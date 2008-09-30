@@ -1,0 +1,74 @@
+2008-03-02  Halturin Taras,,,  <fantom@think>
+
+	reviewed by: <delete if not using a buddy>
+
+	* libgsql/workspace.c: (gsql_workspace_new):
+	* pixmaps/Makefile.am:
+	* plugins/exporter/Makefile.am:
+	* plugins/exporter/plugin_exporter.c: (plugin_load):
+
+2007-08-14 22:45  halturin
+
+	* po, po: forget it
+
+2007-08-14 22:39  halturin
+
+	* .tm_project2.cache, ABOUT-NLS, AUTHORS, COPYING, ChangeLog,
+	  INSTALL, Makefile.am, Makefile.in, NEWS, README, TODO,
+	  TODO.tasks, acinclude.m4, aclocal.m4, autogen.sh, config.guess,
+	  config.h.in, config.sub, configure, configure.in, data, depcomp,
+	  doc, engines, gsql.anjuta, gsql.desktop.in, gsql.schemas,
+	  gtk-doc.make, install-sh, libgsql, ltmain.sh, missing,
+	  mkinstalldirs, pixmaps, plugins, resourses.map.planner,
+	  setup-gettext, src, stamp-h.in, tmp, ., ABOUT-NLS, AUTHORS,
+	  COPYING, ChangeLog, INSTALL, Makefile.am, Makefile.in, NEWS,
+	  README, TODO, TODO.tasks, acinclude.m4, aclocal.m4, autogen.sh,
+	  config.guess, config.h.in, config.sub, configure, configure.in,
+	  data, data/Makefile.am, data/Makefile.in, data/templates,
+	  depcomp, doc, doc/Makefile.am, doc/Makefile.in, doc/gsql.1,
+	  doc/gsql.1.in, doc/manual, doc/reference, engines,
+	  engines/Makefile.am, engines/Makefile.in, engines/mysql,
+	  engines/oracle, engines/postgresql, engines/sample, gsql.anjuta,
+	  gsql.desktop.in, gsql.schemas, gtk-doc.make, install-sh, libgsql,
+	  libgsql/.deps, libgsql/.libs, libgsql/Makefile,
+	  libgsql/Makefile.am, libgsql/Makefile.am.bak,
+	  libgsql/Makefile.in, libgsql/libgsql.c, libgsql/workspace.c,
+	  libgsql/workspace.h, ltmain.sh, missing, mkinstalldirs, pixmaps,
+	  pixmaps/Makefile.am, pixmaps/Makefile.in, pixmaps/close.png,
+	  pixmaps/dbnav.oracle, pixmaps/find.png,
+	  pixmaps/gsql-logo-piston.svg, pixmaps/gsql.png,
+	  pixmaps/logo.src.svg, pixmaps/logo_long.png,
+	  pixmaps/msg_dboutput.png, pixmaps/msg_error.png,
+	  pixmaps/msg_normal.png, pixmaps/msg_notice.png,
+	  pixmaps/msg_warning.png, pixmaps/mysql.png,
+	  pixmaps/object_clone.png, pixmaps/object_code.png,
+	  pixmaps/object_new.png, pixmaps/object_revert.png,
+	  pixmaps/object_save.png, pixmaps/object_sql.png,
+	  pixmaps/oracle.png, pixmaps/pgsql.png, pixmaps/session_close.png,
+	  pixmaps/session_commit.png, pixmaps/session_new.png,
+	  pixmaps/session_rollback.png, pixmaps/sql_export_result.png,
+	  pixmaps/sql_fetch_all.png, pixmaps/sql_fetch_next.png,
+	  pixmaps/sql_run.png, pixmaps/sql_run_at_cursor.png,
+	  pixmaps/sql_run_step.png, pixmaps/sql_showhide_result.png,
+	  pixmaps/sql_stop.png, pixmaps/sql_stop_onerror.png,
+	  pixmaps/sql_updateable.png, pixmaps/unknown.png,
+	  pixmaps/wspace_layout1.png, pixmaps/wspace_layout2.png, plugins,
+	  plugins/Makefile.am, plugins/Makefile.am.bak,
+	  plugins/Makefile.in, plugins/sample, plugins/vte,
+	  resourses.map.planner, setup-gettext, src, src/Makefile.am,
+	  src/Makefile.in, src/common.c, src/common.h, src/engines.c,
+	  src/engines.h, src/gsql.c, src/gsql.h, src/gsqlcb.c,
+	  src/gsqlcb.h, src/gsqlconf.c, src/gsqlconf.h, src/gsqlconfcb.c,
+	  src/gsqlconfcb.h, src/gsqlcontent.c, src/gsqlcontent.h,
+	  src/gsqlcontentcb.c, src/gsqlcontentcb.h, src/gsqldbnav.c,
+	  src/gsqldbnav.h, src/gsqleditor.c, src/gsqleditor.h,
+	  src/gsqlmenu.c, src/gsqlmenu.h, src/gsqlmenucb.c,
+	  src/gsqlmenucb.h, src/gsqlmessages.c, src/gsqlmessages.h,
+	  src/gsqlmessagescb.c, src/gsqlmessagescb.h, src/gsqlsqlhandler.c,
+	  src/gsqlsqlhandler.h, src/gsqlsqlhandlercb.c,
+	  src/gsqlsqlhandlercb.h, src/gsqlwspace.c, src/gsqlwspace.h,
+	  src/gsqlwspacecb.c, src/gsqlwspacecb.h, src/main.c, src/utils.c,
+	  src/utils.h, stamp-h.in, tmp, tmp/dbnav.struct.schema.sqls.txt,
+	  tmp/dbnav.struct.sqls.txt, tmp/dbnav.struct.sqls2.txt: moving to
+	  subdir "trunk"
+

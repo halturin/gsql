@@ -1,0 +1,25 @@
+PACKAGE YHHHHH
+  IS
+--
+-- To modify this template, edit file PKGSPEC.TXT in TEMPLATE 
+-- directory of SQL Navigator
+--
+-- Purpose: Briefly explain the functionality of the package
+--
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- ---------   ------  ------------------------------------------       
+   -- Enter package declarations as shown below
+
+   variable_name   datatype;
+
+   PROCEDURE procedure_name
+     ( param1 IN datatype DEFAULT default_value, 
+       param2 IN OUT datatype);
+ 
+   FUNCTION function_name
+     ( param1 IN datatype DEFAULT default_value, 
+       param2 IN OUT datatype)
+     RETURN  datatype;
+
+END; -- Package spec

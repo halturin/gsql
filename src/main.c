@@ -1,0 +1,119 @@
+/***************************************************************************
+ *            main.c
+ *
+ *  Mon Jul 24 17:05:28 2006
+ *  Copyright  2006  Halturin Taras
+ *  halturin@gmail.com
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
+#include <gtk/gtk.h>
+#include <glib.h>
+#include <libgnome/libgnome.h>
+#include <libgnomeui/libgnomeui.h>
+
+#include <libgsql/common.h>
+#include <libgsql/conf.h>
+#include <libgsql/engines.h>
+#include <libgsql/plugins.h>
+#include <libgsql/stock.h>
+#include "gsql.h"
+
+GtkWidget *gsql_window;
+gpointer   gsql_main_thread;
+
+gboolean gsql_opt_trace_enable = FALSE;
+gboolean gsql_opt_debug_enable = FALSE;
+
+static GOptionEntry opts[] =
+{
+	{ "enable-trace", 0, 0, G_OPTION_ARG_NONE, &gsql_opt_trace_enable, 
+						N_("Enable tracing information (useful for bugs hunting)"), 0 },
+	{ "enable-debug", 0, 0, G_OPTION_ARG_NONE, &gsql_opt_debug_enable, 
+						N_("Enable debugging information (useful for bugs hunting)"), 0 },
+	{ NULL }
+};
+
+int
+main (int argc, char *argv[])
+{
+	GnomeProgram *program;
+	GError *error = NULL;
+	GOptionContext *context = g_option_context_new(_(" - Integrated Database Development Tool"));
+	GtkWidget *dialog;
+	g_thread_init (NULL);
+	gdk_threads_init ();
+	gdk_threads_enter ();
+	
+	g_option_context_add_main_entries(context, opts, GETTEXT_PACKAGE);
+	g_option_context_add_group(context, gtk_get_option_group(TRUE));
+	g_option_context_set_ignore_unknown_options(context, TRUE);
+	g_option_context_parse(context, &argc, &argv, &error);
+	g_option_context_free(context);
+	
+	program = gnome_program_init (PACKAGE, VERSION, LIBGNOMEUI_MODULE,
+				argc, argv, 
+				GNOME_PARAM_HUMAN_READABLE_NAME,
+				N_("GSQL. Integrated Database Development Tool"),
+				GNOME_PARAM_APP_DATADIR,
+				PACKAGE_DATA_DIR, NULL);
+#ifdef ENABLE_NLS
+	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+#endif
+	gtk_set_locale ();
+	
+	
+	gsql_main_thread = (gpointer) g_thread_self ();
+
+	gtk_init (&argc, &argv);
+	
+	add_pixmap_directory (PACKAGE_PIXMAPS_DIR);
+	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/plugins");
+	gsql_stock_init ();
+	
+	gsql_conf_init ();
+	gsql_window_create ();
+	
+	gsql_engines_lookup ();
+	gsql_plugins_lookup ();
+	
+	gtk_widget_show (gsql_window);
+	if (!gsql_engines_count())
+	{
+		dialog = gtk_message_dialog_new (GTK_WINDOW (gsql_window),
+							 GTK_DIALOG_MODAL,
+							 GTK_MESSAGE_ERROR,
+							 GTK_BUTTONS_CLOSE,
+							 N_("Engines not found at " PACKAGE_ENGINES_DIR) );
+		g_signal_connect_swapped (dialog, "response",
+						  G_CALLBACK (gtk_widget_destroy),
+						  dialog);
+		gtk_widget_show (dialog);
+	};
+	gtk_main ();
+
+	gdk_threads_leave ();
+
+	return 0;
+};

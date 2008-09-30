@@ -1,0 +1,104 @@
+.\" Copyright (c) 2007, Taras Halturin <halturin@gmail.com>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.TH GSQL 1
+.SH NAME
+GSQL v@VERSION@ \- an integrated database development environment for \fBGNOME\fR
+.SH SYNOPSIS
+.TP 5
+\fBgsql \fI[options]\fR
+
+.SH DESCRIPTION
+.PP
+\fBGSQL\fR is a gtk2-based modular development tool for various RDBMS,
+such as Oracle, MySQL, PostgreSQL and others
+
+.SH OPTIONS
+The following options are provided by \fBGSQL\fR using the standard GNU
+command line syntax:
+.TP
+.B \-d, \-\-debug
+Print debugging messages to stdout.
+
+.TP
+.B \-h, \-\-help
+Print this help and exit.
+
+.TP
+.B \-v, \-\-version
+Display the version information window.
+
+.SH ENGINES
+The \fBEngine\fR are \fBGSQL\fR's shared library contains a set of functions 
+to access specific database plus the GUI components performing access to 
+the database objects. Engines can be enabled and configured from the
+\fBPreferences\fR window. See http://gsql.org/development page for more 
+information on developing engines.
+
+.SH PLUGINS
+\fBGSQL\fR allows for dynamic loading of plugins to add extra functionality
+to \fBGSQL\fR. See http://gsql.org/development page for more 
+information on developing plugins.
+
+.SH BUGS
+Known bugs are listed at
+.br
+\fIhttp://sourceforge.net/tracker/?group_id=172821&atid=863135\fR
+
+.SH PATCHES
+If you fix a bug in \fBGSQL\fR (or otherwise enhance it), please submit a
+patch (using \fIsvn diff > my.diff\fR against the latest SVN revision)
+at
+.br
+\fIhttp://sourceforge.net/tracker/?func=add&group_id=172821&atid=863135\fR
+
+Before sending a bug report, please verify that you have the latest
+version of \fBGSQL\fR.  Many bugs (major and minor) are fixed
+at each release, and if yours is out of date, the problem may already
+have been solved.
+
+.SH SEE ALSO
+\fIhttp://gsql.org/\fR
+.br
+\fIhttp://www.sourceforge.net/projects/gsql/\fR
+
+.SH LICENSE
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+\fBWITHOUT ANY WARRANTY\fR; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+.SH AUTHORS
+\fBGSQL\fR's active developers are:
+
+ Taras Halturin (lead developer) <\fIhalturin@gmail.com\fR>
+.br
+
+This manpage was originally written by Taras Halturin.

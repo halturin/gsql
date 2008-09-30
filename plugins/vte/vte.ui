@@ -1,0 +1,11 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+   	<menu name="MenuTools" action="ActionMenuTools">
+   	  <placeholder name="PHolderTools">
+   	  	<menuitem name="TerminalOpen" action="ActionTerminalOpen" />
+   	  </placeholder>
+   	</menu>
+  </menubar>
+</ui>
+

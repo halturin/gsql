@@ -1,0 +1,8 @@
+<!-- Preferences -->
+ <chapter id="preferences">
+  <title>Preferences</title>
+  <para>
+   Preferences are ways to customize <application>GSQL</application> to suit
+   your tastes.
+  </para>
+ </chapter>

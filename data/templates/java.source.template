@@ -1,0 +1,38 @@
+//
+// Changelog:
+//
+// Example:
+// 2006-05-25  Petr Ivanov <petr@ivanov.ru>
+//
+//        * NEWS, README: Updated for 0.1.4
+//        * added foo support
+//
+
+import java.lang.*;
+import java.awt.*;
+import java.applet.*;
+
+public class %s
+{
+	public void Method1()
+	{
+    		try
+    		{
+      			return;
+    		} catch (Exception e)
+      		  {
+        	  	  return;
+      		  }
+  	}
+
+  	public void Method2()
+	{
+  	 	try
+    		{
+      			return;
+    		} catch (Exception e)
+      		  {
+        	  	  return;
+      		  }
+	}
+}

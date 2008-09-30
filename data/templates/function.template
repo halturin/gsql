@@ -1,0 +1,24 @@
+FUNCTION %s
+  ( p1 IN datatype DEFAULT default_value, 
+    p2 IN OUT datatype)
+  RETURN  datatype IS
+--
+-- Note: It is just example declaration.
+-- You need replace some keywords to the real name (s.a. 'datatype').
+-- You can modify this template. It is available at
+-- %s/function.template
+--
+-- Changelog:
+--  Date             Comments
+-- ------------------------------------------------------       
+-- %s created.
+
+   variable_name                 datatype;
+   
+BEGIN 
+    function_routine ;
+    RETURN return_value ;
+EXCEPTION
+   WHEN exception_name THEN
+       exception_routine ;
+END;

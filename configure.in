@@ -1,0 +1,194 @@
+dnl Process this file with autoconf to produce a configure script.
+dnl Created by Anjuta - will be overwritten
+dnl If you don't want it to overwrite it,
+dnl 	Please disable it in the Anjuta project configuration
+
+AC_INIT(gsql, 0.2.0, http://gsql.org)
+
+AM_INIT_AUTOMAKE(gsql, 0.2.0)
+AM_CONFIG_HEADER(config.h)
+AM_MAINTAINER_MODE
+
+AC_ISC_POSIX
+AC_PROG_CC
+AM_PROG_CC_STDC
+AC_HEADER_STDC
+
+GETTEXT_PACKAGE=gsql
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Package name for gettext])
+
+dnl Languages which your application supports
+ALL_LINGUAS="de en_AU en_CA en_GB ru"
+AM_GLIB_GNU_GETTEXT
+
+AM_PROG_LIBTOOL
+
+PKG_CHECK_MODULES(PACKAGE, [libgnomeui-2.0 gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0])
+AC_SUBST(PACKAGE_CFLAGS)
+AC_SUBST(PACKAGE_LIBS)
+
+
+
+dnl Checks for libraries.
+AC_SUBST(ORACLE_LIBS)
+
+dnl Checks for header files.
+AC_SUBST(ORACLE_CFLAGS)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_SUBST(ORACLE_LDFLAGS)
+
+dnl Checks for library functions.
+CHECK_ORACLE
+CHECK_MYSQL
+
+AM_GCONF_SOURCE_2
+
+dnl Checks for Additional stuffs.
+AC_DEFINE(PROJECT_URL, "http://gsql.org", "")
+AC_DEFINE(PROJECT_NAME, "GSQL", "")
+dnl Bug report page
+AC_DEFINE(PROJECT_BUG_REPORT_URL, "http://code.google.com/p/gsql/issues/list", "Bug report url")
+dnl Requests'n'Questions page
+AC_DEFINE(PROJECT_GROUP_URL, "http://groups.google.com/group/gsql-dev", "Mail group")
+
+dnl Set PACKAGE_LOCALE_DIR in config.h.
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Package local directory])
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale", [Package local directory])
+fi
+
+dnl Set PACKAGE SOURCE DIR in config.h.
+packagesrcdir=`cd $srcdir && pwd`
+
+dnl Set PACKAGE PREFIX
+if test "x${prefix}" = "xNONE"; then
+  packageprefix=${ac_default_prefix}
+else
+  packageprefix=${prefix}
+fi
+
+dnl Set PACKAGE DATA & DOC DIR
+packagedatadir=share
+packagedocdir=doc/${PACKAGE}
+
+dnl Set PACKAGE DIRs in config.h.
+packagepixmapsdir=share/pixmaps/${PACKAGE}
+packagehelpdir=share/gnome/help/${PACKAGE}
+packagemenudir=share/gnome/apps
+packagepluginsdir=lib/${PACKAGE}/plugins
+packageenginesdir=lib/${PACKAGE}/engines
+packagegladedir=share/${PACKAGE}/glade
+packageuidir=share/${PACKAGE}/ui
+packagetemplatedir=share/${PACKAGE}/template
+
+
+
+dnl Subst PACKAGE_PLUGINS_DIR.
+PACKAGE_PLUGINS_DIR="${packageprefix}/${packagepluginsdir}"
+AC_SUBST(PACKAGE_PLUGINS_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_PLUGINS_DIR, "${packageprefix}/${packagepluginsdir}", [Plugins dir])
+
+dnl Subst PACKAGE_GLADE_DIR.
+PACKAGE_GLADE_DIR="${packageprefix}/${packagegladedir}"
+AC_SUBST(PACKAGE_GLADE_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_GLADE_DIR, "${packageprefix}/${packagegladedir}", [Glade dir])
+
+dnl Subst PACKAGE_UI_DIR.
+PACKAGE_UI_DIR="${packageprefix}/${packageuidir}"
+AC_SUBST(PACKAGE_UI_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_UI_DIR, "${packageprefix}/${packageuidir}", [Glade dir])
+
+dnl Subst PACKAGE_TEMPLATE_DIR.
+PACKAGE_TEMPLATE_DIR="${packageprefix}/${packagetemplatedir}"
+AC_SUBST(PACKAGE_TEMPLATE_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_TEMPLATE_DIR, "${packageprefix}/${packagetemplatedir}", [Glade dir])
+
+
+dnl Subst PACKAGE_ENGINES_DIR.
+PACKAGE_ENGINES_DIR="${packageprefix}/${packageenginesdir}"
+AC_SUBST(PACKAGE_ENGINES_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_ENGINES_DIR, "${packageprefix}/${packageenginesdir}", [Engines dir])
+
+
+
+dnl Subst PACKAGE_DATA_DIR.
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${packagedatadir}", [Package data directory])
+dnl  PACKAGE_DATA_DIR="${packagedatadir}"
+dnl  AC_SUBST(PACKAGE_DATA_DIR)
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${packageprefix}/${packagedatadir}", [Package data directory])
+dnl  PACKAGE_DATA_DIR="${packageprefix}/${packagedatadir}"
+dnl  AC_SUBST(PACKAGE_DATA_DIR)
+fi
+
+
+dnl Subst PACKAGE_DOC_DIR.
+dnl NO_PREFIX_PACKAGE_DOC_DIR="${packagedocdir}"
+dnl AC_SUBST(NO_PREFIX_PACKAGE_DOC_DIR)
+PACKAGE_DOC_DIR="${packageprefix}/${packagedocdir}"
+AC_SUBST(PACKAGE_DOC_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_DOC_DIR, "${packageprefix}/${packagedocdir}", [Doc dir])
+
+
+dnl Subst PACKAGE_PIXMAPS_DIR.
+NO_PREFIX_PACKAGE_PIXMAPS_DIR="${packagepixmapsdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_PIXMAPS_DIR)
+PACKAGE_PIXMAPS_DIR="${packageprefix}/${packagepixmapsdir}"
+AC_SUBST(PACKAGE_PIXMAPS_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_PIXMAPS_DIR, "${packageprefix}/${packagepixmapsdir}", [Pixmaps dir])
+
+
+
+dnl Subst PACKAGE_HELP_DIR.
+NO_PREFIX_PACKAGE_HELP_DIR="${packagehelpdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_HELP_DIR)
+PACKAGE_HELP_DIR="${packageprefix}/${packagehelpdir}"
+AC_SUBST(PACKAGE_HELP_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_HELP_DIR, "${packageprefix}/${packagehelpdir}", [Helps dir])
+
+
+dnl Subst PACKAGE_MENU_DIR.
+NO_PREFIX_PACKAGE_MENU_DIR="${packagemenudir}"
+AC_SUBST(NO_PREFIX_PACKAGE_MENU_DIR)
+PACKAGE_MENU_DIR="${packageprefix}/${packagemenudir}"
+AC_SUBST(PACKAGE_MENU_DIR)
+AC_DEFINE_UNQUOTED(PACKAGE_MENU_DIR, "${packageprefix}/${packagemenudir}", [Menus dir])
+
+
+
+
+# gtk-doc
+GTK_DOC_CHECK([1.4])
+
+AC_OUTPUT([
+Makefile
+po/Makefile.in
+libgsql/Makefile
+src/Makefile
+engines/Makefile
+engines/oracle/Makefile
+engines/oracle/pixmaps/Makefile
+engines/postgresql/Makefile
+engines/postgresql/pixmaps/Makefile
+engines/mysql/Makefile
+engines/mysql/pixmaps/Makefile
+plugins/Makefile
+plugins/vte/Makefile
+plugins/exporter/Makefile
+plugins/runner/Makefile
+pixmaps/Makefile
+data/Makefile
+doc/Makefile
+doc/gsql.1
+doc/reference/Makefile
+doc/reference/version.xml
+doc/manual/Makefile
+doc/manual/C/Makefile
+gsql.desktop
+
+])
+

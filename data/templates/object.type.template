@@ -1,0 +1,34 @@
+TYPE DDDD
+AS OBJECT
+--
+-- To modify this template, edit file TYPSPEC.TXT in TEMPLATE
+-- directory of SQL Navigator
+--
+-- Purpose: Briefly explain the functionality of the type
+--
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- ---------   ------  ------------------------------------------
+--
+--
+
+(
+   --
+   -- Enter type attributes as shown below
+   --
+   
+   attribute_name   datatype,
+   
+   -- Enter type methods as shown below
+   --
+
+  MEMBER PROCEDURE procedure_name
+     ( param1 IN OUT datatype,
+       param2 IN datatype DEFAULT default_value),
+  --
+  MEMBER FUNCTION function_name
+     ( param1 IN OUT datatype,
+       param2 IN datatype DEFAULT default_value)
+     RETURN  datatype
+  --
+)

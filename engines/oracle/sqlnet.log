@@ -1,0 +1,56 @@
+
+
+***********************************************************************
+Fatal NI connect error 12541, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.172.5)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dev)(CID=(PROGRAM=)(HOST=aspire)(USER=fantom))))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.1.0.3.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.1.0.3.0 - Production
+  Time: 04-НОЯ-2007 01:30:18
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12541
+    TNS-12541: Message 12541 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 12560
+    nt main err code: 511
+    TNS-00511: Message 511 not found; No message file for product=network, facility=TNS
+    nt secondary err code: 111
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12514, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.172.5)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dev)(CID=(PROGRAM=)(HOST=aspire)(USER=fantom))))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.1.0.3.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.1.0.3.0 - Production
+  Time: 04-НОЯ-2007 01:33:54
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12564
+    TNS-12564: Message 12564 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 0
+    nt main err code: 0
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12560, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.172.5)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dev)(CID=(PROGRAM=)(HOST=aspire)(USER=fantom))))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.1.0.3.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.1.0.3.0 - Production
+  Time: 05-НОЯ-2007 11:45:12
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12560
+    TNS-12560: Message 12560 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 0
+    nt main err code: 530
+    TNS-00530: Message 530 not found; No message file for product=network, facility=TNS
+    nt secondary err code: 113
+    nt OS err code: 0

@@ -1,0 +1,6 @@
+gsql (0.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Taras Halturin <halturin@gmail.com>  Wed, 06 Aug 2008 01:39:17 +0400
+

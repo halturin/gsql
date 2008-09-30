@@ -1,0 +1,17 @@
+Source: gsql
+Section: unknown
+Priority: extra
+Maintainer: Taras Halturin <halturin@gmail.com>
+Build-Depends: debhelper (>= 5), autotools-dev
+Standards-Version: 3.7.2
+
+Package: gsql
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
+
+Package: gsql-doc
+Architecture: all
+Description: Documentation for gsql
+ <insert long description, indented with spaces>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY GSQLArchitecture SYSTEM "gsql-architecture.sgml">
+<!ENTITY GSQLWritingEngines SYSTEM "gsql-writing-engines.sgml">
+<!ENTITY GSQLWritingPlugins SYSTEM "gsql-writing-plugins.sgml">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <authorgroup>
+      <author>
+	<firstname>Taras</firstname>
+	<surname>Halturin</surname>
+	<authorblurb>
+	  <para>
+	    <email>halturin@gmail.com</email>
+	  </para>
+	</authorblurb>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2007</year>
+      <holder>Taras Halturin</holder>
+    </copyright>
+    <title>GSQL Developers Reference Manual</title>
+    <legalnotice>
+      <para>
+		This document may be distributed subject to the terms and
+        conditions set forth in the Open Publication License, v1.0 or
+        later (the latest version is presently available at <ulink
+        url=" http://www.opencontent.org/openpub/"
+        type="http">http://www.opencontent.org/openpub/</ulink> )
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  &GSQLArchitecture;
+  &GSQLWritingEngines;
+  &GSQLWritingPlugins;
+
+  <chapter id="gsql-api">
+    <title>GSQL API</title>
+    <xi:include href="xml/gsql.xml"/>
+    <xi:include href="xml/engines.xml"/>
+    <xi:include href="xml/gsqldbnav.xml"/>
+    <xi:include href="xml/gsqleditor.xml"/>
+    <xi:include href="xml/gsqlmessages.xml"/>
+    <xi:include href="xml/gsqlsqlhandler.xml"/>
+    <xi:include href="xml/utils.xml"/>
+  </chapter>
+  
+  <chapter id="object-hierarchy">
+    <title>Object Hierarchy</title>
+    <xi:include href="xml/tree_index.sgml"/>
+  </chapter>
+</book>

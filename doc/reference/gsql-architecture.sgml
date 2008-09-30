@@ -1,0 +1,29 @@
+  <chapter id="gsql-architecture">
+  	<title>GSQL Architecture</title>
+	<para>
+		GSQL defines a component-based framework for the Engines and Plugins development. 
+	</para>
+	<para>
+		Following scheme illustrates the architecture more clearly.
+		<figure id="gsql-scheme">
+			<title>GSQL Architecture</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="gsql-architecture.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</para>
+	<sect1>
+		<title>Engines</title>
+		<para>
+			Engines are main components which are loaded in GSQL at run time.
+		</para>
+	</sect1>
+	<sect1>
+		<title>Plugins</title>
+		<para>
+			Plugins work description...
+		</para>
+	</sect1>
+  </chapter>

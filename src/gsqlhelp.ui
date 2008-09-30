@@ -1,0 +1,17 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+    <menu name="MenuHelp" action="ActionMenuHelp">
+    	<placeholder name="PHolderHelp">
+    		<menuitem name="UsersManual" action="ActionUsersManual" />
+    		<separator name="SeparatorA" />
+    		<menuitem name="HomePage" action="ActionHomePage" />
+    		<menuitem name="APIReference" action="ActionAPIReference" />
+    		<menuitem name="BugReport" action="ActionBugReport" />
+    		<menuitem name="RequestsQuestions" action="ActionRequestsQuestions" />
+    		<separator name="SeparatorB" />
+    		<menuitem name="About" action="ActionAbout" />
+    	</placeholder>
+    </menu>
+  </menubar>
+</ui>

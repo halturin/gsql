@@ -1,0 +1,41 @@
+Source: gsql
+Build-Depends: debhelper (>= 5), libltdl3-dev, libpam0g-dev, libmysqlclient15-dev | libmysqlclient-dev, libgdbm-dev, libldap2-dev, libsasl2-dev, libiodbc2-dev, libkrb5-dev, snmp, autotools-dev, dpatch (>= 2), libperl-dev, libtool, dpkg-dev (>= 1.13.19), libpq-dev, libsnmp-dev
+Section: net
+Priority: optional
+Maintainer: Taras Halturin <halturin@gmail.com>
+Standards-Version: 3.7.3
+
+Package: gsql
+Architecture: any
+Depends: adduser, lsb-base (>= 3.0-6), ${shlibs:Depends}
+Provides: radius-server
+Suggests: freeradius-ldap, freeradius-mysql, freeradius-krb5, freeradius-postgresql
+Conflicts: radiusd-freeradius, radiusd-freeradius-krb5, radiusd-freeradius-ldap, radiusd-freeradius-postgresql, radiusd-freeradius-mysql
+Replaces: radiusd-freeradius
+Description: a high-performance and highly configurable RADIUS server
+ A high-performance RADIUS server derived from Cistron's server, and
+ generally similar to Livingston's 2.0 server, with support for...
+  - many vendor-specific attributes
+  - proxying and replicating requests by any criteria
+  - authentication on system passwd, SQL, Kerberos, LDAP, users file, or PAM
+  - multiple DEFAULT configurations
+  - regexp matching in string attributes
+ and lots more.
+
+Package: gsql-mysql
+Architecture: any
+Conflicts: 
+Replaces: 
+Depends: gsql (= ${binary:Version}), ${shlibs:Depends}
+Description: MySQL engine for GSQL
+ The GSQL can works with MySQL server, and this module
+ is necessary for that.
+
+Package: gsql-oracle
+Architecture: any
+Conflicts: 
+Replaces: 
+Depends: gsql (= ${binary:Version}), ${shlibs:Depends}
+Description: Oracle engine for GSQL
+ The GSQL can works with Oracle server, and this module
+ is necessary for that.

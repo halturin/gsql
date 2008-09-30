@@ -1,0 +1,15 @@
+  <chapter id="gsql-writing-plugins">
+  	<title>Writing GSQL plugins</title>
+	<para>
+		Bla bla bla 
+	</para>
+	<para>
+		bla bla bla2
+	</para>
+	<sect1>
+		<title>Make a skeleton</title>
+		<para>
+			First of you need, there is....
+		</para>
+	</sect1>
+  </chapter>

@@ -1,0 +1,743 @@
+<STRUCT>
+<NAME>GSQLNavigation</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLNavigation</NAME>
+struct _GSQLNavigation 
+{
+	gint 			id;
+	gchar 			*stock_name;
+	gchar			*name;
+	const gchar		*sql;
+	gpointer		object_handler;
+	gpointer		expand_handler;
+	GSQLNavigation	*child;
+	gint			childs;
+};
+</STRUCT>
+<STRUCT>
+<NAME>GSQLMenu</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLMenu</NAME>
+struct _GSQLMenu
+{
+	GtkAccelGroup  *accel;
+	GtkUIManager   *ui;
+
+	GtkWidget *gsqlmenu;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gsql_menu_init</NAME>
+<RETURNS>void</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_menu_merge</NAME>
+<RETURNS>guint</RETURNS>
+gchar *ui_file, GtkActionGroup *action
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_menu_get_widget</NAME>
+<RETURNS>GtkWidget  *</RETURNS>
+gchar *name
+</FUNCTION>
+<MACRO>
+<NAME>GSQL_PLUGIN_SYMBOL_LOAD</NAME>
+#define GSQL_PLUGIN_SYMBOL_LOAD   			"plugin_load"
+</MACRO>
+<MACRO>
+<NAME>GSQL_PLUGIN_SYMBOL_UNLOAD</NAME>
+#define GSQL_PLUGIN_SYMBOL_UNLOAD 			"plugin_unload"
+</MACRO>
+<STRUCT>
+<NAME>GSQLPluginInfo</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLPlugin</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLPluginInfo</NAME>
+struct _GSQLPluginInfo
+{
+	gchar * id;
+	gchar * name;
+	gchar * version;
+	gchar * desc;
+	gchar * author;
+	gchar * homepage;
+};
+</STRUCT>
+<STRUCT>
+<NAME>GSQLPlugin</NAME>
+struct _GSQLPlugin
+{
+	struct _GSQLPluginInfo info;
+	gchar   *file_logo; /* icon file */
+	
+	GModule *module;
+	gchar   *file;
+	
+	GtkActionGroup *action;
+	guint menu_id;
+
+	gboolean	(*plugin_load) (GSQLPlugin * plugin);
+	gboolean	(*plugin_unload) (GSQLPlugin * plugin);
+
+	/* menu show/hide */
+	void		(*menu_update_sensitive) (GSQLEngine *engine);
+	/* prefs widget */
+	void  		(*plugin_conf_dialog) ();
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gsql_plugins_lookup</NAME>
+<RETURNS>void</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_plugins_count</NAME>
+<RETURNS>guint</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_plugins_foreach</NAME>
+<RETURNS>void</RETURNS>
+GHFunc func, gpointer userdata
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_plugins_menu_update_all</NAME>
+<RETURNS>void</RETURNS>
+GSQLEngine *engine
+</FUNCTION>
+<MACRO>
+<NAME>GSQL_ENGINE_SYMBOL_LOAD</NAME>
+#define GSQL_ENGINE_SYMBOL_LOAD   			"engine_load"
+</MACRO>
+<MACRO>
+<NAME>GSQL_ENGINE_SYMBOL_UNLOAD</NAME>
+#define GSQL_ENGINE_SYMBOL_UNLOAD 			"engine_unload"
+</MACRO>
+<MACRO>
+<NAME>GNOME_SYSTEM_FONT</NAME>
+#define GNOME_SYSTEM_FONT       "/desktop/gnome/interface/monospace_font_name"
+</MACRO>
+<STRUCT>
+<NAME>GSQLEngineInfo</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLEngine</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLEngineInfo</NAME>
+struct _GSQLEngineInfo
+{
+	gint major_version;
+	gint minor_version;
+	gchar * id;
+	gchar * name;
+	gchar * version;
+	gchar * desc;
+	gchar * author;
+	gchar * homepage;
+};
+</STRUCT>
+<STRUCT>
+<NAME>GSQLEngine</NAME>
+struct _GSQLEngine
+{
+	struct _GSQLEngineInfo info;
+	gchar   *file_logo; /* icon file */
+	
+	GModule *module;
+	gchar   *file;
+	
+	GtkActionGroup *action;
+	guint menu_id;
+
+	gchar *is_file;
+	gboolean in_use;
+
+	gboolean	(*engine_load) (GSQLEngine * engine);
+	gboolean	(*engine_unload) (GSQLEngine * engine);
+	gpointer	(*session_open) (GtkWidget *logon_widget, gchar *buffer);
+	gboolean	(*session_close) (gpointer session);
+	gboolean	(*session_reopen) (gpointer session);
+	/* menu show/hide */
+	void		(*menu_set_visible) (gboolean status);
+	/* logon widget */
+	GtkWidget  *(*logon_widget_create) ();
+	void 		(*logon_widget_free) (GtkWidget * prefs_widget);
+	/* prefs widget */
+	GtkWidget  *(*conf_widget_create) ();
+	void		(*conf_widget_free) (GtkWidget * prefs_widget);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gsql_engines_lookup</NAME>
+<RETURNS>void</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_engines_count</NAME>
+<RETURNS>guint</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_engines_foreach</NAME>
+<RETURNS>void</RETURNS>
+GHFunc func, gpointer userdata
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_engines_menu_hide_all</NAME>
+<RETURNS>void</RETURNS>
+
+</FUNCTION>
+<STRUCT>
+<NAME>GSQLSession</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLSession</NAME>
+struct _GSQLSession
+{
+	gchar	username[64];
+    gchar	password[64];
+    gchar	database[64];
+	gchar	session_name[256];
+	gchar	info[32];
+
+	GSQLEngine		*engine;
+	GtkWidget		*space;		// root workspace widget
+	gpointer		workspace;	// you may use your own workspace 
+								// routines instead of GSQLWorkspace
+	gpointer	spec;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gsql_session_reg</NAME>
+<RETURNS>void</RETURNS>
+GSQLSession *session
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_session_unreg</NAME>
+<RETURNS>void</RETURNS>
+GSQLSession *session
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_sessions_count</NAME>
+<RETURNS>gint</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_session_get_current</NAME>
+<RETURNS>GSQLSession  *</RETURNS>
+
+</FUNCTION>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_USE_SYSTEM_FONT</NAME>
+#define GSQL_CONF_EDITOR_USE_SYSTEM_FONT	GSQL_CONF_ROOT_KEY "/editor/use_system_font"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_FONT_NAME</NAME>
+#define GSQL_CONF_EDITOR_FONT_NAME			GSQL_CONF_ROOT_KEY "/editor/font_name"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_USE_SPACE</NAME>
+#define GSQL_CONF_EDITOR_USE_SPACE			GSQL_CONF_ROOT_KEY "/editor/use_space_instead_tab"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_TAB_WIDTH</NAME>
+#define GSQL_CONF_EDITOR_TAB_WIDTH			GSQL_CONF_ROOT_KEY "/editor/tab_width"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_SHOW_LINE_NUM</NAME>
+#define GSQL_CONF_EDITOR_SHOW_LINE_NUM		GSQL_CONF_ROOT_KEY "/editor/show_line_number"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_HIGHLIGHT_LINE</NAME>
+#define GSQL_CONF_EDITOR_HIGHLIGHT_LINE		GSQL_CONF_ROOT_KEY "/editor/highlight_line"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_WRAPPING</NAME>
+#define GSQL_CONF_EDITOR_WRAPPING			GSQL_CONF_ROOT_KEY "/editor/enable_text_wrapping"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_EDITOR_AUTO_INDENT</NAME>
+#define GSQL_CONF_EDITOR_AUTO_INDENT		GSQL_CONF_ROOT_KEY "/editor/enable_auto_indent"
+</MACRO>
+<MACRO>
+<NAME>GNOME_SYSTEM_FONT</NAME>
+#define GNOME_SYSTEM_FONT       "/desktop/gnome/interface/monospace_font_name"
+</MACRO>
+<FUNCTION>
+<NAME>gsql_source_editor_new</NAME>
+<RETURNS>GtkWidget  *</RETURNS>
+gchar * buffer_body
+</FUNCTION>
+<MACRO>
+<NAME>GSQL_CONF_ROOT_KEY</NAME>
+#define GSQL_CONF_ROOT_KEY "/apps/gsql"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_ENGINES_ROOT_KEY</NAME>
+#define GSQL_CONF_ENGINES_ROOT_KEY GSQL_CONF_ROOT_KEY "/engines"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_PLUGINS_ROOT_KEY</NAME>
+#define GSQL_CONF_PLUGINS_ROOT_KEY GSQL_CONF_ROOT_KEY "/plugins"
+</MACRO>
+<USER_FUNCTION>
+<NAME>GSQLConfNotifyFunc</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *userdata
+</USER_FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_init</NAME>
+<RETURNS>void</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_get_int</NAME>
+<RETURNS>gint</RETURNS>
+gchar *path
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_get_string</NAME>
+<RETURNS>gchar  *</RETURNS>
+gchar *path
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_get_string_at_root</NAME>
+<RETURNS>gchar  *</RETURNS>
+gchar *path
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_get_boolean</NAME>
+<RETURNS>gboolean</RETURNS>
+gchar *path
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_set_int</NAME>
+<RETURNS>void</RETURNS>
+gchar *path, gint value
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_set_string</NAME>
+<RETURNS>void</RETURNS>
+gchar *path, gchar *value
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_value_set_boolean</NAME>
+<RETURNS>void</RETURNS>
+gchar *path, gboolean value
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_conf_nitify_add</NAME>
+<RETURNS>void</RETURNS>
+gchar *path, GSQLConfNotifyFunc func, GtkWidget *userdata
+</FUNCTION>
+<MACRO>
+<NAME>GSQL_STOCK_ALL_SCHEMAS</NAME>
+#define GSQL_STOCK_ALL_SCHEMAS			"gsql-all-schemas"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_ARGUMENTS</NAME>
+#define GSQL_STOCK_ARGUMENTS			"gsql-arguments"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_CLOSE</NAME>
+#define GSQL_STOCK_CLOSE				"gsql-close"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_COLUMNS</NAME>
+#define GSQL_STOCK_COLUMNS				"gsql-columns"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_CONSTRAINT</NAME>
+#define GSQL_STOCK_CONSTRAINT			"gsql-constraints"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_CONSTRAINT_P</NAME>
+#define GSQL_STOCK_CONSTRAINT_P			"gsql-constraints-p"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_CONSTRAINT_F</NAME>
+#define GSQL_STOCK_CONSTRAINT_F			"gsql-constraints-f"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_CONSTRAINT_U</NAME>
+#define GSQL_STOCK_CONSTRAINT_U			"gsql-constraints-u"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_CONSTRAINT_C</NAME>
+#define GSQL_STOCK_CONSTRAINT_C			"gsql-constraints-c"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_FIND</NAME>
+#define GSQL_STOCK_FIND					"gsql-find"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_FUNCTIONS</NAME>
+#define GSQL_STOCK_FUNCTIONS			"gsql-functions"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_GSQL</NAME>
+#define GSQL_STOCK_GSQL					"gsql-gsql"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_INDEXES</NAME>
+#define GSQL_STOCK_INDEXES				"gsql-indexes"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_LOGO</NAME>
+#define GSQL_STOCK_LOGO					"gsql-logo"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_MOUTPUT</NAME>
+#define GSQL_STOCK_MOUTPUT				"gsql-msg-output"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_MERROR</NAME>
+#define GSQL_STOCK_MERROR				"gsql-msg-error"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_MNORMAL</NAME>
+#define GSQL_STOCK_MNORMAL				"gsql-msg-normal"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_MNOTICE</NAME>
+#define GSQL_STOCK_MNOTICE				"gsql-msg-notice"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_MWARNING</NAME>
+#define GSQL_STOCK_MWARNING				"gsql-msg-warning"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_MY_SCHEMA</NAME>
+#define GSQL_STOCK_MY_SCHEMA			"gsql-my-schema"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_OBJ_CLONE</NAME>
+#define GSQL_STOCK_OBJ_CLONE			"gsql-object-clone"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_OBJ_CODE</NAME>
+#define GSQL_STOCK_OBJ_CODE				"gsql-object-code"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_OBJ_NEW</NAME>
+#define GSQL_STOCK_OBJ_NEW				"gsql-object-new"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_OBJ_REVERT</NAME>
+#define GSQL_STOCK_OBJ_REVERT			"gsql-object-revert"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_OBJ_SAVE</NAME>
+#define GSQL_STOCK_OBJ_SAVE				"gsql-object-save"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_OBJ_SQL</NAME>
+#define GSQL_STOCK_OBJ_SQL				"gsql-object-sql"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_PROCEDURES</NAME>
+#define GSQL_STOCK_PROCEDURES			"gsql-procedures"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SEQUENCES</NAME>
+#define GSQL_STOCK_SEQUENCES			"gsql-sequences"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SESSION_CLOSE</NAME>
+#define GSQL_STOCK_SESSION_CLOSE		"gsql-session-close"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SESSION_COMMIT</NAME>
+#define GSQL_STOCK_SESSION_COMMIT		"gsql-session-commit"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SESSION_NEW</NAME>
+#define GSQL_STOCK_SESSION_NEW			"gsql-session-new"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SESSION_ROLLBACK</NAME>
+#define GSQL_STOCK_SESSION_ROLLBACK		"gsql-session-rollback"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_EXPORT</NAME>
+#define GSQL_STOCK_SQL_EXPORT			"gsql-sql-export"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_FETCH_ALL</NAME>
+#define GSQL_STOCK_SQL_FETCH_ALL		"gsql-sql-fetch-all"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_FETCH_NEXT</NAME>
+#define GSQL_STOCK_SQL_FETCH_NEXT		"gsql-sql-fetch-next"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_RUN_AT_CURSOR</NAME>
+#define GSQL_STOCK_SQL_RUN_AT_CURSOR	"gsql-sql-run-at-cursor"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_RUN</NAME>
+#define GSQL_STOCK_SQL_RUN				"gsql-sql-run"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_RUN_STEP</NAME>
+#define GSQL_STOCK_SQL_RUN_STEP			"gsql-sql-run-step"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_SHOW_HIDE</NAME>
+#define GSQL_STOCK_SQL_SHOW_HIDE		"gsql-sql-show-hide"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_STOP_ON_ERR</NAME>
+#define GSQL_STOCK_SQL_STOP_ON_ERR		"gsql-sql-stop-on-err"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_STOP</NAME>
+#define GSQL_STOCK_SQL_STOP				"gsql-sql-stop"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_SQL_UPDATEABLE</NAME>
+#define GSQL_STOCK_SQL_UPDATEABLE		"gsql-sql-updateable"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_TABLES</NAME>
+#define GSQL_STOCK_TABLES				"gsql-tables"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_TRIGGERS</NAME>
+#define GSQL_STOCK_TRIGGERS				"gsql-triggers"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_UNKNOWN</NAME>
+#define GSQL_STOCK_UNKNOWN				"gsql-unknown"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_USERS</NAME>
+#define GSQL_STOCK_USERS				"gsql-users"
+</MACRO>
+<MACRO>
+<NAME>GSQL_STOCK_VIEWS</NAME>
+#define GSQL_STOCK_VIEWS				"gsql-views"
+</MACRO>
+<STRUCT>
+<NAME>GSQLStockIcon</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLStockIcon</NAME>
+struct _GSQLStockIcon
+{
+	const char *name;
+	const char *file;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gsql_stock_init</NAME>
+<RETURNS>void</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_factory_add</NAME>
+<RETURNS>void</RETURNS>
+GSQLStockIcon *stock_icons, gint n_elements
+</FUNCTION>
+<MACRO>
+<NAME>GSQL_CONF_WSPACE_SHOW_DBNAV</NAME>
+#define GSQL_CONF_WSPACE_SHOW_DBNAV			GSQL_CONF_ROOT_KEY "/workspace/show_navarea"
+</MACRO>
+<MACRO>
+<NAME>GSQL_CONF_WSPACE_SHOW_MESS</NAME>
+#define GSQL_CONF_WSPACE_SHOW_MESS			GSQL_CONF_ROOT_KEY "/workspace/show_messarea"
+</MACRO>
+<MACRO>
+<NAME>MSG_LEN</NAME>
+#define MSG_LEN 2048
+</MACRO>
+<STRUCT>
+<NAME>GSQLWorkspace</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GSQLWorkspace</NAME>
+struct _GSQLWorkspace
+{
+	GtkWidget 	*content_area;
+	GtkTreeView *details_tv;
+	GtkListStore *details_common_store;
+	GtkWidget 	*messages_area;
+	GtkTreeView *messages_tv;
+	GtkWidget 	*navigation_area;
+	GtkTreeView *navigation_tv;
+	
+	gboolean  show_navigation_area;
+	gboolean  show_messages_area;
+};
+</STRUCT>
+<MACRO>
+<NAME>MSG_NORMAL_STR</NAME>
+#define MSG_NORMAL_STR "NORMAL"
+</MACRO>
+<MACRO>
+<NAME>MSG_NOTICE_STR</NAME>
+#define MSG_NOTICE_STR "NOTICE"
+</MACRO>
+<MACRO>
+<NAME>MSG_WARNING_STR</NAME>
+#define MSG_WARNING_STR "WARNING"
+</MACRO>
+<MACRO>
+<NAME>MSG_ERROR_STR</NAME>
+#define MSG_ERROR_STR "ERROR"
+</MACRO>
+<MACRO>
+<NAME>MSG_DBOUTPUT_STR</NAME>
+#define MSG_DBOUTPUT_STR "DBOUTPUT"
+</MACRO>
+<FUNCTION>
+<NAME>gsql_workspace_new</NAME>
+<RETURNS>GSQLWorkspace  *</RETURNS>
+GSQLSession *session
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_workspace_free</NAME>
+<RETURNS>void</RETURNS>
+GSQLSession *session
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_message_add</NAME>
+<RETURNS>void</RETURNS>
+GSQLWorkspace *workspace, gint type, gchar * msg
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_notebook_header_new</NAME>
+<RETURNS>GtkWidget *</RETURNS>
+GtkWidget * icon,gchar * label,gboolean close_button,gint direction
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_tree_view_remove_column</NAME>
+<RETURNS>void</RETURNS>
+gpointer column,gpointer treeview
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_source_buffer_get_delim_block</NAME>
+<RETURNS>gchar  *</RETURNS>
+GtkTextIter * iter,GtkTextIter ** block_start,GtkTextIter ** block_end
+</FUNCTION>
+<MACRO>
+<NAME>textdomain</NAME>
+#  define textdomain(String) (String)
+</MACRO>
+<MACRO>
+<NAME>gettext</NAME>
+#  define gettext(String) (String)
+</MACRO>
+<MACRO>
+<NAME>dgettext</NAME>
+#  define dgettext(Domain,Message) (Message)
+</MACRO>
+<MACRO>
+<NAME>dcgettext</NAME>
+#  define dcgettext(Domain,Message,Type) (Message)
+</MACRO>
+<MACRO>
+<NAME>bindtextdomain</NAME>
+#  define bindtextdomain(Domain,Directory) (Domain)
+</MACRO>
+<MACRO>
+<NAME>_</NAME>
+#  define _(String) (String)
+</MACRO>
+<MACRO>
+<NAME>Q_</NAME>
+#  define Q_(String) g_strip_context ((String), (String))
+</MACRO>
+<MACRO>
+<NAME>N_</NAME>
+#  define N_(String) (String)
+</MACRO>
+<MACRO>
+<NAME>HOOKUP_OBJECT</NAME>
+#define HOOKUP_OBJECT(component,widget,name) \
+  g_object_set_data_full (G_OBJECT (component), name, \
+    gtk_widget_ref (widget), (GDestroyNotify) gtk_widget_unref)
+</MACRO>
+<MACRO>
+<NAME>HOOKUP_OBJECT_NO_REF</NAME>
+#define HOOKUP_OBJECT_NO_REF(component,widget,name) \
+  g_object_set_data (G_OBJECT (component), name, widget)
+</MACRO>
+<MACRO>
+<NAME>GSQL_THREAD_ENTER</NAME>
+#define GSQL_THREAD_ENTER gdk_threads_enter ()
+</MACRO>
+<MACRO>
+<NAME>GSQL_THREAD_LEAVE</NAME>
+#define GSQL_THREAD_LEAVE \
+				{\
+					gdk_flush (); \
+					gdk_threads_leave (); \
+				}
+</MACRO>
+<VARIABLE>
+<NAME>gsql_window</NAME>
+extern GtkWidget   *gsql_window;
+</VARIABLE>
+<FUNCTION>
+<NAME>add_pixmap_directory</NAME>
+<RETURNS>void</RETURNS>
+const gchar * directory
+</FUNCTION>
+<FUNCTION>
+<NAME>create_pixmap</NAME>
+<RETURNS>GtkWidget  *</RETURNS>
+const gchar * filename
+</FUNCTION>
+<FUNCTION>
+<NAME>create_pixbuf</NAME>
+<RETURNS>GdkPixbuf  *</RETURNS>
+const gchar * filename
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_messages_popup_menu_cb</NAME>
+<RETURNS>gboolean</RETURNS>
+GtkWidget *tv, void *user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_messages_button_press_cb</NAME>
+<RETURNS>gboolean</RETURNS>
+GtkWidget *tv, GdkEventButton *event, gpointer data
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_messages_key_press_cb</NAME>
+<RETURNS>gboolean</RETURNS>
+GtkWidget *tv, GdkEventKey *event, gpointer user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>on_copy_text_messages_activate</NAME>
+<RETURNS>void</RETURNS>
+GtkMenuItem * menuitem,gpointer user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>on_select_all_messages_activate</NAME>
+<RETURNS>void</RETURNS>
+GtkMenuItem * menuitem,gpointer user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>on_save_to_file_messages_activate</NAME>
+<RETURNS>void</RETURNS>
+GtkMenuItem * menuitem,gpointer user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>on_clear_all_messages_activate</NAME>
+<RETURNS>void</RETURNS>
+GtkMenuItem * menuitem,gpointer user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>gsql_message_save_selection_foreach</NAME>
+<RETURNS>void</RETURNS>
+GtkTreeModel *model,GtkTreePath *path,GtkTreeIter *iter,gpointer data
+</FUNCTION>

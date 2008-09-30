@@ -1,0 +1,5 @@
+usr/lib/gsql/engines/libgsqlengine_oracle*.so
+usr/share/pixmaps/gsql/oracle/*
+usr/share/gsql/glade/oracle/*
+usr/share/gsql/ui/oracle/*
+usr/share/gsql/template/*

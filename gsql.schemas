@@ -1,0 +1,252 @@
+<gconfschemafile>
+  <schemalist>
+
+    <schema>
+      <key>/schemas/apps/gsql/workspace/show_dbnavigator</key>
+      <applyto>/apps/gsql/workspace/show_dbnavigator</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show the database navigator</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+
+    <schema>
+      <key>/schemas/apps/gsql/workspace/show_messages</key>
+      <applyto>/apps/gsql/workspace/show_messages</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show the messages area</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gsql/ui/resotre_size_and_position</key>
+      <applyto>/apps/gsql/ui/resotre_size_and_position</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Restore position and size</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_size_x</key>
+      <applyto>/apps/gsql/ui/window_size_x</applyto>
+      <owner>gsql</owner>
+      <type>int</type>
+      <default>800</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_size_y</key>
+      <applyto>/apps/gsql/ui/window_size_y</applyto>
+      <owner>gsql</owner>
+      <type>int</type>
+      <default>600</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_pos_x</key>
+      <applyto>/apps/gsql/ui/window_pos_x</applyto>
+      <owner>gsql</owner>
+      <type>int</type>      
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_pos_y</key>
+      <applyto>/apps/gsql/ui/window_pos_y</applyto>
+      <owner>gsql</owner>
+      <type>int</type>      
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_maximized</key>
+      <applyto>/apps/gsql/ui/window_maximized</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/gsql/editor/font_name</key>
+      <applyto>/apps/gsql/editor/font_name</applyto>
+      <owner>gsql</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Source editor font</short>
+        <long>
+        </long>
+      </locale>
+    </schema>    
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/use_system_font</key>
+      <applyto>/apps/gsql/editor/use_system_font</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Use GNOME default monospace font</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/use_space_instead_tab</key>
+      <applyto>/apps/gsql/editor/use_space_instead_tab</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/tab_width</key>
+      <applyto>/apps/gsql/editor/tab_width</applyto>
+      <owner>gsql</owner>
+      <type>int</type>
+      <default>8</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/show_line_number</key>
+      <applyto>/apps/gsql/editor/show_line_number</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/highlight_line</key>
+      <applyto>/apps/gsql/editor/highlight_line</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/enable_text_wrapping</key>
+      <applyto>/apps/gsql/editor/enable_text_wrapping</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/editor/enable_auto_indent</key>
+      <applyto>/apps/gsql/editor/enable_auto_indent</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/engines/oracle/use_system_environment</key>
+      <applyto>/apps/gsql/engines/oracle/use_system_environment</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/engines/oracle/environment</key>
+      <applyto>/apps/gsql/engines/oracle/environment</applyto>
+      <owner>gsql</owner>      
+      <type>list</type>
+      <list_type>string</list_type>      
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/engines/oracle/enable_trace</key>
+      <applyto>/apps/gsql/engines/oracle/enable_trace</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    
+  </schemalist>
+</gconfschemafile>

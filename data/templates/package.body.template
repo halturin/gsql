@@ -1,0 +1,28 @@
+PACKAGE BODY YHHHHH
+IS
+--
+-- To modify this template, edit file PKGBODY.TXT in TEMPLATE 
+-- directory of SQL Navigator
+--
+-- Purpose: Briefly explain the functionality of the package body
+--
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- ---------   ------  ------------------------------------------      
+   -- Enter procedure, function bodies as shown below
+
+   PROCEDURE procedure_name
+    ( param1 IN datatype DEFAULT default_value, 
+      param2 IN OUT datatype)
+    IS
+      -- Enter the procedure variables here. As shown below
+     variable_name        datatype  NOT NULL DEFAULT default_value;
+   BEGIN 
+       statements ;
+   EXCEPTION
+      WHEN exception_name THEN
+          statements ;
+   END;
+
+   -- Enter further code below as specified in the Package spec.
+END;

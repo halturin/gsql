@@ -1,0 +1,21 @@
+PROCEDURE FFF
+   ( param1 IN datatype DEFAULT default_value,
+     param2 IN OUT datatype)
+   IS
+--
+-- To modify this template, edit file PROC.TXT in TEMPLATE 
+-- directory of SQL Navigator
+--
+-- Purpose: Briefly explain the functionality of the procedure
+--
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- ---------   ------  -------------------------------------------       
+   variable_name                 datatype;
+   -- Declare program variables as shown above
+BEGIN
+    statements;
+EXCEPTION
+    WHEN exception_name THEN
+        statements ;
+END; -- Procedure

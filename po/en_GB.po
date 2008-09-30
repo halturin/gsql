@@ -1,0 +1,431 @@
+# GSQL British English (en_GB) translation.
+# Copyright (C) 2006
+# This file is distributed under the same license as the GSQL package.
+# Halturin Taras <halturin@gmail.com>, 2006.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GSQL 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-10-28 18:43+0300\n"
+"PO-Revision-Date: 2006-07-24 16:15+0500\n"
+"Last-Translator: Halturin Taras <halturin@gmail.com>\n"
+"Language-Team: ru <en@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: plugins/vte/vte.c:52
+msgid "Open terminal"
+msgstr ""
+
+#: libgsql/stock.c:82 src/gsqlmenu.c:57
+msgid "Close session"
+msgstr ""
+
+#: libgsql/stock.c:83 src/gsqlmenu.c:55
+msgid "New session"
+msgstr ""
+
+#: libgsql/stock.c:84 engines/mysql/engine_menu.c:47
+#: engines/oracle/engine_menu.c:47
+msgid "Commit"
+msgstr ""
+
+#: libgsql/stock.c:85 engines/mysql/engine_menu.c:48
+#: engines/oracle/engine_menu.c:48
+msgid "Rollback"
+msgstr ""
+
+#: libgsql/workspace.c:104
+msgid "Attribute"
+msgstr ""
+
+#: libgsql/workspace.c:119 engines/oracle/engine_conf.c:125
+msgid "Value"
+msgstr ""
+
+#: libgsql/workspace.c:133
+msgid "Detail"
+msgstr ""
+
+#: libgsql/workspace.c:151
+msgid ""
+" In this area a detailed information about the selected object from the tree "
+"of database objects is displayed. In case when a class of objects is "
+"selected, e.g. Triggers, a list of objects will be displayed. It is possible "
+"then to select individual objects from this list and perform actions with "
+"all the selected objects.\n"
+"\n"
+" Note that the actual behaviour of this area depends completely on the "
+"implementation of pluggable DBMS engines.  Due to the intrinsic differences "
+"between DBMSs the consistensy of this object area look-and-feel can only be "
+"assured to a certain extent."
+msgstr ""
+
+#: libgsql/workspace.c:189
+msgid "Sessions"
+msgstr ""
+
+#: libgsql/common.c:82 libgsql/common.c:106
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr ""
+
+#: libgsql/conf.c:39
+msgid "Cannot initialize configuration manager."
+msgstr ""
+
+#: libgsql/session.c:91
+msgid "Workspace widget fault. Please check your code for a bug"
+msgstr ""
+
+#: engines/mysql/engine_mysql.c:124 engines/oracle/engine_oracle.c:133
+msgid "Database name"
+msgstr ""
+
+#: engines/mysql/engine_mysql.c:141 engines/oracle/engine_oracle.c:150
+msgid "Username"
+msgstr ""
+
+#: engines/mysql/engine_mysql.c:158 engines/oracle/engine_oracle.c:167
+msgid "Password"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:35 engines/oracle/engine_menu.c:35
+msgid "Server output"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:35 engines/oracle/engine_menu.c:35
+#: src/gsqlmenu.c:45
+msgid "Exit"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:40
+msgid "MySQL"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:42 engines/oracle/engine_menu.c:42
+msgid "Empty Recycle bin"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:43 engines/oracle/engine_menu.c:43
+msgid "Job manager"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:45 engines/oracle/engine_menu.c:45
+msgid "Find code"
+msgstr ""
+
+#: engines/mysql/engine_menu.c:46 engines/oracle/engine_menu.c:46
+msgid "Find object"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:84
+msgid "Use the system environment"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:113
+msgid "Name"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:138
+msgid "Add"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:142 src/gsqlmenu.c:39
+msgid "Edit"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:146
+msgid "Delete"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:150
+msgid "<b>Environment</b>"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:170
+msgid "Enable trace (may affect perfomance)"
+msgstr ""
+
+#: engines/oracle/engine_conf.c:174 src/gsql_prefs_dialog.glade:142
+#: src/gsql_prefs_dialog.glade:406
+msgid "<b>Options</b>"
+msgstr ""
+
+#: engines/oracle/engine_session.c:92
+#, c-format
+msgid ""
+"Connect to the Oracle database \"<b>%s</b>\" succesfully\n"
+"<small>(%s)</small>"
+msgstr ""
+
+#: engines/oracle/engine_oracle.c:189
+msgid "Connect as "
+msgstr ""
+
+#: engines/oracle/engine_oracle.c:203
+msgid "Options"
+msgstr ""
+
+#: engines/oracle/tmp/oracle.c:243
+msgid "Prepare to execute SQL..."
+msgstr ""
+
+#: engines/oracle/tmp/oracle.c:294
+msgid "Start SQL execution..."
+msgstr ""
+
+#: engines/oracle/tmp/oracle.c:309
+msgid "Query execution finished"
+msgstr ""
+
+#: engines/oracle/tmp/oracle.c:612
+#, c-format
+msgid "Bind value [:%d] = %s"
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:203
+msgid "Create a new object "
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:215
+msgid "Clone current object "
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:228
+msgid "Revert to previous state "
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:241
+msgid "Generate SQL code "
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:254
+msgid "Apply changes"
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:275
+msgid "Find..."
+msgstr ""
+
+#: engines/oracle/tmp/oraclehnds.c:294
+msgid "Select the tag to jump to"
+msgstr ""
+
+#: engines/oracle/engine_menu.c:40
+msgid "Oracle"
+msgstr ""
+
+#: src/main.c:55
+msgid "GSQL. Integrated Database Development Tool"
+msgstr ""
+
+#: src/main.c:84 src/gsql.c:169
+msgid "Engines not found at "
+msgstr ""
+
+#: src/gsqlhelp.c:38
+msgid "_Help"
+msgstr ""
+
+#: src/gsqlhelp.c:40
+msgid "User's Manual"
+msgstr ""
+
+#: src/gsqlhelp.c:42
+msgid "Home page"
+msgstr ""
+
+#: src/gsqlhelp.c:43
+msgid "API Reference"
+msgstr ""
+
+#: src/gsqlhelp.c:44
+msgid "Bug report"
+msgstr ""
+
+#: src/gsqlhelp.c:45
+msgid "Requests'n'Questions"
+msgstr ""
+
+#: src/gsqlhelp.c:46
+msgid "About"
+msgstr ""
+
+#: src/gsqlhelp.c:145
+msgid ""
+"GSQL is an integrated database development tool. This application developing "
+"for the GNOME Desktop"
+msgstr ""
+
+#: src/gsqlmenu.c:38
+msgid "_File"
+msgstr ""
+
+#: src/gsqlmenu.c:40
+msgid "Search"
+msgstr ""
+
+#: src/gsqlmenu.c:41
+msgid "_View"
+msgstr ""
+
+#: src/gsqlmenu.c:42
+msgid "_Session"
+msgstr ""
+
+#: src/gsqlmenu.c:43
+msgid "_Tools"
+msgstr ""
+
+#: src/gsqlmenu.c:47
+msgid "Navigator"
+msgstr ""
+
+#: src/gsqlmenu.c:48
+msgid "Messages window"
+msgstr ""
+
+#: src/gsqlmenu.c:50
+msgid "Next workspace"
+msgstr ""
+
+#: src/gsqlmenu.c:50 src/gsqlmenu.c:51
+msgid "Switch to the next workspace"
+msgstr ""
+
+#: src/gsqlmenu.c:51
+msgid "Previous workspace"
+msgstr ""
+
+#: src/gsqlmenu.c:55
+msgid "Open new session"
+msgstr ""
+
+#: src/gsqlmenu.c:56
+msgid "Reconnect"
+msgstr ""
+
+#: src/gsqlmenu.c:56
+msgid "Reconnect current session"
+msgstr ""
+
+#: src/gsqlmenu.c:57
+msgid "Close current session"
+msgstr ""
+
+#: src/gsqlmenu.c:58
+msgid "Close all session"
+msgstr ""
+
+#: src/gsql.c:177
+msgid "Database logon"
+msgstr ""
+
+#: src/gsql.c:194
+msgid "Choose the engine:"
+msgstr ""
+
+#: src/gsql.c:253
+msgid "Close session(s)"
+msgstr ""
+
+#: src/gsql.c:279
+msgid "Select all"
+msgstr ""
+
+#: plugins/vte/vte_dialog_conf.glade:8
+msgid "GSQL terminal plugin "
+msgstr ""
+
+#: plugins/vte/vte_dialog_conf.glade:44
+msgid ""
+"Available options:\n"
+"\t<b>%h</b> - hostname\t<b>%u</b> - username\n"
+"\t<b>%d</b> - database\t<b>%p</b> - password\n"
+"\t<small>Example command: /usr/bin/mysql -h<b>%h</b> -u<b>%u</b> -D<b>%d</b> "
+"-p<b>%p</b></small>"
+msgstr ""
+
+#: plugins/vte/vte_dialog_conf.glade:73 src/gsql_prefs_dialog.glade:510
+msgid "gtk-close"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:8
+msgid "Preferences"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:49
+msgid "Start with:"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:61
+msgid "Show database navigation area"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:76
+msgid "Show message area"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:94
+msgid "<b>Workspace</b>"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:126
+msgid "Restore size and position of the window"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:164
+msgid "General"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:198
+msgid "Use system font"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:229
+msgid "<b>Font</b>"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:261
+msgid "Insert spaces instead tabs"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:277
+msgid "Tab width"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:314
+msgid "<b>Tabs</b>"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:347
+msgid "Display line numbers"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:361
+msgid "Highlight current line"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:375
+msgid "Enable text wrapping"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:389
+msgid "Enable auto indent"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:429
+msgid "Editor"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:466
+msgid "Configure"
+msgstr ""
+
+#: src/gsql_prefs_dialog.glade:485
+msgid "Plugins"
+msgstr ""

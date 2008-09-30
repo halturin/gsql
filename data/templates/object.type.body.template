@@ -1,0 +1,47 @@
+TYPE BODY DDDD
+IS
+--
+-- To modify this template, edit file TYPBODY.TXT in TEMPLATE
+-- directory of SQL Navigator
+--
+-- Purpose: Briefly explain the functionality of the type body
+--
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- ---------   ------  ------------------------------------------
+--
+--
+
+
+   -- Enter type method definitions as shown below
+
+   MEMBER PROCEDURE procedure_name
+    ( param1 IN OUT datatype,
+      param2 IN datatype DEFAULT default_value)
+   IS
+     -- Enter the method variables here. As shown below
+     variable_name        datatype  NOT NULL DEFAULT default_value;
+   BEGIN
+       statements ;
+   EXCEPTION
+      WHEN exception_name THEN
+          statements ;
+   END;
+   --
+   --
+   MEMBER FUNCTION function_name
+     ( param1 IN OUT datatype,
+       param2 IN datatype DEFAULT default_value)
+     RETURN  datatype
+   IS 
+     -- Enter the method variables here. As shown below
+     variable_name        datatype  NOT NULL DEFAULT default_value;
+   BEGIN
+       statements ;
+   EXCEPTION
+      WHEN exception_name THEN
+          statements ;
+   END;
+   --
+   --
+END;
