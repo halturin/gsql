@@ -27,6 +27,7 @@
 
 static GSQLMenu  *gsql_menu;
 extern GtkWidget *gsql_window;
+
 void
 gsql_menu_init()
 {
@@ -54,15 +55,29 @@ gsql_menu_merge (gchar *ui_file, GtkActionGroup *action)
 	if (ret)
 	{
 		gtk_ui_manager_ensure_update (gsql_menu->ui);
-		GSQL_DEBUG ("UI:\n %s", gtk_ui_manager_get_ui (gsql_menu->ui));
 		return ret;
-	} else
-	{
+		
+	} else	{
 		gtk_ui_manager_remove_action_group (gsql_menu->ui, action);
 	}
 	
 	return 0;
 }
+
+guint
+gsql_menu_merge_ui (gchar *ui_file)
+{
+	GError **error;
+	guint ret;
+	
+	ret = gtk_ui_manager_add_ui_from_file (gsql_menu->ui, ui_file, error);
+	
+	if (ret)
+		gtk_ui_manager_ensure_update (gsql_menu->ui);
+	
+	return ret;
+}
+
 
 guint
 gsql_menu_merge_from_string (const gchar *str, GtkActionGroup *action)
@@ -78,10 +93,9 @@ gsql_menu_merge_from_string (const gchar *str, GtkActionGroup *action)
 	if (ret)
 	{
 		gtk_ui_manager_ensure_update (gsql_menu->ui);
-		GSQL_DEBUG ("UI:\n %s", gtk_ui_manager_get_ui (gsql_menu->ui));
 		return ret;
-	} else
-	{
+		
+	} else	{
 		gtk_ui_manager_remove_action_group (gsql_menu->ui, action);
 	}
 	

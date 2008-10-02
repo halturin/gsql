@@ -62,6 +62,9 @@ static GtkToggleActionEntry gsqlmenu_toggle_actions[] =
 	{ "ActionShowMessarea", NULL, N_("Messages"), "F11", N_("Messages"), G_CALLBACK(on_messarea_activate), TRUE }
 };
 
+
+
+
 GtkWidget *
 gsql_main_menu_init()
 {
@@ -81,8 +84,8 @@ gsql_main_menu_init()
 	gtk_action_group_add_toggle_actions(action, gsqlmenu_toggle_actions,
 									G_N_ELEMENTS (gsqlmenu_toggle_actions), NULL);
 	gsql_menu_merge (PACKAGE_UI_DIR "/gsql.ui", action);
-	
-	
+		
+	gsql_menu_merge_ui (PACKAGE_UI_DIR "/gsqltool.ui");
 	
 	return gsql_menu_get_widget("/MenuMain");	
 };

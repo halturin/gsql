@@ -1,0 +1,15 @@
+<!--*- xml -*-->
+<ui>
+  <toolbar name="ToolbarMain">
+		<toolitem name="NewFile" action="ActionFileNew" />
+		<toolitem name="OpenFile" action="ActionFileOpen" />
+		<toolitem name="SaveFile" action="ActionFileSave" />
+		<toolitem name="ReloadFile" action="ActionFileReload" />
+		<separator />
+		<toolitem name="NewSession" action="ActionMenuNewSession"/>
+      	<separator />
+      	<placeholder name="PHolderToolbarMain" />
+  </toolbar>
+  
+</ui>
+

@@ -56,9 +56,10 @@ gsql_help_menu_init()
 	action = gtk_action_group_new ("ActionsMenuHelp");
 	gtk_action_group_add_actions (action, gsqlmenu_action, 
 								  G_N_ELEMENTS (gsqlmenu_action), NULL);	
-	gsql_menu_merge (PACKAGE_UI_DIR "/gsqlhelp.ui", action);
-	return;
-};
+
+	gsql_menu_merge_action (action);
+	
+}
 
 
 

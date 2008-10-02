@@ -50,9 +50,7 @@ add_pixmap_directory (const gchar * directory)
 
 static gchar *
 find_pixmap_file (const gchar * filename)
-{
-	GSQL_TRACE_FUNC
-	
+{	
 	GList *elem;
 
   /* We step through each of the pixmaps directory to find it. */
@@ -76,9 +74,7 @@ find_pixmap_file (const gchar * filename)
 
 GtkWidget *
 create_pixmap (const gchar * filename)
-{
-	GSQL_TRACE_FUNC
-		
+{		
 	gchar *pathname = NULL;
  	GtkWidget *pixmap;
 
@@ -101,9 +97,7 @@ create_pixmap (const gchar * filename)
 
 GdkPixbuf *
 create_pixbuf (const gchar * filename)
-{
-	GSQL_TRACE_FUNC
-		
+{		
 	gchar *pathname = NULL;
 	GdkPixbuf *pixbuf;
 	GError *error = NULL;

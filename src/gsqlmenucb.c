@@ -53,8 +53,7 @@ on_file_new_sql_activate (GtkMenuItem *mi, gpointer data)
 	
 	gsql_files_open_file (session, NULL, NULL);
 
-	return;
-};
+}
 
 void
 on_file_open_activate (GtkMenuItem *mi, gpointer data)
@@ -102,8 +101,10 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 	if (ret == GTK_RESPONSE_OK)
 	{
 		file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+		
 		if (folder)
 			g_free (folder);
+		
 		folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (chooser));
 		
 		if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (encoding_list), &iter))
@@ -112,17 +113,16 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 			gtk_tree_model_get (model, &iter,
 						1, &encoding, -1);
 			GSQL_DEBUG ("Encoding selected: %s", encoding);
-		};
+		}
 		
 		if (file != NULL)
-		{
 			gsql_files_open_file (session, file, encoding);
-		};
-	};
+
+	}
 	
 	gtk_widget_destroy (chooser); 
-	return;
-};
+
+}
 
 void
 on_file_save_activate (GtkMenuItem *mi, gpointer data)
@@ -135,7 +135,8 @@ on_file_save_activate (GtkMenuItem *mi, gpointer data)
 	g_return_if_fail (GSQL_IS_CONTENT (content));
 	
 	g_signal_emit_by_name (G_OBJECT(content), "save", FALSE);
-};
+	
+}
 
 void
 on_file_save_as_activate (GtkMenuItem *mi, gpointer data)
@@ -149,81 +150,7 @@ on_file_save_as_activate (GtkMenuItem *mi, gpointer data)
 	
 	g_signal_emit_by_name (G_OBJECT(content), "save", TRUE);
 
-/*	gsql_content_set_child (content, editor);
-	gsql_workspace_add_content (workspace, content);
-
-	GSQLSession *session;
-	GSQLContent *content;
-	GtkWidget *chooser;
-	gint ret;
-	gchar *file;
-	static gchar *folder = NULL;
-	gchar *old_name;
-	gchar *old_display_name;
-	gboolean old_is_file;
-	
-	session = gsql_session_get_current ();
-	g_return_if_fail (session != NULL);
-	
-	content = gsql_content_get_current (session);
-	g_return_if_fail (content != NULL);
-	
-	chooser = gtk_file_chooser_dialog_new (N_("Save as..."),
-					       NULL,
-					       GTK_FILE_CHOOSER_ACTION_SAVE,
-					       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					       GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
-					       NULL);
-	if (folder)
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER(chooser), 
-											 folder);
-
-	ret = gtk_dialog_run (GTK_DIALOG (chooser));
-	if (ret == GTK_RESPONSE_ACCEPT)
-	{
-		file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-		if (folder) 
-			g_free (folder);
-
-		folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (chooser));
-		GSQL_DEBUG ("Saving file as: [file=%s]", file);
-		
-		if (file != NULL)
-		{
-			old_name = content->name;
-			old_display_name = content->display_name;
-			old_is_file = content->is_file;
-			content->is_file = TRUE;
-			content->name = file; 
-			content->display_name = g_filename_display_basename (file);
-			
-			if (!gsql_files_save_file (content))
-			{
-				g_free (content->name);
-				g_free (content->display_name);
-				content->name = old_name;
-				content->display_name = old_display_name;
-				content->is_file = old_is_file;
-				
-
-				gtk_widget_destroy (chooser);
-				return;
-			};
-			if (old_name == old_display_name)
-				g_free (old_name);
-			else 
-			{
-				g_free (old_name);
-				g_free (old_display_name);
-			};
-			
-			gsql_content_set_status (content, FALSE);
-		};
-	};
-	gtk_widget_destroy (chooser);
-*/
-	return;
-};
+}
 
 void
 on_file_close_activate (GtkMenuItem *mi, gpointer data)
@@ -237,43 +164,7 @@ on_file_close_activate (GtkMenuItem *mi, gpointer data)
 	
 	g_signal_emit_by_name (G_OBJECT(content), "close", FALSE);
 	
-/*	if (!content)
-		return;
-	
-	// unsaved file?
-	if ((content->is_file) && (content->status))
-	{
-		GtkDialog * dialog;
-		GladeXML* gxml;
-		gint ret=0;
-		
-		gxml = glade_xml_new (GSQL_GLADE_DIALOGS, "gsql_unsaved_file_dialog", NULL);
-		g_return_if_fail(gxml);
-		
-		dialog = (GtkDialog *) glade_xml_get_widget (gxml, "gsql_unsaved_file_dialog");
-		ret = gtk_dialog_run (dialog);
-		gtk_widget_destroy ((GtkWidget *) dialog);
-		g_object_unref(G_OBJECT(gxml));
-		
-		switch (ret)
-		{
-			case 1: // Save
-				if (!gsql_files_save_file (content))
-					return;
-				break;
-			
-			case 2: // Cancel
-				return;
-			
-			case 3: // Discard
-				break;
-		};
-		
-	}
-	gsql_content_remove (content);
-*/	
-	return;
-};
+}
 
 void
 on_file_close_all_activate (GtkMenuItem *mi, gpointer data)
@@ -295,23 +186,7 @@ on_file_reload_activate (GtkMenuItem *mi, gpointer data)
 	
 	g_signal_emit_by_name (G_OBJECT(content), "revert");
 
-/*	GSQLSession *session = NULL;
-	GSQLContent *content = NULL;
-	
-	session = gsql_session_get_current ();
-	g_return_if_fail (session != NULL);
-	content = gsql_content_get_current (session);
-	
-	if (!content)
-		return;
-	
-	if ((!content->is_file) || (content->name == NULL))
-		return;
-	
-	gsql_files_reload_file (content, content->name, content->file_encoding);
-*/	
-	return;
-};
+}
 
 void
 on_exit_activate (GtkMenuItem * mi, gpointer data)
@@ -319,8 +194,8 @@ on_exit_activate (GtkMenuItem * mi, gpointer data)
 	GSQL_TRACE_FUNC
 
 	gsql_window_clean_exit();
-	return;
-};
+
+}
 
 
 void
@@ -334,16 +209,14 @@ on_navarea_activate (GtkToggleAction *ta, gpointer data)
 	
 	session = gsql_session_get_active ();
 	
-	if (session == NULL)
+	if (!session)
 		return;
 	
 	workspace = gsql_session_get_workspace (session);
 	status = gtk_toggle_action_get_active (ta);
 	
-	gsql_workspace_set_navigate_visible (workspace, 
-										 status);
-	return;
-};
+	gsql_workspace_set_navigate_visible (workspace, status);
+}
 
 void
 on_messarea_activate (GtkToggleAction *ta, gpointer data)
@@ -356,16 +229,15 @@ on_messarea_activate (GtkToggleAction *ta, gpointer data)
 	
 	session = gsql_session_get_active ();
 	
-	if (session == NULL)
+	if (!session)
 		return;
 	
 	workspace = gsql_session_get_workspace (session);
 	status = gtk_toggle_action_get_active (ta);
 	
-	gsql_workspace_set_messages_visible (workspace, 
-										 status);
-	return;
-};
+	gsql_workspace_set_messages_visible (workspace, status);
+
+}
 
 void
 on_next_session (GtkMenuItem *mi, gpointer data)
@@ -374,11 +246,11 @@ on_next_session (GtkMenuItem *mi, gpointer data)
 
 	GtkNotebook *sessions;
 
-	sessions = GTK_NOTEBOOK (g_object_get_data (G_OBJECT (gsql_window), "sessions"));
+	sessions = GTK_NOTEBOOK (g_object_get_data (G_OBJECT (gsql_window), 
+												"sessions"));
 	gtk_notebook_next_page (sessions);
 
-	return;	
-};
+}
 
 void
 on_prev_session (GtkMenuItem *mi, gpointer data)
@@ -387,11 +259,11 @@ on_prev_session (GtkMenuItem *mi, gpointer data)
 
 	GtkNotebook *sessions;
 
-	sessions = GTK_NOTEBOOK (g_object_get_data (G_OBJECT (gsql_window), "sessions"));
+	sessions = GTK_NOTEBOOK (g_object_get_data (G_OBJECT (gsql_window), 
+												"sessions"));
 	gtk_notebook_prev_page (sessions);
 
-	return;	
-};
+}
 
 void
 on_next_page (GtkMenuItem *mi, gpointer data)
@@ -406,8 +278,7 @@ on_next_page (GtkMenuItem *mi, gpointer data)
 	
 	gsql_workspace_next_content (workspace);
 
-	return;	
-};
+}
 
 void
 on_prev_page (GtkMenuItem *mi, gpointer data)
@@ -422,8 +293,7 @@ on_prev_page (GtkMenuItem *mi, gpointer data)
 	
 	gsql_workspace_prev_content (workspace);
 
-	return;
-};
+}
 
 void
 on_content_details (GtkMenuItem *mi, gpointer data)
@@ -437,8 +307,8 @@ on_content_details (GtkMenuItem *mi, gpointer data)
 	workspace = gsql_session_get_workspace (session);
 	
 	gsql_workspace_set_content_page (workspace, NULL);  
-	return;
-};
+
+}
 
 void
 on_preferences_activate (GtkMenuItem *mi, gpointer data)
@@ -446,8 +316,7 @@ on_preferences_activate (GtkMenuItem *mi, gpointer data)
 	GSQL_TRACE_FUNC
 
 	gsql_conf_dialog();
-	return;
-};
+}
 
 
 void
@@ -471,22 +340,29 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 
 	gchar logon_message[256];
 
-	if ((dialog = (GtkDialog *) create_dialog_logon()) == NULL)
+	dialog = (GtkDialog *) create_dialog_logon();
+	
+	if (!dialog)
 		return;
 	
 	while (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
 	{
 		dialog_vbox = GTK_DIALOG (dialog)->vbox;
+		
 		notebook = (GtkWidget *) g_object_get_data (G_OBJECT (dialog_vbox),
 													"notebook");
 		page_num = gtk_notebook_get_current_page (GTK_NOTEBOOK (notebook));
 		logon_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook),
 														  page_num);
+		
 		engine = (GSQLEngine *) g_object_get_data (G_OBJECT (logon_widget), 
 														  "engine");
-		if (!engine->session_open)	continue;
+		if (!engine->session_open)	
+			continue;
 		
-		if ((session = engine->session_open (logon_widget, logon_message)) == NULL)
+		session = engine->session_open (logon_widget, logon_message);
+		
+		if (!session)
 		{
 			msg = (GtkDialog *) gtk_message_dialog_new (GTK_WINDOW (dialog), 
                                                         0,
@@ -495,20 +371,17 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 														logon_message);
 			gtk_dialog_run (msg);
 			gtk_widget_destroy ((GtkWidget *) msg);
+			
 			continue;
-		};
+		}
 
-		
 		break;
-	};
+	}
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	
-	if (!GSQL_IS_SESSION (session))
-	{
-		GSQL_DEBUG ("session != (GSQLSession *)");
-		return;
-	};
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
 	session->engine = engine;
 	sessions = g_object_get_data(G_OBJECT(gsql_window), "sessions");
 	session_name = gsql_session_get_name (session);
@@ -530,38 +403,7 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 	gtk_notebook_set_current_page (GTK_NOTEBOOK(sessions), ret);
 	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(sessions),
 							  GTK_WIDGET (session), TRUE);
-	return;
 
-}
-
-void
-on_session_commit (GtkMenuItem *mi, gpointer data)
-{
-	GSQL_TRACE_FUNC
-		
-	GSQLSession *session = NULL;
-	
-	session = gsql_session_get_active ();
-	
-	if (!session)
-		return;
-	
-	g_signal_emit_by_name (G_OBJECT (session), "commit", NULL);
-}
-
-void
-on_session_rollback (GtkMenuItem *mi, gpointer data)
-{
-	GSQL_TRACE_FUNC
-		
-	GSQLSession *session = NULL;
-	
-	session = gsql_session_get_active ();
-	
-	if (!session)
-		return;
-	
-	g_signal_emit_by_name (G_OBJECT (session), "rollback", NULL);
 }
 
 void
@@ -647,6 +489,7 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 	}
 	
 	authors[n] = NULL;
+	
 	if (buffer)
 		free (buffer);
 
@@ -658,11 +501,12 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 		N_("GSQL is an integrated database development tool. This application developing for the GNOME Desktop");
 
 
-	if (about != NULL)
+	if (about)
 	{
 		gtk_window_set_transient_for (GTK_WINDOW (about),
 					      GTK_WINDOW (gsql_window));
 		gtk_window_present (GTK_WINDOW (about));
+		
 		return;
 	}
 
@@ -679,10 +523,12 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 			      "logo", logo, NULL);
 
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (about), TRUE);
+	
 	g_signal_connect (about, "response", G_CALLBACK (gtk_widget_destroy),
 			  NULL);
 	g_signal_connect (about, "destroy", G_CALLBACK (gtk_widget_destroyed),
 			  &about);
+	
 	gtk_window_set_transient_for (GTK_WINDOW (about),
 				      GTK_WINDOW (gsql_window));
 	gtk_window_present (GTK_WINDOW (about));

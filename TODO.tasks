@@ -2,14 +2,17 @@
 <gtodo>
   <category title="Personal" place="0">
     <item>
-      <attribute id="1206913884" priority="1" done="0" start_date="733132" enddate="99999999" notify="0" endtime="-60" last_edited="1206913884"/>
-      <summary>MySQL. &#x411;&#x430;&#x437;&#x43E;&#x432;&#x44B;&#x439; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x43E;&#x43D;&#x430;&#x43B;</summary>
-      <comment>1. &#x421;&#x43E;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x438;&#x435;
-2. &#x417;&#x430;&#x43A;&#x440;&#x44B;&#x442;&#x438;&#x435; &#x441;&#x435;&#x441;&#x438;&#x438;
-3. Commit/Rollback</comment>
+      <attribute id="1207000851" priority="1" done="0" start_date="733133" enddate="733193" notify="0" endtime="-60" last_edited="1207426011"/>
+      <summary>My Schema</summary>
+      <comment>&#x41E;&#x43F;&#x446;&#x438;&#x43E;&#x43D;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;... &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x430;&#x432;&#x442;&#x43E;&#x43C;&#x430;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43A;&#x438;&#x439; &#x44D;&#x43A;&#x441;&#x43F;&#x430;&#x43D;&#x434; &#x441;&#x430;&#x431;&#x436;&#x430; &#x43F;&#x440;&#x438; &#x440;&#x430;&#x437;&#x432;&#x43E;&#x440;&#x43E;&#x442;&#x435; &#x440;&#x443;&#x442;&#x43E;&#x432;&#x43E;&#x433;&#x43E; &#x438;&#x442;&#x435;&#x43C;&#x430; &#x432; navigation. &#x422;&#x430;&#x43A; &#x443;&#x434;&#x43E;&#x431;&#x43D;&#x435;&#x439; &#x431;&#x443;&#x434;&#x435;&#x442;, &#x43D;&#x443; &#x438; &#x432;&#x440;&#x43E;&#x434;&#x44C; &#x43A;&#x430;&#x43A; &#x441;&#x438;&#x43C;&#x43F;&#x430;&#x442;&#x438;&#x447;&#x43D;&#x435;&#x439;.</comment>
     </item>
     <item>
-      <attribute id="1206913938" priority="0" done="0" start_date="733132" enddate="733193" notify="0" endtime="-60" last_edited="1206914051"/>
+      <attribute id="1208883264" priority="1" done="0" start_date="733154" enddate="99999999" notify="0" endtime="-60" last_edited="1208883264"/>
+      <summary>Insert from CSV</summary>
+      <comment>&#x412; &#x43F;&#x435;&#x440;&#x441;&#x43F;&#x435;&#x43A;&#x442;&#x438;&#x432;&#x435; &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x430;&#x431;&#x436; &#x438;&#x431;&#x43E; &#x432;&#x435;&#x441;&#x44C;&#x43C;&#x430; &#x443;&#x434;&#x43E;&#x431;&#x43D;&#x43E;... &#x432;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x444;&#x430;&#x439;&#x43B;&#x43E; &#x438; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x442;&#x44C;  &#x432; &#x43A;&#x430;&#x43A;&#x443;&#x44E; &#x442;&#x430;&#x431;&#x43B;&#x438;&#x446;&#x443; &#x432;&#x441;&#x442;&#x430;&#x432;&#x438;&#x442;&#x44C;.</comment>
+    </item>
+    <item>
+      <attribute id="1206913938" priority="0" done="0" start_date="733132" enddate="733193" notify="0" endtime="-60" last_edited="1222806863"/>
       <summary>&#x420;&#x430;&#x437;&#x43D;&#x43E;&#x435;....</summary>
       <comment>
 9. &#x432;&#x438;&#x43D;&#x434;&#x43E;&#x432;&#x44B;&#x439; &#x432;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x442; &#x43A;&#x430;&#x440;&#x435;&#x442;&#x43A;&#x438; '\r' &#x432;&#x44B;&#x437;&#x44B;&#x432;&#x430;&#x435;&#x442; &#x442;&#x440;&#x443;&#x434;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x443; OCI
@@ -23,105 +26,7 @@
 
 
 10. &#x43D;&#x430; &#x437;&#x430;&#x43A;&#x440;&#x44B;&#x442;&#x438;&#x435; &#x432;&#x441;&#x435;&#x439; &#x43F;&#x440;&#x438;&#x431;&#x43B;&#x443;&#x434;&#x44B; &#x43E;&#x442;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x442;&#x44C; &#x437;&#x430;&#x43A;&#x440;&#x44B;&#x442;&#x438;&#x435; &#x441;&#x435;&#x441;&#x441;&#x438;&#x439;
-
-14. &#x43F;&#x43E;&#x43F;&#x440;&#x43E;&#x431;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x434;&#x435;&#x43B;&#x430;&#x442;&#x44C; &#x441;&#x435;&#x441;&#x441;&#x438;&#x44E; &#x43D;&#x435;&#x431;&#x43B;&#x43E;&#x43A;&#x438;&#x440;&#x443;&#x435;&#x43C;&#x43E;&#x439;
-	OCIAttrSet((dvoid *)fsvrhp, (ub4)OCI_HTYPE_SERVER, (dvoid *)TRUE, (ub4)0, (ub4)OCI_ATTR_NONBLOCKING_MODE, errhp);
-
-	&#x43D;&#x43E; &#x43F;&#x440;&#x438; &#x44D;&#x442;&#x43E;&#x43C; &#x43D;&#x430;&#x434;&#x43E; &#x431;&#x443;&#x434;&#x435;&#x442; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x43E;&#x43B;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x432;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x449;&#x430;&#x435;&#x43C;&#x44B;&#x435; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x442; OCI*
-	&#x43D;&#x430; &#x43F;&#x440;&#x435;&#x434;&#x43C;&#x435;&#x442; OCI_STILL_EXECUTING
-
-	&#x441;&#x435;&#x439;&#x447;&#x430;&#x441; &#x437;&#x430;&#x43B;&#x438;&#x43F;&#x430;&#x435;&#x442; &#x43D;&#x430; OCIStmtPrepare2 &#x438; OCIStmtRelease
-
---------------
-gtk_action_create_tool_item - Creates a toolbar item widget that proxies for the given action.</comment>
-    </item>
-    <item>
-      <attribute id="1207000296" priority="1" done="1" start_date="733133" completed_date="733134" enddate="733193" notify="0" endtime="-60" last_edited="1207089118"/>
-      <summary>&#x417;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A; &#x43E;&#x43A;&#x43D;&#x430;</summary>
-      <comment>&#x41F;&#x440;&#x438; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x438; &#x43D;&#x43E;&#x432;&#x43E;&#x439; &#x441;&#x435;&#x441;&#x441;&#x438;&#x438; (&#x438;&#x43B;&#x438; &#x43F;&#x440;&#x438; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x438;) &#x443;&#x441;&#x442;&#x430;&#x43D;&#x430;&#x432;&#x438;&#x43B;&#x438;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x430;&#x431;&#x436; &#x441;&#x43E;&#x43E;&#x442;&#x432;-&#x43D;&#x43E;</comment>
-    </item>
-    <item>
-      <attribute id="1207000851" priority="1" done="0" start_date="733133" enddate="733193" notify="0" endtime="-60" last_edited="1207426011"/>
-      <summary>My Schema</summary>
-      <comment>&#x41E;&#x43F;&#x446;&#x438;&#x43E;&#x43D;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;... &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x430;&#x432;&#x442;&#x43E;&#x43C;&#x430;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43A;&#x438;&#x439; &#x44D;&#x43A;&#x441;&#x43F;&#x430;&#x43D;&#x434; &#x441;&#x430;&#x431;&#x436;&#x430; &#x43F;&#x440;&#x438; &#x440;&#x430;&#x437;&#x432;&#x43E;&#x440;&#x43E;&#x442;&#x435; &#x440;&#x443;&#x442;&#x43E;&#x432;&#x43E;&#x433;&#x43E; &#x438;&#x442;&#x435;&#x43C;&#x430; &#x432; navigation. &#x422;&#x430;&#x43A; &#x443;&#x434;&#x43E;&#x431;&#x43D;&#x435;&#x439; &#x431;&#x443;&#x434;&#x435;&#x442;, &#x43D;&#x443; &#x438; &#x432;&#x440;&#x43E;&#x434;&#x44C; &#x43A;&#x430;&#x43A; &#x441;&#x438;&#x43C;&#x43F;&#x430;&#x442;&#x438;&#x447;&#x43D;&#x435;&#x439;.</comment>
-    </item>
-    <item>
-      <attribute id="1207083582" priority="1" done="1" start_date="733134" completed_date="733138" enddate="733143" notify="0" endtime="-60" last_edited="1207459513"/>
-      <summary>Menu View</summary>
-      <comment>Next workspace -&gt; Next Session
-&#x442;&#x430;&#x43A;&#x436;&#x435; &#x438; previous
-
-Next Content -&gt; Next Page
-&#x422;&#x430;&#x43A;&#x436;&#x435; &#x438; previous</comment>
-    </item>
-    <item>
-      <attribute id="1207089016" priority="1" done="1" start_date="733134" completed_date="733138" enddate="733135" notify="0" endtime="-60" last_edited="1207459616"/>
-      <summary>callback'&#x438; &#x43D;&#x430; GSQLSession</summary>
-      <comment>on_close
-on_duplicate
-on_commit
-on_rollback
-on_reopen
-
-
-&#x43F;&#x440;&#x438;&#x446;&#x435;&#x43F;&#x438;&#x442;&#x44C; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438; &#x441;&#x438;&#x433;&#x43D;&#x430;&#x43B;&#x43E;&#x432; &#x43D;&#x430; &#x441;&#x442;&#x430;&#x434;&#x438;&#x438; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F; &#x441;&#x435;&#x441;&#x441;&#x438;&#x438; engine_session_open (&#x442;.&#x435;. &#x434;&#x435;&#x43B;&#x430;&#x435;&#x442;&#x441;&#x44F; &#x432; &#x441;&#x430;&#x43C;&#x43E;&#x43C; engine)
-
-
-UPDATED: on-new-sql - &#x441; &#x44D;&#x442;&#x438;&#x43C; &#x441;&#x438;&#x433;&#x43D;&#x430;&#x43B;&#x43E;&#x43C; &#x43F;&#x43E;&#x43A;&#x430; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;, &#x43A;&#x430;&#x43A; &#x438;&#x43C;&#x435;&#x43D;&#x43D;&#x43E; &#x441;&#x434;&#x435;&#x43B;&#x430;&#x442;&#x44C; &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x430;&#x446;&#x438;&#x44E;</comment>
-    </item>
-    <item>
-      <attribute id="1207512798" priority="1" done="0" start_date="733139" enddate="733152" notify="0" endtime="-60" last_edited="1207512798"/>
-      <summary>&#x423;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x441;&#x435;&#x441;&#x441;&#x438;&#x44F;&#x43C;&#x438;. &#x41E;&#x442;&#x43A;&#x43B;&#x44E;&#x447;&#x435;&#x43D;&#x438;&#x435; &#x444;&#x435;&#x442;&#x447;&#x438;&#x43D;&#x433;&#x430; &#x438; &#x442;.&#x434;.</summary>
-      <comment>1. &#x443; MySQL &#x441;&#x434;&#x435;&#x43B;&#x430;&#x442;&#x44C; &#x434;&#x432;&#x435; &#x440;&#x435;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x435; &#x441;&#x435;&#x441;&#x441;&#x438;&#x438; &#x432; &#x440;&#x430;&#x43C;&#x43A;&#x430;&#x445; &#x43E;&#x434;&#x43D;&#x43E;&#x439; GSQLSession:
-	&#x43E;&#x434;&#x43D;&#x443; &#x434;&#x43B;&#x44F; &#x43D;&#x430;&#x432;&#x438;&#x433;&#x430;&#x446;&#x438;&#x438;, &#x432;&#x442;&#x43E;&#x440;&#x443;&#x44E; &#x434;&#x43B;&#x44F; &#x440;&#x430;&#x431;&#x43E;&#x442;&#x44B;.
-
-2. &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44E; &#x431;&#x43B;&#x43E;&#x43A;&#x438;&#x440;&#x43E;&#x432;&#x43A;&#x438; &#x444;&#x435;&#x442;&#x447;&#x438;&#x43D;&#x433;&#x430; &#x432;&#x43E; &#x432;&#x441;&#x435;&#x445; &#x43E;&#x442;&#x43A;&#x440;&#x44B;&#x442;&#x44B;&#x445; SQL-&#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x43E;&#x440;&#x430;&#x445; (&#x432; &#x440;&#x430;&#x43C;&#x43A;&#x430;&#x445; &#x43E;&#x434;&#x43D;&#x43E;&#x439; GSQLSession)
-	&#x430;) &#x443; &#x43C;&#x443;&#x441;&#x43A;&#x443;&#x43B;&#x44F; &#x43D;&#x430;&#x441;&#x43E;&#x432;&#x441;&#x435;&#x43C;, &#x438;&#x431;&#x43E; statement &#x443;&#x434;&#x430;&#x43B;&#x44F;&#x435;&#x442;&#x441;&#x44F;, &#x442;.&#x435;. &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x431;&#x443;&#x434;&#x435;&#x442; &#x43B;&#x44E;&#x431;&#x43E;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43D;&#x430; &#x442;&#x43E;, &#x447;&#x442;&#x43E; &#x443;&#x436;&#x435; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x438;&#x43B;.
-	&#x431;) &#x443; &#x43E;&#x440;&#x430;&#x43A;&#x43B;&#x430; - &#x43D;&#x430; &#x43F;&#x435;&#x440;&#x438;&#x43E;&#x434; &#x437;&#x430;&#x43D;&#x44F;&#x442;&#x43E;&#x441;&#x442;&#x438; &#x441;&#x435;&#x441;&#x441;&#x438;&#x438;.
-
-3. &#x440;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x442;&#x44C; &#x432;&#x430;&#x440;&#x438;&#x430;&#x43D;&#x442; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x438;&#x44F; &#x434;&#x432;&#x443;&#x445; &#x441;&#x435;&#x441;&#x441;&#x438;&#x439; &#x43A;&#x430;&#x43A; &#x43F;.1 (&#x43F;&#x43E;-&#x43C;&#x43E;&#x435;&#x43C;&#x443; &#x431;&#x443;&#x434;&#x435;&#x442; &#x434;&#x435;&#x439;&#x441;&#x442;&#x432;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E; &#x443;&#x434;&#x43E;&#x431;&#x43D;&#x43E;, &#x43F;&#x43E;&#x442;&#x43E;&#x43C;&#x443; &#x43A;&#x430;&#x43A; &#x43F;&#x440;&#x438; &#x43E;&#x434;&#x43D;&#x43E;&#x439; &#x441;&#x435;&#x441;&#x441;&#x438;&#x438; &#x434;&#x430;&#x436;&#x435; &#x43F;&#x43E; &#x434;&#x435;&#x440;&#x435;&#x432;&#x443; &#x43D;&#x430;&#x432;&#x438;&#x433;&#x430;&#x446;&#x438;&#x438; &#x43D;&#x435; &#x43F;&#x43E;&#x433;&#x443;&#x43B;&#x44F;&#x442;&#x44C;.</comment>
-    </item>
-    <item>
-      <attribute id="1208883264" priority="1" done="0" start_date="733154" enddate="99999999" notify="0" endtime="-60" last_edited="1208883264"/>
-      <summary>Insert from CSV</summary>
-      <comment>&#x412; &#x43F;&#x435;&#x440;&#x441;&#x43F;&#x435;&#x43A;&#x442;&#x438;&#x432;&#x435; &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x430;&#x431;&#x436; &#x438;&#x431;&#x43E; &#x432;&#x435;&#x441;&#x44C;&#x43C;&#x430; &#x443;&#x434;&#x43E;&#x431;&#x43D;&#x43E;... &#x432;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x444;&#x430;&#x439;&#x43B;&#x43E; &#x438; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x442;&#x44C;  &#x432; &#x43A;&#x430;&#x43A;&#x443;&#x44E; &#x442;&#x430;&#x431;&#x43B;&#x438;&#x446;&#x443; &#x432;&#x441;&#x442;&#x430;&#x432;&#x438;&#x442;&#x44C;.</comment>
-    </item>
-    <item>
-      <attribute id="1207000725" priority="1" done="1" start_date="733133" completed_date="733164" enddate="733143" notify="0" endtime="-60" last_edited="1209739007"/>
-      <summary>&#x423;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x438;&#x437; libgsql</summary>
-      <comment>&#x43A;&#x43E;&#x43B;&#x431;&#x435;&#x43A; &#x444;&#x430;&#x439;&#x43B;&#x44B;. &#x441;&#x434;&#x435;&#x43B;&#x430;&#x442;&#x44C; &#x441;&#x442;&#x430;&#x442;&#x438;&#x43A;-&#x441;&#x435;&#x43A;&#x446;&#x438;&#x438;. 
-editor_cb
-
 </comment>
-    </item>
-    <item>
-      <attribute id="1207000174" priority="1" done="1" start_date="733133" completed_date="733171" enddate="733190" notify="0" endtime="-60" last_edited="1210332916"/>
-      <summary>popup menu. navigation</summary>
-      <comment>&#x41D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x43F;&#x440;&#x43E;&#x434;&#x443;&#x43C;&#x430;&#x442;&#x44C; &#x441;&#x430;&#x431;&#x436;, &#x434;&#x430;&#x431;&#x44B; &#x431;&#x44B;&#x43B;&#x430; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x44C; &#x438;&#x43C;&#x435;&#x442;&#x44C; &#x43E;&#x431;&#x449;&#x438;&#x435; &#x44D;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;&#x44B; &#x432; &#x43C;&#x435;&#x43D;&#x44E;, &#x43D;&#x430;&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440; "Refresh" &#x434;&#x43E;&#x43B;&#x436;&#x43D;&#x430; &#x431;&#x44B;&#x442;&#x44C; &#x443; &#x43A;&#x430;&#x436;&#x434;&#x43E;&#x433;&#x43E; popup menu.
-</comment>
-    </item>
-    <item>
-      <attribute id="1208811061" priority="1" done="0" start_date="733154" enddate="733192" notify="0" endtime="-60" last_edited="1210334119"/>
-      <summary>Details page</summary>
-      <comment>&#x41A; &#x442;&#x435;&#x43A;&#x443;&#x449;&#x435;&#x439; &#x442;&#x435;&#x43A;&#x441;&#x442;&#x43E;&#x432;&#x43A;&#x435; &#x434;&#x43E;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x44C; &#x442;&#x438;&#x43F;&#x441; &#x432;&#x440;&#x43E;&#x434;&#x435; "&#x418;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; &#x43F;&#x440;&#x430;&#x432;&#x443;&#x44E; &#x43A;&#x43D;&#x43E;&#x43F;&#x43A;&#x443; &#x43C;&#x44B;&#x448;&#x438; &#x434;&#x43B;&#x44F; &#x432;&#x44B;&#x437;&#x43E;&#x432;&#x430; &#x43A;&#x43E;&#x43D;&#x442;&#x435;&#x43A;&#x441;&#x442;&#x43D;&#x43E;&#x433;&#x43E; &#x43C;&#x435;&#x43D;&#x44E; &#x434;&#x435;&#x439;&#x441;&#x442;&#x432;&#x438;&#x439;, &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x43D;&#x438;&#x43C;&#x44B;&#x445; &#x43A; &#x432;&#x44B;&#x434;&#x435;&#x43B;&#x435;&#x43D;&#x43D;&#x43E;&#x43C;&#x443; &#x43E;&#x431;&#x435;&#x44A;&#x43A;&#x442;&#x443;. &#x412;&#x441;&#x43F;&#x43B;&#x44B;&#x432;&#x430;&#x44E;&#x449;&#x438;&#x435; &#x43F;&#x43E;&#x434;&#x441;&#x43A;&#x430;&#x437;&#x43A;&#x438; &#x43F;&#x43E;&#x43A;&#x430;&#x436;&#x443;&#x442; &#x431;&#x44B;&#x441;&#x442;&#x440;&#x44B;&#x435; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x438; (&#x43D;&#x430;&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;, &#x43A;&#x43D;&#x43E;&#x43F;&#x43A;&#x430; F5 &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x44F;&#x435;&#x442; &#x441;&#x43F;&#x438;&#x441;&#x43E;&#x43A; &#x435;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x432; &#x432; &#x432;&#x44B;&#x434;&#x435;&#x43B;&#x435;&#x43D;&#x43D;&#x43E;&#x439; &#x432;&#x435;&#x442;&#x43A;&#x435;."
-
-eng:
-Use the right mouse button to show context menu with actions applicable to the selected object. 
-The tool tips will show you shortcuts.
-
-Popping up tool tips will show you shortcuts</comment>
-    </item>
-    <item>
-      <attribute id="1208720598" priority="1" done="1" start_date="733152" completed_date="733171" enddate="733162" notify="0" endtime="-60" last_edited="1210334370"/>
-      <summary>MySQL engine</summary>
-      <comment>&#x423;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x438;&#x437; &#x43C;&#x435;&#x43D;&#x44E;
-
-(lt-gsql:7492): Gtk-WARNING **: MySQLCommit: missing action MySQLActionCommit
-(lt-gsql:7492): Gtk-WARNING **: MySQLRollback: missing action MySQLActionRollback
-(lt-gsql:7492): Gtk-WARNING **: MySQLCommit: missing action MySQLActionCommit
-(lt-gsql:7492): Gtk-WARNING **: MySQLRollback: missing action MySQLActionRollback
-
-&#x438;&#x431;&#x43E; &#x43E;&#x43D;&#x43E; &#x431;&#x443;&#x434;&#x435;&#x442; &#x43D;&#x430; &#x43A;&#x43E;&#x43B;&#x431;&#x435;&#x43A;&#x430;&#x445;</comment>
     </item>
   </category>
   <category title="Business" place="1"/>

@@ -21,7 +21,8 @@ gsql_glade_DATA = \
 	gsql_dialogs.glade
 gsql_ui_DATA = gsql.ui \
 	gsqlfiles.ui\
-	gsqlhelp.ui
+	gsqlhelp.ui\
+	gsqltool.ui
 
 bin_PROGRAMS = gsql
 

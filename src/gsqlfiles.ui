@@ -1,18 +1,5 @@
 <!--*- xml -*-->
 <ui>
-  <menubar name="MenuMain">
-    <menu name="MenuFile" action="ActionMenuFile">
-    	<placeholder name="PHolderFile">
-    		<menuitem name="New" action="ActionFileNew" />
-    		<menuitem name="Open" action="ActionFileOpen" />
-    		<menuitem name="Save" action="ActionFileSave" />
-    		<menuitem name="SaveAs" action="ActionFileSaveAs" />
-    		<menuitem name="Close" action="ActionFileClose" />
-    		<menuitem name="CloseAll" action="ActionFileCloseAll" />
-    		<menuitem name="Reload" action="ActionFileReload" />
-    		<separator name="SeparatorA" />
-    	</placeholder>
-    </menu>
-  </menubar>
+  
 </ui>
 

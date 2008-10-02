@@ -5,7 +5,8 @@ engine_gladedir = $(PACKAGE_GLADE_DIR)/oracle
 engine_uidir = $(PACKAGE_UI_DIR)/oracle
 
 engine_glade_DATA = 
-engine_ui_DATA = 
+engine_ui_DATA = \
+	engine_oracle.ui
 
 libgsqldir = $(PACKAGE_ENGINES_DIR)
 

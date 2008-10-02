@@ -35,7 +35,7 @@ void
 on_server_output (GtkToggleAction *ta, gpointer data)
 {
 	GSQL_TRACE_FUNC
-	GSQLEOracleCursor *cursor;
+	GSQLCursor *cursor;
 	GSQLSession *session;
 	GSQLEOracleSession *spec;
 	GSQLWorkspace *workspace;
@@ -56,22 +56,18 @@ on_server_output (GtkToggleAction *ta, gpointer data)
 		GSQL_DEBUG ("set DBMS_OUTPUT enable");
 		sql = (gchar *) sql_enable;
 		gsql_message_add (workspace, GSQL_MESSAGE_OUTPUT, "DBMS_OUTPUT enable");
-	}
-	else
-	{
+	} else {
 		GSQL_DEBUG ("set DBMS_OUTPUT disable");
 		sql = (gchar *) sql_disable;
 		gsql_message_add (workspace, GSQL_MESSAGE_OUTPUT, "DBMS_OUTPUT disable");
-	};
+	}
 	
 	spec->dbms_output = status;
 	
-	//cursor = gsql_cursor_open (session, sql, FALSE, FALSE);
-	//if (cursor)
-	//	gsql_cursor_close (cursor);
-	
-	return;
-};
+	cursor = gsql_cursor_new (session, sql);
+	gsql_cursor_open (cursor, FALSE);
+	gsql_cursor_close (cursor);
+}
  
 void
 on_empty_recycle_activate (GtkMenuItem * mi, gpointer data)

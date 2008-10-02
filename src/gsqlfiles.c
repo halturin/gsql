@@ -44,7 +44,7 @@ static GtkActionEntry gsqlfiles_action[] =
 {
 	{ "ActionFileNew", GTK_STOCK_NEW, N_("New"), "<control>N", N_("New SQL"), G_CALLBACK(on_file_new_sql_activate) },
 	{ "ActionFileOpen", GTK_STOCK_OPEN, N_("Open"), "<control>O", N_("Open file"), G_CALLBACK(on_file_open_activate) },
-	{ "ActionFileSave", GTK_STOCK_SAVE, N_("Save"), "<control>S", N_("Save file"), G_CALLBACK(on_file_save_activate) },
+	{ "ActionFileSave", GTK_STOCK_SAVE, N_("Save"), "<control>S", N_("Save"), G_CALLBACK(on_file_save_activate) },
 	{ "ActionFileSaveAs", GTK_STOCK_SAVE_AS, N_("Save As..."), NULL, N_("Save file as..."), G_CALLBACK(on_file_save_as_activate) },
 	{ "ActionFileClose", GTK_STOCK_CLOSE, N_("Close"), "<control>W", N_("Close"), G_CALLBACK(on_file_close_activate) },
 	{ "ActionFileCloseAll", NULL, N_("Close All"), NULL, N_("Close All"), G_CALLBACK(on_file_close_all_activate) },
@@ -64,10 +64,9 @@ gsql_files_menu_init()
 	gtk_action_group_add_actions (action, gsqlfiles_action, 
 								  G_N_ELEMENTS (gsqlfiles_action), NULL);
 	
-	gsql_menu_merge (PACKAGE_UI_DIR "/gsqlfiles.ui", action);
+	gsql_menu_merge_action (action);
 
-	return;
-};
+}
 
 void
 gsql_files_menu_update ()

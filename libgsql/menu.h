@@ -52,6 +52,9 @@ gsql_menu_merge_from_string (const gchar *str, GtkActionGroup *action);
 void
 gsql_menu_merge_action (GtkActionGroup *action);
 
+guint
+gsql_menu_merge_ui (gchar *ui_file);
+
 GtkWidget *
 gsql_menu_get_widget (gchar *name);
 

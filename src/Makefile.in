@@ -250,7 +250,8 @@ gsql_glade_DATA = \
 
 gsql_ui_DATA = gsql.ui \
 	gsqlfiles.ui\
-	gsqlhelp.ui
+	gsqlhelp.ui\
+	gsqltool.ui
 
 gsql_SOURCES = \
 	main.c\

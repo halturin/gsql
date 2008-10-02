@@ -2,9 +2,16 @@
 <ui>
   <menubar name="MenuMain">
     <menu name="MenuFile" action="ActionMenuFile">
-    	<placeholder name="PHolderFile"/>
+   		<menuitem name="New" action="ActionFileNew" />
+   		<menuitem name="Open" action="ActionFileOpen" />
+   		<placeholder name="PHolderRecent" />
+   		<menuitem name="Save" action="ActionFileSave" />
+   		<menuitem name="SaveAs" action="ActionFileSaveAs" />
+   		<menuitem name="Close" action="ActionFileClose" />
+   		<menuitem name="CloseAll" action="ActionFileCloseAll" />
+   		<menuitem name="Reload" action="ActionFileReload" />
+   		<separator name="SeparatorA" />
     	<placeholder name="PHolderPrint" />
-		<placeholder name="PHolderRecent" />
 		<menuitem name="Quit" action="ActionExit" />
     </menu>
     <menu name="MenuEdit" action="ActionMenuEdit">
@@ -37,7 +44,16 @@
    	<menu name="MenuTools" action="ActionMenuTools">
    	  <placeholder name="PHolderTools" />
    	</menu>
-   	<placeholder name="PHolderHelp" />
+   	<menu name="MenuHelp" action="ActionMenuHelp">
+   		<menuitem name="UsersManual" action="ActionUsersManual" />
+   		<separator name="SeparatorA" />
+   		<menuitem name="HomePage" action="ActionHomePage" />
+   		<menuitem name="APIReference" action="ActionAPIReference" />
+   		<menuitem name="BugReport" action="ActionBugReport" />
+   		<menuitem name="RequestsQuestions" action="ActionRequestsQuestions" />
+   		<separator name="SeparatorB" />
+   		<menuitem name="About" action="ActionAbout" />
+    </menu>
   </menubar>
   
   <popup name="NavObjects" action="ActionNavObjects">
@@ -51,10 +67,7 @@
 		<toolitem name="ReloadFile" action="ActionFileReload" />
 		<separator />
 		<toolitem name="NewSession" action="ActionMenuNewSession"/>
-      	<toolitem name="CloseSession" action="ActionMenuCloseSession"/>
-      	<separator name="SeparatorA" />
-      	<toolitem name="MenuCommit" action="ActionMenuCommit" /> 
-      	<toolitem name="MenueRollback" action="ActionMenuRollback" />
+      	<placeholder name="PHolderToolbarMain" />
   </toolbar>
   
 </ui>

@@ -56,8 +56,7 @@ on_dialog_logon_engine_name_changed (GtkComboBox *combobox,
 	page_num = gtk_combo_box_get_active (GTK_COMBO_BOX(engine_name));
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page_num);
 		
-	return;
-};
+}
 
 
 void
@@ -78,24 +77,23 @@ on_dialog_close_session_toggle_activate (GtkCellRendererToggle * renderer,
 	GtkTreeIter iter, parent;
 	GtkTreeModel *model = (GtkTreeModel *) data;
 	gboolean will_close;
-	//gchar *mark, *esc;
+
 
 	gtk_tree_model_get_iter_from_string (model, &iter, path_str);
 	gtk_tree_model_get (model, &iter, 1, &will_close, -1);
 	gtk_tree_store_set (GTK_TREE_STORE (model), &iter, 1, 
                             !will_close, -1);
+	
 	if (gtk_tree_model_iter_parent (model, &parent, &iter))
 	{
 		if (!will_close)
-			gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
-					    4,
-					    "<span weight='bold'>save</span>",
-					    -1);
+			gtk_tree_store_set (GTK_TREE_STORE (model), &iter, 4,
+								"<span weight='bold'>save</span>", -1);
 		else
 			gtk_tree_store_set (GTK_TREE_STORE (model), &iter, 4, "", -1);
-	}
-	else
-	{
+		
+	} else {
+		
 		if (!will_close)
 			gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
 					    4,
@@ -104,9 +102,9 @@ on_dialog_close_session_toggle_activate (GtkCellRendererToggle * renderer,
 		else
 			gtk_tree_store_set (GTK_TREE_STORE (model), &iter, 4, "", -1);
 		
-	};
-	return;
-};
+	}
+
+}
 
 
 void
@@ -131,28 +129,30 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 	{
 		GSQL_DEBUG ("session = NULL");
 		session = GSQL_SESSION (gtk_notebook_get_nth_page (notebook, page_num));
+		
 		if (session)
 		{
 			g_snprintf(gsql_window_header, 128, "%s: %s", "GSQL", 
 						gsql_session_get_name (session));
+			
 			gsql_engine_menu_set_status (session->engine,
 								TRUE);
 			
-		}
-		else
+		} else
 			g_snprintf(gsql_window_header, 128, "%s", "GSQL");
-	}
-	else
-	{
+		
+	} else {
 		GSQL_DEBUG ("session != NULL");
 		gsql_engine_menu_set_status (session->engine,
 								FALSE);
+		
 		session = GSQL_SESSION (gtk_notebook_get_nth_page (notebook, page_num));
+		
 		g_snprintf(gsql_window_header, 128, "%s: %s", "GSQL", 
 				   gsql_session_get_name (session));
-		gsql_engine_menu_set_status (session->engine,
-								TRUE);
-	};
+		
+		gsql_engine_menu_set_status (session->engine, TRUE);
+	}
 	
 	gsql_session_set_active (session);
 	gtk_window_set_title (GTK_WINDOW (gsql_window), gsql_window_header);
@@ -160,17 +160,20 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 	
 	//update status menuitems 
 	workspace = gsql_session_get_workspace (session);
+	
 	mi = gsql_menu_get_widget ("/MenuMain/MenuView/MenuShowNavarea");
 	g_return_if_fail (mi != NULL);
+	
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), 
 									gsql_workspace_get_navigate_visible (workspace));
+	
 	mi = gsql_menu_get_widget ("/MenuMain/MenuView/MenuShowMessarea");
 	g_return_if_fail (mi != NULL);
+	
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), 
 									gsql_workspace_get_messages_visible (workspace));
 	
-	return;
-};
+}
 
 void
 on_sessions_notebook_page_removed (GtkNotebook     *notebook,
@@ -180,29 +183,28 @@ on_sessions_notebook_page_removed (GtkNotebook     *notebook,
 {
 	GSQL_TRACE_FUNC
 
-//	GSQLSession *session;
+	GSQLSession *session;
 	
-/*	session = gsql_session_get_current ();
+	session = gsql_session_get_active ();
 	
-	if ( session == NULL)
+/*	if ( session == NULL)
 	{
 		gsql_engines_menu_hide_all ();
 		gsql_plugins_menu_update_all (NULL);
 		
 		return;
-	};
+	}
 	
 	gsql_plugins_menu_update_all (session->engine);
-	*/
-	return;
-};
+*/
+}
 
 void 
 on_gsql_window_destroy(GtkWidget * widget, gpointer data)
 {
 	GSQL_TRACE_FUNC
 	return;
-};
+}
 
 gint 
 on_gsql_window_delete(GtkWidget * wd, GdkEvent * event, gpointer data)
@@ -211,7 +213,7 @@ on_gsql_window_delete(GtkWidget * wd, GdkEvent * event, gpointer data)
         // here is checking for opened DB and not saved data
 	gsql_window_clean_exit();
 	return TRUE;
-};
+}
 
 
 void
@@ -225,5 +227,5 @@ on_session_close_header_button_activate (GtkButton *button,
 	session = GSQL_SESSION (user_data);
 
 	g_signal_emit_by_name (G_OBJECT (session), "close");
-	return;
-};
+
+}

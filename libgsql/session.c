@@ -130,7 +130,16 @@ static gchar session_ui[] =
 "      </placeholder>   "
 "    </menu>   "
 "  </menubar>   "
+"  <toolbar name=\"ToolbarMain\">   "
+"	<placeholder name=\"PHolderToolbarMain\">   "
+"     	<toolitem name=\"CloseSession\" action=\"ActionMenuCloseSession\"/>   "
+"      	<separator name=\"SeparatorA\" />   "
+"      	<toolitem name=\"MenuCommit\" action=\"ActionMenuCommit\" />    "
+"      	<toolitem name=\"MenueRollback\" action=\"ActionMenuRollback\" />   "
+"	</placeholder>   "
+"  </toolbar>   "
 "</ui> ";
+
 
 static GtkActionEntry session_acts[] = 
 {
@@ -218,8 +227,6 @@ gsql_session_new_with_attrs (gchar *attr_name,...)
 		
 		if (value == NULL)
 			break;
-		
-		GSQL_DEBUG ("GSQLSession. set prop: [\"%s\"] = [\"%s\"]", attr, value);
 		
 		g_value_set_string (gval, (const gchar *) value);
 		

@@ -158,18 +158,7 @@ gsql_source_editor_new(gchar * buffer_body)
 	}
 	
 	lm = gtk_source_language_manager_new();
-	/*
-	list_lang = gtk_source_languages_manager_get_available_languages(lm);
-	if (lang == NULL)
-		while (list_lang != NULL)
-		{
-			lang = GTK_SOURCE_LANGUAGE (list_lang->data);
 
-			if (strcmp (gtk_source_language_get_id (lang), "SQL") == 0)
-				break;
-			list_lang = g_slist_next (list_lang);
-		}
-	*/
 	lang = gtk_source_language_manager_get_language (lm, "sql");
 	gtk_source_buffer_set_language  (buffer, lang);
 
@@ -241,7 +230,6 @@ gsql_source_editor_marker_set (GtkTextIter *iter, gchar *marker_type)
 		pixmark = gtk_source_mark_new (NULL, marker_type);
 		
 		gtk_text_buffer_add_mark (GTK_TEXT_BUFFER (buffer), GTK_TEXT_MARK (pixmark), iter);
-		//pixmark = gtk_source_buffer_create_marker (buffer, NULL, marker_type, iter);
 		
 		markers = g_object_get_data (G_OBJECT (buffer), "markers");
 		markers = g_list_append (markers, pixmark);
