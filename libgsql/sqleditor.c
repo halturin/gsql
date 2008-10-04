@@ -130,6 +130,7 @@ struct _GSQLEditorPrivate
 	GtkWidget    *checkb_limit;
 	gboolean	 stop_fetch;
 	guint		 fetch_max;
+	guint		 fetch_step;
 	
 	gboolean	is_file;
 	gchar	   *encoding;
@@ -373,6 +374,10 @@ gsql_editor_new (GtkWidget *source)
 	editor->private->fetch_max = limit_max;
 	
 	gsql_conf_nitify_add (GSQL_CONF_SQL_FETCH_STEP,
+								on_sqleditor_fetch_limit_set,
+								(gpointer) editor);
+	
+	gsql_conf_nitify_add (GSQL_CONF_SQL_FETCH_MAX,
 								on_sqleditor_fetch_limit_set,
 								(gpointer) editor);
 	
@@ -881,11 +886,14 @@ do_sql_run (GSQLEditor *sqleditor)
 				// mark as "complete"
 				GSQL_DEBUG ("Marking iters block as \"complete\"");
 				gsql_source_editor_marker_set (s_iter, GSQL_EDITOR_MARKER_COMPLETE);
+				
 				memset (msg, 0, 128);
+				tmp = NULL;
+				
 				switch (cursor->stmt_type)
 				{
-					case GSQL_CURSOR_STMT_IUD:
-						tmp = N_("Affected rows");
+					case GSQL_CURSOR_STMT_DML:
+						tmp = N_("DML operation finished. Affected rows");
 						break;
 						
 					case GSQL_CURSOR_STMT_INSERT:
@@ -902,20 +910,41 @@ do_sql_run (GSQLEditor *sqleditor)
 						
 					case GSQL_CURSOR_STMT_EXEC:
 						tmp = N_("Execution finished");
+						break;
+					
+					case GSQL_CURSOR_STMT_CREATE:
+						tmp = N_("Object created");
+						break;
+					
+					case GSQL_CURSOR_STMT_DROP:
+						tmp = N_("Object droped");
+						break;
+						
+					case GSQL_CURSOR_STMT_ALTER:
+						tmp = N_("Object altered");
+						break;
+						
+					case GSQL_CURSOR_STMT_DDL:
+						tmp = N_("DDL operation finished");
+						break;
 						
 					default:
 						GSQL_DEBUG ("Unknown statement type");
 				}
 				
-				gtk_text_view_get_line_yrange (GTK_TEXT_VIEW (source), s_iter, 
-											   &l, &i);
-				GSQL_DEBUG ("tmp: [%s]", msg);
-				g_snprintf (msg, 128, "%s [%llu] %s %d [elapsed: %02f]", tmp, cursor->stmt_affected_rows, 
-						   N_("at line"), l, g_timer_elapsed (timer, &microsec));
 				GSQL_THREAD_LEAVE;
-				GSQL_DEBUG ("msg: [%s]", msg);
-				gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
 				
+				if (tmp)
+				{
+					gtk_text_view_get_line_yrange (GTK_TEXT_VIEW (source), s_iter, 
+												   &l, &i);
+					GSQL_DEBUG ("tmp: [%s]", msg);
+					g_snprintf (msg, 128, "%s [%llu] %s %d [elapsed: %02f]", tmp, cursor->stmt_affected_rows, 
+							   N_("at line"), l, g_timer_elapsed (timer, &microsec));
+					
+					GSQL_DEBUG ("msg: [%s]", msg);
+					gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
+				}
 			}
 			
 		}
@@ -1082,8 +1111,19 @@ do_sql_fetch (GSQLEditor *editor)
     cursor = editor->cursor;
     g_return_if_fail (gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_OPEN);
     g_return_if_fail (cursor->stmt_type == GSQL_CURSOR_STMT_SELECT);
-    
+	
 	workspace = gsql_session_get_workspace (cursor->session);
+	
+	if (cursor->stmt_affected_rows >= editor->private->fetch_max)
+	{
+		g_snprintf (msg, 128, 
+					N_("The maximum limit of fetch is reached [%d]. You can extend this limit in the settings."),
+					editor->private->fetch_max);
+
+		gsql_message_add (workspace, GSQL_MESSAGE_WARNING,
+						  msg);
+		return;
+	}
 	
 	fetch_b = gtk_ui_manager_get_widget (editor->private->ui,
 									   "/SQLEditorToolbarFetch/SQLEditorFetch");
@@ -1247,7 +1287,8 @@ do_sql_fetch (GSQLEditor *editor)
 		liststore_new = liststore;
 	}
 	
-	rows_limit = gtk_spin_button_get_value (GTK_SPIN_BUTTON (editor->private->fetch_limit));
+	rows_limit = editor->private->fetch_step;
+	
 	GSQL_DEBUG ("rows_limit: %d", rows_limit);
 	
 	GSQL_THREAD_LEAVE;
@@ -1348,9 +1389,11 @@ do_sql_fetch (GSQLEditor *editor)
 		gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
 							 	 GTK_TREE_MODEL(liststore_new));
 	
+	GSQL_DEBUG ("Cursor state = [%d]", gsql_cursor_get_state (cursor));
+	
 	if ((!cursor->session->engine->multi_statement) || 
-		(gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_FETCHED) ||
-		(cursor->stmt_affected_rows >=editor->private->fetch_max)
+		(gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_FETCHED) 
+		//||(cursor->stmt_affected_rows >=editor->private->fetch_max)
 		)
 	{		
 		gtk_widget_set_sensitive (fetch_b, FALSE);
@@ -1381,9 +1424,10 @@ on_sql_fetch (GtkToolButton *button, gpointer data)
 	GError *err;
 	GThread *thread = NULL;
 	GSQLEditor *editor = data;
-	guint   limit;
+	guint limit;
 	
 	limit = gtk_spin_button_get_value (GTK_SPIN_BUTTON (editor->private->fetch_limit));
+	editor->private->fetch_step = limit;
 	
 	if (button == NULL) // isn't callback. run foreground.
 	{	
@@ -1404,7 +1448,29 @@ static void
 on_sql_fetch_all (GtkToolButton *button, gpointer data)
 {
 	GSQLEditor *editor = data;
+	GError *err;
+	GThread *thread = NULL;
+	guint   limit;
 	
+	limit = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_MAX);
+	
+	if (!limit)
+		limit = GSQL_EDITOR_FETCH_MAX_DEFAULT;
+	
+	editor->private->fetch_step = limit;
+	
+	if (button == NULL) // isn't callback. run foreground.
+	{	
+		do_sql_fetch (editor);	
+		return;
+	} 
+	
+	thread = g_thread_create ((GThreadFunc) do_sql_fetch,
+							  editor, 
+							  FALSE,
+							  &err);
+	if (!thread)
+		GSQL_DEBUG ("Couldn't create thread");	
 	
 }
 
@@ -1848,8 +1914,8 @@ on_sqleditor_fetch_limit_set (gpointer data)
 	
 	limit_max = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_MAX);
 	
-	if (!limit_step)
-		limit_step = GSQL_EDITOR_FETCH_MAX_DEFAULT;
+	if (!limit_max)
+		limit_max = GSQL_EDITOR_FETCH_MAX_DEFAULT;
 	
 	widget = editor->private->checkb_limit;
 	

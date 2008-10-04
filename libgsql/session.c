@@ -436,8 +436,8 @@ gsql_session_lock (GSQLSession *session)
 		workspace = gsql_session_get_workspace (session);
 		gsql_message_add (workspace, 
 						  GSQL_MESSAGE_WARNING, 
-						  N_("Current session already in use. Please, try later "
-							 "or stop running the current statement"));
+						  N_("The current session already in use. Please, try later "
+							 "or stop the running statement."));
 		return FALSE;
 	} 
 	

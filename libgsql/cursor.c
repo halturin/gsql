@@ -447,6 +447,7 @@ gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
 			
 		case 0:
 			gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_FETCHED);
+			break;
 			
 		default:
 			gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_OPEN);

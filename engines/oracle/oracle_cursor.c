@@ -273,92 +273,9 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		OCIDescriptorFree (param, OCI_DTYPE_PARAM);
 
 	}
-	
-	
-	
+		
 	return GSQL_CURSOR_STATE_OPEN;
-	
-/*	GSQLEOracleCursor *cur;
-	GSQLEOracleSession *o_session;
-	GSQLEOracleVariable *var;
-	OCIParam *param;
-	unsigned char op[2000];
-	sword ret;
-	gchar buffer[GSQL_MESSAGE_LEN];
-	
-	o_session = (GSQLEOracleSession *) session->spec;
-	cur = (GSQLEOracleCursor *) g_malloc0 (sizeof (GSQLEOracleCursor));
-	cur->session = session;
-	
-	if ( OCIHandleAlloc ((dvoid *)(o_session->envhp), 
-					   (dvoid **)&(cur->errhp),
-						OCI_HTYPE_ERROR, 0, (dvoid **) 0)
-		== OCI_ERROR
-		)
-	{
-		g_snprintf (buffer, MSG_LEN,"OCIHandleAlloc (allocate an error handle)... failed");
-			gsql_message_add (session->workspace, MSG_ERROR, buffer);
-		
-		 	return NULL;
-	};
-    
-	if (oracle_sql_prepare(cur, sql) != 0)
-	{	
-		g_free(cur);
-		return NULL;
-	};
-    GSQL_DEBUG ("SQL = %s", sql);
-	va_start(vl, num);
-
-	for (i = 0; i < num; i++)
-	{
-		bind = va_arg(vl, char *);
-		ret = OCIBindByPos (cur->statement, &bindhp, cur->errhp, (ub4) i+1,
-							(dvoid *) bind, (sb4)strlen(bind)+1, (ub2) SQLT_STR,
-							(dvoid *) 0, (ub2 *) 0, (ub2 *) 0, (ub4) 0, (ub4 *) 0,
-							(ub4) OCI_DEFAULT);
-		GSQL_DEBUG ("Bind by pos: [\':%d\' = %s] [ret = %d]", i+1, bind, ret);
-		if (oracle_check_error (cur, ret))
-		{
-			 g_free (cur);
-			 return NULL;
-		};
-	};
-	
-	va_end(vl);
-        
-	if (oracle_sql_exec(cur) != 0)
-	{
-		g_free (cur);
-		return NULL;
-	};
-    
-	
-	
-	ret = OCIAttrGet(cur->statement, OCI_HTYPE_STMT, (dvoid*) &(cur->var_count), 0,
-						OCI_ATTR_PARAM_COUNT, cur->errhp);
-	
-	if (oracle_check_error (cur, ret))
-	{
-			 g_free (cur);
-			 return NULL;
-	};
-
-	for (i = 0; i < cur->var_count; i++)
-	{	
-		OCIParamGet(cur->statement, OCI_HTYPE_STMT,
-						cur->errhp, (void**) &param, i+1);
-		var = oracle_variable_create(cur, param, i+1);
-		
-		cur->var_list = g_list_append(cur->var_list, var);
-		
-		OCIDescriptorFree(param, OCI_DTYPE_PARAM);
-	};
-	
-	return cur;	
-	*/
-	return GSQL_CURSOR_STATE_ERROR;
-};
+}
 
 GSQLCursorState 
 oracle_cursor_open_bind_by_name (GSQLCursor *cursor, GList *args)
@@ -486,6 +403,7 @@ oracle_cursor_fetch(GSQLCursor * cursor, gint rows)
 	ret = OCIAttrGet (cursor_spec->statement, OCI_HTYPE_STMT,
 						(void *) &fetched, (uint *) 0, 
 						OCI_ATTR_ROWS_FETCHED, cursor_spec->errhp);
+	GSQL_DEBUG ("ORACLE Fetched [%d]", fetched);
 	return fetched;
 }
 
@@ -601,14 +519,21 @@ oracle_sql_exec(GSQLCursor *cursor)
 			cursor->stmt_affected_rows = spec_cursor->row_count;
 			break;
 
-		
 		case OCI_STMT_SELECT:
+			cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
+			cursor->stmt_affected_rows = 0;
+			break;
+		
+		case OCI_STMT_CREATE:
+		case OCI_STMT_DROP:
+		case OCI_STMT_ALTER:
 			cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
 			cursor->stmt_affected_rows = 0;
 			break;
 			
 		case OCI_STMT_BEGIN:
-			cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
+		case OCI_STMT_DECLARE:
+			cursor->stmt_type = GSQL_CURSOR_STMT_EXEC;
 			cursor->stmt_affected_rows = 0;
 			break;
 			
