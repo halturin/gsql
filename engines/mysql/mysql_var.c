@@ -57,6 +57,8 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 	{
 		case MYSQL_TYPE_FLOAT:  
 		case MYSQL_TYPE_DOUBLE:
+		case MYSQL_TYPE_NEWDECIMAL:
+		case MYSQL_TYPE_DECIMAL:
 			GSQL_DEBUG ("Cast to G_TYPE_DOUBLE");
 			variable->value_type = G_TYPE_DOUBLE;
 			variable->value_length = 8;

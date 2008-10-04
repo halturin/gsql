@@ -56,8 +56,8 @@ struct _GSQLSessionPrivate
 	GSQLWorkspace *workspace;
 	GHashTable  *titles_hash;
 	
-	pthread_mutex_t lock;
-	gboolean	busy;
+	GMutex	  *lock;
+	gboolean  busy;
 };
 
 enum {
@@ -426,23 +426,18 @@ gsql_session_lock (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
 	
-	gint ret = 0;
 	GSQLWorkspace *workspace;
 	
 	g_return_val_if_fail (GSQL_IS_SESSION (session), FALSE);
 	
-	ret = pthread_mutex_lock (&(session->private->lock));
-	
-	if (ret)
+	if (!g_mutex_trylock (session->private->lock))
 	{
-		GSQL_DEBUG ("Mutex error: %s", strerror (ret));
 		
 		workspace = gsql_session_get_workspace (session);
 		gsql_message_add (workspace, 
 						  GSQL_MESSAGE_WARNING, 
 						  N_("Current session already in use. Please, try later "
 							 "or stop running the current statement"));
-		
 		return FALSE;
 	} 
 	
@@ -457,14 +452,9 @@ gsql_session_unlock (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
 	
-	gint ret = 0;
-	
 	g_return_if_fail (GSQL_IS_SESSION (session));
 	
-	ret = pthread_mutex_unlock (&(session->private->lock));
-	
-	if (ret)
-		GSQL_DEBUG ("Mutex error: %s", strerror (ret));
+	g_mutex_unlock (session->private->lock);
 	
 	session->private->busy = FALSE;
 	
@@ -679,9 +669,7 @@ gsql_session_init (GSQLSession *obj)
 	
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (obj), FALSE);
 	
-	pthread_mutexattr_init(&mutexattr);
-	pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_ERRORCHECK_NP);
-	pthread_mutex_init (&(obj->private->lock), &mutexattr);
+	obj->private->lock  = g_mutex_new ();
 	
 	obj->private->busy = FALSE;
 	

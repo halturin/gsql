@@ -36,7 +36,7 @@
 #define PLUGIN_VERSION "0.1"
 #define PLUGIN_ID    "plugin_runner"
 #define PLUGIN_NAME  "Runner"
-#define PLUGIN_DESC  "Periodicaly run SQL"
+#define PLUGIN_DESC  "Periodical SQL execution"
 #define PLUGIN_AUTHOR "Taras Halturin"
 #define PLUGIN_HOMEPAGE "http://gsql.org"
 
@@ -51,7 +51,7 @@ static GSQLStockIcon stock_icons[] =
 
 static GtkToggleActionEntry runner_action[] = 
 {
-	{ "ActionRunner", GSQLP_RUNNER_STOCK_ICON, N_("Periodical run"), NULL, 
+	{ "ActionRunner", GSQLP_RUNNER_STOCK_ICON, N_("Periodical execution"), NULL, 
 		N_("Periodical run"), G_CALLBACK (on_runner), FALSE}
 };
 

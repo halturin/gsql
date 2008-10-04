@@ -30,6 +30,7 @@
 #include <libgsql/workspace.h>
 #include <libgsql/plugins.h>
 #include <libgsql/type_datetime.h>
+#include <libgsql/sqleditor.h>
 
 #include "gsqlconf.h"
 #include "gsqlconfcb.h"
@@ -80,6 +81,9 @@ gsql_conf_dialog()
 	GtkWidget *enable_auto_indent_check;
 	GtkWidget *configure_button;
 	GtkWidget *plugins_tree_view;
+	GtkWidget *fetch_limit_step;
+	GtkWidget *fetch_limit_max;
+	
 	GtkListStore *plugins_list;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
@@ -173,7 +177,28 @@ gsql_conf_dialog()
         
 	gconf_bool_value = gsql_conf_value_get_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (restore_sizepos_check), gconf_bool_value);
+	
+	gconf_int_value = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_STEP);
+	
+	if (!gconf_int_value)
+		gconf_int_value = GSQL_EDITOR_FETCH_STEP_DEFAULT;
+	
+	fetch_limit_step = glade_xml_get_widget (gxml, "fetch_limit_step");
+	g_signal_connect (G_OBJECT (fetch_limit_step), "value-changed",
+					  G_CALLBACK (on_fetch_limit_step_changed), fetch_limit_step);
 
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (fetch_limit_step), gconf_int_value);
+	
+	gconf_int_value = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_MAX);
+	
+	if (!gconf_int_value)
+		gconf_int_value = GSQL_EDITOR_FETCH_MAX_DEFAULT;
+	
+	fetch_limit_max = glade_xml_get_widget (gxml, "fetch_limit_max");
+	g_signal_connect (G_OBJECT (fetch_limit_max), "value-changed",
+					  G_CALLBACK (on_fetch_limit_max_changed), fetch_limit_max);
+	
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (fetch_limit_max), gconf_int_value);
 	   
 	gconf_gchar_value = gsql_conf_value_get_string (GSQL_CONF_EDITOR_FONT_NAME);
 	gconf_bool_value = gsql_conf_value_get_boolean (GSQL_CONF_EDITOR_USE_SYSTEM_FONT);

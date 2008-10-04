@@ -1,0 +1,13 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+    <placeholder name="PHolderEngines">
+    <menu name="MenuOracle" action="OracleActionMenu">
+    		<menuitem name="OracleServerOutput" action="OracleActionServerOutput" />
+    		<separator name="Separator" />
+    		<menuitem name="OracleEmptyRecycle" action="OracleActionEmptyRecycle" />
+    </menu>
+   </placeholder>
+  </menubar>
+   
+</ui>

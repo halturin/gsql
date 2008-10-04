@@ -91,7 +91,6 @@ extern gboolean gsql_opt_debug_enable;
 #define GSQL_TRACE_FUNC \
 	if (gsql_opt_trace_enable) \
 		g_print("trace: [%p] %s [%s:%d]\n", (gpointer) g_thread_self(), __func__, __FILE__, __LINE__); \
-		
 
 #define GSQL_DEBUG(params...) \
 	if (gsql_opt_debug_enable) \

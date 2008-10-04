@@ -81,7 +81,7 @@ struct _GSQLCursor
 	gboolean	scrollable;
 	
 	GSQLCursorStmtType stmt_type;
-	gdouble		stmt_affected_rows;
+	guint64		stmt_affected_rows;
 	
 	GSQLCursorPrivate *private;
 };

@@ -29,6 +29,7 @@
 #include <libgsql/workspace.h>
 #include <libgsql/plugins.h>
 #include <libgsql/type_datetime.h>
+#include <libgsql/sqleditor.h>
 #include <time.h>
 
 void
@@ -71,8 +72,31 @@ on_gsql_prefs_restore_sizepos_check_toggled (GtkToggleButton  *togglebutton,
 	gsql_conf_value_set_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS,
 							status);
 	return;
-};
+}
 
+void 
+on_fetch_limit_step_changed (GtkSpinButton *button, gpointer data)
+{
+	
+	guint value;
+	
+	value = gtk_spin_button_get_value (button);
+	gsql_conf_value_set_int (GSQL_CONF_SQL_FETCH_STEP,
+							 value);
+	
+}
+
+void 
+on_fetch_limit_max_changed (GtkSpinButton *button, gpointer data)
+{
+	
+	guint value;
+	
+	value = gtk_spin_button_get_value (button);
+	gsql_conf_value_set_int (GSQL_CONF_SQL_FETCH_MAX,
+							 value);
+	
+}
 
 void
 on_gsql_prefs_use_system_font_check_toggled (GtkToggleButton *togglebutton,

@@ -41,6 +41,12 @@ typedef struct _GSQLEditorClass		GSQLEditorClass;
 #define GSQL_IS_EDITOR(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQL_EDITOR_TYPE))
 #define GSQL_IS_EDITOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQL_EDITOR_TYPE))
 
+#define GSQL_CONF_SQL_FETCH_STEP	GSQL_CONF_ROOT_KEY "/sql_fetch_step"
+#define GSQL_CONF_SQL_FETCH_MAX		GSQL_CONF_ROOT_KEY "/sql_fetch_max"
+
+#define GSQL_EDITOR_FETCH_STEP_DEFAULT  100
+#define GSQL_EDITOR_FETCH_MAX_DEFAULT  10000
+
 typedef GtkActionGroup * (*GSQLEditorFActionCB) (void);
 
 #include <libgsql/common.h>

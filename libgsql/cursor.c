@@ -438,19 +438,20 @@ gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
 	
 	ret = cursor->session->engine->cursor_fetch (cursor, rows);
 	
-	if (ret < rows)
+	switch (ret)
 	{
-		if (ret < 0)
+		case -1:
 			gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_ERROR);
-		else
+			ret = 0;
+			break;
+			
+		case 0:
 			gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_FETCHED);
-		
-	} else {
-	
-		gsql_cursor_set_state (cursor, state);
-	
+			
+		default:
+			gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_OPEN);
 	}
-	
+		
 	gsql_session_unlock (cursor->session);
 	
 	return ret;
@@ -679,6 +680,7 @@ gsql_cursor_init (GSQLCursor *obj)
 	obj->private->state = GSQL_CURSOR_STATE_NONE;
 	obj->private->notify_on_finish = FALSE;
 	obj->scrollable = FALSE;
+	obj->stmt_affected_rows = 0;
 
 }
 

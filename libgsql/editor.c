@@ -250,7 +250,7 @@ gsql_source_editor_markers_clear (GtkSourceBuffer *buffer)
 	
 	if (markers == NULL)
 	{
-		GSQL_DEBUG ("No one markers found. markers == NULL.");
+		GSQL_DEBUG ("No markers found. markers == NULL.");
 		return;
 	}
 	

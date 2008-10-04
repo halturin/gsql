@@ -53,8 +53,6 @@ static gchar sqleditor_ui[] =
 "  </toolbar>  "
   
 "  <toolbar name=\"SQLEditorToolbarFetch\">  "
-//"  	<toolitem name=\"SQLEditorLimit\" action=\"ActionSQLEditorLimit\"/>  "
-//"  	<toolitem name=\"SQLEditorLimitEntry\" action=\"ActionSQLEditorLimitEntry\"/>  "
 "  	<toolitem name=\"SQLEditorFetch\" action=\"ActionSQLEditorFetch\"/>  "
 "  	<toolitem name=\"SQLEditorFetchAll\" action=\"ActionSQLEditorFetchAll\"/>  "
 "  	<toolitem name=\"SQLEditorFetchStop\" action=\"ActionSQLEditorFetchStop\"/>  "
@@ -70,11 +68,18 @@ static void on_sql_run_step (GtkToolButton *button, gpointer data);
 static void on_sql_stop (GtkToolButton *button, gpointer data);
 static void on_set_runatcursor (GtkToggleToolButton *button, gpointer data);
 static void on_set_stoponerror (GtkToggleToolButton *button, gpointer data);
+
 static void on_custom_limit_checkbutton_toggled (GtkToggleButton *togglebutton,
 										gpointer user_data);
+static void on_sql_fetch (GtkToolButton *button, gpointer data);
+static void on_sql_fetch_all (GtkToolButton *button, gpointer data);
+static void on_sql_fetch_stop (GtkToolButton *button, gpointer data);
+
 static void on_editor_set_parent (GtkWidget *widget, GtkObject *object,
 								  gpointer user_data);
+
 static void on_buffer_changed (GtkWidget *widget, gpointer user_data);
+
 static void  gsql_editor_get_property	(GObject		*object,
 							 guint			propid,
 							 GValue	*value,
@@ -83,6 +88,7 @@ static void gsql_editor_set_property	(GObject		*object,
 							 guint			propid,
 							 const GValue	*value,
 							 GParamSpec		*pspec);
+static void on_sqleditor_fetch_limit_set (gpointer data);
 
 
 static GtkActionEntry sqleditor_acts[] = 
@@ -122,6 +128,8 @@ struct _GSQLEditorPrivate
 	
 	GtkWidget	 *fetch_limit;
 	GtkWidget    *checkb_limit;
+	gboolean	 stop_fetch;
+	guint		 fetch_max;
 	
 	gboolean	is_file;
 	gchar	   *encoding;
@@ -204,6 +212,7 @@ gsql_editor_new (GtkWidget *source)
 	GtkWidget *custom_limit_spin;
 	GtkWidget *custom_limit_checkbutton;
 	GSQLEditorFActionCB f_action;
+	guint limit_step, limit_max;
 	
 	if (source == NULL)
 		source = gsql_source_editor_new (NULL);
@@ -309,7 +318,15 @@ gsql_editor_new (GtkWidget *source)
 	gtk_toolbar_set_style (GTK_TOOLBAR (result_toolbar), 
 						   GTK_TOOLBAR_ICONS);
 	
-	button = gtk_ui_manager_get_widget (ui, "/SQLEditorToolbarFetch/ActionSQLEditorFetchStop");
+	button = gtk_ui_manager_get_widget (ui, "/SQLEditorToolbarFetch/SQLEditorFetch");
+	g_signal_connect (button, "clicked", G_CALLBACK (on_sql_fetch), editor);
+	
+	button = gtk_ui_manager_get_widget (ui, "/SQLEditorToolbarFetch/SQLEditorFetchAll");
+	g_signal_connect (button, "clicked", G_CALLBACK (on_sql_fetch_all), editor);
+	
+	button = gtk_ui_manager_get_widget (ui, "/SQLEditorToolbarFetch/SQLEditorFetchStop");
+	g_signal_connect (button, "clicked", G_CALLBACK (on_sql_fetch_stop), editor);
+	gtk_widget_set_sensitive (button, TRUE);
 	
 	toolitem = (GtkWidget *) gtk_tool_item_new ();
 	gtk_widget_show (toolitem);
@@ -339,6 +356,25 @@ gsql_editor_new (GtkWidget *source)
 	g_signal_connect ((gpointer) custom_limit_checkbutton, "toggled",
 					G_CALLBACK (on_custom_limit_checkbutton_toggled),
 					(gpointer) custom_limit_spin);
+	
+	limit_step = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_STEP);
+	
+	if (!limit_step)
+		limit_step = GSQL_EDITOR_FETCH_STEP_DEFAULT;
+	
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (custom_limit_spin),
+								   limit_step);
+	
+	limit_max = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_MAX);
+	
+	if (!limit_max)
+		limit_max = GSQL_EDITOR_FETCH_MAX_DEFAULT;
+	
+	editor->private->fetch_max = limit_max;
+	
+	gsql_conf_nitify_add (GSQL_CONF_SQL_FETCH_STEP,
+								on_sqleditor_fetch_limit_set,
+								(gpointer) editor);
 	
 	result_scroll = gtk_scrolled_window_new (NULL, NULL);        
 	gtk_box_pack_start (GTK_BOX (sql_result_vbox), 
@@ -423,6 +459,7 @@ gsql_editor_merge_f_actions (gchar *ui_addons, GSQLEditorFActionCB f_action)
  *  on_editor_cb_save
  *  on_editor_cb_revert
  *  on_editor_set_parent
+ *  on_sqleditor_fetch_limit_set
  */
 
 
@@ -642,24 +679,14 @@ do_sql_run (GSQLEditor *sqleditor)
 	GSQLSession *session;
 	GSQLWorkspace *workspace = NULL;
 	GtkSourceView *source;
-	GtkTreeView *result_treeview;
 	GtkVBox *result_vbox;
-	GtkListStore *liststore, *liststore_new;
-	GtkTreeViewColumn *column;
-	GtkCellRenderer *renderer;
-	GtkWidget *column_header;
 	GtkTextBuffer *buffer;
 	GtkTextIter start_iter, end_iter, *search_iter, *s_iter, *e_iter;
-	GtkWidget *run_b, *run_step_b, *stop_b, *runatcursor_b, *stoponerror_b;
-	GtkWidget *fetch_b, *fetch_all_b, *fetch_stop_b;
+	GtkWidget *run_b, *run_step_b, *stop_b, *runatcursor_b, *stoponerror_b,
+				*fetch_b, *fetch_all_b, *toolbar_fetch;
 	GList *list, *columns, *vlist;
-	gint i, l, *column_pos, var_count;
-	GType *var_types;
-	GValue *values;
-	gchar *sql = NULL, *tmp, msg[128];
-	GSQLVariable *var;
-	GSQLTypeDateTime *ggg;
-	gboolean sorting;
+	gint i, l;
+	gchar *sql = NULL, *tmp, msg[128], tmp_value[1024];
 	GTimer *timer;
 	gulong  microsec;
 	
@@ -668,8 +695,6 @@ do_sql_run (GSQLEditor *sqleditor)
 	
 	source = GTK_SOURCE_VIEW (sqleditor->private->source);
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (source));
-	result_treeview = sqleditor->private->result_treeview;
-	result_vbox = sqleditor->private->result_vbox;
 	
 	run_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
 									   "/SQLEditorToolbarRun/SQLEditorRun");
@@ -681,23 +706,29 @@ do_sql_run (GSQLEditor *sqleditor)
 											   "/SQLEditorToolbarRun/SQLEditorRunAtCursorToggle");
 	stoponerror_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
 											   "/SQLEditorToolbarRun/SQLEditorStopOnErrToggle");
-	if (!session->engine->multi_statement)
-	{
-		gtk_toggle_button_set_state (GTK_TOGGLE_BUTTON (sqleditor->private->checkb_limit), TRUE);
-		gtk_widget_set_sensitive (sqleditor->private->checkb_limit, FALSE);
-		
-		fetch_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
+	result_vbox = sqleditor->private->result_vbox;
+	
+	fetch_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
 									   "/SQLEditorToolbarFetch/SQLEditorFetch");
-		fetch_all_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
+	fetch_all_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
 										"/SQLEditorToolbarFetch/SQLEditorFetchAll");
-		fetch_stop_b = gtk_ui_manager_get_widget (sqleditor->private->ui,
-										"/SQLEditorToolbarFetch/SQLEditorFetchStop");
-		gtk_widget_set_sensitive (fetch_b, FALSE);
-		gtk_widget_set_sensitive (fetch_all_b, FALSE);
-		gtk_widget_set_sensitive (fetch_stop_b, FALSE);
-	}
+	toolbar_fetch = gtk_ui_manager_get_widget (sqleditor->private->ui,
+										"/SQLEditorToolbarFetch");
 	
 	GSQL_THREAD_ENTER;
+	
+	if (!session->engine->multi_statement)
+	{		
+		gtk_widget_set_sensitive (fetch_b, FALSE);
+		gtk_widget_set_sensitive (fetch_all_b, FALSE);
+		
+	} else {
+		
+		gtk_widget_set_sensitive (fetch_b, TRUE);
+		gtk_widget_set_sensitive (fetch_all_b, TRUE);
+		
+	}
+
 	if (!sqleditor->private->run_at_cursor)
 	{
 		
@@ -725,11 +756,12 @@ do_sql_run (GSQLEditor *sqleditor)
 										  gtk_text_buffer_get_insert (GTK_TEXT_BUFFER (buffer)));
 	}
 	
-	
-	
+	gtk_widget_set_sensitive (toolbar_fetch, FALSE);
 	gtk_widget_set_sensitive (run_step_b, FALSE);
 	gtk_widget_set_sensitive (run_b, FALSE);
 	gtk_widget_set_sensitive (stop_b, TRUE);
+	
+	
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (source), FALSE);
 	gsql_source_editor_markers_clear (buffer);
 	GSQL_THREAD_LEAVE;
@@ -741,7 +773,9 @@ do_sql_run (GSQLEditor *sqleditor)
 		if (sql != NULL)
 			g_free (sql);
 
-		if (gtk_text_buffer_get_selection_bounds(buffer, &start_iter, &end_iter))
+		if (gtk_text_buffer_get_selection_bounds(buffer,
+												 &start_iter,
+												 &end_iter))
 		{
 			// run selected text
 			tmp = gtk_text_iter_get_text (&start_iter, &end_iter);
@@ -805,190 +839,28 @@ do_sql_run (GSQLEditor *sqleditor)
 								   g_timer_elapsed (timer, &microsec));
 			gsql_message_add (workspace, GSQL_MESSAGE_NORMAL, tmp);
 			
-			g_free (tmp); tmp = NULL;
-			
 			GSQL_THREAD_ENTER;
+			gsql_source_editor_marker_set (s_iter, GSQL_EDITOR_MARKER_COMPLETE);
+			GSQL_THREAD_LEAVE;
+			
+			g_free (tmp); tmp = NULL;
 			
 			GSQL_DEBUG ("Cursor opened")
 			/* i think it's bad idea to execute next query if the statement are select.
 				set stepping flag
 			*/
 			sqleditor->private->stepping = TRUE;
-		
-			liststore = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (result_treeview)));
-			columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (result_treeview));
-			g_list_foreach (columns, (GFunc) gsql_tree_view_remove_column,
-							result_treeview);
-			g_list_free(columns);
-		
-			var_count = g_list_length (cursor->var_list);
+			sqleditor->cursor = cursor;
+			cursor->stmt_affected_rows = 0;
 			
-			if (!var_count)
-			{
-				GSQL_DEBUG ("Variables list is zero length");
-				
-				gtk_widget_hide_all (GTK_WIDGET (result_vbox));
-				gtk_widget_set_no_show_all (GTK_WIDGET (result_vbox), TRUE);
-				gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (result_treeview), FALSE);
-				GSQL_THREAD_LEAVE;
-				
-				g_timer_destroy (timer);
-				
-				return;
-				
-			} else {
-				GSQL_DEBUG ("alloc mem for %d", var_count);
-				column_pos = g_new0 (gint, var_count);
-				var_types = g_new0 (GType, var_count);
-				values = g_new0 (GValue, var_count);
-			}
-			
-			vlist = g_list_first (cursor->var_list);
-			sorting = TRUE;
-			for (i=0; i<var_count; i++)
-			{
-				GSQL_DEBUG ("Parsing %d variable", i);
-				column_pos[i] = i;
-				var = vlist->data;
-				
-				if (!GSQL_IS_VARIABLE (var))
-				{
-					GSQL_DEBUG ("Is not a GSQLVariable");
-					
-					continue;
-				}
-				
-				vlist = g_list_next (vlist);
-				tmp = "text";
-				
-				switch (var->value_type)
-				{
-					case G_TYPE_INT64:
-						GSQL_DEBUG ("G_TYPE_INT64");
-						var_types[i] = G_TYPE_INT64;
-						g_value_init (&values[i], G_TYPE_INT64);
-						renderer = gtk_cell_renderer_text_new();
-						break;
-						
-					case G_TYPE_INT:
-						GSQL_DEBUG ("G_TYPE_INT");
-						var_types[i] = G_TYPE_INT;
-						g_value_init (&values[i], G_TYPE_INT);
-						renderer = gtk_cell_renderer_text_new();
-						break;
-						
-					case G_TYPE_DOUBLE:
-						GSQL_DEBUG ("G_TYPE_DOUBLE");
-						var_types[i] = G_TYPE_DOUBLE;
-						g_value_init (&values[i], G_TYPE_DOUBLE);
-						renderer = gtk_cell_renderer_text_new();
-						break;
-						
-					default:
-						
-						// GSQL_TYPE_DATETIME - case label does not reduce to an integer constant
-						if (var->value_type == GSQL_TYPE_DATETIME)
-						{
-							sorting = FALSE;
-							GSQL_DEBUG ("GSQL_TYPE_DATETIME");
-							var_types[i] = GSQL_TYPE_DATETIME;
-							g_value_init (&values[i], GSQL_TYPE_DATETIME);
-							renderer = gsql_cell_renderer_datetime_new();
-							tmp = "datetime";
-							break;
-							
-						}
-						GSQL_DEBUG ("G_TYPE_STRING");
-						var_types[i] = G_TYPE_STRING;
-						g_value_init (&values[i], G_TYPE_STRING);
-						renderer = gtk_cell_renderer_text_new();
-
-				}
-
-				column_header = gtk_label_new (var->field_name);
-				gtk_widget_show (column_header);
-
-				column = gtk_tree_view_column_new ();
-				gtk_tree_view_column_set_widget (column, column_header);
-				gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-
-				if (sorting)
-					gtk_tree_view_column_set_sort_column_id (column, i);
-
-				gtk_tree_view_append_column(GTK_TREE_VIEW(result_treeview), column);
-				gtk_tree_view_column_set_resizable (column, TRUE);
-				gtk_tree_view_column_pack_start (column, renderer, TRUE);
-				gtk_tree_view_column_add_attribute (column, renderer, tmp, i);
-			}
-
-			gtk_tree_view_set_headers_visible(GTK_TREE_VIEW (result_treeview), TRUE);
-			liststore_new = gtk_list_store_newv (var_count, var_types);
-			gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
-										GTK_TREE_MODEL(liststore_new));
-
-			gtk_list_store_insert_with_valuesv (liststore_new, NULL, -1,
-													column_pos, values, var_count);
-
-			/*GSQL_DEBUG ("Fetch limit = %d", custom_limit);
-			while ((oracle_cursor_fetch (cursor)>0) && (fetched_rows++ < custom_limit)) 
-			{
-				for (i = 0; i < var_count; i++)
-				{
-					variable = oracle_cursor_get_variable (cursor, i);
-					GSQL_DEBUG ("data_type=%d   indicator=%d   data_len=%d    max_len=%d \n", 
-								(int) variable->data_type, (int) (*(variable->indicator)),
-								(int) variable->data_len, (int) variable->max_len );
-					disp_value = oracle_variable_data_to_display_format (variable);
-					if (disp_value == NULL)
-						continue;
-					GSQL_DEBUG ("disp_value != NULL");
-					switch (var_types[i])
-					{
-						case G_TYPE_STRING:
-							GSQL_DEBUG ("var_types[%d] = G_TYPE_STRING", i);
-							g_value_set_string (&values[i], (const gchar *) disp_value);
-							break;
-						case G_TYPE_INT:
-							GSQL_DEBUG ("var_types[%d] = G_TYPE_INT", i);
-							g_value_set_int (&values[i], *((gint *) disp_value));
-							break;
-						case G_TYPE_INT64:
-							GSQL_DEBUG ("var_types[%d] = G_TYPE_INT64", i);
-							g_value_set_int64 (&values[i], *((gint64 *) disp_value));
-							break;
-						case G_TYPE_DOUBLE:
-							GSQL_DEBUG ("var_types[%d] = G_TYPE_DOUBLE", i);
-							g_value_set_double (&values[i], *((gdouble *) disp_value));
-							GSQL_DEBUG ("g_value_set_double [value = %f] [size = %d]", *((gdouble *) disp_value), sizeof (gdouble));
-							break;
-						default:
-							GSQL_DEBUG ("bug?");
-					};
-
-					memset(variable->data, 0, variable->max_len);
-					g_free (disp_value);                             
-				};
-                        
-				gtk_list_store_insert_with_valuesv (liststore_new, NULL, -1,
-													column_pos, values, var_count);
-			}; */
-			//GSQL_DEBUG ("fetched rows: %d\n", fetched_rows -1);
-			
-			gtk_widget_set_no_show_all (GTK_WIDGET (result_vbox), FALSE);
-			gtk_widget_show_all (GTK_WIDGET (result_vbox));
-			gsql_source_editor_marker_set (s_iter, GSQL_EDITOR_MARKER_COMPLETE);
-			GSQL_THREAD_LEAVE;
+			//=========================================================
+			on_sql_fetch (NULL, sqleditor);
 			
 			if (!session->engine->multi_statement)
 			{
 				gsql_cursor_close (cursor);
 				sqleditor->cursor = NULL;
-			} else 
-				sqleditor->cursor = cursor;
-			
-			g_free (var_types);
-			g_free (column_pos);
-			g_free (values);
+			}			
 			
 		} else {
 			
@@ -1055,10 +927,10 @@ do_sql_run (GSQLEditor *sqleditor)
 		GSQL_THREAD_ENTER
 		gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (buffer), e_iter);
 		gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (source),
-										  e_iter,
+									  e_iter,
 									  0, TRUE, 0,0);
 		GSQL_THREAD_LEAVE
-		
+				
 		if (sqleditor->private->stepping)
 			break;
 		
@@ -1078,6 +950,7 @@ do_sql_run (GSQLEditor *sqleditor)
 	}
 	
 	GSQL_THREAD_ENTER;
+	gtk_widget_set_sensitive (toolbar_fetch, TRUE);
 	gtk_widget_set_sensitive (run_step_b, TRUE);
 	gtk_widget_set_sensitive (run_b, TRUE);
 	gtk_widget_set_sensitive (stop_b, FALSE);
@@ -1182,6 +1055,365 @@ on_custom_limit_checkbutton_toggled (GtkToggleButton *togglebutton,
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin), 
 								   SQL_EDITOR_CUSTOM_FETCH_LIMIT);
 	
+}
+
+static void
+do_sql_fetch (GSQLEditor *editor)
+{
+    GSQLCursor *cursor = NULL;
+	GSQLWorkspace *workspace = NULL;
+	GtkVBox *result_vbox;
+	GtkTreeView *result_treeview;
+	GtkListStore *liststore, *liststore_new;
+	GtkTreeViewColumn *column;
+	GtkCellRenderer *renderer;
+	GtkWidget *column_header;
+	GtkWidget *fetch_b, *fetch_all_b, *fetch_stop_b, *toolbar_run;
+	GList *list, *columns, *vlist;
+	gint i, l, *column_pos, var_count;
+	GType *var_types;
+	GValue *values;
+	gchar msg[128], tmp_value[1024], *tmp;
+	GSQLVariable *var;
+	gboolean sorting;
+	gboolean continue_fetch;
+	guint rows_limit = 0, rows_fetched = 0, rows;
+    
+    cursor = editor->cursor;
+    g_return_if_fail (gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_OPEN);
+    g_return_if_fail (cursor->stmt_type == GSQL_CURSOR_STMT_SELECT);
+    
+	workspace = gsql_session_get_workspace (cursor->session);
+	
+	fetch_b = gtk_ui_manager_get_widget (editor->private->ui,
+									   "/SQLEditorToolbarFetch/SQLEditorFetch");
+	fetch_all_b = gtk_ui_manager_get_widget (editor->private->ui,
+										"/SQLEditorToolbarFetch/SQLEditorFetchAll");
+	fetch_stop_b = gtk_ui_manager_get_widget (editor->private->ui,
+										"/SQLEditorToolbarFetch/SQLEditorFetchStop");
+	toolbar_run = gtk_ui_manager_get_widget (editor->private->ui,
+									   "/SQLEditorToolbarRun");
+	
+	result_treeview = editor->private->result_treeview;
+	result_vbox = editor->private->result_vbox;
+	
+	gtk_widget_set_sensitive (toolbar_run, FALSE);
+	gtk_widget_set_sensitive (fetch_b, FALSE);
+	gtk_widget_set_sensitive (fetch_all_b, FALSE);
+	gtk_widget_set_sensitive (fetch_stop_b, TRUE);
+	
+	editor->private->stop_fetch = FALSE;
+	
+	liststore = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (result_treeview)));
+	
+	continue_fetch = (cursor->stmt_affected_rows == 0) ? FALSE : TRUE;
+	var_count = g_list_length (cursor->var_list);
+	
+	GSQL_THREAD_ENTER;
+    
+	if (!continue_fetch)
+	{   
+		var_count = g_list_length (cursor->var_list);
+		if (!var_count)
+		{
+			GSQL_DEBUG ("Variables list is zero length");
+		
+			gtk_widget_hide_all (GTK_WIDGET (result_vbox));
+			gtk_widget_set_no_show_all (GTK_WIDGET (result_vbox), TRUE);
+			gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (result_treeview), FALSE);
+			GSQL_THREAD_LEAVE;
+
+			return;
+		}
+		
+		gtk_list_store_clear (liststore);
+		g_object_unref(liststore);
+		
+		columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (result_treeview));
+		g_list_foreach (columns, (GFunc) gsql_tree_view_remove_column,
+							result_treeview);					
+		g_list_free(columns);
+	}
+	
+	GSQL_DEBUG ("alloc mem for %d", var_count);
+	column_pos = g_new0 (gint, var_count);
+	var_types = g_new0 (GType, var_count);
+	values = g_new0 (GValue, var_count);
+    
+	vlist = g_list_first (cursor->var_list);
+	
+	for (i=0; i<var_count; i++)
+	{
+		GSQL_DEBUG ("Parsing %d variable", i);
+		column_pos[i] = i;
+		var = vlist->data;
+		sorting = TRUE;
+		
+		vlist = g_list_next (vlist);
+		tmp = "text";
+		
+		switch (var->value_type)
+		{
+			case G_TYPE_INT64:
+				GSQL_DEBUG ("G_TYPE_INT64");
+				
+				var_types[i] = G_TYPE_INT64;
+				g_value_init (&values[i], G_TYPE_INT64);
+				
+				if (!continue_fetch)
+					renderer = gtk_cell_renderer_text_new();
+				
+				break;
+				
+			case G_TYPE_INT:
+				GSQL_DEBUG ("G_TYPE_INT");
+				
+				var_types[i] = G_TYPE_INT;
+				g_value_init (&values[i], G_TYPE_INT);
+				
+				if (!continue_fetch)
+					renderer = gtk_cell_renderer_text_new();
+				
+				break;
+				
+			case G_TYPE_DOUBLE:
+				GSQL_DEBUG ("G_TYPE_DOUBLE");
+				
+				var_types[i] = G_TYPE_DOUBLE;
+				g_value_init (&values[i], G_TYPE_DOUBLE);
+				
+				if (!continue_fetch)
+					renderer = gtk_cell_renderer_text_new();
+				
+				break;
+				
+			default:
+			
+				// GSQL_TYPE_DATETIME - case label does not reduce to an integer constant
+				if (var->value_type == GSQL_TYPE_DATETIME)
+				{
+					sorting = FALSE;
+					GSQL_DEBUG ("GSQL_TYPE_DATETIME");
+				
+					var_types[i] = GSQL_TYPE_DATETIME;
+					g_value_init (&values[i], GSQL_TYPE_DATETIME);
+				
+					if (!continue_fetch)
+						renderer = gsql_cell_renderer_datetime_new();
+					tmp = "datetime";
+				
+					break;
+				
+				}
+				
+				GSQL_DEBUG ("G_TYPE_STRING");
+				
+				var_types[i] = G_TYPE_STRING;
+				g_value_init (&values[i], G_TYPE_STRING);
+				
+				if (!continue_fetch)
+					renderer = gtk_cell_renderer_text_new();
+				
+		}
+		
+		if (!continue_fetch)
+		{
+			column_header = gtk_label_new (var->field_name);
+			gtk_widget_show (column_header);
+		
+			column = gtk_tree_view_column_new ();
+			gtk_tree_view_column_set_widget (column, column_header);
+			gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+		
+			if (sorting)
+				gtk_tree_view_column_set_sort_column_id (column, i);
+		
+			gtk_tree_view_append_column(GTK_TREE_VIEW(result_treeview), column);
+			gtk_tree_view_column_set_resizable (column, TRUE);
+			gtk_tree_view_column_pack_start (column, renderer, TRUE);
+			gtk_tree_view_column_add_attribute (column, renderer, tmp, i);
+		}
+	}
+	
+	if (!continue_fetch)
+	{
+		liststore_new = gtk_list_store_newv (var_count, var_types);
+		gtk_widget_set_no_show_all (GTK_WIDGET (result_vbox), FALSE);
+		gtk_widget_show_all (GTK_WIDGET (result_vbox));
+		gtk_tree_view_set_headers_visible(GTK_TREE_VIEW (result_treeview), TRUE);
+	
+	} else {
+	
+		liststore_new = liststore;
+	}
+	
+	rows_limit = gtk_spin_button_get_value (GTK_SPIN_BUTTON (editor->private->fetch_limit));
+	GSQL_DEBUG ("rows_limit: %d", rows_limit);
+	
+	GSQL_THREAD_LEAVE;
+	rows_fetched = 0;
+	editor->private->stop_fetch = FALSE;
+	
+	while ( (rows_fetched < rows_limit) &&
+		   (rows = gsql_cursor_fetch (cursor, 1) > 0))
+	{
+		GSQL_THREAD_ENTER;
+		
+		if (rows <= 0)
+			break;
+		
+		vlist = g_list_first (cursor->var_list);
+		
+		for (l = 0; l < var_count; l++)
+		{
+			var = vlist->data;
+			vlist = g_list_next (vlist);
+			
+			if (var->value == NULL)
+				continue;
+			
+			if (var->raw_to_value)
+				var->raw_to_value (var);
+			
+			switch (var->value_type)
+			{
+				case G_TYPE_STRING:
+					g_value_set_string (&values[l], (const gchar *) var->value);
+					break;
+					
+				case G_TYPE_INT64:
+					g_value_set_int64 (&values[l], *((gint64 *) var->value));
+					break;
+					
+				case G_TYPE_INT:
+					g_value_set_int (&values[l], *((gint *) var->value));
+					break;
+					
+				case G_TYPE_DOUBLE:
+					g_value_set_double (&values[l], *((gdouble *) var->value));
+					break;
+					
+				default:
+					if (var->value_type == GSQL_TYPE_DATETIME)
+					{
+						g_value_set_boxed (&values[l], var->value);
+						break;
+					}
+					g_value_set_string (&values[l], (const gchar *) N_("&lt;value&gt;"));
+			}
+			
+			
+			
+		}
+		gtk_list_store_insert_with_valuesv (liststore_new, NULL, -1,
+											column_pos, values, var_count);
+		
+		GSQL_THREAD_LEAVE;
+		
+		rows_fetched++;
+		
+		if (rows_fetched >= rows_limit)
+			break;
+		
+		if (editor->private->stop_fetch)
+		{
+			gsql_message_add (workspace, GSQL_MESSAGE_WARNING,
+							  N_("The fetching has been canceled."));
+			break;
+			
+		}
+		
+		if (cursor->stmt_affected_rows + rows_fetched >= editor->private->fetch_max)
+		{
+			g_snprintf (msg, 128, 
+						N_("The maximum limit of fetch is reached [%d]. You can extend this limit in the settings."),
+						editor->private->fetch_max);
+
+			gsql_message_add (workspace, GSQL_MESSAGE_WARNING,
+							  msg);
+			break;
+		}
+		
+	}
+	
+	cursor->stmt_affected_rows += rows_fetched;
+	
+	g_snprintf (msg, 128, N_("Rows fetched: %d [total: %llu]"), 
+				rows_fetched, cursor->stmt_affected_rows);
+	
+	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
+	
+	GSQL_THREAD_ENTER;
+	if (!continue_fetch)
+		gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
+							 	 GTK_TREE_MODEL(liststore_new));
+	
+	if ((!cursor->session->engine->multi_statement) || 
+		(gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_FETCHED) ||
+		(cursor->stmt_affected_rows >=editor->private->fetch_max)
+		)
+	{		
+		gtk_widget_set_sensitive (fetch_b, FALSE);
+		gtk_widget_set_sensitive (fetch_all_b, FALSE);
+		
+	} else {
+		
+		gtk_widget_set_sensitive (fetch_b, TRUE);
+		gtk_widget_set_sensitive (fetch_all_b, TRUE);
+	}
+
+	gtk_widget_set_sensitive (fetch_stop_b, FALSE);
+	gtk_widget_set_sensitive (toolbar_run, TRUE);
+	
+	GSQL_THREAD_LEAVE;
+	
+	g_free (var_types);
+	g_free (column_pos);
+	g_free (values); 	
+	
+}
+
+
+
+static void
+on_sql_fetch (GtkToolButton *button, gpointer data)
+{
+	GError *err;
+	GThread *thread = NULL;
+	GSQLEditor *editor = data;
+	guint   limit;
+	
+	limit = gtk_spin_button_get_value (GTK_SPIN_BUTTON (editor->private->fetch_limit));
+	
+	if (button == NULL) // isn't callback. run foreground.
+	{	
+		do_sql_fetch (editor);	
+		return;
+	} 
+	
+	thread = g_thread_create ((GThreadFunc) do_sql_fetch,
+							  editor, 
+							  FALSE,
+							  &err);
+	if (!thread)
+		GSQL_DEBUG ("Couldn't create thread");	
+	
+}
+
+static void
+on_sql_fetch_all (GtkToolButton *button, gpointer data)
+{
+	GSQLEditor *editor = data;
+	
+	
+}
+
+static void
+on_sql_fetch_stop (GtkToolButton *button, gpointer data)
+{
+	GSQLEditor *editor = data;
+	
+	editor->private->stop_fetch = TRUE;
 }
 
 static void
@@ -1598,3 +1830,38 @@ on_buffer_changed (GtkWidget *widget, gpointer user_data)
 	gsql_content_set_changed (content, gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (widget)));
 	
 }
+
+static void
+on_sqleditor_fetch_limit_set (gpointer data)
+{
+	GSQLEditor *editor = data;
+	guint limit_step;
+	guint limit_max;
+	GtkWidget *widget;
+	
+	g_return_if_fail (GSQL_IS_EDITOR (editor));
+	
+	limit_step = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_STEP);
+	
+	if (!limit_step)
+		limit_step = GSQL_EDITOR_FETCH_STEP_DEFAULT;
+	
+	limit_max = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_MAX);
+	
+	if (!limit_step)
+		limit_step = GSQL_EDITOR_FETCH_MAX_DEFAULT;
+	
+	widget = editor->private->checkb_limit;
+	
+	if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
+	{
+		widget = editor->private->fetch_limit;
+		gtk_spin_button_set_value (GTK_SPIN_BUTTON (widget),
+								   limit_step);
+	}
+	
+	editor->private->fetch_max = limit_max;
+	
+}
+
+
