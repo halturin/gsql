@@ -117,6 +117,10 @@ gsql_source_editor_new(gchar * buffer_body)
 	gchar ** split_buffer;
 	gchar ** mark;
 	gchar * tmp;
+	gchar *lng_path[] = {
+		PACKAGE_DATA_DIR "/gsql/",
+		NULL
+	};
 	
 	
 	buffer = gtk_source_buffer_new(NULL);
@@ -158,8 +162,11 @@ gsql_source_editor_new(gchar * buffer_body)
 	}
 	
 	lm = gtk_source_language_manager_new();
+	
+	gtk_source_language_manager_set_search_path (lm, lng_path);
 
-	lang = gtk_source_language_manager_get_language (lm, "sql");
+	lang = gtk_source_language_manager_get_language (lm, "gsql");
+	
 	gtk_source_buffer_set_language  (buffer, lang);
 
 	gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
@@ -342,6 +349,10 @@ gsql_source_editor_property_set (gpointer src)
 														conf_boolean);
         
 	conf_int = gsql_conf_value_get_int (GSQL_CONF_EDITOR_TAB_WIDTH);
+
+	if ((conf_int <= 0) || (conf_int > 8))
+		conf_int = GSQL_CONF_EDITOR_TAB_WIDTH_DEFAULT;
+
 	gtk_source_view_set_tab_width (GTK_SOURCE_VIEW (source), conf_int);
         
 	conf_boolean = gsql_conf_value_get_boolean (GSQL_CONF_EDITOR_AUTO_INDENT);

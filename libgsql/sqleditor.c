@@ -308,7 +308,7 @@ gsql_editor_new (GtkWidget *source)
 	
 	button = gtk_ui_manager_get_widget (ui, "/SQLEditorToolbarRun/SQLEditorStopOnErrToggle");
 	g_signal_connect (button, "clicked", G_CALLBACK (on_set_stoponerror), editor);
-	
+	editor->private->stop_on_error = TRUE;
 		
 	sql_result_vbox = gtk_vbox_new (FALSE, 0);
 	result_toolbar = gtk_ui_manager_get_widget (ui, "/SQLEditorToolbarFetch");
@@ -840,8 +840,11 @@ do_sql_run (GSQLEditor *sqleditor)
 		if ((gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_OPEN) &&
 			(cursor->stmt_type == GSQL_CURSOR_STMT_SELECT))
 		{
-			tmp = g_strdup_printf (N_("Query execution finished [elapsed: %02f]"), 
-								   g_timer_elapsed (timer, &microsec));
+			l = gtk_text_iter_get_line (s_iter);
+			
+			tmp = g_strdup_printf (N_("Query execution finished at line %d [elapsed: %02f]"), 
+								   l, g_timer_elapsed (timer, &microsec));
+			
 			gsql_message_add (workspace, GSQL_MESSAGE_NORMAL, tmp);
 			
 			GSQL_THREAD_ENTER;
@@ -880,6 +883,7 @@ do_sql_run (GSQLEditor *sqleditor)
 				
 				if (sqleditor->private->stop_on_error)
 					sqleditor->private->stepping = TRUE;
+				
 				GSQL_THREAD_LEAVE;
 				
 			} else { 
@@ -888,63 +892,115 @@ do_sql_run (GSQLEditor *sqleditor)
 				gsql_source_editor_marker_set (s_iter, GSQL_EDITOR_MARKER_COMPLETE);
 				
 				memset (msg, 0, 128);
-				tmp = NULL;
+				i = GSQL_MESSAGE_ERROR;
+				
+				l = gtk_text_iter_get_line (s_iter);
 				
 				switch (cursor->stmt_type)
 				{
 					case GSQL_CURSOR_STMT_DML:
-						tmp = N_("DML operation finished. Affected rows");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s [%llu] %s %d [%s: %02f]",
+									N_("Query execution finished [DML]. Affected rows"),
+									cursor->stmt_affected_rows,
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 						
 					case GSQL_CURSOR_STMT_INSERT:
-						tmp = N_("Inserted rows");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s [%llu] %s %d [%s: %02f]",
+									N_("Query execution finished. Inserted rows"),
+									cursor->stmt_affected_rows,
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 						
 					case GSQL_CURSOR_STMT_UPDATE:
-						tmp = N_("Updated rows");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s [%llu] %s %d [%s: %02f]",
+									N_("Query execution finished. Updated rows"),
+									cursor->stmt_affected_rows,
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 						
 					case GSQL_CURSOR_STMT_DELETE:
-						tmp = N_("Deleted rows");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s [%llu] %s %d [%s: %02f]",
+									N_("Query execution finished. Deleted rows"),
+									cursor->stmt_affected_rows,
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 						
 					case GSQL_CURSOR_STMT_EXEC:
-						tmp = N_("Execution finished");
+						i = GSQL_MESSAGE_NORMAL;
+						g_snprintf (msg, 128, 
+									"%s %s %d [%s: %02f]",
+									N_("Query execution finished"),
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 					
 					case GSQL_CURSOR_STMT_CREATE:
-						tmp = N_("Object created");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s %s %d [%s: %02f]",
+									N_("Query execution finished. Object created"),
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 					
 					case GSQL_CURSOR_STMT_DROP:
-						tmp = N_("Object droped");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s %s %d [%s: %02f]",
+									N_("Query execution finished. Object droped"),
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 						
 					case GSQL_CURSOR_STMT_ALTER:
-						tmp = N_("Object altered");
-						break;
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s %s %d [%s: %02f]",
+									N_("Query execution finished. Object altered"),
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						
 					case GSQL_CURSOR_STMT_DDL:
-						tmp = N_("DDL operation finished");
+						i = GSQL_MESSAGE_NOTICE;
+						g_snprintf (msg, 128, 
+									"%s %s %d [%s: %02f]",
+									N_("Query execution finished [DDL]"),
+									N_("at line"), l+1, 
+									N_("elapsed"),
+									g_timer_elapsed (timer, &microsec));
 						break;
 						
 					default:
-						GSQL_DEBUG ("Unknown statement type");
+						i = GSQL_MESSAGE_WARNING;
+						g_snprintf (msg, 128,"%s",
+									N_("Unknown statement type"));
 				}
 				
-				GSQL_THREAD_LEAVE;
+				GSQL_THREAD_LEAVE;	
 				
-				if (tmp)
-				{
-					gtk_text_view_get_line_yrange (GTK_TEXT_VIEW (source), s_iter, 
-												   &l, &i);
-					GSQL_DEBUG ("tmp: [%s]", msg);
-					g_snprintf (msg, 128, "%s [%llu] %s %d [elapsed: %02f]", tmp, cursor->stmt_affected_rows, 
-							   N_("at line"), l, g_timer_elapsed (timer, &microsec));
-					
-					GSQL_DEBUG ("msg: [%s]", msg);
-					gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
-				}
+				gsql_message_add (workspace, i, msg);
+
 			}
 			
 		}
@@ -1166,8 +1222,11 @@ do_sql_fetch (GSQLEditor *editor)
 			return;
 		}
 		
-		gtk_list_store_clear (liststore);
-		g_object_unref(liststore);
+		if (liststore)
+		{
+			gtk_list_store_clear (liststore);
+			g_object_unref(liststore);
+		}
 		
 		columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (result_treeview));
 		g_list_foreach (columns, (GFunc) gsql_tree_view_remove_column,

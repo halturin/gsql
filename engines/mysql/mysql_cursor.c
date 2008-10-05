@@ -199,7 +199,7 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		
 		//  I can't recognize the real statement type :(
 		//  so, for Ins, Upd, Del we are using this type;
-		cursor->stmt_type = GSQL_CURSOR_STMT_IUD;
+		cursor->stmt_type = GSQL_CURSOR_STMT_DML;
 		cursor->stmt_affected_rows = affect;
 	}
 	g_free (binds);
@@ -274,20 +274,22 @@ mysql_cursor_open (GSQLCursor *cursor)
 
 		return GSQL_CURSOR_STATE_ERROR;		
 	}
-	
+	/*  FIXME:
+		How to recognize the type of the statement?
+		Any body knows? I it irealy defective!! 
+	*/
+
 	if (affect = mysql_stmt_affected_rows(e_cursor->statement) == -1)
 	{
 		GSQL_DEBUG ("GSQL_CURSOR_STMT_SELECT");
 		cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
 		
 	} else {
-		
-		//  I can't recognize the real statement type :(
-		//  so, for Ins, Upd, Del we are using this type;
-		GSQL_DEBUG ("GSQL_CURSOR_STMT_IUD");
-		cursor->stmt_type = GSQL_CURSOR_STMT_IUD;
+
+		GSQL_DEBUG ("GSQL_CURSOR_STMT_DML");
+		cursor->stmt_type = GSQL_CURSOR_STMT_DML;
 		cursor->stmt_affected_rows = affect;
-	}
+	}	
 	
 	n_fields =  mysql_field_count (mysql);	
 	fields = e_cursor->statement->fields;

@@ -41,6 +41,8 @@
 #define GSQL_CONF_EDITOR_WRAPPING			GSQL_CONF_ROOT_KEY "/editor/enable_text_wrapping"
 #define GSQL_CONF_EDITOR_AUTO_INDENT		GSQL_CONF_ROOT_KEY "/editor/enable_auto_indent"
 
+#define GSQL_CONF_EDITOR_TAB_WIDTH_DEFAULT  4
+
 #define GNOME_SYSTEM_FONT       "/desktop/gnome/interface/monospace_font_name"
 
 

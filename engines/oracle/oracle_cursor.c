@@ -525,9 +525,17 @@ oracle_sql_exec(GSQLCursor *cursor)
 			break;
 		
 		case OCI_STMT_CREATE:
+			cursor->stmt_type = GSQL_CURSOR_STMT_CREATE;
+			cursor->stmt_affected_rows = 0;
+			break;
+			
 		case OCI_STMT_DROP:
+			cursor->stmt_type = GSQL_CURSOR_STMT_DROP;
+			cursor->stmt_affected_rows = 0;
+			break;
+			
 		case OCI_STMT_ALTER:
-			cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
+			cursor->stmt_type = GSQL_CURSOR_STMT_ALTER;
 			cursor->stmt_affected_rows = 0;
 			break;
 			

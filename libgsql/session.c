@@ -414,7 +414,7 @@ gsql_session_release_title (GSQLSession *session, gchar *name)
 	GSQL_TRACE_FUNC;
 	
 	if (g_hash_table_remove (session->private->titles_hash, name))
-		GSQL_DEBUG ("Untitled hash: entry found. removed.")
+		GSQL_DEBUG ("Untitled hash: entry found. removed.");
 	else 
 		GSQL_DEBUG ("Untitled hash: entry not found [%s].", name);
 	

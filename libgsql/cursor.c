@@ -577,12 +577,12 @@ gsql_cursor_open_with_vbind (GSQLCursor *cursor, GSQLCursorBindType btype, GList
 			else 
 			{
 				GSQL_DEBUG("[%s] bind by position not implemented",
-						cursor->session->engine->info.name)
+						cursor->session->engine->info.name);
 			}
 			break;
 			
 		default:
-			GSQL_DEBUG ("Unknown GSQLCursorBindType [%d]", (gint) btype)
+			GSQL_DEBUG ("Unknown GSQLCursorBindType [%d]", (gint) btype);
 	}
 	
 	gsql_session_unlock (cursor->session);
