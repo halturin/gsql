@@ -42,7 +42,7 @@ oracle_client_info (gchar *buf);
 gboolean
 oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
     unsigned char buf[64];
 	gint ret;
@@ -241,7 +241,7 @@ oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer)
 void
 oracle_session_commit (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	sword ret;
 	gchar *mess;
@@ -265,7 +265,7 @@ oracle_session_commit (GSQLSession *session)
 void
 oracle_session_rollback (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	sword ret;
 	gchar *mess;
@@ -289,7 +289,7 @@ oracle_session_rollback (GSQLSession *session)
 gboolean 
 oracle_session_close (GSQLSession *session, gchar *buffer)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	/* End session and detach from server */
 	GSQLEOracleSession *o_session;
@@ -317,7 +317,7 @@ oracle_session_close (GSQLSession *session, gchar *buffer)
 static void
 oracle_client_info (gchar *buf)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	struct utsname u;
   
@@ -332,7 +332,7 @@ oracle_client_info (gchar *buf)
 gboolean 
 oracle_check_error (GSQLCursor *cursor, gint ret)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	text  msgbuf[GSQL_MESSAGE_LEN];
 	sb4   errcode = 0;       
@@ -405,7 +405,7 @@ oracle_check_error (GSQLCursor *cursor, gint ret)
 gchar *
 oracle_get_error_string (OCIError *error)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	sb4   errcode = 0;
 	text  msgbuf[256];

@@ -33,7 +33,7 @@ static GConfClient *gconf_client;
 void
 gsql_conf_init()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	gconf_client = gconf_client_get_default ();
 	
@@ -54,7 +54,7 @@ static void
 gsql_conf_notify_handler (GConfClient *client, guint cnxn_id,
 						  GConfEntry *entry, gpointer userdata)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLConfNotifyFunc handler;
 	
@@ -72,7 +72,7 @@ gsql_conf_notify_handler (GConfClient *client, guint cnxn_id,
 void
 gsql_conf_nitify_add (gchar *path, GSQLConfNotifyFunc func, gpointer userdata)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_if_fail (G_IS_OBJECT (userdata));
 
@@ -93,7 +93,7 @@ gsql_conf_nitify_add (gchar *path, GSQLConfNotifyFunc func, gpointer userdata)
 gint
 gsql_conf_value_get_int (gchar *path)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gint value;
@@ -120,7 +120,7 @@ gsql_conf_value_get_int (gchar *path)
 gchar *
 gsql_conf_value_get_string (gchar *path)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (path != NULL, NULL);
 
@@ -132,7 +132,7 @@ gsql_conf_value_get_string (gchar *path)
 gchar *
 gsql_conf_value_get_string_at_root (gchar *path)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (path != NULL, NULL);
 	
@@ -144,7 +144,7 @@ gsql_conf_value_get_string_at_root (gchar *path)
 gboolean
 gsql_conf_value_get_boolean (gchar *path)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gboolean value;
@@ -163,7 +163,7 @@ gsql_conf_value_get_boolean (gchar *path)
 void
 gsql_conf_value_set_int (gchar *path, gint value)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean ret;
 	GError *error = NULL;
@@ -181,7 +181,7 @@ gsql_conf_value_set_int (gchar *path, gint value)
 void
 gsql_conf_value_set_string (gchar *path, gchar *value)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean ret;
 
@@ -195,7 +195,7 @@ gsql_conf_value_set_string (gchar *path, gchar *value)
 void
 gsql_conf_value_set_boolean (gchar *path, gboolean value)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean ret;
 

@@ -261,7 +261,7 @@ GtkWidget*
 gsql_utils_header_new (GtkWidget * icon, gchar *text, gchar *tooltip,
 						 gboolean close_button, gint direction)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *box;
 	GtkWidget *image;
@@ -340,7 +340,7 @@ gsql_source_buffer_get_delim_block (GtkTextIter * iter,
 									GtkTextIter ** block_start,
 									GtkTextIter ** block_end)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gchar * str, *tmp;
 	gunichar uch;

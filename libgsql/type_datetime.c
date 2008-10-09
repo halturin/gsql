@@ -90,7 +90,7 @@ union  _dmyhms
 GType
 gsql_type_datetime_get_type (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	static GType datetime_type = 0;
 	
@@ -140,7 +140,7 @@ gsql_cell_renderer_datetime_get_type (void)
 gchar *
 gsql_type_datetime_to_gchar (GSQLTypeDateTime *dt, gchar *text, guint textlen)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	gchar *f_tmp;
 	static GtkWidget *tmp;
 	GSQLTypeDateTime dt1;
@@ -211,7 +211,7 @@ gsql_cell_renderer_datetime_start_editing (GtkCellRenderer     *cell,
 							       GdkRectangle        *cell_area,
 							       GtkCellRendererState flags)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 		//FIXME
 	GSQL_DEBUG ("Not implemented");
@@ -362,7 +362,7 @@ gsql_type_datetime_free (GSQLTypeDateTime *dt)
 static void
 gsql_datetime_format_property_set (gpointer pt)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	gchar *c_value;
 	gint notstop = DATETIME_MAX_LEN;
@@ -458,7 +458,7 @@ gsql_datetime_format_property_set (gpointer pt)
 static gchar *
 gsql_datetime_format_parse (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	gint notstop = DATETIME_MAX_LEN;
 	gchar *c = dt_format;

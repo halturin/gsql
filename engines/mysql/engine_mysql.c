@@ -55,7 +55,7 @@ engine_logon_widget_free (GtkWidget * logon_widget);
 gboolean
 engine_load (GSQLEngine *engine)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	engine->info.author = ENGINE_AUTHOR;
 	engine->info.id = ENGINE_ID;
@@ -93,7 +93,7 @@ engine_load (GSQLEngine *engine)
 gboolean
 engine_unload (GSQLEngine * engine)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	if (engine->in_use)
 	{
@@ -111,7 +111,7 @@ engine_unload (GSQLEngine * engine)
 GtkWidget *
 engine_logon_widget_new ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *table;
 	GtkWidget *hostname;
@@ -201,7 +201,7 @@ engine_logon_widget_new ()
 void
 engine_logon_widget_free (GtkWidget * logon_widget)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 }

@@ -45,7 +45,7 @@ conf_renderer_edited_cb (GtkCellRendererText *renderer,
 void
 plugin_vte_conf_dialog ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GladeXML* gxml;
 	GtkDialog *dialog;
@@ -111,7 +111,7 @@ conf_engines_list_create (gpointer key,
 								gpointer value,
 								gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkListStore *engines_list = user_data;
 	GtkTreeIter iter;
@@ -142,7 +142,7 @@ conf_renderer_edited_cb (GtkCellRendererText *renderer,
 						 gchar *new_text,
 						 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreePath *path;
 	GtkListStore *lstore = user_data;

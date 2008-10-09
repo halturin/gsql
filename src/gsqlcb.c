@@ -44,7 +44,7 @@ void
 on_dialog_logon_engine_name_changed (GtkComboBox *combobox,
 										gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget * vbox = GTK_WIDGET(user_data);
 	GtkWidget * engine_name;
@@ -63,7 +63,7 @@ void
 on_dialog_close_session_select_all_button_activate (GtkButton * button,
 						    gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	return;
 }
@@ -72,7 +72,7 @@ void
 on_dialog_close_session_toggle_activate (GtkCellRendererToggle * renderer,
 					 gchar * path_str, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GtkTreeIter iter, parent;
 	GtkTreeModel *model = (GtkTreeModel *) data;
@@ -113,7 +113,7 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 											guint            page_num,
 											gpointer         user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLWorkspace *workspace;
@@ -181,7 +181,7 @@ on_sessions_notebook_page_removed (GtkNotebook     *notebook,
 											guint            page_num,
 											gpointer         user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	
@@ -202,14 +202,14 @@ on_sessions_notebook_page_removed (GtkNotebook     *notebook,
 void 
 on_gsql_window_destroy(GtkWidget * widget, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	return;
 }
 
 gint 
 on_gsql_window_delete(GtkWidget * wd, GdkEvent * event, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
         // here is checking for opened DB and not saved data
 	gsql_window_clean_exit();
 	return TRUE;
@@ -220,7 +220,7 @@ void
 on_session_close_header_button_activate (GtkButton *button,
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 

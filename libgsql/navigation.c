@@ -192,7 +192,7 @@ query_tooltip_tree_view_cb (GtkWidget  *widget,
 GSQLNavigation *
 gsql_navigation_new (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkTreeStore *navstore;
 	GtkTreeView	 *navtree;
@@ -360,7 +360,7 @@ gsql_navigation_set_root (GSQLNavigation *navigation, gchar *stock, gchar *owner
 GtkListStore *
 gsql_navigation_get_details (GSQLNavigation *navigation, gchar *key)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkListStore *details = NULL;
 	
@@ -480,7 +480,7 @@ gsql_navigation_get_model (GSQLNavigation *navigation)
 static void
 gsql_navigation_destroy (GtkObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLNavigation *navigation = GSQL_NAVIGATION (obj);
 	
@@ -491,7 +491,7 @@ gsql_navigation_destroy (GtkObject *obj)
 static void
 gsql_navigation_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLNavigation *navigation = GSQL_NAVIGATION (obj);
 	
@@ -506,7 +506,7 @@ gsql_navigation_finalize (GObject *obj)
 static void
 gsql_navigation_class_init (GSQLNavigationClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 	GtkObjectClass   *gtkobject_class = GTK_OBJECT_CLASS (klass);
@@ -551,7 +551,7 @@ gsql_navigation_class_init (GSQLNavigationClass *klass)
 static void 
 gsql_navigation_init (GSQLNavigation *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GError **error;
 	GtkActionGroup *action;
@@ -764,7 +764,7 @@ on_navigation_activate (GtkTreeView *tv, GtkTreePath *path,
 				GtkTreeViewColumn *col, gpointer data)
 {
 	
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLNavigation *navigation = data;
 	GtkTreeModel *model;
@@ -795,7 +795,7 @@ static void
 on_navigation_cursor_changed (GtkTreeView *tv,
 					gpointer     user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkListStore *details = NULL;
 	GtkTreePath *path;
@@ -825,7 +825,7 @@ static gboolean
 on_navigation_button_press (GtkWidget *tv, GdkEventButton *event,
 										gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkTreePath *path;
 	GtkTreeSelection *selection;
@@ -849,7 +849,7 @@ static gboolean
 on_navigation_key_press (GtkWidget *tv, GdkEventKey *event, 
 									 gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLNavigation *navigation = data;
 	GtkTreeIter iter;
@@ -908,7 +908,7 @@ on_navigation_key_press (GtkWidget *tv, GdkEventKey *event,
 static gboolean 
 on_navigation_popup_menu (GtkWidget *tv, void *data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLNavigation *navigation = data;
 	GtkTreePath *path = NULL;
@@ -1015,7 +1015,7 @@ on_navigation_popup_refresh (GtkMenuItem *menuitem,
 static void
 details_hash_remove_key_notify (gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_free (data);
 
@@ -1024,7 +1024,7 @@ details_hash_remove_key_notify (gpointer data)
 static void
 details_hash_remove_value_notify (gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_object_unref (G_OBJECT (data));
 

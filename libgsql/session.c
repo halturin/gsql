@@ -181,7 +181,7 @@ gsql_session_get_type ()
 GSQLSession *
 gsql_session_new (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLSession *session;
 	session = g_object_new (GSQL_SESSION_TYPE, NULL);
@@ -201,7 +201,7 @@ gsql_session_new (void)
 GSQLSession *
 gsql_session_new_with_attrs (gchar *attr_name,...)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	va_list vl;
@@ -250,7 +250,7 @@ gsql_session_new_with_attrs (gchar *attr_name,...)
 void
 gsql_session_set_attrs (GSQLSession *session, gchar *attr_name,...)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	va_list vl;
 	gchar *attr;
@@ -298,7 +298,7 @@ gsql_session_set_attrs (GSQLSession *session, gchar *attr_name,...)
 void 
 gsql_session_set_workspace (GSQLSession *session, GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkWidget *child;
 	
@@ -319,7 +319,7 @@ gsql_session_set_workspace (GSQLSession *session, GSQLWorkspace *workspace)
 GSQLWorkspace *
 gsql_session_get_workspace (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	if (GSQL_IS_SESSION (session))
 		
@@ -334,7 +334,7 @@ gsql_session_get_workspace (GSQLSession *session)
 gchar *
 gsql_session_get_name (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
 
@@ -344,7 +344,7 @@ gsql_session_get_name (GSQLSession *session)
 gint
 gsql_sessions_count (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return g_hash_table_size (sessions);
 }
@@ -352,7 +352,7 @@ gsql_sessions_count (void)
 GSQLSession *
 gsql_session_get_active (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return active_session;
 }
@@ -492,7 +492,7 @@ gsql_session_lock_state (GSQLSession *session)
 static void
 gsql_session_destroy (GtkObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session = GSQL_SESSION (obj);
 	
@@ -524,7 +524,7 @@ gsql_session_destroy (GtkObject *obj)
 static void
 gsql_session_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	(* G_OBJECT_CLASS (parent_class)->finalize) (obj);
 	
@@ -539,7 +539,7 @@ gsql_session_child_type (GtkContainer   *container)
 static void
 gsql_session_class_init (GSQLSessionClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 	GtkObjectClass   *gtkobject_class = GTK_OBJECT_CLASS (klass);
@@ -652,7 +652,7 @@ gsql_session_class_init (GSQLSessionClass *klass)
 static void 
 gsql_session_init (GSQLSession *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (obj != NULL);
 	
@@ -681,7 +681,7 @@ gsql_session_get_property	(GObject		*object,
 							 GValue	*value,
 							 GParamSpec		*pspec)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLSession *session;
 	g_return_if_fail (object != NULL);
@@ -724,7 +724,7 @@ gsql_session_set_property	(GObject		*object,
 							 const GValue	*value,
 							 GParamSpec		*pspec)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLSession *session;
 	g_return_if_fail (object != NULL);
@@ -769,7 +769,7 @@ gsql_session_set_property	(GObject		*object,
 static void 
 gsql_session_set_session_name (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (session != NULL);
 
@@ -950,7 +950,7 @@ void on_session_rollback (GtkMenuItem *mi, gpointer data)
 static void
 untitled_hash_remove_key_notify (gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_free (data);
 }

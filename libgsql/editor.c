@@ -103,7 +103,7 @@ static GtkActionEntry editor_acts[] =
 GtkWidget *
 gsql_source_editor_new(gchar * buffer_body)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GtkWidget * source;        
 	static GtkSourceLanguage *lang;
@@ -225,7 +225,7 @@ gsql_source_editor_new(gchar * buffer_body)
 void 
 gsql_source_editor_marker_set (GtkTextIter *iter, gchar *marker_type)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkSourceMark *pixmark;
 	GtkSourceBuffer *buffer;
@@ -249,7 +249,7 @@ gsql_source_editor_marker_set (GtkTextIter *iter, gchar *marker_type)
 void
 gsql_source_editor_markers_clear (GtkSourceBuffer *buffer)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GList *markers = NULL;
 	
@@ -297,7 +297,7 @@ gsql_source_editor_markers_clear (GtkSourceBuffer *buffer)
 static void
 gsql_markers_clear_for_each (gpointer data, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkTextBuffer *buffer = user_data;
 	gtk_text_buffer_delete_mark (buffer,
@@ -309,7 +309,7 @@ gsql_markers_clear_for_each (gpointer data, gpointer user_data)
 static void 
 gsql_source_editor_property_set (gpointer src)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkWidget *source = src;
 	PangoFontDescription * font_desc;

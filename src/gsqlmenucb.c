@@ -44,7 +44,7 @@
 void
 on_file_new_sql_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	
@@ -58,7 +58,7 @@ on_file_new_sql_activate (GtkMenuItem *mi, gpointer data)
 void
 on_file_open_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *chooser;
 	gint ret;
@@ -127,7 +127,7 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 void
 on_file_save_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLContent *content = NULL;	
 	
@@ -141,7 +141,7 @@ on_file_save_activate (GtkMenuItem *mi, gpointer data)
 void
 on_file_save_as_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLContent *content = NULL;	
 	
@@ -155,7 +155,7 @@ on_file_save_as_activate (GtkMenuItem *mi, gpointer data)
 void
 on_file_close_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLContent *content = NULL;	
 	
@@ -169,7 +169,7 @@ on_file_close_activate (GtkMenuItem *mi, gpointer data)
 void
 on_file_close_all_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -177,7 +177,7 @@ on_file_close_all_activate (GtkMenuItem *mi, gpointer data)
 void
 on_file_reload_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLContent *content = NULL;
 	
@@ -191,7 +191,7 @@ on_file_reload_activate (GtkMenuItem *mi, gpointer data)
 void
 on_exit_activate (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gsql_window_clean_exit();
 
@@ -201,7 +201,7 @@ on_exit_activate (GtkMenuItem * mi, gpointer data)
 void
 on_navarea_activate (GtkToggleAction *ta, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLWorkspace *workspace;
@@ -221,7 +221,7 @@ on_navarea_activate (GtkToggleAction *ta, gpointer data)
 void
 on_messarea_activate (GtkToggleAction *ta, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLWorkspace *workspace;
@@ -242,7 +242,7 @@ on_messarea_activate (GtkToggleAction *ta, gpointer data)
 void
 on_next_session (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkNotebook *sessions;
 
@@ -255,7 +255,7 @@ on_next_session (GtkMenuItem *mi, gpointer data)
 void
 on_prev_session (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkNotebook *sessions;
 
@@ -268,7 +268,7 @@ on_prev_session (GtkMenuItem *mi, gpointer data)
 void
 on_next_page (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLWorkspace *workspace;
@@ -283,7 +283,7 @@ on_next_page (GtkMenuItem *mi, gpointer data)
 void
 on_prev_page (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLWorkspace *workspace;
@@ -298,7 +298,7 @@ on_prev_page (GtkMenuItem *mi, gpointer data)
 void
 on_content_details (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLWorkspace *workspace;
@@ -313,7 +313,7 @@ on_content_details (GtkMenuItem *mi, gpointer data)
 void
 on_preferences_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gsql_conf_dialog();
 }
@@ -322,7 +322,7 @@ on_preferences_activate (GtkMenuItem *mi, gpointer data)
 void
 on_new_session_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkDialog *dialog;
 	GtkDialog *msg;
@@ -380,7 +380,8 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	
-	g_return_if_fail (GSQL_IS_SESSION (session));
+	if (!GSQL_IS_SESSION (session))
+		return;
 	
 	session->engine = engine;
 	sessions = g_object_get_data(G_OBJECT(gsql_window), "sessions");
@@ -409,7 +410,7 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 void
 on_help_manual_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gnome_help_display ("gsql.xml", NULL, NULL);
 }
@@ -417,7 +418,7 @@ on_help_manual_activate (GtkMenuItem *mi, gpointer data)
 void
 on_home_page_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gnome_url_show (PROJECT_URL, &error);	
@@ -427,7 +428,7 @@ on_home_page_activate (GtkMenuItem *mi, gpointer data)
 void
 on_api_refs_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gnome_url_show (PROJECT_URL "/development/references", &error);	
@@ -437,7 +438,7 @@ on_api_refs_activate (GtkMenuItem *mi, gpointer data)
 void
 on_bug_report_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gnome_url_show (PROJECT_BUG_REPORT_URL, &error);
@@ -447,7 +448,7 @@ on_bug_report_activate (GtkMenuItem *mi, gpointer data)
 void
 on_mailgroup_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gnome_url_show (PROJECT_GROUP_URL, &error);
@@ -458,7 +459,7 @@ on_about_activate_url (GtkAboutDialog *about,
 						const gchar *link,
 						gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
 	gnome_url_show (PROJECT_URL, &error);
@@ -467,7 +468,7 @@ on_about_activate_url (GtkAboutDialog *about,
 void
 on_about_activate (GtkMenuItem *mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	static GtkWidget *about = NULL;
 	GdkPixbuf *logo;

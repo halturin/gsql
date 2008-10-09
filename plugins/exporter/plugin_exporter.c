@@ -64,7 +64,7 @@ static GtkActionGroup *action;
 gboolean 
 plugin_load (GSQLPlugin * plugin)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	plugin->info.author = PLUGIN_AUTHOR;
 	plugin->info.id = PLUGIN_ID;
@@ -90,7 +90,7 @@ plugin_load (GSQLPlugin * plugin)
 gboolean 
 plugin_unload (GSQLPlugin * plugin)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return TRUE;
 };

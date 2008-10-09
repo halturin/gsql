@@ -41,7 +41,7 @@ periodical_thread (gpointer data)
 	
 	if (eopt->suspended)
 	{
-		GSQL_DEBUG ("Suspended period: %d", eopt->suspended_period)
+		GSQL_DEBUG ("Suspended period: %d", eopt->suspended_period);
 		period = eopt->suspended_period;
 		while (period)
 		{

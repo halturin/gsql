@@ -88,29 +88,29 @@ gsql_marshal_VOID__STRING_STRING (GClosure  *closure,
 extern gboolean gsql_opt_trace_enable;
 extern gboolean gsql_opt_debug_enable;
 
-#ifdef HAVE_ENABLE_TRACE
+//#ifdef HAVE_ENABLE_TRACE
 
 #define GSQL_TRACE_FUNC \
 	if (gsql_opt_trace_enable) \
-		g_print("trace: [%p] %s [%s:%d]\n", (gpointer) g_thread_self(), __func__, __FILE__, __LINE__); \
+		g_print("trace: [%p] %s [%s:%d]\n", (gpointer) g_thread_self(), __func__, __FILE__, __LINE__)
 
-#else
+//#else
 
-#define GSQL_TRACE_FUNC
+//#define GSQL_TRACE_FUNC;
 
-#endif
+//#endif
 
-#ifdef HAVE_ENABLE_DEBUG
+//#ifdef HAVE_ENABLE_DEBUG
 
 #define GSQL_DEBUG(params...) \
 	if (gsql_opt_debug_enable) \
-		g_debug (params);\
+		g_debug (params)
 
-#else
+//#else
 
-#define GSQL_DEBUG(params...)
+//#define GSQL_DEBUG(params...)
 
-#endif
+//#endif
 	
 #define GSQL_THREAD_ENTER \
 	if (gsql_main_thread !=(gpointer)  g_thread_self()) \

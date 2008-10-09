@@ -27,6 +27,7 @@
 #include <libgsql/common.h>
 #include <libgsql/session.h>
 #include <libgsql/workspace.h>
+#include <libgsql/utils.h>
 #include "engine_session.h"
 #include "oracle.h"
 #include "oracle_cursor.h"
@@ -62,7 +63,7 @@ on_cursor_close (GSQLCursor *cursor, gpointer user_data)
 GSQLCursorState 
 oracle_cursor_open (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEOracleCursor	*spec_cursor;
 	GSQLEOracleSession	*spec_session;
@@ -143,7 +144,7 @@ oracle_cursor_open (GSQLCursor *cursor)
 GSQLCursorState
 oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEOracleCursor	*spec_cursor;
 	GSQLEOracleSession	*spec_session;
@@ -280,7 +281,7 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 GSQLCursorState 
 oracle_cursor_open_bind_by_name (GSQLCursor *cursor, GList *args)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	va_list vl;
 	char *bind, *holder;
@@ -378,7 +379,7 @@ oracle_cursor_open_bind_by_name (GSQLCursor *cursor, GList *args)
 gint 
 oracle_cursor_fetch(GSQLCursor * cursor, gint rows)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	sword ret;
 	gint fetched;
@@ -411,7 +412,7 @@ oracle_cursor_fetch(GSQLCursor * cursor, gint rows)
 static gboolean
 oracle_sql_prepare (GSQLCursor *cursor, gchar *sql)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	sword ret;
 	unsigned char op[2000];
@@ -449,12 +450,12 @@ static gchar *
 oracle_get_affected_message (GSQLEOracleCursor *cursor, gdouble elapsed);
 
 static void
-oracle_dbms_output (GSQLEOracleCursor *cursor);
+oracle_dbms_output (GSQLCursor *cursor);
 
 static gboolean
 oracle_sql_exec(GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	sword ret;
 	int num_iters = 0;
@@ -551,8 +552,8 @@ oracle_sql_exec(GSQLCursor *cursor)
 			
 	}
 
-	//if (session->dbms_output)
-		//oracle_dbms_output (cursor);
+	if (spec_session->dbms_output)
+		oracle_dbms_output (cursor);
 
 	return ret;
 };
@@ -560,11 +561,12 @@ oracle_sql_exec(GSQLCursor *cursor)
 
 
 static void
-oracle_dbms_output (GSQLEOracleCursor *cursor)
+oracle_dbms_output (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEOracleSession *session;
+	GSQLWorkspace *workspace;
 	OCIBind *bind_p1 = NULL, *bind_p2 = NULL;
 	OCIStmt *sth = NULL;
 	sb2 ind = OCI_IND_NULL;
@@ -572,12 +574,14 @@ oracle_dbms_output (GSQLEOracleCursor *cursor)
 	const gchar *sql = "begin dbms_output.get_line (line=>:p1, status=>:p2); end;";
 	gchar *mess = NULL;
 
-// TODO: use gconf for this limit
+// FIXME: use gconf
 #define DBMS_OUTPUT_BUFFER 2048
-/*	gchar p1_value[DBMS_OUTPUT_BUFFER];
+	gchar p1_value[DBMS_OUTPUT_BUFFER];
 	gint p2_value = 0, ret;
 	
 	session = (GSQLEOracleSession *) cursor->session->spec;
+	workspace = gsql_session_get_workspace (cursor->session);
+	
 	OCIHandleAlloc ((dvoid *)(session->envhp), 
 					   (dvoid **)&(errhp),
 						OCI_HTYPE_ERROR, 0, (dvoid **) 0);
@@ -596,6 +600,7 @@ oracle_dbms_output (GSQLEOracleCursor *cursor)
 				  			(ub2) SQLT_STR,
 							(dvoid *) &ind, (ub2 *) 0, (ub2 *) 0, (ub4) 0, (ub4 *) 0,
 							(ub4) OCI_DEFAULT);
+	
 	OCIBindByPos (sth, &bind_p2, errhp, (ub4) 2,
 							(dvoid *) &p2_value, (sb4) sizeof(p2_value),
 				  			(ub2) SQLT_INT,
@@ -606,23 +611,25 @@ oracle_dbms_output (GSQLEOracleCursor *cursor)
 	{
 		ret = OCIStmtExecute(session->svchp, sth,
 							errhp, 1, 0, 0, 0, OCI_DEFAULT);
+		
 		if (ret != OCI_SUCCESS)
 		{
 			GSQL_DEBUG ("Couldn't get dbms output: %s", 
 						oracle_get_error_string (errhp));
 			break;
-		};
+		}
+		
 		if (g_utf8_strlen (p1_value, DBMS_OUTPUT_BUFFER) > 0)
 		{
 			mess = gsql_utils_escape_string (p1_value);
 			GSQL_DEBUG ("DBMS_OUTPUT: %s", mess);
-			gsql_message_add (cursor->session->workspace, MSG_DBOUTPUT, mess);
+			gsql_message_add (workspace, GSQL_MESSAGE_OUTPUT, mess);
 			g_free (mess);
-		};
-	};
+		}
+	}
 	
 	OCIHandleFree((dvoid *)sth, (ub4)OCI_HTYPE_STMT);
-	OCIHandleFree((dvoid *)errhp, (ub4)OCI_HTYPE_ERROR);*/
+	OCIHandleFree((dvoid *)errhp, (ub4)OCI_HTYPE_ERROR);
 
-};
+}
 

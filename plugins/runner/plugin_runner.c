@@ -86,7 +86,7 @@ on_f_action()
 gboolean 
 plugin_load (GSQLPlugin * plugin)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkWidget *button;
 	GtkMenu		*menu;
@@ -116,7 +116,7 @@ plugin_load (GSQLPlugin * plugin)
 gboolean 
 plugin_unload (GSQLPlugin * plugin)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return TRUE;
 }
@@ -124,7 +124,7 @@ plugin_unload (GSQLPlugin * plugin)
 static void
 on_real_close_content (GSQLContent *content, gboolean force)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLPRunnerExecOptions *eopt;
 	
@@ -145,7 +145,7 @@ on_real_close_content (GSQLContent *content, gboolean force)
 static void
 on_widget_toggled (GtkToggleButton *togglebutton, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkWidget *w = user_data;
 	

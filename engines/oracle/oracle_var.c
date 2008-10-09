@@ -63,7 +63,7 @@ gboolean
 oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable, 
 					 OCIParam *param, gint pos)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEOracleVariable *spec_var;
 	GSQLEOracleSession  *spec_session;
@@ -239,7 +239,7 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 static void
 oracle_raw_to_value (GSQLVariable *variable)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gchar * gchar_value;
 #define MAX_LEN_STR_VALUE   1024
@@ -364,7 +364,7 @@ oracle_raw_to_value (GSQLVariable *variable)
 void 
 oracle_variable_free(GSQLEOracleVariable *var)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (var != NULL);
 	

@@ -43,7 +43,7 @@ static void on_session_commit (GSQLSession *session, gpointer user_data);
 gpointer
 engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *widget;
 		
@@ -182,7 +182,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 static void
 on_session_close (GSQLSession *session, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 }
@@ -190,7 +190,7 @@ on_session_close (GSQLSession *session, gpointer user_data)
 static void
 on_session_reopen (GSQLSession *session, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 }
@@ -198,7 +198,7 @@ on_session_reopen (GSQLSession *session, gpointer user_data)
 static void
 on_session_duplicate (GSQLSession *session, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 }
@@ -206,7 +206,7 @@ on_session_duplicate (GSQLSession *session, gpointer user_data)
 static void
 on_session_commit (GSQLSession *session, gpointer user_data)
 {
-	GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;;
 	
 	GSQLWorkspace *workspace;
 	
@@ -221,7 +221,7 @@ on_session_commit (GSQLSession *session, gpointer user_data)
 static void
 on_session_rollback (GSQLSession *session, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLWorkspace *workspace;
 	

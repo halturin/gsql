@@ -34,7 +34,7 @@ static NotifyNotification *notify;
 void
 gsql_notify_send (GSQLSession *session, gchar *subject, gchar *message)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gchar subj[256];
 

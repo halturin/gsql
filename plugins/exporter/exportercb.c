@@ -46,7 +46,7 @@ static struct _export_types export_types[] =
 static void
 on_choosebutton_activate (GtkButton *button, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkDialog *dialog;
 	GtkWidget *target = user_data;
@@ -147,7 +147,7 @@ get_export_types_combo ()
 void
 on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GladeXML* gxml;
 	GtkDialog *dialog;

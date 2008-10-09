@@ -31,7 +31,7 @@
 void
 exporter_export_to_csv (GSQLContent *content, gchar *file, gchar *encoding, gboolean headers)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	return;
 };

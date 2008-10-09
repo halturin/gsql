@@ -56,7 +56,7 @@ gsql_conf_engines_conf_widget_free (gpointer key,
 void
 gsql_conf_dialog()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkDialog * dialog;
 	GladeXML* gxml;
@@ -246,7 +246,7 @@ gsql_conf_engines_conf_widget_create (gpointer key,
 								gpointer value,
 								gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEngine	*engine = (GSQLEngine *) value;
 	GtkWidget	*label;
@@ -272,7 +272,7 @@ gsql_conf_engines_conf_widget_free (gpointer key,
 								gpointer value,
 								gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget	*widget;
 	GtkNotebook *notebook = (GtkNotebook *) user_data;
@@ -291,7 +291,7 @@ gsql_conf_plugins_list_create (gpointer key,
 								gpointer value,
 								gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkListStore *plugins_list = user_data;
 	GtkTreeIter iter;

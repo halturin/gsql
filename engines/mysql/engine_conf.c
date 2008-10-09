@@ -30,7 +30,7 @@
 GtkWidget *
 engine_conf_widget_new ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return NULL;
 };
@@ -38,7 +38,7 @@ engine_conf_widget_new ()
 void
 engine_conf_widget_free (GtkWidget *conf_widget)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };

@@ -90,7 +90,7 @@ static GtkIconFactory *gsql_icon_factory;
 void
 gsql_stock_init ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gsql_icon_factory = gtk_icon_factory_new();
 	gtk_icon_factory_add_default(gsql_icon_factory);
@@ -103,7 +103,7 @@ gsql_stock_init ()
 void
 gsql_factory_add (GSQLStockIcon *stock_icons, gint n_elements)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gint i;
 	GdkPixbuf *pixbuf;

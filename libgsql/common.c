@@ -41,7 +41,7 @@ static GList *pixmaps_directories = NULL;
 void
 add_pixmap_directory (const gchar * directory)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
   	pixmaps_directories = g_list_prepend (pixmaps_directories,
 					g_strdup (directory));

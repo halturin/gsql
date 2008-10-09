@@ -429,7 +429,7 @@ on_popup_table_browse (GtkMenuItem * menuitem,
 static void
 nav_tree_tables_browse (gchar *name, gchar *owner)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLSession *session;
 	GSQLCursor  *cursor;

@@ -53,7 +53,7 @@ gsql_engine_new (gchar * engine_file);
 void
 gsql_engines_lookup ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	const gchar *file_name;
 	GDir * dir;
@@ -117,7 +117,7 @@ gsql_engines_lookup ()
 static GSQLEngine *
 gsql_engine_new (gchar * engine_file)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLEngine *engine, *engine1;
 	GModule *module;
@@ -193,7 +193,7 @@ gsql_engine_new (gchar * engine_file)
 static gboolean
 gsql_engine_load_symbols (GSQLEngine * engine)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 // linking required symbols
 	if ((!g_module_symbol (engine->module, GSQL_ENGINE_SYMBOL_LOAD, 
@@ -210,7 +210,7 @@ gsql_engine_load_symbols (GSQLEngine * engine)
 guint
 gsql_engines_count()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	g_return_val_if_fail (hash_engines != NULL, 0);
 	
@@ -220,7 +220,7 @@ gsql_engines_count()
 void
 gsql_engines_foreach (GHFunc func, gpointer userdata)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	if (!gsql_engines_count())
 		return;
@@ -235,7 +235,7 @@ void
 gsql_engine_menu_set_status (GSQLEngine *engine,
 								gboolean status)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	g_object_set(G_OBJECT(engine->action), "visible", status, NULL);
 }

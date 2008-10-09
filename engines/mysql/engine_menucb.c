@@ -28,7 +28,7 @@
 void
 on_server_output (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -36,7 +36,7 @@ on_server_output (GtkMenuItem * mi, gpointer data)
 void
 on_empty_recycle_activate (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -44,7 +44,7 @@ on_empty_recycle_activate (GtkMenuItem * mi, gpointer data)
 void
 on_job_manager_activate (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -52,7 +52,7 @@ on_job_manager_activate (GtkMenuItem * mi, gpointer data)
 void
 on_find_code_activate (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -60,7 +60,7 @@ on_find_code_activate (GtkMenuItem * mi, gpointer data)
 void
 on_find_object_activate (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };

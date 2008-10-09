@@ -49,7 +49,7 @@ static GtkActionEntry gsqlmenu_action[] =
 void
 gsql_help_menu_init()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkActionGroup *action;
 

@@ -31,7 +31,7 @@ extern GtkWidget *gsql_window;
 void
 gsql_menu_init()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	gsql_menu = (GSQLMenu *) g_malloc0 (sizeof( GSQLMenu));
 	gsql_menu->ui = gtk_ui_manager_new ();
@@ -44,7 +44,7 @@ gsql_menu_init()
 guint
 gsql_menu_merge (gchar *ui_file, GtkActionGroup *action)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GError **error;
 	guint ret;
@@ -82,7 +82,7 @@ gsql_menu_merge_ui (gchar *ui_file)
 guint
 gsql_menu_merge_from_string (const gchar *str, GtkActionGroup *action)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GError **error;
 	guint ret;
@@ -105,7 +105,7 @@ gsql_menu_merge_from_string (const gchar *str, GtkActionGroup *action)
 void
 gsql_menu_merge_action (GtkActionGroup *action)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	gtk_ui_manager_insert_action_group (gsql_menu->ui, action, 0);
 	gtk_ui_manager_ensure_update (gsql_menu->ui);
@@ -115,7 +115,7 @@ gsql_menu_merge_action (GtkActionGroup *action)
 GtkWidget *
 gsql_menu_get_widget (gchar *name)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	return gtk_ui_manager_get_widget (gsql_menu->ui, name);
 }

@@ -60,7 +60,7 @@ on_cursor_close (GSQLCursor *cursor, gpointer user_data)
 static gboolean
 mysql_cursor_prepare (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEMySQLSession *e_session = NULL;
 	GSQLEMySQLCursor  *e_cursor = NULL;
@@ -79,10 +79,6 @@ mysql_cursor_prepare (GSQLCursor *cursor)
 	
 	if (mysql_stmt_prepare(e_cursor->statement, cursor->sql, g_utf8_strlen(cursor->sql, 1048576)))
 	{
-		g_sprintf (error_str, "Prepare failed: %s", mysql_stmt_error (e_cursor->statement));
-		GSQL_DEBUG (error_str);
-		workspace = gsql_session_get_workspace (cursor->session);
-		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 		mysql_stmt_reset (e_cursor->statement);
 		return FALSE;
 	};
@@ -250,6 +246,7 @@ mysql_cursor_open (GSQLCursor *cursor)
 	gulong n, n_fields, is_null = 1;
 	gdouble affect = 0;
 	gchar error_str[2048];
+	gchar *stmt_char;
 	
 	e_session = cursor->session->spec;
 	workspace = gsql_session_get_workspace (cursor->session);
@@ -262,10 +259,9 @@ mysql_cursor_open (GSQLCursor *cursor)
 	}
 	e_cursor = cursor->spec;
 	
+	e_cursor->result = mysql_stmt_result_metadata(e_cursor->statement);
 
-	if ((!(e_cursor->result = mysql_stmt_result_metadata(e_cursor->statement))) ||
-		(mysql_stmt_execute(e_cursor->statement)) )
-		
+	if (mysql_stmt_execute(e_cursor->statement)) 
 	{
 		g_sprintf (error_str, "Error occured: %s", mysql_stmt_error (e_cursor->statement));
 		GSQL_DEBUG (error_str);
@@ -278,21 +274,77 @@ mysql_cursor_open (GSQLCursor *cursor)
 		How to recognize the type of the statement?
 		Any body knows? I it irealy defective!! 
 	*/
-
-	if (affect = mysql_stmt_affected_rows(e_cursor->statement) == -1)
+	
+	affect = mysql_stmt_affected_rows(e_cursor->statement);
+	
+	stmt_char = g_ascii_strdown (cursor->sql, 10);
+	
+	switch (0)
 	{
-		GSQL_DEBUG ("GSQL_CURSOR_STMT_SELECT");
-		cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
-		
-	} else {
-
-		GSQL_DEBUG ("GSQL_CURSOR_STMT_DML");
-		cursor->stmt_type = GSQL_CURSOR_STMT_DML;
-		cursor->stmt_affected_rows = affect;
-	}	
+		case 0:
+			if (g_str_has_prefix (stmt_char, "select"))
+			{
+				GSQL_DEBUG ("'select' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
+				break;
+			}
+			
+			if (g_str_has_prefix (stmt_char, "insert"))
+			{
+				GSQL_DEBUG ("'insert' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_INSERT;
+				cursor->stmt_affected_rows = affect;
+				break;
+			}
+			
+			if (g_str_has_prefix (stmt_char, "update"))
+			{
+				GSQL_DEBUG ("'update' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_UPDATE;
+				cursor->stmt_affected_rows = affect;
+				break;
+			}
+			
+			if (g_str_has_prefix (stmt_char, "delete"))
+			{
+				GSQL_DEBUG ("'delete' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_DELETE;
+				cursor->stmt_affected_rows = affect;
+				break;
+			}
+				
+			if (g_str_has_prefix (stmt_char, "create"))
+			{
+				GSQL_DEBUG ("'create' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_CREATE;
+				break;
+			}
+			
+			if (g_str_has_prefix (stmt_char, "drop"))
+			{
+				GSQL_DEBUG ("'drop' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_DROP;
+				break;
+			}
+			
+			if (g_str_has_prefix (stmt_char, "alter"))
+			{
+				GSQL_DEBUG ("'alter' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_ALTER;
+				break;
+			}
+			
+		default:
+				GSQL_DEBUG ("default 'exec' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_EXEC;
+	}
 	
 	n_fields =  mysql_field_count (mysql);	
 	fields = e_cursor->statement->fields;
+	
+	if (n_fields == 0)
+		return GSQL_CURSOR_STATE_OPEN;
+	
 	binds = g_new0 (MYSQL_BIND, n_fields);
 	e_cursor->binds = binds;
 	
@@ -303,6 +355,8 @@ mysql_cursor_open (GSQLCursor *cursor)
 		mysql_variable_init (var, &fields[n], &binds[n]);
 		cursor->var_list = g_list_append (cursor->var_list, var);
 	}
+	
+	
 	
 	if (mysql_stmt_bind_result (e_cursor->statement, binds))
 	{

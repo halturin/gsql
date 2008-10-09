@@ -31,7 +31,7 @@ void
 on_conf_use_system_env_check_toggled (GtkToggleButton *togglebutton,
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkDialog * dialog = user_data;        
 	gboolean status;
@@ -52,7 +52,7 @@ void
 on_conf_oracle_env_add_button_activate (GtkButton *button,
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -62,7 +62,7 @@ void
 on_conf_oracle_env_edit_button_activate (GtkButton *button,
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -72,7 +72,7 @@ void
 on_conf_oracle_env_del_button_activate (GtkButton *button,
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -82,7 +82,7 @@ void
 on_conf_oracle_enable_trace_check_toggled (GtkToggleButton *togglebutton,
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         

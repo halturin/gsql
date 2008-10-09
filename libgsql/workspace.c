@@ -134,7 +134,7 @@ gsql_workspace_child_type (GtkContainer   *container)
 GSQLWorkspace *
 gsql_workspace_new (GSQLSession *session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLWorkspace 		*workspace;
 	/* FIXME: layout choosing */
@@ -375,7 +375,7 @@ gsql_workspace_new (GSQLSession *session)
 GSQLContent *
 gsql_workspace_get_current_content (GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkNotebook *contents;
 	GSQLContent *content;
@@ -421,7 +421,7 @@ gsql_workspace_get_navigation (GSQLWorkspace *workspace)
 void
 gsql_workspace_add_content (GSQLWorkspace *workspace, GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (GSQL_IS_WORKSPACE (workspace));
 	g_return_if_fail (GSQL_IS_CONTENT (content));
@@ -446,7 +446,7 @@ gsql_workspace_add_content (GSQLWorkspace *workspace, GSQLContent *content)
 GList *
 gsql_workspace_get_content_list (GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), NULL);
 	
@@ -457,7 +457,7 @@ gsql_workspace_get_content_list (GSQLWorkspace *workspace)
 void
 gsql_workspace_set_navigate_visible (GSQLWorkspace *workspace, gboolean visible)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	workspace->private->navigate_show = visible;
 	
@@ -472,7 +472,7 @@ gsql_workspace_set_navigate_visible (GSQLWorkspace *workspace, gboolean visible)
 void
 gsql_workspace_set_messages_visible (GSQLWorkspace *workspace, gboolean visible)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	workspace->private->messages_show = visible;
 	
@@ -487,7 +487,7 @@ gsql_workspace_set_messages_visible (GSQLWorkspace *workspace, gboolean visible)
 gboolean
 gsql_workspace_get_navigate_visible (GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), FALSE);
 	
@@ -498,7 +498,7 @@ gsql_workspace_get_navigate_visible (GSQLWorkspace *workspace)
 gboolean
 gsql_workspace_get_messages_visible (GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), FALSE);
 	
@@ -508,7 +508,7 @@ gsql_workspace_get_messages_visible (GSQLWorkspace *workspace)
 GSQLSession *
 gsql_workspace_get_session (GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), NULL);
 		
@@ -568,7 +568,7 @@ gsql_workspace_set_details (GSQLWorkspace *workspace,
 void 
 gsql_message_add(GSQLWorkspace *workspace, gint type, gchar * msg)
 {    
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *vpaned;
 	GtkTreeModel *liststore = NULL;
@@ -691,7 +691,7 @@ gsql_workspace_set_content_page (GSQLWorkspace *workspace, GSQLContent *content)
 static void
 gsql_workspace_destroy (GtkObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLWorkspace *workspace = GSQL_WORKSPACE (obj);
 	
@@ -702,7 +702,7 @@ gsql_workspace_destroy (GtkObject *obj)
 static void
 gsql_workspace_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLWorkspace *workspace = GSQL_WORKSPACE (obj);
 
@@ -715,7 +715,7 @@ gsql_workspace_finalize (GObject *obj)
 static void
 gsql_workspace_class_init (GSQLWorkspaceClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 	GtkObjectClass   *gtkobject_class = GTK_OBJECT_CLASS (klass);
@@ -759,7 +759,7 @@ gsql_workspace_class_init (GSQLWorkspaceClass *klass)
 static void 
 gsql_workspace_init (GSQLWorkspace *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (obj != NULL);
 	
@@ -863,7 +863,7 @@ gsql_message_save_selection_foreach (GtkTreeModel *model,
 										GtkTreeIter *iter,
 										gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gchar * type_message_str;
 	gint type_message;
@@ -923,7 +923,7 @@ static void
 on_copy_text_messages_activate (GtkMenuItem * menuitem, 
                                 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreeView *treeview = user_data;
 	GtkTreeSelection *sel;
@@ -964,7 +964,7 @@ static void
 on_select_all_messages_activate (GtkMenuItem * menuitem, 
                                  gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreeView * treeview = user_data;
 	GtkTreeSelection * sel;
@@ -979,7 +979,7 @@ static void
 on_save_to_file_messages_activate (GtkMenuItem * menuitem, 
                                    gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget * dialog;
 	static gchar * uri, *file_name;
@@ -1031,7 +1031,7 @@ static void
 on_clear_all_messages_activate (GtkMenuItem * menuitem, 
 								gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkListStore * liststore;
 	GtkTreeView * treeview = user_data;
@@ -1045,7 +1045,7 @@ on_clear_all_messages_activate (GtkMenuItem * menuitem,
 static void 
 gsql_messages_menu_show(GtkWidget * treeview)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *menu;
 	GtkWidget *menuitem;
@@ -1122,7 +1122,7 @@ gsql_messages_menu_show(GtkWidget * treeview)
 static gboolean 
 gsql_messages_popup_menu_cb (GtkWidget *tv, void *user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gsql_messages_menu_show (tv);
 	
@@ -1134,7 +1134,7 @@ gsql_messages_button_press_cb (GtkWidget *tv,
 								GdkEventButton *event,   
 								gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	if ((event->button == 3) && (event->type == GDK_BUTTON_PRESS)) 
 	{
@@ -1150,7 +1150,7 @@ gsql_messages_key_press_cb (GtkWidget *tv,
                             GdkEventKey *event,                             
                             gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return TRUE;
 }

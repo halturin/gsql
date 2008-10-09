@@ -33,7 +33,7 @@
 void
 exporter_export_to_xml (GSQLContent *content, gchar *file, gchar *encoding, gboolean headers)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GIOChannel *ioc = NULL;
 	GIOStatus status;

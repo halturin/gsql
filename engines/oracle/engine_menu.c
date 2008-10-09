@@ -54,7 +54,7 @@ static GtkActionGroup *action;
 void
 engine_menu_init (GSQLEngine *engine)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	guint id;
 	GError * error;
@@ -77,7 +77,7 @@ engine_menu_init (GSQLEngine *engine)
 void
 engine_menu_set_visible (gboolean status)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_object_set(G_OBJECT(action), "visible", status, NULL);
 	return;
@@ -86,7 +86,7 @@ engine_menu_set_visible (gboolean status)
 void
 engine_menu_update (gpointer session)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkWidget *mi;
 	GSQLEOracleSession *spec;

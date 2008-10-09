@@ -459,7 +459,7 @@ on_popup_table_browse (GtkMenuItem * menuitem,
 static void
 nav_tree_tables_browse (gchar *name, gchar *owner)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLSession *session;
 	GSQLCursor  *cursor;
@@ -632,7 +632,7 @@ nav_tree_refresh_tables (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreeModel *model;
 	GtkListStore *detail;
@@ -750,7 +750,7 @@ nav_tree_refresh_tables (GSQLNavigation *navigation,
 GtkActionGroup *
 nav_tree_tables_popup_actions ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	static GtkActionGroup *table_actions = NULL;
 	static gint menu_id;
@@ -774,7 +774,7 @@ nav_tree_tables_popup_actions ()
 void
 nav_tree_tables_browse (gchar *name, gchar *owner, gboolean updatable)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *tmp_widget;
 	GSQLSession *session;

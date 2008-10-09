@@ -38,7 +38,7 @@
 GtkWidget *
 engine_conf_widget_create ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkWidget *oracle_page_vbox = NULL;
 	GtkWidget *oracle_env_frame;
@@ -206,7 +206,7 @@ engine_conf_widget_create ()
 void
 engine_conf_widget_free (GtkWidget *conf_widget)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -214,7 +214,7 @@ engine_conf_widget_free (GtkWidget *conf_widget)
 void
 engine_conf_environment_load (GtkListStore *env, gboolean *use_system)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	if (use_system)
 	{
@@ -226,7 +226,7 @@ engine_conf_environment_load (GtkListStore *env, gboolean *use_system)
 void
 engine_conf_environment_save (GtkListStore *env)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 }

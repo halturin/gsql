@@ -36,7 +36,7 @@ void
 on_nav_tree_popup_tables_create (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -45,7 +45,7 @@ void
 on_nav_tree_popup_tables_drop (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -54,7 +54,7 @@ void
 on_nav_tree_popup_tables_alter (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -63,7 +63,7 @@ void
 on_nav_tree_popup_tables_browse (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
@@ -103,7 +103,7 @@ void
 on_nav_tree_popup_tables_browse_update (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
@@ -144,7 +144,7 @@ void
 on_nav_tree_popup_tables_analyze (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };

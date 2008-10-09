@@ -48,7 +48,7 @@ extern GtkWidget *gsql_window;
 void
 gsql_window_create (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GdkPixbuf *gsql_window_icon_pixbuf;
 	GtkWidget * mainvbox;
@@ -121,7 +121,7 @@ gsql_window_create (void)
 void
 gsql_window_clean_exit()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gnome_accelerators_sync ();
 	gtk_main_quit ();
@@ -133,7 +133,7 @@ gsql_dialog_logon_make_widget (gpointer key,
 								gpointer value,
 								gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEngine * engine = (GSQLEngine *) value;
 	GtkWidget * vbox = (GtkWidget *) user_data;
@@ -173,7 +173,7 @@ gsql_dialog_logon_make_widget (gpointer key,
 GtkWidget*
 create_dialog_logon (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *dialog;
 	GtkWidget *dialog_logon;
@@ -274,7 +274,7 @@ create_dialog_logon (void)
 GtkDialog*
 create_dialog_close_session (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkDialog *dialog_close_session;
 	GtkWidget *dialog_vbox2;

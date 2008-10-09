@@ -66,7 +66,7 @@ struct CursorOpenBGStruct
 GType
 gsql_cursor_get_type ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	static GType obj_type = 0;
 	
@@ -98,7 +98,7 @@ gsql_cursor_get_type ()
 GSQLCursorState
 gsql_cursor_get_state (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQL_CURSOR (cursor) != NULL, GSQL_CURSOR_STATE_ERROR);
 	return cursor->private->state;	
@@ -109,7 +109,7 @@ gsql_cursor_get_state (GSQLCursor *cursor)
 GSQLCursor *
 gsql_cursor_new (GSQLSession *session, gchar *sql)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLCursor *cursor;
 	
@@ -169,7 +169,7 @@ gsql_cursor_bind_args_list_free (GList *list)
 GSQLCursorState
 gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorBindType btype, ...)
 {
-	GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;;
 	
 	struct CursorOpenBGStruct *bg_struct;
 	GError *err;
@@ -198,7 +198,7 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 				
 				case G_TYPE_CHAR:
 				case G_TYPE_POINTER:
-					GSQL_DEBUG ("bind: TYPE_POINTER")
+					GSQL_DEBUG ("bind: TYPE_POINTER");
 					l_args = g_list_append (l_args, (gpointer) value_type);
 					l_args = g_list_append (l_args, va_arg(args, void *));
 					break;
@@ -236,7 +236,7 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 					break;
 					
 				default:
-					GSQL_DEBUG ("Cursor bind. Unhandled type. %d ", value_type)
+					GSQL_DEBUG ("Cursor bind. Unhandled type. %d ", value_type);
 					args_stop = -1;
 			}
 		
@@ -293,7 +293,7 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 GSQLCursorState
 gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GError *err;
 	struct CursorOpenBGStruct *bg_struct;
@@ -338,7 +338,7 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 			else 
 			{
 				GSQL_DEBUG("[%s] open not implemented",
-						cursor->session->engine->info.name)
+						cursor->session->engine->info.name);
 				gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_ERROR);
 			}
 	}
@@ -349,7 +349,7 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 void
 gsql_cursor_notify_set (GSQLCursor *cursor, gboolean notify)
 {
-	GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;;
 	
 	g_return_if_fail (GSQL_IS_CURSOR (cursor));
 	
@@ -363,7 +363,7 @@ gsql_cursor_notify_set (GSQLCursor *cursor, gboolean notify)
 GList *
 gsql_cursor_get_variables (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_val_if_fail (cursor != NULL, NULL);
 	g_return_val_if_fail (gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_OPEN,
@@ -375,7 +375,7 @@ gsql_cursor_get_variables (GSQLCursor *cursor)
 void
 gsql_cursor_stop (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLWorkspace *workspace;
 	gchar msg[GSQL_MESSAGE_LEN];
@@ -392,7 +392,7 @@ gsql_cursor_stop (GSQLCursor *cursor)
 	if (cursor->session->engine->cursor_stop == NULL)
 	{
 		GSQL_DEBUG("[%s] stop not implemented",
-						cursor->session->engine->info.name)
+						cursor->session->engine->info.name);
 		memset (msg, 0, GSQL_MESSAGE_LEN);
 		
 		g_sprintf (msg, N_("The %s engine does not support this feature"), 
@@ -412,7 +412,7 @@ gsql_cursor_stop (GSQLCursor *cursor)
 gint
 gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	gint ret = 0;
 	GSQLCursorState state;
@@ -427,7 +427,7 @@ gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
 	if (cursor->session->engine->cursor_fetch == NULL)
 	{
 		GSQL_DEBUG("[%s] fetch not implemented",
-						cursor->session->engine->info.name)
+						cursor->session->engine->info.name);
 		return -1;
 	}
 	
@@ -462,7 +462,7 @@ gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
 void
 gsql_cursor_close (GSQLCursor *cursor)
 {
-	GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;;
 	
 	GList *vlist;
 	GSQLVariable *variable;
@@ -501,7 +501,7 @@ gsql_cursor_close (GSQLCursor *cursor)
 static void
 gsql_cursor_set_state (GSQLCursor *cursor, GSQLCursorState state)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (cursor != NULL);
 	cursor->private->state = state;
@@ -514,7 +514,7 @@ gsql_cursor_set_state (GSQLCursor *cursor, GSQLCursorState state)
 static gpointer
 gsql_cursor_open_bg (gpointer params)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLCursorState state;
 
@@ -544,7 +544,7 @@ gsql_cursor_open_bg (gpointer params)
 static GSQLCursorState
 gsql_cursor_open_with_vbind (GSQLCursor *cursor, GSQLCursorBindType btype, GList *args)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLCursorState state = GSQL_CURSOR_STATE_OPEN;
 	
@@ -564,7 +564,7 @@ gsql_cursor_open_with_vbind (GSQLCursor *cursor, GSQLCursorBindType btype, GList
 			else 
 			{
 				GSQL_DEBUG("[%s] bind by name not implemented",
-						cursor->session->engine->info.name)
+						cursor->session->engine->info.name);
 			}
 			break;
 		
@@ -609,7 +609,7 @@ gsql_cursor_open_with_vbind (GSQLCursor *cursor, GSQLCursorBindType btype, GList
 static void
 gsql_cursor_dispose (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLCursor *cursor = GSQL_CURSOR (obj);
 	
@@ -620,7 +620,7 @@ gsql_cursor_dispose (GObject *obj)
 static void
 gsql_cursor_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLCursor *cursor = GSQL_CURSOR (obj);
 
@@ -637,7 +637,7 @@ gsql_cursor_finalize (GObject *obj)
 static void
 gsql_cursor_class_init (GSQLCursorClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class;
 	
@@ -673,7 +673,7 @@ gsql_cursor_class_init (GSQLCursorClass *klass)
 static void 
 gsql_cursor_init (GSQLCursor *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (obj != NULL);
 	

@@ -86,7 +86,7 @@ static GSQLStockIcon stock_icons[] =
 void
 engine_stock_init ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gsql_factory_add (stock_icons, G_N_ELEMENTS(stock_icons));
 	return;

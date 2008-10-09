@@ -206,7 +206,7 @@ mysql_variable_data_to_display_format (GSQLEMySQLVariable *var)
 static void 
 mysql_time_to_datetime (GSQLVariable *variable)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_if_fail (GSQL_IS_VARIABLE (variable));
 	g_return_if_fail (variable->value_type == GSQL_TYPE_DATETIME);

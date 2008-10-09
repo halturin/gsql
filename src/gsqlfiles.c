@@ -55,7 +55,7 @@ static GtkActionEntry gsqlfiles_action[] =
 void
 gsql_files_menu_init()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkActionGroup *action;
 
@@ -71,7 +71,7 @@ gsql_files_menu_init()
 void
 gsql_files_menu_update ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	return;
 };
@@ -80,7 +80,7 @@ gsql_files_menu_update ()
 void
 gsql_files_open_file (GSQLSession *session, gchar *file, gchar *encoding)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLContent *content;
 	GSQLWorkspace *workspace;
@@ -213,7 +213,7 @@ gsql_files_open_file (GSQLSession *session, gchar *file, gchar *encoding)
 gboolean
 gsql_files_save_file (GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 /*	gchar msg[MSG_LEN];
 	GtkTextBuffer *buffer;
@@ -275,7 +275,7 @@ gsql_files_save_file (GSQLContent *content)
 void
 gsql_files_reload_file (GSQLContent *content, gchar *file, gchar *encoding)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 /*	GIOChannel *ioc;
 	GtkTextIter start_iter, end_iter;

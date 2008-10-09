@@ -36,7 +36,7 @@ void
 on_gsql_prefs_show_dbnav_check_toggled (GtkToggleButton *togglebutton,
 										gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -50,7 +50,7 @@ void
 on_gsql_prefs_show_message_check_toggled (GtkToggleButton *togglebutton,
 										gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -64,7 +64,7 @@ void
 on_gsql_prefs_restore_sizepos_check_toggled (GtkToggleButton  *togglebutton,
 										gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -102,7 +102,7 @@ void
 on_gsql_prefs_use_system_font_check_toggled (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget * font_button;
 	gboolean status;
@@ -123,7 +123,7 @@ void
 on_gsql_prefs_insert_space_check_toggled (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -138,7 +138,7 @@ on_gsql_prefs_tab_width_spin_value_changed (GtkSpinButton *spin_button,
 										gpointer user_data)
 
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gint value;    
   
@@ -154,7 +154,7 @@ void
 on_gsql_prefs_display_line_num_check_toggled (GtkToggleButton *togglebutton,
                                         gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -168,7 +168,7 @@ void
 on_gsql_prefs_highlight_line_check_toggled (GtkToggleButton *togglebutton,
                                         gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -182,7 +182,7 @@ void
 on_gsql_prefs_enable_text_wrap_check_toggled (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -196,7 +196,7 @@ void
 on_gsql_prefs_enable_auto_indent_check_toggled (GtkToggleButton *togglebutton,
 										gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gboolean status;
         
@@ -212,7 +212,7 @@ void
 on_gsql_prefs_font_button_font_set (GtkFontButton * font_button,
                                     gpointer       user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	const gchar * font; 
 
@@ -230,7 +230,7 @@ void
 on_pref_plugins_configure_button_clicked (GtkButton *conf_button,
 										  gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkTreeView *tv = user_data;
 	GtkTreePath *path;
@@ -255,7 +255,7 @@ void
 on_prefs_plugins_tree_view_cursor_changed (GtkTreeView *tv,
 										   gpointer     user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *button = user_data;
 	GtkTreePath *path;
@@ -284,7 +284,7 @@ void
 on_pref_datetime_preview (GtkButton *conf_button,
 										  gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GtkEntry *preview = user_data;
 	
@@ -312,7 +312,7 @@ gboolean
 on_pref_datetime_entry_focus_out (GtkWidget *widget, GdkEventFocus *event,
 							 gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GtkEntry *entry = GTK_ENTRY(widget);
 	const gchar *format;

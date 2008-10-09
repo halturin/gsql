@@ -53,7 +53,7 @@ static GtkActionGroup *action;
 void
 engine_menu_init (GSQLEngine *engine)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	guint id;
 	GError * error; 

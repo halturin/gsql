@@ -68,7 +68,7 @@ static GtkToggleActionEntry gsqlmenu_toggle_actions[] =
 GtkWidget *
 gsql_main_menu_init()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkActionGroup *action;
 	

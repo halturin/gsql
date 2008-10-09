@@ -42,7 +42,7 @@ gsql_plugin_new (gchar * plugin_file);
 void
 gsql_plugins_lookup()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	const gchar *file_name;
 	GDir * dir;
@@ -97,7 +97,7 @@ gsql_plugins_lookup()
 static GSQLPlugin *
 gsql_plugin_new (gchar * plugin_file)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLPlugin *plugin, *plugin1;
 	GModule *module;
@@ -172,7 +172,7 @@ gsql_plugin_new (gchar * plugin_file)
 static gboolean
 gsql_plugin_load_symbols (GSQLPlugin *plugin)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 // linking required symbols
 	if ((!g_module_symbol (plugin->module, GSQL_PLUGIN_SYMBOL_LOAD, 
@@ -188,7 +188,7 @@ gsql_plugin_load_symbols (GSQLPlugin *plugin)
 guint
 gsql_plugins_count()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	g_return_val_if_fail (hash_plugins != NULL, 0);
 	
@@ -198,7 +198,7 @@ gsql_plugins_count()
 void
 gsql_plugins_foreach (GHFunc func, gpointer userdata)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	if (!gsql_plugins_count())
 		return;
@@ -213,7 +213,7 @@ gsql_plugins_menu_update (gpointer key,
 						gpointer value,
 						gpointer userdata)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GSQLPlugin *plugin = value;
 	
@@ -226,7 +226,7 @@ gsql_plugins_menu_update (gpointer key,
 void
 gsql_plugins_menu_disable_all()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	gsql_plugins_foreach (gsql_plugins_menu_update, NULL);
 }
@@ -234,7 +234,7 @@ gsql_plugins_menu_disable_all()
 void
 gsql_plugins_menu_update_all (GSQLEngine *engine)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	gsql_plugins_foreach (gsql_plugins_menu_update, engine);
 }

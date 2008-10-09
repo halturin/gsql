@@ -116,7 +116,7 @@ gsql_content_get_type ()
 GSQLContent *
 gsql_content_new (GSQLSession *session, const gchar *stock)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLContent *content;
 	GtkImage *image = NULL;
@@ -184,7 +184,7 @@ gsql_content_get_menu_label (GSQLContent *content)
 void
 gsql_content_set_child (GSQLContent *content, GtkWidget *child)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	g_return_if_fail (GSQL_IS_CONTENT (content));
 	g_return_if_fail (GTK_IS_WIDGET (child));
@@ -200,7 +200,7 @@ gsql_content_set_child (GSQLContent *content, GtkWidget *child)
 void 
 gsql_content_set_name (GSQLContent *content, gchar *name)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_if_fail (GSQL_IS_CONTENT (content));
 	g_return_if_fail (name != NULL);
@@ -216,7 +216,7 @@ gsql_content_set_name (GSQLContent *content, gchar *name)
 void 
 gsql_content_set_display_name (GSQLContent *content, gchar *name)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	g_return_if_fail (GSQL_IS_CONTENT (content));
 
@@ -235,7 +235,7 @@ gsql_content_set_display_name (GSQLContent *content, gchar *name)
 void 
 gsql_content_set_name_full (GSQLContent *content, gchar *name, gchar *display_name)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	gchar *t_name;
 	g_return_if_fail (GSQL_IS_CONTENT (content));
@@ -257,7 +257,7 @@ gsql_content_set_name_full (GSQLContent *content, gchar *name, gchar *display_na
 void
 gsql_content_set_stock (GSQLContent *content, const gchar *stock)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (GSQL_IS_CONTENT (content));
 	g_return_if_fail (stock != NULL);
@@ -276,7 +276,7 @@ gsql_content_set_stock (GSQLContent *content, const gchar *stock)
 gboolean
 gsql_content_get_changed (GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQL_IS_CONTENT (content), FALSE);
 	
@@ -286,7 +286,7 @@ gsql_content_get_changed (GSQLContent *content)
 void
 gsql_content_set_changed (GSQLContent *content, gboolean changed)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (GSQL_IS_CONTENT (content));
 	
@@ -307,7 +307,7 @@ gsql_content_set_changed (GSQLContent *content, gboolean changed)
 gchar *
 gsql_content_get_display_name (GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	g_return_val_if_fail (content != NULL, NULL);
 
@@ -317,7 +317,7 @@ gsql_content_get_display_name (GSQLContent *content)
 gchar *
 gsql_content_get_name (GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	g_return_val_if_fail (content != NULL, NULL);
 
@@ -341,7 +341,7 @@ gsql_content_get_name (GSQLContent *content)
 static void
 gsql_content_class_init (GSQLContentClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 	GtkObjectClass   *gtkobject_class = GTK_OBJECT_CLASS (klass);
@@ -407,7 +407,7 @@ gsql_content_class_init (GSQLContentClass *klass)
 static void 
 gsql_content_init (GSQLContent *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (obj != NULL);
 	
@@ -426,7 +426,7 @@ gsql_content_init (GSQLContent *obj)
 static void
 gsql_content_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLContent *content = GSQL_CONTENT (obj);
 
@@ -448,7 +448,7 @@ gsql_content_finalize (GObject *obj)
 static void
 gsql_content_destroy (GtkObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLContent *content = GSQL_CONTENT (obj);
 	
@@ -461,7 +461,7 @@ static void
 on_content_close_button_activate (GtkButton *button, 
 											gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLContent *content = GSQL_CONTENT (user_data);
 	
@@ -543,7 +543,7 @@ gsql_content_size_request (GtkWidget *widget, GtkRequisition *requisition)
 static void
 gsql_content_update_labels (GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GtkLabel *lbl;
 	gchar *disp;

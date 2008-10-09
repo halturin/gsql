@@ -191,7 +191,7 @@ gsql_editor_get_type ()
 GSQLEditor *
 gsql_editor_new (GtkWidget *source)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEditor *editor;
 	GtkUIManager   *ui = NULL;
@@ -371,6 +371,10 @@ gsql_editor_new (GtkWidget *source)
 	if (!limit_max)
 		limit_max = GSQL_EDITOR_FETCH_MAX_DEFAULT;
 	
+	gtk_spin_button_set_range (GTK_SPIN_BUTTON (custom_limit_spin),
+							   GSQL_EDITOR_FETCH_STEP_DEFAULT,
+							   GSQL_EDITOR_FETCH_MAX_DEFAULT);
+	
 	editor->private->fetch_max = limit_max;
 	
 	gsql_conf_nitify_add (GSQL_CONF_SQL_FETCH_STEP,
@@ -471,7 +475,7 @@ gsql_editor_merge_f_actions (gchar *ui_addons, GSQLEditorFActionCB f_action)
 static void
 gsql_editor_class_init (GSQLEditorClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 	GtkObjectClass   *gtkobject_class = GTK_OBJECT_CLASS (klass);
@@ -505,7 +509,7 @@ gsql_editor_class_init (GSQLEditorClass *klass)
 static void 
 gsql_editor_init (GSQLEditor *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (obj != NULL);
 	obj->private = g_new0 (GSQLEditorPrivate, 1);
@@ -522,7 +526,7 @@ gsql_editor_init (GSQLEditor *obj)
 static void
 gsql_editor_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEditor *editor = GSQL_EDITOR (obj);
 	g_object_unref (editor->private->ui);
@@ -574,7 +578,7 @@ here===>	trace: [0x8056408] gsql_content_destroy [content.c:451]
 static void
 gsql_editor_destroy (GtkObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLEditor *editor = GSQL_EDITOR (obj);
 	
@@ -622,7 +626,7 @@ gsql_editor_set_property	(GObject		*object,
 							 const GValue	*value,
 							 GParamSpec		*pspec)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	
 	GSQLEditor *editor;
 	
@@ -842,6 +846,8 @@ do_sql_run (GSQLEditor *sqleditor)
 		{
 			l = gtk_text_iter_get_line (s_iter);
 			
+			if (l == 0)	
+				l++;
 			tmp = g_strdup_printf (N_("Query execution finished at line %d [elapsed: %02f]"), 
 								   l, g_timer_elapsed (timer, &microsec));
 			
@@ -853,7 +859,7 @@ do_sql_run (GSQLEditor *sqleditor)
 			
 			g_free (tmp); tmp = NULL;
 			
-			GSQL_DEBUG ("Cursor opened")
+			GSQL_DEBUG ("Cursor opened");
 			/* i think it's bad idea to execute next query if the statement are select.
 				set stepping flag
 			*/
@@ -895,6 +901,8 @@ do_sql_run (GSQLEditor *sqleditor)
 				i = GSQL_MESSAGE_ERROR;
 				
 				l = gtk_text_iter_get_line (s_iter);
+				if (l == 0)
+					l++;
 				
 				switch (cursor->stmt_type)
 				{
@@ -1128,18 +1136,25 @@ static void
 on_custom_limit_checkbutton_toggled (GtkToggleButton *togglebutton,
 										gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GtkWidget *spin = user_data;
 	gboolean status;
+	guint limit_step;
         
 	status = gtk_toggle_button_get_active (togglebutton);
 	gtk_widget_set_sensitive (spin, status);
 	
 	if (!status)
-		gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin), 
-								   SQL_EDITOR_CUSTOM_FETCH_LIMIT);
+	{
+		limit_step = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_STEP);
 	
+		if (!limit_step)
+			limit_step = GSQL_EDITOR_FETCH_STEP_DEFAULT;
+		
+		gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin), 
+								   limit_step);
+	}
 }
 
 static void
@@ -1163,6 +1178,7 @@ do_sql_fetch (GSQLEditor *editor)
 	gboolean sorting;
 	gboolean continue_fetch;
 	guint rows_limit = 0, rows_fetched = 0, rows;
+	guint signal_id = 0;	
     
     cursor = editor->cursor;
     g_return_if_fail (gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_OPEN);
@@ -1352,7 +1368,14 @@ do_sql_fetch (GSQLEditor *editor)
 	
 	GSQL_THREAD_LEAVE;
 	rows_fetched = 0;
-	editor->private->stop_fetch = FALSE;
+	editor->private->stop_fetch = FALSE;	
+	/* FIXME:
+		perfomance problem.
+		A treeview widget tries to redraw on every insert operation.
+		Any body knows how to avoid this trouble?
+	 */
+	gtk_widget_hide (GTK_WIDGET (result_treeview));
+	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview), NULL);
 	
 	while ( (rows_fetched < rows_limit) &&
 		   (rows = gsql_cursor_fetch (cursor, 1) > 0))
@@ -1444,9 +1467,14 @@ do_sql_fetch (GSQLEditor *editor)
 	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
 	
 	GSQL_THREAD_ENTER;
-	if (!continue_fetch)
-		gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
+	
+	/* FIXME:
+		perfomance problem.
+		getting back the treemodel.
+	 */
+	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
 							 	 GTK_TREE_MODEL(liststore_new));
+	gtk_widget_show (GTK_WIDGET (result_treeview));
 	
 	GSQL_DEBUG ("Cursor state = [%d]", gsql_cursor_get_state (cursor));
 	
@@ -1772,7 +1800,7 @@ on_editor_cb_close (GSQLContent *content, gboolean force)
 static void
 on_editor_cb_revert (GSQLContent *content)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GIOChannel *ioc;
 	GtkTextIter start_iter, end_iter;
@@ -1917,7 +1945,7 @@ static void
 on_editor_set_parent (GtkWidget *widget, GtkObject *object,
 								  gpointer user_data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 		
 	GtkWidget *parent;
 	

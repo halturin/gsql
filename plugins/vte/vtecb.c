@@ -45,7 +45,7 @@ vte_child_exited_cb (GtkWidget *widget, gpointer user_data);
 static gchar **
 vte_parse_command (GSQLSession *session, gchar *command)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	gchar **str, **ptr, *t;
 	gchar *dest;
@@ -53,9 +53,18 @@ vte_parse_command (GSQLSession *session, gchar *command)
 	GValue database = {0, };
 	GValue username = {0, };
 	GValue password = {0, };
+	GSQLWorkspace *workspace;
 	
 	g_return_val_if_fail (session != NULL, NULL);
-	g_return_val_if_fail (command != NULL, NULL);
+	
+	if (command == NULL)
+	{
+		workspace = gsql_session_get_workspace (session);
+		gsql_message_add (workspace, GSQL_MESSAGE_ERROR,
+						  N_("The command line was not set properly"));
+		
+		return NULL;	
+	}
 	
 	g_value_init (&hostname, G_TYPE_STRING);
 	g_value_init (&database, G_TYPE_STRING);
@@ -107,7 +116,7 @@ vte_parse_command (GSQLSession *session, gchar *command)
 void
 on_open_terminal_activate (GtkMenuItem * mi, gpointer data)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLSession *session;
 	GSQLContent *content;

@@ -44,7 +44,7 @@ static guint variable_signals[SIG_LAST] = { 0 };
 GType
 gsql_variable_get_type ()
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	static GType obj_type = 0;
 	
@@ -73,7 +73,7 @@ gsql_variable_get_type ()
 GSQLVariable *
 gsql_variable_new (void)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 	GSQLVariable *var;
 	
 	var = g_object_new (GSQL_VARIABLE_TYPE, NULL);
@@ -96,7 +96,7 @@ gsql_variable_new (void)
 static void
 gsql_variable_dispose (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLVariable *variable = GSQL_VARIABLE (obj);
 	
@@ -108,7 +108,7 @@ gsql_variable_dispose (GObject *obj)
 static void
 gsql_variable_finalize (GObject *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GSQLVariable *variable = GSQL_VARIABLE (obj);
 
@@ -121,7 +121,7 @@ gsql_variable_finalize (GObject *obj)
 static void
 gsql_variable_class_init (GSQLVariableClass *klass)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	GObjectClass *obj_class;
 	
@@ -148,7 +148,7 @@ gsql_variable_class_init (GSQLVariableClass *klass)
 static void 
 gsql_variable_init (GSQLVariable *obj)
 {
-	GSQL_TRACE_FUNC
+	GSQL_TRACE_FUNC;
 
 	g_return_if_fail (obj != NULL);
 	
