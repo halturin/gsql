@@ -27,6 +27,7 @@
 #include <libgsql/editor.h>
 #include <libgsql/cursor.h>
 #include <libgsql/cvariable.h>
+#include <libgsql/menu.h>
 #include <string.h>
 #include "engine_session.h"
 #include "engine_menu.h"
@@ -38,7 +39,7 @@ static void on_session_reopen (GSQLSession *session, gpointer user_data);
 static void on_session_duplicate (GSQLSession *session, gpointer user_data);
 static void on_session_rollback (GSQLSession *session, gpointer user_data);
 static void on_session_commit (GSQLSession *session, gpointer user_data);
-
+static void on_session_switch (GSQLSession *session, gpointer user_data);
 
 gpointer
 engine_session_open (GtkWidget *logon_widget, gchar *buffer)
@@ -157,6 +158,8 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 					  G_CALLBACK (on_session_commit), session);
 	g_signal_connect (G_OBJECT (session), "rollback",
 					  G_CALLBACK (on_session_rollback), session);
+	g_signal_connect (G_OBJECT (session), "switch",
+					  G_CALLBACK (on_session_switch), session);
 	
 	g_snprintf(buffer, 256,
 			   _("Connect to the Oracle database \"<b>%s</b>\" succesfully\n"
@@ -229,5 +232,44 @@ on_session_rollback (GSQLSession *session, gpointer user_data)
 	
 	workspace = gsql_session_get_workspace (session);
 	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction rolled back"));
+	
+}
+
+
+static void
+on_session_switch (GSQLSession *session, gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLSession *current;
+	GSQLEOracleSession *spec_session;
+	GtkWidget *widget;
+	GtkAction *act;
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	current = gsql_session_get_active ();
+	
+	if (current == session)
+	{
+		gsql_engine_menu_set_status (session->engine, TRUE);
+		
+		spec_session = session->spec;
+		
+		widget = gsql_menu_get_widget ("/MenuMain/PHolderEngines/MenuOracle/OracleServerOutput");
+
+		act = gtk_action_group_get_action (session->engine->action, "OracleActionServerOutput");
+		gtk_action_block_activate_from (act, widget);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), spec_session->dbms_output);
+		gtk_action_unblock_activate_from (act, widget);
+
+		GSQL_DEBUG ("Oracle engine. Yes, It is mine");
+		
+	} else {
+		
+		gsql_engine_menu_set_status (session->engine, FALSE);
+
+			GSQL_DEBUG ("Oracle engine. No, It is not mine");
+	}
 	
 }

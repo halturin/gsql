@@ -387,60 +387,86 @@ void
 on_editor_undo_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkWidget *widget;
 	
+	widget = gtk_window_get_focus (GTK_WINDOW (gsql_window));
 	
+	if (!GTK_IS_SOURCE_VIEW (widget))
+		return;
 	
-	return;
+	g_signal_emit_by_name (widget, "undo");
 }
 
 void 
 on_editor_redo_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkWidget *widget;
 	
+	widget = gtk_window_get_focus (GTK_WINDOW (gsql_window));
 	
+	if (!GTK_IS_SOURCE_VIEW (widget))
+		return;
 	
-	return;
+	g_signal_emit_by_name (widget, "redo");
 }
 
 void 
 on_editor_copy_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkWidget *widget;
 	
+	widget = gtk_window_get_focus (GTK_WINDOW (gsql_window));
 	
+	if (!GTK_IS_TEXT_VIEW (widget))
+		return;
 	
-	return;
+	g_signal_emit_by_name (widget, "copy-clipboard");
+	
 }
 
 void 
 on_editor_cut_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkWidget *widget;
 	
+	widget = gtk_window_get_focus (GTK_WINDOW (gsql_window));
 	
+	if (!GTK_IS_TEXT_VIEW (widget))
+		return;
 	
-	return;
+	g_signal_emit_by_name (widget, "cut-clipboard");
+
 }
 
 void 
 on_editor_paste_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkWidget *widget;
 	
+	widget = gtk_window_get_focus (GTK_WINDOW (gsql_window));
 	
+	if (!GTK_IS_TEXT_VIEW (widget))
+		return;
 	
-	return;
+	g_signal_emit_by_name (widget, "paste-clipboard");
 }
 
 void 
 on_editor_delete_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkWidget *widget;
 	
+	widget = gtk_window_get_focus (GTK_WINDOW (gsql_window));
 	
+	if (!GTK_IS_TEXT_VIEW (widget))
+		return;
 	
-	return;
+	g_signal_emit_by_name (widget, "backspace");
 }
 
 void 

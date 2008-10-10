@@ -115,7 +115,7 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 {
 	GSQL_TRACE_FUNC;
 
-	GSQLSession *session;
+	GSQLSession *session, *old_session;
 	GSQLWorkspace *workspace;
 	gchar gsql_window_header[128];
 	GtkWidget *mi;
@@ -123,11 +123,11 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 	if (GSQL_IS_SESSION (page))
 		GSQL_DEBUG ("is my object - GSQLSession");
 
-	session = gsql_session_get_active();
+	old_session = gsql_session_get_active();
 	
-	if (!session)
+	if (!old_session)
 	{
-		GSQL_DEBUG ("session = NULL");
+		GSQL_DEBUG ("old_session == NULL");
 		session = GSQL_SESSION (gtk_notebook_get_nth_page (notebook, page_num));
 		
 		if (session)
@@ -135,28 +135,28 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 			g_snprintf(gsql_window_header, 128, "%s: %s", "GSQL", 
 						gsql_session_get_name (session));
 			
-			gsql_engine_menu_set_status (session->engine,
-								TRUE);
-			
 		} else
 			g_snprintf(gsql_window_header, 128, "%s", "GSQL");
 		
 	} else {
-		GSQL_DEBUG ("session != NULL");
-		gsql_engine_menu_set_status (session->engine,
-								FALSE);
+		GSQL_DEBUG ("old_session != NULL");
 		
 		session = GSQL_SESSION (gtk_notebook_get_nth_page (notebook, page_num));
 		
 		g_snprintf(gsql_window_header, 128, "%s: %s", "GSQL", 
 				   gsql_session_get_name (session));
 		
-		gsql_engine_menu_set_status (session->engine, TRUE);
+
 	}
 	
 	gsql_session_set_active (session);
 	gtk_window_set_title (GTK_WINDOW (gsql_window), gsql_window_header);
+
+	if (old_session)
+		g_signal_emit_by_name (old_session, "switch");
 	
+	if (session)
+		g_signal_emit_by_name (session, "switch");
 	
 	//update status menuitems 
 	workspace = gsql_session_get_workspace (session);

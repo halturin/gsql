@@ -68,6 +68,8 @@ struct _GSQLSessionClass
 	void (*on_session_duplicate)	(GSQLSession *session);
 	void (*on_session_commit)		(GSQLSession *session);
 	void (*on_session_rollback)		(GSQLSession *session);	
+	//
+	void (*on_session_switch)		(GSQLSession *session);
 };
 
 G_BEGIN_DECLS

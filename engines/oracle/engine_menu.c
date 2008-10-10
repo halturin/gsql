@@ -70,37 +70,6 @@ engine_menu_init (GSQLEngine *engine)
 	
 	g_object_set(G_OBJECT(action), "visible", FALSE, NULL);
 	
-	return;
-	
-};
+}
 
-void
-engine_menu_set_visible (gboolean status)
-{
-	GSQL_TRACE_FUNC;
-
-	g_object_set(G_OBJECT(action), "visible", status, NULL);
-	return;
-};
-
-void
-engine_menu_update (gpointer session)
-{
-	GSQL_TRACE_FUNC;
-	
-	GtkWidget *mi;
-	GSQLEOracleSession *spec;
-	GtkAction *act;
-	
-	GSQLSession *sess = session;
-	spec = (GSQLEOracleSession *) sess->spec;
-	mi = gsql_menu_get_widget ("/MenuMain/PHolderEngines/MenuOracle/OracleServerOutput");
-	g_return_if_fail (mi != NULL);
-	act = gtk_action_group_get_action (action, "OracleActionServerOutput");
-	gtk_action_block_activate_from (act, mi);
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), spec->dbms_output);
-	gtk_action_unblock_activate_from (act, mi);
-	
-	return;
-};
 

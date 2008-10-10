@@ -32,12 +32,6 @@ G_BEGIN_DECLS
 void
 engine_menu_init (GSQLEngine *engine);
 
-void
-engine_menu_set_visible (gboolean status);
-
-void
-engine_menu_update (gpointer session);
-
 G_END_DECLS
 
 #endif /* _ENGINE_MENU_H */

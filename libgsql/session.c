@@ -66,6 +66,7 @@ enum {
 	SIG_ON_SESSION_DUPLICATE,
 	SIG_ON_SESSION_COMMIT,
 	SIG_ON_SESSION_ROLLBACK,
+	SIG_ON_SESSION_SWITCH,
 	
 	SIG_LAST
 };
@@ -643,6 +644,16 @@ gsql_session_class_init (GSQLSessionClass *klass)
 					  G_SIGNAL_RUN_FIRST,
 					  G_STRUCT_OFFSET (GSQLSessionClass,
 									   on_session_rollback),
+					  NULL, // GSignalAccumulator
+					  NULL, g_cclosure_marshal_VOID__VOID,
+					  G_TYPE_NONE, 0);
+	
+	session_signals [SIG_ON_SESSION_SWITCH] = 
+		g_signal_new ("switch", 
+					  G_TYPE_FROM_CLASS (obj_class),
+					  G_SIGNAL_RUN_FIRST,
+					  G_STRUCT_OFFSET (GSQLSessionClass,
+									   on_session_switch),
 					  NULL, // GSignalAccumulator
 					  NULL, g_cclosure_marshal_VOID__VOID,
 					  G_TYPE_NONE, 0);

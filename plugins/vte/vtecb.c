@@ -133,6 +133,7 @@ on_open_terminal_activate (GtkMenuItem * mi, gpointer data)
 	GtkWidget *scroll;
 	GtkWidget *hbox;
 	gint pid;
+	gchar *font = NULL;
 	
 	session = gsql_session_get_active ();
 	if (session == NULL)
@@ -162,6 +163,10 @@ on_open_terminal_activate (GtkMenuItem * mi, gpointer data)
 	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (term), TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), scroll, FALSE, TRUE, 0);
 	
+	font = gsql_conf_value_get_string_at_root (GNOME_SYSTEM_FONT);
+	
+	if (font)
+		vte_terminal_set_font_from_string (VTE_TERMINAL (term), font);
 	
 	gsql_content_set_child (content, hbox);
 	

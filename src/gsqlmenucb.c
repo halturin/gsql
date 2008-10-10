@@ -132,7 +132,8 @@ on_file_save_activate (GtkMenuItem *mi, gpointer data)
 	GSQLContent *content = NULL;	
 	
 	content = gsql_workspace_get_current_content (NULL);
-	g_return_if_fail (GSQL_IS_CONTENT (content));
+	if (!GSQL_IS_CONTENT (content))
+		return;
 	
 	g_signal_emit_by_name (G_OBJECT(content), "save", FALSE);
 	
@@ -146,7 +147,8 @@ on_file_save_as_activate (GtkMenuItem *mi, gpointer data)
 	GSQLContent *content = NULL;	
 	
 	content = gsql_workspace_get_current_content (NULL);
-	g_return_if_fail (GSQL_IS_CONTENT (content));
+	if (!GSQL_IS_CONTENT (content))
+		return;
 	
 	g_signal_emit_by_name (G_OBJECT(content), "save", TRUE);
 
@@ -160,7 +162,8 @@ on_file_close_activate (GtkMenuItem *mi, gpointer data)
 	GSQLContent *content = NULL;	
 	
 	content = gsql_workspace_get_current_content (NULL);
-	g_return_if_fail (GSQL_IS_CONTENT (content));
+	if (!GSQL_IS_CONTENT (content))
+		return;
 	
 	g_signal_emit_by_name (G_OBJECT(content), "close", FALSE);
 	
@@ -182,7 +185,8 @@ on_file_reload_activate (GtkMenuItem *mi, gpointer data)
 	GSQLContent *content = NULL;
 	
 	content = gsql_workspace_get_current_content (NULL);
-	g_return_if_fail (GSQL_IS_CONTENT (content));
+	if (!GSQL_IS_CONTENT (content))
+		return;
 	
 	g_signal_emit_by_name (G_OBJECT(content), "revert");
 

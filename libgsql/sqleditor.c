@@ -1374,7 +1374,7 @@ do_sql_fetch (GSQLEditor *editor)
 		A treeview widget tries to redraw on every insert operation.
 		Any body knows how to avoid this trouble?
 	 */
-	gtk_widget_hide (GTK_WIDGET (result_treeview));
+	gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), FALSE);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview), NULL);
 	
 	while ( (rows_fetched < rows_limit) &&
@@ -1474,13 +1474,12 @@ do_sql_fetch (GSQLEditor *editor)
 	 */
 	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
 							 	 GTK_TREE_MODEL(liststore_new));
-	gtk_widget_show (GTK_WIDGET (result_treeview));
+	gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), TRUE);
 	
 	GSQL_DEBUG ("Cursor state = [%d]", gsql_cursor_get_state (cursor));
 	
 	if ((!cursor->session->engine->multi_statement) || 
-		(gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_FETCHED) 
-		//||(cursor->stmt_affected_rows >=editor->private->fetch_max)
+		(gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_FETCHED)
 		)
 	{		
 		gtk_widget_set_sensitive (fetch_b, FALSE);

@@ -397,12 +397,8 @@ gsql_workspace_get_current_content (GSQLWorkspace *workspace)
 	child = gtk_notebook_get_nth_page (contents, page);
 	
 	if (GSQL_IS_CONTENT (child))
-	{
-		GSQL_DEBUG ("Is GSQLContent page");
 		return (GSQL_CONTENT (child));
-	}
-	
-	GSQL_DEBUG ("Isn't GSQLContent page. Seems to be 'Details'");
+
 	
 	return NULL;
 }

@@ -37,7 +37,7 @@ static void on_session_reopen (GSQLSession *session, gpointer user_data);
 static void on_session_duplicate (GSQLSession *session, gpointer user_data);
 static void on_session_rollback (GSQLSession *session, gpointer user_data);
 static void on_session_commit (GSQLSession *session, gpointer user_data);
-
+static void on_session_switch (GSQLSession *session, gpointer user_data);
 
 gpointer 
 engine_session_open (GtkWidget *logon_widget, gchar *buffer)
@@ -118,6 +118,8 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 					  G_CALLBACK (on_session_commit), session);
 	g_signal_connect (G_OBJECT (session), "rollback",
 					  G_CALLBACK (on_session_rollback), session);
+	g_signal_connect (G_OBJECT (session), "switch",
+					  G_CALLBACK (on_session_switch), session);
 	
 	g_snprintf(buffer, 256,
 			   _("Connect to the MySQL database \"<b>%s</b>\" succesfully\n"
@@ -193,3 +195,25 @@ on_session_rollback (GSQLSession *session, gpointer user_data)
 	
 }
 
+static void
+on_session_switch (GSQLSession *session, gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLSession *current;
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	current = gsql_session_get_active ();
+	
+	if (current == session)
+	{
+		
+		GSQL_DEBUG ("MySQL engine. Yes, It is mine");
+		
+	} else {
+		
+			GSQL_DEBUG ("MySQL engine. No, It is not mine");
+	}
+	
+}
