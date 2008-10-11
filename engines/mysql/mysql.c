@@ -53,11 +53,14 @@ mysql_session_open (GSQLSession *session, gint mode, gchar *buffer)
 	g_value_init (&database, G_TYPE_STRING);
 	g_value_init (&username, G_TYPE_STRING);
 	g_value_init (&password, G_TYPE_STRING);
+	
 	g_object_get_property (G_OBJECT (session), "session-database", &database);
 	g_object_get_property (G_OBJECT (session), "session-hostname", &hostname);
 	g_object_get_property (G_OBJECT (session), "session-username", &username);
 	g_object_get_property (G_OBJECT (session), "session-password", &password);
+	
 	GSQL_DEBUG ("try connect");
+	
 	if (!mysql_real_connect(mysql, g_value_get_string (&hostname),
 								   g_value_get_string (&username),
 								   g_value_get_string (&password),
@@ -66,12 +69,14 @@ mysql_session_open (GSQLSession *session, gint mode, gchar *buffer)
 	{
 		GSQL_DEBUG ("Connect failed");
 		return FALSE;
-	};
+	}
+	
+	mysql_autocommit(mysql, 0);
 	
 	spec->server_version = (gchar *) mysql_get_server_info (mysql);
 	
 	return TRUE;
-};
+}
 
 gboolean
 mysql_session_close (GSQLSession *session, gchar *buffer)
@@ -79,23 +84,71 @@ mysql_session_close (GSQLSession *session, gchar *buffer)
 	GSQL_TRACE_FUNC;
 	
 	return TRUE;
-};
+}
 
 void
 mysql_session_commit (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
 	
-	return;
-};
+	GSQLWorkspace *workspace;
+	GSQLEMySQLSession *spec_session;
+	gchar error_str[2048];
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	spec_session = session->spec;
+	
+	workspace = gsql_session_get_workspace (session);
+	
+	if (!mysql_commit (spec_session->mysql))
+	{
+		gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction commited"));
+		
+		return;
+	}
+	
+	memset (error_str, 0, 2048);
+	
+	g_sprintf (error_str, "Error occured: [%d]%s", 
+			   mysql_errno (spec_session->mysql), 
+			   mysql_error (spec_session->mysql));
+	
+	gsql_message_add (workspace, GSQL_MESSAGE_WARNING,
+								  error_str);
+}
 
 void
 mysql_session_rollback (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
 	
-	return;
-};
+	GSQLWorkspace *workspace;
+	GSQLEMySQLSession *spec_session;
+	gchar error_str[2048];
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	spec_session = session->spec;
+	
+	workspace = gsql_session_get_workspace (session);
+	
+	if (!mysql_rollback (spec_session->mysql))
+	{
+		gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction rolled back"));
+		
+		return;
+	}
+	
+	memset (error_str, 0, 2048);
+	
+	g_sprintf (error_str, "Error occured: [%d]%s", 
+			   mysql_errno (spec_session->mysql), 
+			   mysql_error (spec_session->mysql));
+	
+	gsql_message_add (workspace, GSQL_MESSAGE_WARNING,
+								  error_str);
+}
 
 gchar *
 mysql_session_get_error (GSQLSession *session)
@@ -104,11 +157,11 @@ mysql_session_get_error (GSQLSession *session)
 	g_return_if_fail (GSQL_SESSION (session) != NULL);
 	
 	GSQLEMySQLSession *sess = session->spec;
+	
 	g_return_if_fail (sess != NULL);
 	
 	return (gchar *) mysql_error(sess->mysql);
 	
-	
-};
+}
 
 

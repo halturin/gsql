@@ -46,6 +46,7 @@
 
 #include "engine_menu.h"
 #include "engine_conf.h"
+#include "engine_stock.h"
 #include "engine_session.h"
 #include "oracle_cursor.h"
 
@@ -74,6 +75,7 @@ engine_load (GSQLEngine *engine)
 	engine->info.minor_version = ENGINE_MINOR_VER;
 
 	engine->file_logo = "oracle/oracle.png";
+	engine->stock_logo = GSQLE_ORACLE_STOCK_ORACLE;
 	
 	engine_menu_init (engine);
 	

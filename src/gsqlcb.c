@@ -175,29 +175,6 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 	
 }
 
-void
-on_sessions_notebook_page_removed (GtkNotebook     *notebook,
-											GtkNotebookPage *page,
-											guint            page_num,
-											gpointer         user_data)
-{
-	GSQL_TRACE_FUNC;
-
-	GSQLSession *session;
-	
-	session = gsql_session_get_active ();
-	
-/*	if ( session == NULL)
-	{
-		gsql_engines_menu_hide_all ();
-		gsql_plugins_menu_update_all (NULL);
-		
-		return;
-	}
-	
-	gsql_plugins_menu_update_all (session->engine);
-*/
-}
 
 void 
 on_gsql_window_destroy(GtkWidget * widget, gpointer data)

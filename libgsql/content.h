@@ -104,6 +104,9 @@ gsql_content_set_name_full (GSQLContent *content, gchar *name, gchar *display_na
 void
 gsql_content_set_stock (GSQLContent *content, const gchar *stock);
 
+gchar *
+gsql_content_get_stock (GSQLContent *content);
+
 GtkWidget *
 gsql_content_get_header_label (GSQLContent *content);
 

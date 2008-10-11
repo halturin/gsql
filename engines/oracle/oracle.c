@@ -245,22 +245,26 @@ oracle_session_commit (GSQLSession *session)
 
 	sword ret;
 	gchar *mess;
+	GSQLWorkspace *workspace;
 	GSQLEOracleSession *o_session;
 
-/*	o_session = (GSQLEOracleSession *) session->spec;
+	o_session = (GSQLEOracleSession *) session->spec;
+	
+	workspace = gsql_session_get_workspace (session);
+	
 	ret = OCITransCommit(o_session->svchp, o_session->errhp, OCI_DEFAULT);
 	
 	if (ret != OCI_SUCCESS)
 	{
 		mess = oracle_get_error_string (o_session->errhp);
-		gsql_message_add (session->workspace,
-							  MSG_ERROR, mess);
+		gsql_message_add (workspace,
+							  GSQL_MESSAGE_ERROR, mess);
 		g_free (mess);
 	} else
-		gsql_message_add (session->workspace,
-							  MSG_NOTICE, N_("Transaction commited"));
-	*/
-};
+		gsql_message_add (workspace,
+							  GSQL_MESSAGE_NOTICE, N_("Transaction commited"));
+	
+}
 
 void
 oracle_session_rollback (GSQLSession *session)
@@ -269,22 +273,26 @@ oracle_session_rollback (GSQLSession *session)
 
 	sword ret;
 	gchar *mess;
+	GSQLWorkspace *workspace;
 	GSQLEOracleSession * o_session;
 	
-/*	o_session = (GSQLEOracleSession *) session->spec;
+	o_session = (GSQLEOracleSession *) session->spec;
+	
+	workspace = gsql_session_get_workspace (session);
+	
 	ret = OCITransRollback(o_session->svchp, o_session->errhp, OCI_DEFAULT);
 	
 	if (ret != OCI_SUCCESS)
 	{
 		mess = oracle_get_error_string (o_session->errhp);
-		gsql_message_add (session->workspace,
-							  MSG_ERROR, mess);
+		gsql_message_add (workspace,
+							  GSQL_MESSAGE_ERROR, mess);
 		g_free (mess);
 	} else
-		gsql_message_add (session->workspace,
-							  MSG_NOTICE, N_("Transaction rolled back"));
-	*/
-};
+		gsql_message_add (workspace,
+							  GSQL_MESSAGE_NOTICE, N_("Transaction rolled back"));
+	
+}
 
 gboolean 
 oracle_session_close (GSQLSession *session, gchar *buffer)
@@ -296,7 +304,7 @@ oracle_session_close (GSQLSession *session, gchar *buffer)
 	
 	o_session = (GSQLEOracleSession *) session->spec;
 	
-		// FIXME: we need to close all opened cursors
+	gsql_session_close (session);
 	
 	OCISessionEnd (o_session->svchp, o_session->errhp, 
 				   o_session->usrhp, OCI_DEFAULT);
@@ -309,7 +317,6 @@ oracle_session_close (GSQLSession *session, gchar *buffer)
 	OCIHandleFree ((dvoid *)o_session->envhp, OCI_HTYPE_ENV);
 
 	g_free(o_session);
-	session->spec = NULL;
 	
 	return TRUE;
 };

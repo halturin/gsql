@@ -121,6 +121,12 @@ gsql_session_unlock (GSQLSession *session);
 gboolean
 gsql_session_lock_state (GSQLSession *session);
 
+GtkDialog *
+gsql_session_unsaved_dialog (GSQLSession *session);
+
+gboolean
+gsql_session_close_all ();
+
 G_END_DECLS
 
 #endif /* _SESSION_H */

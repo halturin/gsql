@@ -171,13 +171,7 @@ on_session_commit (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 	
-	GSQLWorkspace *workspace;
-	
-	g_return_if_fail (GSQL_IS_SESSION (session));
-	
-	workspace = gsql_session_get_workspace (session);
-	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction commited"));
-	
+	mysql_session_commit (session);
 
 }
 
@@ -186,13 +180,7 @@ on_session_rollback (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 	
-	GSQLWorkspace *workspace;
-	
-	g_return_if_fail (GSQL_IS_SESSION (session));
-	
-	workspace = gsql_session_get_workspace (session);
-	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction rolled back"));
-	
+	mysql_session_rollback (session);
 }
 
 static void

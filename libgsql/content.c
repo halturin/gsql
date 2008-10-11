@@ -273,6 +273,14 @@ gsql_content_set_stock (GSQLContent *content, const gchar *stock)
 
 }
 
+gchar *
+gsql_content_get_stock (GSQLContent *content)
+{
+	GSQL_TRACE_FUNC;
+	
+	return (gchar *) content->private->stock;
+}
+
 gboolean
 gsql_content_get_changed (GSQLContent *content)
 {

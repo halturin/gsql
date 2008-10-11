@@ -43,6 +43,7 @@
 
 #include "engine_menu.h"
 #include "engine_session.h"
+#include "engine_stock.h"
 #include "engine_conf.h"
 #include "mysql_cursor.h"
 
@@ -66,7 +67,8 @@ engine_load (GSQLEngine *engine)
 	engine->info.major_version = ENGINE_MAJOR_VER;
 	engine->info.minor_version = ENGINE_MINOR_VER;
 
-	engine->file_logo = "mysql/mysql.png";	
+	engine->file_logo = "mysql/mysql.png";
+	engine->stock_logo = GSQLE_MYSQL_STOCK_MYSQL;
 	engine->session_open = engine_session_open;
 
 	/* logon widget */

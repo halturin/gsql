@@ -106,9 +106,7 @@ gsql_window_create (void)
 	g_signal_connect_after ((gpointer) notebook, "switch-page",
 						G_CALLBACK (on_sessions_notebook_change_current_page),
 						NULL);
-	g_signal_connect_after ((gpointer) notebook, "page-removed",
-						G_CALLBACK (on_sessions_notebook_page_removed),
-						NULL);
+	
 	g_signal_connect (G_OBJECT (gsql_window), "delete_event",
 						G_CALLBACK (on_gsql_window_delete), 
 					  NULL);
@@ -122,6 +120,9 @@ void
 gsql_window_clean_exit()
 {
 	GSQL_TRACE_FUNC;
+	
+	if (!gsql_session_close_all ())
+		return;
 
 	gnome_accelerators_sync ();
 	gtk_main_quit ();

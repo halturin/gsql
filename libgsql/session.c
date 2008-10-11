@@ -102,12 +102,15 @@ static void gsql_session_forall (GtkContainer *container,
 					  GtkCallback   callback,
 					  gpointer      callback_data);
 
-void on_session_reconnect (GtkMenuItem *mi, gpointer data);
-void on_session_duplicate (GtkMenuItem *mi, gpointer data);
-void on_session_close (GtkMenuItem *mi, gpointer data);
-void on_session_close_all (GtkMenuItem *mi, gpointer data);
-void on_session_commit (GtkMenuItem *mi, gpointer data);
-void on_session_rollback (GtkMenuItem *mi, gpointer data);
+void static on_menu_session_reconnect (GtkMenuItem *mi, gpointer data);
+void static on_menu_session_duplicate (GtkMenuItem *mi, gpointer data);
+void static on_menu_session_close (GtkMenuItem *mi, gpointer data);
+void static on_menu_session_close_all (GtkMenuItem *mi, gpointer data);
+void static on_menu_session_commit (GtkMenuItem *mi, gpointer data);
+void static on_menu_session_rollback (GtkMenuItem *mi, gpointer data);
+static void on_unsaved_dialog_enabled_toggled (GtkCellRendererToggle *cell,
+								   gchar *path_str,
+								   GtkTreeView *tv);
 
 static void untitled_hash_remove_key_notify (gpointer data);
 
@@ -144,12 +147,12 @@ static gchar session_ui[] =
 
 static GtkActionEntry session_acts[] = 
 {
-	{ "ActionMenuReconnect", NULL, N_("Reconnect"), NULL, N_("Reconnect current session"), G_CALLBACK(on_session_reconnect) },
-	{ "ActionMenuDuplicateSession", NULL, N_("Duplicate"), NULL, N_("Duplicate current session"), G_CALLBACK(on_session_duplicate) },
-	{ "ActionMenuCloseSession", GTK_STOCK_DISCONNECT/*GSQL_STOCK_SESSION_CLOSE*/, N_("Close Session"), NULL, N_("Close current session"), G_CALLBACK(on_session_close) },
-	{ "ActionMenuCloseAllSessions", NULL, N_("Close All Session"), NULL, N_("Close all session"), G_CALLBACK(on_session_close_all) },
-	{ "ActionMenuCommit", GSQL_STOCK_SESSION_COMMIT, N_("Commit"), NULL, N_("Commit"), G_CALLBACK(on_session_commit) },
-	{ "ActionMenuRollback", GSQL_STOCK_SESSION_ROLLBACK, N_("Rollback"), NULL, N_("Rollback"), G_CALLBACK(on_session_rollback) }
+	{ "ActionMenuReconnect", NULL, N_("Reconnect"), NULL, N_("Reconnect current session"), G_CALLBACK(on_menu_session_reconnect) },
+	{ "ActionMenuDuplicateSession", NULL, N_("Duplicate"), NULL, N_("Duplicate current session"), G_CALLBACK(on_menu_session_duplicate) },
+	{ "ActionMenuCloseSession", GTK_STOCK_DISCONNECT/*GSQL_STOCK_SESSION_CLOSE*/, N_("Close Session"), NULL, N_("Close current session"), G_CALLBACK(on_menu_session_close) },
+	{ "ActionMenuCloseAllSessions", NULL, N_("Close All Session"), NULL, N_("Close all session"), G_CALLBACK(on_menu_session_close_all) },
+	{ "ActionMenuCommit", GSQL_STOCK_SESSION_COMMIT, N_("Commit"), NULL, N_("Commit"), G_CALLBACK(on_menu_session_commit) },
+	{ "ActionMenuRollback", GSQL_STOCK_SESSION_ROLLBACK, N_("Rollback"), NULL, N_("Rollback"), G_CALLBACK(on_menu_session_rollback) }
 };
 
 GType
@@ -469,6 +472,208 @@ gsql_session_lock_state (GSQLSession *session)
 	return session->private->busy;
 }
 
+void
+gsql_session_close (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLWorkspace *workspace;
+	GSQLContent *content = NULL;
+	GList *clist;
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	workspace = gsql_session_get_workspace (session);
+	
+	clist = gsql_workspace_get_content_list (workspace);
+	clist = g_list_first (clist);
+
+	while (clist)
+	{
+		content = GSQL_CONTENT (clist->data);
+		
+		clist = g_list_next (clist);
+		
+		g_signal_emit_by_name (content, "close", TRUE);	
+	}
+	
+	g_list_free (clist);
+	
+	gtk_widget_destroy (GTK_WIDGET (session));
+
+}
+
+GtkDialog *
+gsql_session_unsaved_dialog (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLWorkspace *workspace;
+	GtkTreeStore *ts;
+	GtkWidget  *tv = NULL;
+	GtkVBox *box;
+	GtkWidget *dialog;
+	GtkWidget	*scroll;
+	GtkTreeViewColumn 	*column;
+	GtkCellRenderer 	*renderer;
+	GtkTreeIter iter, child;
+	GList *clist = NULL;
+	GList *slist = NULL;
+	GSQLContent *content;
+	guint unsaved_count = 0;
+	gchar *session_name;
+	gboolean content_state, have_changes;
+	
+	ts = gtk_tree_store_new (4,
+							 G_TYPE_BOOLEAN,
+							 G_TYPE_STRING,
+							 G_TYPE_STRING,
+							 G_TYPE_POINTER);
+	
+	
+	
+	if (!session)
+	{
+		slist = g_hash_table_get_values (sessions);
+		slist = g_list_first (slist);
+	} else {
+		slist = g_list_append (slist, session);
+	}
+	GSQL_DEBUG ("Sessions hash len: [%d]", g_list_length (slist));
+	while (slist)
+	{
+		session = GSQL_SESSION (slist->data);
+		workspace = gsql_session_get_workspace (GSQL_SESSION (slist->data));
+		
+		clist = gsql_workspace_get_content_list (workspace);
+	
+		if (g_list_length (clist) == 0)
+		{
+			slist = g_list_next (slist);
+			continue;
+		}
+
+		clist = g_list_first (clist);
+	
+		gtk_tree_store_append(ts, &iter, NULL);
+
+		gtk_tree_store_set(ts, &iter,
+						   0, TRUE,
+						   1, session->engine->stock_logo,
+						   2, session->private->name,
+						   3, NULL,
+						   -1);
+		have_changes = FALSE;
+		while (clist)
+		{
+			content_state = gsql_content_get_changed (GSQL_CONTENT (clist->data));
+			
+			if (content_state) 
+			{
+				unsaved_count++;
+				have_changes = TRUE;
+				gtk_tree_store_append(ts, &child, &iter);
+				
+				gtk_tree_store_set(ts, &child,
+								   0, TRUE,
+								   1, gsql_content_get_stock (GSQL_CONTENT (clist->data)),
+								   2, gsql_content_get_display_name (GSQL_CONTENT (clist->data)),
+								   3, clist->data,
+								   -1);
+				
+			}
+			
+			clist = g_list_next (clist);
+		}
+		
+		if (!have_changes)
+			gtk_tree_store_remove(ts, &iter);
+
+		slist = g_list_next (slist);
+	}
+	
+	if (!unsaved_count)
+	{
+		gtk_tree_store_clear (ts);
+		g_object_unref(ts);
+		return NULL;
+	}
+	
+	tv = gtk_tree_view_new_with_model (GTK_TREE_MODEL (ts));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tv), FALSE);
+	
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), column);
+	
+	renderer = gtk_cell_renderer_toggle_new ();
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+										"active", 0);
+	g_signal_connect (renderer, "toggled",
+					  G_CALLBACK (on_unsaved_dialog_enabled_toggled), tv);
+	
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), column);
+	gtk_tree_view_column_set_title (column, N_("Unsaved Files"));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tv), FALSE);
+	
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+										"stock-id", 1);
+	
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_add_attribute (column, renderer,
+										"text", 2);
+	
+	scroll = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scroll),
+									GTK_POLICY_AUTOMATIC,
+									GTK_POLICY_AUTOMATIC);	
+	
+	gtk_container_add (GTK_CONTAINER (scroll),
+					   GTK_WIDGET(tv));
+	
+	dialog = gtk_dialog_new_with_buttons (N_("Unsaved documents..."),
+										  GTK_WINDOW (gsql_window),
+										  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+										  GTK_STOCK_DISCARD,
+										  GTK_RESPONSE_CLOSE,
+										  GTK_STOCK_CANCEL,
+										  GTK_RESPONSE_CANCEL,
+										  GTK_STOCK_SAVE,
+										  GTK_RESPONSE_OK,
+										  NULL);
+	
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 360, 280);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scroll, TRUE, TRUE, 2);
+	g_object_set_data (G_OBJECT (dialog), "treeview", tv);
+	
+	gtk_tree_view_expand_all (GTK_TREE_VIEW (tv));
+	
+	
+	gtk_widget_show_all (dialog);
+	
+	g_list_free (clist);
+	g_list_free (slist);
+	
+	return GTK_DIALOG (dialog);
+}
+
+gboolean
+gsql_session_close_all ()
+{
+	GSQL_TRACE_FUNC;
+	
+	on_menu_session_close_all (NULL, NULL);
+	
+	if (g_hash_table_size (sessions) > 0)
+		return FALSE;
+	
+	return TRUE;
+}
 
 /* Static section:
  *	gsql_session_init
@@ -480,18 +685,27 @@ gsql_session_lock_state (GSQLSession *session)
  *	gsql_session_size_request
  *	gsql_session_size_allocate
  *	gsql_session_for_all
- *  on_session_reconnect
- *  on_session_duplicate
- *  on_session_close
- *  on_session_close_all
- *  on_session_commit
- *  on_session_rollback
+ *  on_menu_session_reconnect
+ *  on_menu_session_duplicate
+ *  on_menu_session_close
+ *  on_menu_session_close_all
+ *  on_menu_session_commit
+ *  on_menu_session_rollback
  *
  *  untitled_hash_remove_key_notify
  *  
  */
 static void
 gsql_session_destroy (GtkObject *obj)
+{
+	GSQL_TRACE_FUNC;
+
+	(* GTK_OBJECT_CLASS (parent_class)->destroy) (obj);
+	
+}
+
+static void
+gsql_session_finalize (GObject *obj)
 {
 	GSQL_TRACE_FUNC;
 
@@ -502,7 +716,8 @@ gsql_session_destroy (GtkObject *obj)
 	if (g_hash_table_size (sessions) == 0)
 		gtk_action_group_set_sensitive (session_actions, FALSE);
 	
-	g_hash_table_unref (session->private->titles_hash);
+	if (session->private->titles_hash)
+		g_hash_table_unref (session->private->titles_hash);
 
 	if (session->private->username)
 		g_free ((gchar *) session->private->username);
@@ -516,16 +731,6 @@ gsql_session_destroy (GtkObject *obj)
 		g_free ((gchar *) session->private->info);
 	
 	g_free (session->private);
-
-
-	(* GTK_OBJECT_CLASS (parent_class)->destroy) (obj);
-	
-}
-
-static void
-gsql_session_finalize (GObject *obj)
-{
-	GSQL_TRACE_FUNC;
 
 	(* G_OBJECT_CLASS (parent_class)->finalize) (obj);
 	
@@ -887,8 +1092,8 @@ gsql_session_forall (GtkContainer *container,
 	
 }
 
-void 
-on_session_reconnect (GtkMenuItem *mi, gpointer data)
+static void 
+on_menu_session_reconnect (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 	GSQLSession *session = NULL;
@@ -900,7 +1105,8 @@ on_session_reconnect (GtkMenuItem *mi, gpointer data)
 
 }
 
-void on_session_duplicate (GtkMenuItem *mi, gpointer data)
+static void 
+on_menu_session_duplicate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 	GSQLSession *session = NULL;
@@ -912,7 +1118,8 @@ void on_session_duplicate (GtkMenuItem *mi, gpointer data)
 
 }
 
-void on_session_close (GtkMenuItem *mi, gpointer data)
+static void 
+on_menu_session_close (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 	GSQLSession *session = NULL;
@@ -924,15 +1131,74 @@ void on_session_close (GtkMenuItem *mi, gpointer data)
 
 }
 
-void on_session_close_all (GtkMenuItem *mi, gpointer data)
+static void 
+on_menu_session_close_all (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	GtkDialog *dialog;
+	guint ret;
+	GtkTreeView *tv;
+	GtkTreeModel *model;
+	GtkTreeIter iter, child;
+	GSQLContent *content;
+	gboolean  bvalue;
+	guint n;
 	
+	dialog = gsql_session_unsaved_dialog (NULL);
+	
+	if (dialog)
+	{
+		ret = gtk_dialog_run(dialog);
+		
+		switch (ret)
+		{
+			case GTK_RESPONSE_OK:
+				tv = GTK_TREE_VIEW (g_object_get_data (G_OBJECT (dialog), "treeview"));
+				model = gtk_tree_view_get_model (tv);
+				
+				gtk_tree_model_get_iter_first (model, &iter);
+				
+				for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
+				{
+					gtk_tree_model_iter_nth_child (model, &child, &iter, n);
+					gtk_tree_model_get (model, &child,
+										3, &content, -1);
+					gtk_tree_model_get (model, &child,  
+										0, &bvalue, -1);
+					
+					if (!bvalue)
+						continue;
+					
+					if (GSQL_IS_CONTENT (content))
+					{
+						g_signal_emit_by_name (content, "save");	
+							
+					} else {
+						
+						GSQL_DEBUG ("It is not GSQLContent");
+					}
+				}
+			
+				break;
+				
+			case GTK_RESPONSE_CANCEL:
+				gtk_widget_destroy (GTK_WIDGET (dialog));
+				return;
+				
+			case GTK_RESPONSE_CLOSE:
+				break;
+		} 
+		
+		
+	}
+	
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 	
 	return;
 };
 
-void on_session_commit (GtkMenuItem *mi, gpointer data)
+static void
+on_menu_session_commit (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 	GSQLSession *session = NULL;
@@ -945,7 +1211,8 @@ void on_session_commit (GtkMenuItem *mi, gpointer data)
 
 }
 
-void on_session_rollback (GtkMenuItem *mi, gpointer data)
+static void
+on_menu_session_rollback (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 	GSQLSession *session = NULL;
@@ -966,3 +1233,45 @@ untitled_hash_remove_key_notify (gpointer data)
 	g_free (data);
 }
 
+static void
+on_unsaved_dialog_enabled_toggled (GtkCellRendererToggle *cell,
+								   gchar *path_str,
+								   GtkTreeView *tv)
+{
+	GSQL_TRACE_FUNC;
+	
+	GtkTreeIter iter, child;
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	gboolean bvalue;
+	gpointer p = NULL;
+	guint n;
+	
+	path = gtk_tree_path_new_from_string (path_str);
+	model = gtk_tree_view_get_model (tv);
+	gtk_tree_model_get_iter (model, &iter, path);
+	
+	gtk_tree_model_get (model, &iter,  
+						3, 
+						&p, -1);
+	gtk_tree_model_get (model, &iter,  
+						0, 
+						&bvalue, -1);
+	if (!p)
+	{
+		GSQL_DEBUG ("Seeeeeeeeeeeeeesss [%d]", gtk_tree_model_iter_n_children (model, &iter));
+		
+		for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
+		{
+			gtk_tree_model_iter_nth_child (model, &child, &iter, n);
+			
+			gtk_tree_store_set(GTK_TREE_STORE (model), &child,
+						0, !bvalue,
+						-1);
+		}
+	} 
+		
+	gtk_tree_store_set(GTK_TREE_STORE (model), &iter,
+						0, !bvalue,
+						-1);
+}

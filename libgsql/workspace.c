@@ -60,6 +60,10 @@ static void gsql_workspace_forall (GtkContainer *container,
 									gboolean      include_internals,
 									GtkCallback   callback,
 									gpointer      callback_data);
+static void on_contents_notebook_page_removed (GtkNotebook *nb, 
+											   GSQLContent *content, 
+											   guint pnum,
+											   GSQLWorkspace *workspace);
 static void
 on_adjustment_changed (GtkAdjustment* adj, gpointer data);
 
@@ -165,6 +169,11 @@ gsql_workspace_new (GSQLSession *session)
 	/*  CONTENTS AREA  */	
 	
 	workspace->private->contents = GTK_WIDGET (gtk_notebook_new ());
+	
+	g_signal_connect (workspace->private->contents,
+					   "page-removed",
+					   G_CALLBACK (on_contents_notebook_page_removed),
+					   workspace);
 	
 	contents_root = workspace->private->contents;
 	
@@ -437,6 +446,9 @@ gsql_workspace_add_content (GSQLWorkspace *workspace, GSQLContent *content)
 	
 	gtk_notebook_set_current_page (contents, p);
 	
+	workspace->private->content_list = g_list_append (workspace->private->content_list,
+													  content);
+	
 };
 
 GList *
@@ -445,6 +457,9 @@ gsql_workspace_get_content_list (GSQLWorkspace *workspace)
 	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), NULL);
+	
+	if (!workspace->private)
+		return NULL;
 	
 	return g_list_copy (workspace->private->content_list);
 	
@@ -701,6 +716,9 @@ gsql_workspace_finalize (GObject *obj)
 	GSQL_TRACE_FUNC;
 
 	GSQLWorkspace *workspace = GSQL_WORKSPACE (obj);
+	
+	if (workspace->private->content_list)
+		g_list_free (workspace->private->content_list);
 
 	g_free (workspace->private);
 	
@@ -1151,3 +1169,14 @@ gsql_messages_key_press_cb (GtkWidget *tv,
 	return TRUE;
 }
 
+static void
+on_contents_notebook_page_removed (GtkNotebook *nb, GSQLContent *content, 
+								   guint pnum,
+								   GSQLWorkspace *workspace)
+{
+	GSQL_TRACE_FUNC;
+	
+	workspace->private->content_list = g_list_remove (workspace->private->content_list,
+													  content);
+	
+}

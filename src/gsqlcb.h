@@ -51,11 +51,7 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 											GtkNotebookPage *page,
 											guint            page_num,
 											gpointer         user_data);
-void
-on_sessions_notebook_page_removed (GtkNotebook     *notebook,
-											GtkNotebookPage *page,
-											guint            page_num,
-											gpointer         user_data);
+
 void
 on_session_close_header_button_activate (GtkButton *button,
 											gpointer user_data);

@@ -57,6 +57,7 @@ struct _GSQLEngine
 {
 	GSQLEngineInfo info;
 	gchar   *file_logo; /* icon file */
+	gchar   *stock_logo; /* stock name of logo */
 	
 	GModule *module;
 	gchar   *file;

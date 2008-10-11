@@ -495,8 +495,11 @@ gsql_navigation_finalize (GObject *obj)
 
 	GSQLNavigation *navigation = GSQL_NAVIGATION (obj);
 	
-	g_hash_table_unref (navigation->private->details_hash);
+	if (navigation->private->details_hash)
+		g_hash_table_unref (navigation->private->details_hash);
+	
 	g_object_unref (navigation->private->ui);
+	
 	g_free (navigation->private);
 	
 	(* G_OBJECT_CLASS (parent_class)->finalize) (obj);
