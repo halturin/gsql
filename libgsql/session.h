@@ -127,6 +127,9 @@ gsql_session_unsaved_dialog (GSQLSession *session);
 gboolean
 gsql_session_close_all ();
 
+void
+gsql_session_close (GSQLSession *session);
+
 G_END_DECLS
 
 #endif /* _SESSION_H */

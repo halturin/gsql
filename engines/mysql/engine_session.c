@@ -146,8 +146,9 @@ static void
 on_session_close (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
+	
+	mysql_session_close (session, NULL);
 
-	return;
 }
 
 static void

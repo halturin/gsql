@@ -1175,8 +1175,11 @@ on_contents_notebook_page_removed (GtkNotebook *nb, GSQLContent *content,
 								   GSQLWorkspace *workspace)
 {
 	GSQL_TRACE_FUNC;
+	GList *list;
 	
-	workspace->private->content_list = g_list_remove (workspace->private->content_list,
-													  content);
+	list = workspace->private->content_list;
+	
+	if (list)
+		workspace->private->content_list = g_list_remove (list, content);
 	
 }

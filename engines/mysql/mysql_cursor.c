@@ -81,7 +81,8 @@ mysql_cursor_prepare (GSQLCursor *cursor)
 	
 	if (mysql_stmt_prepare(e_cursor->statement, cursor->sql, g_utf8_strlen(cursor->sql, 1048576)))
 	{
-		g_sprintf (error_str, "Prepare failed: %s", mysql_stmt_error (e_cursor->statement));
+		g_sprintf (error_str, "Prepare failed: %s", 
+				   gsql_utils_escape_string (mysql_stmt_error (e_cursor->statement)));
                 GSQL_DEBUG (error_str);
                 workspace = gsql_session_get_workspace (cursor->session);
                 gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);

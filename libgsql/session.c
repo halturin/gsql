@@ -196,8 +196,9 @@ gsql_session_new (void)
 		gtk_action_group_add_actions (session_actions, session_acts, 
 								  G_N_ELEMENTS (session_acts), NULL);
 		gsql_menu_merge_from_string (session_ui, session_actions);
-		gtk_action_group_set_sensitive (session_actions, TRUE);
 	}
+	
+	gtk_action_group_set_sensitive (session_actions, TRUE);
 	
 	return session;
 }
@@ -246,6 +247,7 @@ gsql_session_new_with_attrs (gchar *attr_name,...)
 	va_end (vl);
 	
 	gsql_session_set_session_name (session);
+	gtk_action_group_set_sensitive (session_actions, TRUE);
 	
 	return session;	
 }
@@ -514,8 +516,10 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 	GtkVBox *box;
 	GtkWidget *dialog;
 	GtkWidget	*scroll;
+	GtkWidget *label;
 	GtkTreeViewColumn 	*column;
 	GtkCellRenderer 	*renderer;
+	GtkWidget *alignment;
 	GtkTreeIter iter, child;
 	GList *clist = NULL;
 	GList *slist = NULL;
@@ -648,6 +652,17 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 										  NULL);
 	
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 360, 280);
+	
+	label = gtk_label_new (N_("Select the files which you want to save. "
+							  "Note that checking the session name will "
+							  "result in selection of all the unsaved "
+							  "files in this session."));
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	
+	alignment = gtk_alignment_new (0.02, 0.5, 1, 1);
+	gtk_container_add (GTK_CONTAINER (alignment), label);
+	
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), alignment, FALSE, FALSE, 2);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scroll, TRUE, TRUE, 2);
 	g_object_set_data (G_OBJECT (dialog), "treeview", tv);
 	
@@ -1141,8 +1156,11 @@ on_menu_session_close_all (GtkMenuItem *mi, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeIter iter, child;
 	GSQLContent *content;
+	GSQLSession *session;
 	gboolean  bvalue;
 	guint n;
+	gchar *session_name;
+	GList *list;
 	
 	dialog = gsql_session_unsaved_dialog (NULL);
 	
@@ -1150,52 +1168,116 @@ on_menu_session_close_all (GtkMenuItem *mi, gpointer data)
 	{
 		ret = gtk_dialog_run(dialog);
 		
+		tv = GTK_TREE_VIEW (g_object_get_data (G_OBJECT (dialog), "treeview"));
+		model = gtk_tree_view_get_model (tv);
+				
+		gtk_tree_model_get_iter_first (model, &iter);
+		
 		switch (ret)
 		{
 			case GTK_RESPONSE_OK:
-				tv = GTK_TREE_VIEW (g_object_get_data (G_OBJECT (dialog), "treeview"));
-				model = gtk_tree_view_get_model (tv);
 				
-				gtk_tree_model_get_iter_first (model, &iter);
-				
-				for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
+		
+				do
 				{
-					gtk_tree_model_iter_nth_child (model, &child, &iter, n);
-					gtk_tree_model_get (model, &child,
-										3, &content, -1);
-					gtk_tree_model_get (model, &child,  
-										0, &bvalue, -1);
+					gtk_tree_model_get (model, &iter, 2, &session_name, -1);
 					
-					if (!bvalue)
-						continue;
+					GSQL_DEBUG ("Session name: [%s]", session_name);
 					
-					if (GSQL_IS_CONTENT (content))
+					for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
 					{
-						g_signal_emit_by_name (content, "save");	
+						gtk_tree_model_iter_nth_child (model, &child, &iter, n);
+						gtk_tree_model_get (model, &child,
+											3, &content, -1);
+						gtk_tree_model_get (model, &child,  
+											0, &bvalue, -1);
+					
+						if (!bvalue)
+							continue;
+					
+						if (GSQL_IS_CONTENT (content))
+						{
+							g_signal_emit_by_name (content, "save");	
 							
+						} else {
+						
+							GSQL_DEBUG ("It is not GSQLContent");
+						}
+					}
+					
+					session = g_hash_table_lookup (sessions, session_name);
+					
+					if (!GSQL_IS_SESSION (session)) 
+					{
+						GSQL_DEBUG ("Session not found. Bug!");
 					} else {
 						
-						GSQL_DEBUG ("It is not GSQLContent");
+						gsql_session_close (session);
 					}
+												   
 				}
+				while (gtk_tree_model_iter_next (model, &iter));
 			
 				break;
 				
 			case GTK_RESPONSE_CANCEL:
-				gtk_widget_destroy (GTK_WIDGET (dialog));
-				return;
+				
+				break;
 				
 			case GTK_RESPONSE_CLOSE:
+			
+				do
+				{
+					gtk_tree_model_get (model, &iter, 2, &session_name, -1);
+					
+					GSQL_DEBUG ("Session name: [%s]", session_name);
+					
+					session = g_hash_table_lookup (sessions, session_name);
+					
+					if (!GSQL_IS_SESSION (session)) 
+					{
+						GSQL_DEBUG ("Session not found. Bug!");
+					} else {
+						
+						gsql_session_close (session);
+					}
+												   
+				}
+				while (gtk_tree_model_iter_next (model, &iter));
+				
 				break;
+				
+			default:
+				GSQL_DEBUG ("Unknown response. Bug!");
 		} 
 		
 		
+	} else {
+		
+		list = g_hash_table_get_values (sessions);
+		list = g_list_first (list);
+		
+		while (list)
+		{
+			session = GSQL_IS_SESSION (list->data) ? GSQL_SESSION (list->data) : NULL;
+			
+			if (!session)
+			{
+				GSQL_DEBUG ("Session list. Unknown data in list. Bug");
+				
+			} else {
+				
+				gsql_session_close (session);
+				
+			}
+			
+			list = g_list_next (list);
+		}
 	}
 	
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	
-	return;
-};
+}
 
 static void
 on_menu_session_commit (GtkMenuItem *mi, gpointer data)
@@ -1258,9 +1340,7 @@ on_unsaved_dialog_enabled_toggled (GtkCellRendererToggle *cell,
 						0, 
 						&bvalue, -1);
 	if (!p)
-	{
-		GSQL_DEBUG ("Seeeeeeeeeeeeeesss [%d]", gtk_tree_model_iter_n_children (model, &iter));
-		
+	{		
 		for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
 		{
 			gtk_tree_model_iter_nth_child (model, &child, &iter, n);

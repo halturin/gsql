@@ -83,6 +83,16 @@ mysql_session_close (GSQLSession *session, gchar *buffer)
 {
 	GSQL_TRACE_FUNC;
 	
+	GSQLEMySQLSession *spec_session;
+
+	spec_session = (GSQLEMySQLSession *) session->spec;
+
+	gsql_session_close (session);
+
+	mysql_close (spec_session->mysql);
+
+	g_free (spec_session);
+
 	return TRUE;
 }
 

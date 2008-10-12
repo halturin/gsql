@@ -143,6 +143,9 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 		
 		session = GSQL_SESSION (gtk_notebook_get_nth_page (notebook, page_num));
 		
+		if (!session)
+			g_snprintf(gsql_window_header, 128, "%s", "GSQL");
+		
 		g_snprintf(gsql_window_header, 128, "%s: %s", "GSQL", 
 				   gsql_session_get_name (session));
 		
