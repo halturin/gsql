@@ -66,8 +66,6 @@ struct CursorOpenBGStruct
 GType
 gsql_cursor_get_type ()
 {
-	GSQL_TRACE_FUNC;
-
 	static GType obj_type = 0;
 	
 	if (!obj_type)
@@ -100,7 +98,8 @@ gsql_cursor_get_state (GSQLCursor *cursor)
 {
 	GSQL_TRACE_FUNC;
 
-	g_return_val_if_fail (GSQL_CURSOR (cursor) != NULL, GSQL_CURSOR_STATE_ERROR);
+	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
+	
 	return cursor->private->state;	
 }
 

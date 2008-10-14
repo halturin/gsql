@@ -90,8 +90,6 @@ union  _dmyhms
 GType
 gsql_type_datetime_get_type (void)
 {
-	GSQL_TRACE_FUNC;
-		
 	static GType datetime_type = 0;
 	
 	if (!datetime_type)
@@ -140,7 +138,6 @@ gsql_cell_renderer_datetime_get_type (void)
 gchar *
 gsql_type_datetime_to_gchar (GSQLTypeDateTime *dt, gchar *text, guint textlen)
 {
-	GSQL_TRACE_FUNC;
 	gchar *f_tmp;
 	static GtkWidget *tmp;
 	GSQLTypeDateTime dt1;
@@ -169,6 +166,7 @@ gsql_type_datetime_to_gchar (GSQLTypeDateTime *dt, gchar *text, guint textlen)
 							 *(guint *) ((void *) dt + dt_offset[4]), 
 							 *(guint *) ((void *) dt + dt_offset[5]) );
 		return f_tmp;
+		
 	} else {
 		g_snprintf (text, textlen, dt_format_parsed,
 					*(guint *) ((void *) dt + dt_offset[0]), 
@@ -178,6 +176,7 @@ gsql_type_datetime_to_gchar (GSQLTypeDateTime *dt, gchar *text, guint textlen)
 					*(guint *) ((void *) dt + dt_offset[4]), 
 					*(guint *) ((void *) dt + dt_offset[5]) );
 	}
+	
 	return text;
 }
 

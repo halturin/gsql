@@ -56,6 +56,8 @@ on_cursor_close (GSQLCursor *cursor, gpointer user_data)
 		ret = OCIStmtRelease(spec->statement,
 							spec->errhp, NULL, 0, OCI_DEFAULT);
 		
+		OCIHandleFree ((dvoid *)spec->errhp, OCI_HTYPE_ERROR);
+		
 	}
 	
 }

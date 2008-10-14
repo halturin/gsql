@@ -69,6 +69,7 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 		
 		case MYSQL_TYPE_SHORT:  
 		case MYSQL_TYPE_LONG:
+		case MYSQL_TYPE_TINY:
 			GSQL_DEBUG ("Cast to G_TYPE_INT");
 			variable->value_type = G_TYPE_INT;
 			variable->value_length = 4;

@@ -111,7 +111,16 @@ extern gboolean gsql_opt_debug_enable;
 //#define GSQL_DEBUG(params...)
 
 //#endif
-	
+
+//#ifdef HAVE_ENABLE_FIXME
+#define GSQL_FIXME \
+	g_warning ("FIXME: file [%s] line [%s]", __FILE__, __LINE__)
+//#else
+
+//#define GSQL_FIXME
+
+//#endif
+
 #define GSQL_THREAD_ENTER \
 	if (gsql_main_thread !=(gpointer)  g_thread_self()) \
 		gdk_threads_enter (); \

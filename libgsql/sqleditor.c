@@ -1160,6 +1160,8 @@ on_custom_limit_checkbutton_toggled (GtkToggleButton *togglebutton,
 static void
 do_sql_fetch (GSQLEditor *editor)
 {
+	GSQL_TRACE_FUNC;
+	
     GSQLCursor *cursor = NULL;
 	GSQLWorkspace *workspace = NULL;
 	GtkVBox *result_vbox;
@@ -1374,8 +1376,8 @@ do_sql_fetch (GSQLEditor *editor)
 		A treeview widget tries to redraw on every insert operation.
 		Any body knows how to avoid this trouble?
 	 */
-	gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), FALSE);
-	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview), NULL);
+	//gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), FALSE);
+	//gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview), NULL);
 	
 	while ( (rows_fetched < rows_limit) &&
 		   (rows = gsql_cursor_fetch (cursor, 1) > 0))
@@ -1386,7 +1388,7 @@ do_sql_fetch (GSQLEditor *editor)
 			break;
 		
 		vlist = g_list_first (cursor->var_list);
-		
+
 		for (l = 0; l < var_count; l++)
 		{
 			var = vlist->data;
@@ -1397,7 +1399,7 @@ do_sql_fetch (GSQLEditor *editor)
 			
 			if (var->raw_to_value)
 				var->raw_to_value (var);
-			
+
 			switch (var->value_type)
 			{
 				case G_TYPE_STRING:
@@ -1417,16 +1419,15 @@ do_sql_fetch (GSQLEditor *editor)
 					break;
 					
 				default:
+
 					if (var->value_type == GSQL_TYPE_DATETIME)
 					{
 						g_value_set_boxed (&values[l], var->value);
 						break;
 					}
+
 					g_value_set_string (&values[l], (const gchar *) N_("&lt;value&gt;"));
-			}
-			
-			
-			
+			}			
 		}
 		gtk_list_store_insert_with_valuesv (liststore_new, NULL, -1,
 											column_pos, values, var_count);
@@ -1445,7 +1446,7 @@ do_sql_fetch (GSQLEditor *editor)
 			break;
 			
 		}
-		
+
 		if (cursor->stmt_affected_rows + rows_fetched >= editor->private->fetch_max)
 		{
 			g_snprintf (msg, 128, 
@@ -1456,7 +1457,7 @@ do_sql_fetch (GSQLEditor *editor)
 							  msg);
 			break;
 		}
-		
+
 	}
 	
 	cursor->stmt_affected_rows += rows_fetched;
@@ -1474,7 +1475,7 @@ do_sql_fetch (GSQLEditor *editor)
 	 */
 	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
 							 	 GTK_TREE_MODEL(liststore_new));
-	gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), TRUE);
+	//gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), TRUE);
 	
 	GSQL_DEBUG ("Cursor state = [%d]", gsql_cursor_get_state (cursor));
 	
