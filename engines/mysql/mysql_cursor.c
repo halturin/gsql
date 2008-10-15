@@ -381,6 +381,13 @@ mysql_cursor_statement_detect (GSQLCursor *cursor)
 				break;
 			}
 			
+			if (g_str_has_prefix (stmt_char, "desc"))
+			{
+				GSQL_DEBUG ("'desc' statement");
+				cursor->stmt_type = GSQL_CURSOR_STMT_SELECT;
+				break;
+			}
+			
 			if (g_str_has_prefix (stmt_char, "insert"))
 			{
 				GSQL_DEBUG ("'insert' statement");
