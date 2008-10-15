@@ -297,7 +297,7 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 	GError *err;
 	struct CursorOpenBGStruct *bg_struct;
 	
-	g_return_val_if_fail (cursor != NULL, GSQL_CURSOR_STATE_ERROR);
+	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
 	
 	GSQLCursorState state = GSQL_CURSOR_STATE_RUN;
 	
@@ -466,7 +466,7 @@ gsql_cursor_close (GSQLCursor *cursor)
 	GList *vlist;
 	GSQLVariable *variable;
 	
-	g_return_if_fail (cursor != NULL);
+	g_return_if_fail (GSQL_IS_CURSOR (cursor));
 	
 	vlist = cursor->var_list;
 	

@@ -29,6 +29,7 @@
 
 #include "engine_menu.h"
 #include "engine_menucb.h"
+#include "engine_conf.h"
 
 static GtkActionEntry enginemenu_action[] = 
 {
@@ -41,6 +42,47 @@ static GtkActionEntry enginemenu_action[] =
 static GtkActionGroup *action;
 
 
+static GtkListStore *ListStorePredefinedCharset = NULL;
+
+static MySQLPredefinedCharset ArrPredefinedCharset[] = {
+	{ "armscii8", "ARMSCII-8 Armenian" },
+	{ "ascii", "US ASCII" },
+	{ "big5", "Big5 Traditional Chinese" },
+	{ "binary", "Binary pseudo charset" },
+	{ "cp1250", "Windows Central European" },
+	{ "cp1251", "Windows Cyrillic" },
+	{ "cp1256", "Windows Arabic" },
+	{ "cp1257", "Windows Baltic" },
+	{ "cp850", "DOS West European" },
+	{ "cp852", "DOS Central European" },
+	{ "cp866", "DOS Russian" },
+	{ "cp932", "SJIS for Windows Japanese" },
+	{ "dec8", "DEC West European" },
+	{ "eucjpms", "UJIS for Windows Japanese" },
+	{ "euckr", "EUC-KR Korean" },
+	{ "gb2312", "GB2312 Simplified Chinese" },
+	{ "gbk", "GBK Simplified Chinese" },
+	{ "geostd8", "GEOSTD8 Georgian" },
+	{ "greek", "ISO 8859-7 Greek" },
+	{ "hebrew", "ISO 8859-8 Hebrew" },
+	{ "hp8", "HP West European" },
+	{ "keybcs2", "DOS Kamenicky Czech-Slovak" },
+	{ "koi8r", "KOI8-R Relcom Russian" },
+	{ "koi8u", "KOI8-U Ukrainian" },
+	{ "latin1", "cp1252 West European" },
+	{ "latin2", "ISO 8859-2 Central European" },
+	{ "latin5", "ISO 8859-9 Turkish" },
+	{ "latin7", "ISO 8859-13 Baltic" },
+	{ "macce", "Mac Central European" },
+	{ "macroman", "Mac West European" },
+	{ "sjis", "Shift-JIS Japanese" },
+	{ "swe7", "7bit Swedish" },
+	{ "tis620", "TIS620 Thai" },
+	{ "ucs2", "UCS-2 Unicode" },
+	{ "ujis", "EUC-JP Japanese" },
+	{ "utf8", "UTF-8 Unicode" }
+};
+
 void
 engine_menu_init (GSQLEngine *engine)
 {
@@ -52,6 +94,9 @@ engine_menu_init (GSQLEngine *engine)
 	GtkWidget *submenu;
 	GtkWidget *item;
 	GSList *group;
+	GtkTreeIter iter;
+	guint i;
+	gchar desc_full[255];
 	
 	action = gtk_action_group_new ("ActionsMenuMySQL");
 	
@@ -64,32 +109,48 @@ engine_menu_init (GSQLEngine *engine)
 	
 	submenu = gtk_menu_new ();
 	
-	item = gtk_radio_menu_item_new_with_label (NULL, "latin1");
-	group =  gtk_radio_menu_item_get_group (item);
+	if (!ListStorePredefinedCharset)
+	{
+		ListStorePredefinedCharset = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
+		
+		for (i=0; i < G_N_ELEMENTS (ArrPredefinedCharset); i++)
+		{
+			g_snprintf(desc_full, 255,"%s [%s]", 
+					   ArrPredefinedCharset[i].name,
+					   ArrPredefinedCharset[i].desc);
+			
+			gtk_list_store_append (ListStorePredefinedCharset,
+								   &iter);
+			gtk_list_store_set (ListStorePredefinedCharset, 
+								&iter, 
+								0, desc_full,
+								1, ArrPredefinedCharset[i].name, -1);
+			item = gtk_menu_item_new_with_label (desc_full);
+			
+			g_signal_connect (item, "activate", 
+							  G_CALLBACK (on_charter_set_activate),
+							  ArrPredefinedCharset[i].name);
+			
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), item);
+		}
+		
+	}
 
-
-	gtk_menu_shell_append (submenu, 
-						   item);
-	item = gtk_radio_menu_item_new_with_label (group, "utf8");
-
-
-	gtk_menu_shell_append (submenu, 
-						   item);
-	/*
-	 show variables
-where Variable_name = 'character_set_client'
-	 
-	 */
 	
-	gtk_menu_item_set_submenu (widget, submenu);
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), submenu);
 	
 	gtk_widget_show_all (submenu);
 		
 	g_object_set(G_OBJECT(action), "visible", FALSE, NULL);
 	
-	return;
-	
-};
+}
+
+
+GtkListStore *
+engine_menu_get_charset_store ()
+{
+	return ListStorePredefinedCharset;	
+}
 
 
 

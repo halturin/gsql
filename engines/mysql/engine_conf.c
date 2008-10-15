@@ -26,6 +26,11 @@
 #include <libgsql/common.h>
 #include "engine_conf.h"
 #include "engine_confcb.h"
+#include "engine_menu.h"
+
+
+static void
+on_custom_charset_changed (GtkWidget *widget, gpointer user_data);
 
 GtkWidget *
 engine_conf_widget_new ()
@@ -40,8 +45,12 @@ engine_conf_widget_new ()
 	GtkWidget *frame;
 	gboolean gconf_bool_value;
 	gchar *gconf_char_value;
-	
+	GtkListStore *ls;
+	GtkCellRenderer *cell;
+	GtkTreeIter iter;
+	gchar *ls_value;
 	vbox = gtk_vbox_new (FALSE, 0);
+	gboolean have_found = TRUE;
 	
 	
 	frame = gtk_frame_new (NULL);
@@ -68,14 +77,43 @@ engine_conf_widget_new ()
 	gtk_widget_show (check_charset);
 	gtk_box_pack_start (GTK_BOX (vbox_charset), check_charset, FALSE, FALSE, 0);
 	
-	charset_list = gtk_combo_box_new_text ();
-	gconf_char_value =  gsql_conf_value_get_string (GSQLE_CONF_MYSQL_CUSTOM_CHARSET);
-	if (gconf_char_value)
-		gtk_combo_box_append_text (charset_list, gconf_char_value);
-	else
-		gtk_combo_box_append_text (charset_list, "latin1");
+	ls = engine_menu_get_charset_store ();
 	
-	gtk_combo_box_set_active (charset_list, 0);
+	charset_list = gtk_combo_box_new_with_model (GTK_TREE_MODEL (ls));
+	
+	cell = gtk_cell_renderer_text_new ();
+    
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (charset_list),
+                                    cell, TRUE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (charset_list),
+                                        cell, "markup", 0, NULL);
+	
+	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (ls), &iter);
+	
+	gconf_char_value =  gsql_conf_value_get_string (GSQLE_CONF_MYSQL_CUSTOM_CHARSET);
+	
+	do
+	{
+		if (!gconf_char_value)
+			break;
+		
+		gtk_tree_model_get (GTK_TREE_MODEL (ls), 
+							&iter,
+							1, &ls_value, -1);
+		
+		
+		if (!g_ascii_strncasecmp (ls_value, gconf_char_value, 32))
+			break;
+		
+		
+	} while (have_found = gtk_tree_model_iter_next (GTK_TREE_MODEL (ls), &iter));
+	
+	if (have_found)
+		gtk_combo_box_set_active_iter (GTK_COMBO_BOX (charset_list), &iter);
+	
+	g_signal_connect (charset_list, "changed",
+						G_CALLBACK (on_custom_charset_changed),
+						ls);
 	
 	gtk_widget_show (charset_list);
 	gtk_box_pack_start (GTK_BOX (vbox_charset), charset_list, FALSE, FALSE, 0);
@@ -90,16 +128,33 @@ engine_conf_widget_new ()
 	
 	gtk_widget_show_all (vbox);
 	
-	
-
 	return vbox;
-};
+}
 
 void
 engine_conf_widget_free (GtkWidget *conf_widget)
 {
 	GSQL_TRACE_FUNC;
 
-	return;
-};
+}
+
+
+static void
+on_custom_charset_changed (GtkWidget *widget, gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+	GtkTreeIter iter;
+	GtkTreeModel *model = user_data;
+
+	gchar *ls_value;
+	
+	if (!gtk_combo_box_get_active_iter (GTK_COMBO_BOX (widget), &iter))
+		return;
+	
+	gtk_tree_model_get (model, &iter, 1, &ls_value, -1);
+	
+	gsql_conf_value_set_string (GSQLE_CONF_MYSQL_CUSTOM_CHARSET, ls_value);
+	
+}
 

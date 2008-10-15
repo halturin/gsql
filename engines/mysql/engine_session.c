@@ -54,7 +54,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	GSQLWorkspace *workspace;
 	GSQLNavigation *navigation;
 	GSQLEMySQLSession *mysql_session;
-	
+	guint port = 0;
 					
 	gint connect_as = 0;
 	widget = g_object_get_data (G_OBJECT (logon_widget), "username");
@@ -68,13 +68,28 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	
 	if ((g_utf8_strlen(database,128) <= 0) || (g_utf8_strlen(username,128) <= 0))
 	{
-		g_strlcpy (buffer, "The Database and Username fields are required.", 256);
+		g_strlcpy (buffer, N_("The Database and Username fields are required."), 256);
 		return NULL;
 	};
 	
 	if (g_utf8_strlen(hostname,128) <= 0)
-		hostname = g_strdup("localhost");
+		hostname = "localhost";
 
+	
+	mysql_session = g_malloc0 (sizeof (GSQLEMySQLSession));
+	mysql_session->use = FALSE;
+	
+	if (!port)
+		port = 3306;
+	
+	if (!mysql_session_open (mysql_session, username, password, database, hostname, port))
+	{
+		g_strlcpy (buffer, (const gchar *) mysql_error (mysql_session->mysql), 256);
+		g_free (mysql_session->mysql);
+		g_free (mysql_session);
+		return FALSE;
+	};
+	
 	session = gsql_session_new_with_attrs ("session-username", 
 										   g_strdup(username),
 										   "session-password",
@@ -82,25 +97,11 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 										   "session-database",
 										   g_strdup (database),
 										   "session-hostname",
-										   g_strdup(hostname),
+										   g_strdup (hostname),
+										   "session-info",
+										   g_strdup (mysql_session->server_version),
 										   NULL);
-	
-	mysql_session = g_malloc0 (sizeof (GSQLEMySQLSession));
-	
 	session->spec = mysql_session;
-	mysql_session->use = FALSE;
-	
-	if (!mysql_session_open (session))
-	{
-		g_strlcpy (buffer, (const gchar *) mysql_session_get_error (session), 256);
-		g_free (mysql_session);
-		gtk_widget_destroy (GTK_WIDGET (session));
-		return FALSE;
-	};
-	
-	gsql_session_set_attrs (session, "session-info",
-							mysql_session->server_version,
-							NULL);
 	
 	workspace = gsql_workspace_new (session);
 	navigation = gsql_workspace_get_navigation (workspace);

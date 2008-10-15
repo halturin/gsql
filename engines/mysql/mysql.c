@@ -24,48 +24,46 @@
  
 #include <mysql/mysql.h>
 #include <glib.h>
+#include <libgsql/conf.h>
 #include <libgsql/session.h>
 #include <libgsql/common.h>
 #include "engine_session.h"
+#include "engine_conf.h"
 
 
 gboolean
-mysql_session_open (GSQLSession *session, gint mode, gchar *buffer)
+mysql_session_open (GSQLEMySQLSession *spec_session, 
+					gchar *username,
+					gchar *password,
+					gchar *database,
+					gchar *hostname,
+					guint port)
 {
 	GSQL_TRACE_FUNC;
 	
+	gchar *charset = NULL;
+	gboolean use_custom_charset = FALSE;
 	MYSQL *mysql;
-	GValue hostname = {0, };
-	GValue database = {0, };
-	GValue username = {0, };
-	GValue password = {0, };
 	GSQLEMySQLSession *spec;
 	
-	g_return_if_fail (session != NULL);
-	
 	mysql = g_malloc0 (sizeof (MYSQL));
-	mysql_init (mysql);
-
-	spec = (GSQLEMySQLSession *) session->spec;
-	spec->mysql = mysql;
-
-	g_value_init (&hostname, G_TYPE_STRING);
-	g_value_init (&database, G_TYPE_STRING);
-	g_value_init (&username, G_TYPE_STRING);
-	g_value_init (&password, G_TYPE_STRING);
+	mysql_init (mysql);	
+	spec_session->mysql = mysql;
 	
-	g_object_get_property (G_OBJECT (session), "session-database", &database);
-	g_object_get_property (G_OBJECT (session), "session-hostname", &hostname);
-	g_object_get_property (G_OBJECT (session), "session-username", &username);
-	g_object_get_property (G_OBJECT (session), "session-password", &password);
+	use_custom_charset = gsql_conf_value_get_boolean (GSQLE_CONF_MYSQL_USE_CUSTOM_CHARSET);
 	
-	GSQL_DEBUG ("try connect");
+	if (use_custom_charset)
+	{
+		charset = gsql_conf_value_get_string (GSQLE_CONF_MYSQL_CUSTOM_CHARSET);
+		if (charset)
+			mysql_options(mysql, MYSQL_SET_CHARSET_NAME, charset);
+	}
 	
-	if (!mysql_real_connect(mysql, g_value_get_string (&hostname),
-								   g_value_get_string (&username),
-								   g_value_get_string (&password),
-								   g_value_get_string (&database),
-								   0,NULL,0)) 
+	if (!mysql_real_connect(mysql, hostname,
+								   username,
+								   password,
+								   database,
+								   port, NULL, 0)) 
 	{
 		GSQL_DEBUG ("Connect failed");
 		return FALSE;
@@ -73,7 +71,7 @@ mysql_session_open (GSQLSession *session, gint mode, gchar *buffer)
 	
 	mysql_autocommit(mysql, 0);
 	
-	spec->server_version = (gchar *) mysql_get_server_info (mysql);
+	spec_session->server_version = (gchar *) mysql_get_server_info (mysql);
 	
 	return TRUE;
 }

@@ -40,21 +40,17 @@ static void
 oracle_client_info (gchar *buf);
 
 gboolean
-oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer)
+oracle_session_open (GSQLEOracleSession *oracle_session, 
+					 gchar *username,
+					 gchar *password,
+					 gchar *database, 
+					 gchar *buffer)
 {
 	GSQL_TRACE_FUNC;
 
     unsigned char buf[64];
-	gint ret;
-	GValue value = { 0 };
-	gchar *cvalue;
-	
-	g_value_init  (&value, G_TYPE_STRING);
-	
-	GSQLEOracleSession *oracle_session = g_malloc0 (sizeof (GSQLEOracleSession));
-	session->spec = (gpointer) oracle_session;
-	
-	oracle_session->mode = mode;
+	gint ret;	
+
     
 	/* initialize the mode to be the threaded and object environment */
 	if ( OCIEnvNlsCreate(&(oracle_session->envhp), OCI_THREADED|OCI_OBJECT, (dvoid *)0,
@@ -89,15 +85,11 @@ oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer)
 	};
 
 	/* create a server context */
-	
-	g_object_get_property (G_OBJECT (session), "session-database", &value);
-	cvalue = (gchar *) g_value_get_string (&value);
-	GSQL_DEBUG ("Database [%s]", cvalue);
-	
+		
 	if ( OCIServerAttach (oracle_session->srvhp, 
 						oracle_session->errhp, 
-						(text *) cvalue,
-						g_utf8_strlen (cvalue, 64), 
+						(text *) database,
+						g_utf8_strlen (database, 64), 
 						OCI_DEFAULT)
 		== OCI_ERROR
 		)
@@ -145,15 +137,11 @@ oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer)
 	};
 	   
 	/* set user name attribute in user session handle */
-	
-	g_object_get_property (G_OBJECT (session), "session-username", &value);
-	cvalue = (gchar *) g_value_get_string (&value);
-	
-	
+		
 	if ( OCIAttrSet ((dvoid *) oracle_session->usrhp, 
 				   OCI_HTYPE_SESSION,
-				   (dvoid *) cvalue,
-				   (ub4) g_utf8_strlen(cvalue, 64),
+				   (dvoid *) username,
+				   (ub4) g_utf8_strlen(username, 64),
 				   OCI_ATTR_USERNAME,
 				   oracle_session->errhp)
 		== OCI_ERROR
@@ -164,14 +152,11 @@ oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer)
 	};
 	   
 	/* set password attribute in user session handle */
-	
-	g_object_get_property (G_OBJECT (session), "session-password", &value);
-	cvalue = (gchar *) g_value_get_string (&value);
-	
+		
 	if ( OCIAttrSet ((dvoid *)(oracle_session->usrhp),
 				   OCI_HTYPE_SESSION,
-				   (dvoid *)cvalue,
-				   (ub4) g_utf8_strlen(cvalue, 64),
+				   (dvoid *)password,
+				   (ub4) g_utf8_strlen(password, 64),
 				   OCI_ATTR_PASSWORD,
 				   oracle_session->errhp)
 		== OCI_ERROR

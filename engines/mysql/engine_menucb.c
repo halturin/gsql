@@ -23,6 +23,7 @@
  */
 
 #include <libgsql/common.h>
+#include <libgsql/session.h>
 #include <engine_menucb.h>
 
 void
@@ -31,4 +32,43 @@ on_show_processes (GtkMenuItem * mi, gpointer data)
 	GSQL_TRACE_FUNC;
 
 	return;
+}
+
+void
+on_charter_set_activate (GtkMenuItem * mi, gpointer data)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLSession *session;
+	GSQLWorkspace *workspace;
+	GSQLCursor *cursor;
+	gchar sql[255];
+	gchar *charset = data;
+	
+	session = gsql_session_get_active ();
+	
+	if (!GSQL_IS_SESSION (session))
+		return;
+	
+	workspace = gsql_session_get_workspace (session);
+	
+	memset (sql, 0, 255);
+	g_snprintf (sql, 255, "SET CHARACTER SET %s", data);
+	
+	cursor = gsql_cursor_new (session, sql);
+	gsql_cursor_open (cursor, FALSE);
+	
+	if (gsql_cursor_get_state (cursor) != GSQL_CURSOR_STATE_OPEN)
+	{
+		gsql_cursor_close (cursor);
+		return;
+	}
+	
+	memset (sql, 0, 255);
+	g_snprintf (sql, 255, N_("Character set was changed to '%s'"), data);
+	
+	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, sql);
+	
+	gsql_cursor_close (cursor);
+	
 }

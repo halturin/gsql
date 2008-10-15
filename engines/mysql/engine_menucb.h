@@ -32,6 +32,9 @@ G_BEGIN_DECLS
 
 void
 on_show_processes (GtkMenuItem * mi, gpointer data);
+
+void
+on_charter_set_activate (GtkMenuItem * mi, gpointer data);
  
 G_END_DECLS
 

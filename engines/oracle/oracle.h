@@ -29,14 +29,18 @@
 #include <libgsql/session.h>
 #include <libgsql/cursor.h>
 #include <oci.h>
-
+#include "engine_session.h"
 #include "oracle_cursor.h"
 
 
 G_BEGIN_DECLS
 
 gboolean
-oracle_session_open (GSQLSession *session, ub4 mode, gchar *buffer);
+oracle_session_open (GSQLEOracleSession *oracle_session, 
+					 gchar *username,
+					 gchar *password,
+					 gchar *database, 
+					 gchar *buffer);
 
 gboolean
 oracle_session_close (GSQLSession *session, gchar *buffer);

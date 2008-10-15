@@ -31,6 +31,14 @@
 #define GSQLE_CONF_MYSQL_USE_CUSTOM_CHARSET	GSQL_CONF_ENGINES_ROOT_KEY "/mysql/use_custom_charset"
 #define GSQLE_CONF_MYSQL_CUSTOM_CHARSET	GSQL_CONF_ENGINES_ROOT_KEY "/mysql/custom_charset"
 
+typedef struct _MySQLPredefinedCharset MySQLPredefinedCharset;
+
+struct _MySQLPredefinedCharset
+{
+	gchar *name;
+	gchar *desc;
+};
+
 G_BEGIN_DECLS
 
 
@@ -39,6 +47,8 @@ engine_conf_widget_new ();
 
 void
 engine_conf_widget_free (GtkWidget *conf_widget);
+
+
 
 G_END_DECLS
 

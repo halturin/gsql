@@ -31,8 +31,12 @@
 G_BEGIN_DECLS
 
 gboolean
-mysql_session_open (GSQLSession *session, gint mode, gchar *buffer);
-
+mysql_session_open (GSQLEMySQLSession *spec_session, 
+					gchar *username,
+					gchar *password,
+					gchar *database,
+					gchar *hostname,
+					guint port);
 gboolean
 mysql_session_close (GSQLSession *session, gchar *buffer);
 

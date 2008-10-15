@@ -95,6 +95,20 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 			mode = OCI_DEFAULT;
 	}
 	
+	
+	
+	spec = g_malloc0 (sizeof (GSQLEOracleSession));
+	
+	
+	spec->mode = mode;
+	
+	if (!oracle_session_open (spec, username, password, database, buffer)) {
+		
+		g_free (spec);
+		
+		return NULL;
+	}
+	
 	session = gsql_session_new_with_attrs ("session-username", 
 										   g_strdup(username),
 										   "session-password",
@@ -102,14 +116,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 										   "session-database",
 										   g_strdup (database),
 										   NULL);
-	
-	if (!oracle_session_open (session, mode, buffer)) {
-		
-		g_object_unref(session);
-		return NULL;
-	}
-	
-	spec = session->spec;
+	session->spec = spec;
 	
 	/* 
 	 I know, this is the hack, but i think the 'workaround' sounds better :).
@@ -186,65 +193,6 @@ static void
 on_session_close (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
-	
-	GtkDialog *dialog = NULL;
-	guint ret;
-	GtkTreeView *tv;
-	GtkTreeModel *model;
-	GtkTreeIter iter, child;
-	GSQLContent *content;
-	gboolean  bvalue;
-	guint n;
-	
-	dialog = gsql_session_unsaved_dialog (session);
-	
-	if (dialog)
-	{
-		ret = gtk_dialog_run(dialog);
-		
-		switch (ret)
-		{
-			case GTK_RESPONSE_OK:
-				tv = GTK_TREE_VIEW (g_object_get_data (G_OBJECT (dialog), "treeview"));
-				model = gtk_tree_view_get_model (tv);
-				
-				gtk_tree_model_get_iter_first (model, &iter);
-				
-				for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
-				{
-					gtk_tree_model_iter_nth_child (model, &child, &iter, n);
-					gtk_tree_model_get (model, &child,
-										3, &content, -1);
-					gtk_tree_model_get (model, &child,  
-										0, &bvalue, -1);
-					
-					if (!bvalue)
-						continue;
-					
-					if (GSQL_IS_CONTENT (content))
-					{
-						g_signal_emit_by_name (content, "save");	
-							
-					} else {
-						
-						GSQL_DEBUG ("It is not GSQLContent");
-					}
-				}
-			
-				break;
-				
-			case GTK_RESPONSE_CANCEL:
-				gtk_widget_destroy (GTK_WIDGET (dialog));
-				return;
-				
-			case GTK_RESPONSE_CLOSE:
-				break;
-		} 
-	}
-	
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-	
-	gsql_engine_menu_set_status (session->engine, FALSE);
 	
 	oracle_session_close (session, NULL);
 }

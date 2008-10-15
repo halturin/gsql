@@ -26,11 +26,15 @@
 #define _ENGINE_MENU_H
 
 #include <glib.h>
+#include <libgsql/engines.h>
 
 G_BEGIN_DECLS
 
 void
 engine_menu_init (GSQLEngine *engine);
+
+GtkListStore *
+engine_menu_get_charset_store ();
 
 G_END_DECLS
 

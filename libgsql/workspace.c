@@ -456,9 +456,7 @@ gsql_workspace_get_content_list (GSQLWorkspace *workspace)
 {
 	GSQL_TRACE_FUNC;
 
-	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), NULL);
-	
-	if (!workspace->private)
+	if ((!GSQL_IS_WORKSPACE (workspace)) || (!workspace->private))
 		return NULL;
 	
 	return g_list_copy (workspace->private->content_list);
@@ -590,6 +588,8 @@ gsql_message_add(GSQLWorkspace *workspace, gint type, gchar * msg)
 	gchar tmp[GSQL_MESSAGE_LEN], tmp1[GSQL_MESSAGE_LEN];
 	gchar ctime[16];
 	time_t ttime = time(NULL);
+	
+	g_return_if_fail (GSQL_IS_WORKSPACE (workspace));
 	
     liststore = gtk_tree_view_get_model (GTK_TREE_VIEW (workspace->private->messages_tview));
 

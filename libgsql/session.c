@@ -198,7 +198,7 @@ gsql_session_new (void)
 		gsql_menu_merge_from_string (session_ui, session_actions);
 	}
 	
-	gtk_action_group_set_sensitive (session_actions, TRUE);
+	gtk_action_group_set_visible (session_actions, TRUE);
 	
 	return session;
 }
@@ -247,7 +247,7 @@ gsql_session_new_with_attrs (gchar *attr_name,...)
 	va_end (vl);
 	
 	gsql_session_set_session_name (session);
-	gtk_action_group_set_sensitive (session_actions, TRUE);
+	gtk_action_group_set_visible (session_actions, TRUE);
 	
 	return session;	
 }
@@ -479,7 +479,7 @@ gsql_session_close (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
 	
-	GSQLWorkspace *workspace;
+	GSQLWorkspace *workspace = NULL;
 	GSQLContent *content = NULL;
 	GList *clist;
 	
@@ -487,19 +487,22 @@ gsql_session_close (GSQLSession *session)
 	
 	workspace = gsql_session_get_workspace (session);
 	
-	clist = gsql_workspace_get_content_list (workspace);
-	clist = g_list_first (clist);
-
-	while (clist)
+	if (workspace)
 	{
-		content = GSQL_CONTENT (clist->data);
+		clist = gsql_workspace_get_content_list (workspace);
+		clist = g_list_first (clist);
+
+		while (clist)
+		{
+			content = GSQL_CONTENT (clist->data);
 		
-		clist = g_list_next (clist);
+			clist = g_list_next (clist);
 		
-		g_signal_emit_by_name (content, "close", TRUE);	
-	}
+			g_signal_emit_by_name (content, "close", TRUE);	
+		}
 	
-	g_list_free (clist);
+		g_list_free (clist);
+	}
 	
 	gtk_widget_destroy (GTK_WIDGET (session));
 
@@ -528,22 +531,27 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 	gchar *session_name;
 	gboolean content_state, have_changes;
 	
+	if (!sessions)
+		return NULL;
+	
 	ts = gtk_tree_store_new (4,
 							 G_TYPE_BOOLEAN,
 							 G_TYPE_STRING,
 							 G_TYPE_STRING,
 							 G_TYPE_POINTER);
 	
-	
-	
-	if (!session)
+	if ((!session) && (g_hash_table_size (sessions) > 0))
 	{
 		slist = g_hash_table_get_values (sessions);
 		slist = g_list_first (slist);
+		
 	} else {
+		
 		slist = g_list_append (slist, session);
 	}
+	
 	GSQL_DEBUG ("Sessions hash len: [%d]", g_list_length (slist));
+	
 	while (slist)
 	{
 		session = GSQL_SESSION (slist->data);
@@ -600,6 +608,7 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 	{
 		gtk_tree_store_clear (ts);
 		g_object_unref(ts);
+		
 		return NULL;
 	}
 	
@@ -729,7 +738,10 @@ gsql_session_finalize (GObject *obj)
 	g_hash_table_remove (sessions, session->private->name);
 	
 	if (g_hash_table_size (sessions) == 0)
-		gtk_action_group_set_sensitive (session_actions, FALSE);
+	{
+		gtk_action_group_set_visible (session_actions, FALSE);
+		active_session = NULL;
+	}
 	
 	if (session->private->titles_hash)
 		g_hash_table_unref (session->private->titles_hash);
@@ -1138,9 +1150,69 @@ on_menu_session_close (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 	GSQLSession *session = NULL;
+	GtkDialog *dialog = NULL;
+	guint ret;
+	GtkTreeView *tv;
+	GtkTreeModel *model;
+	GtkTreeIter iter, child;
+	GSQLContent *content;
+	gboolean  bvalue;
+	guint n;
+	
+	
 	session = gsql_session_get_active ();
 	
 	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	dialog = gsql_session_unsaved_dialog (session);
+	
+	if (dialog)
+	{
+		ret = gtk_dialog_run(dialog);
+		
+		switch (ret)
+		{
+			case GTK_RESPONSE_OK:
+				tv = GTK_TREE_VIEW (g_object_get_data (G_OBJECT (dialog), "treeview"));
+				model = gtk_tree_view_get_model (tv);
+				
+				gtk_tree_model_get_iter_first (model, &iter);
+				
+				for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
+				{
+					gtk_tree_model_iter_nth_child (model, &child, &iter, n);
+					gtk_tree_model_get (model, &child,
+										3, &content, -1);
+					gtk_tree_model_get (model, &child,  
+										0, &bvalue, -1);
+					
+					if (!bvalue)
+						continue;
+					
+					if (GSQL_IS_CONTENT (content))
+					{
+						g_signal_emit_by_name (content, "save");	
+							
+					} else {
+						
+						GSQL_DEBUG ("It is not GSQLContent");
+					}
+				}
+			
+				break;
+				
+			case GTK_RESPONSE_CANCEL:
+				gtk_widget_destroy (GTK_WIDGET (dialog));
+				return;
+				
+			case GTK_RESPONSE_CLOSE:
+				break;
+		}
+		
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+	}
+	
+	gsql_engine_menu_set_status (session->engine, FALSE);
 	
 	g_signal_emit_by_name (G_OBJECT (session), "close");
 
@@ -1212,11 +1284,13 @@ on_menu_session_close_all (GtkMenuItem *mi, gpointer data)
 						GSQL_DEBUG ("Session not found. Bug!");
 					} else {
 						
-						gsql_session_close (session);
+						g_signal_emit_by_name (G_OBJECT (session), "close");
 					}
 												   
 				}
 				while (gtk_tree_model_iter_next (model, &iter));
+				
+				gsql_engine_menu_set_status (session->engine, FALSE);
 			
 				break;
 				
@@ -1239,11 +1313,13 @@ on_menu_session_close_all (GtkMenuItem *mi, gpointer data)
 						GSQL_DEBUG ("Session not found. Bug!");
 					} else {
 						
-						gsql_session_close (session);
+						g_signal_emit_by_name (G_OBJECT (session), "close");
 					}
 												   
 				}
 				while (gtk_tree_model_iter_next (model, &iter));
+				
+				gsql_engine_menu_set_status (session->engine, FALSE);
 				
 				break;
 				
@@ -1260,22 +1336,27 @@ on_menu_session_close_all (GtkMenuItem *mi, gpointer data)
 		while (list)
 		{
 			session = GSQL_IS_SESSION (list->data) ? GSQL_SESSION (list->data) : NULL;
-			
+			GSQL_DEBUG ("Have no unsaved. Session list != NULL");
 			if (!session)
 			{
 				GSQL_DEBUG ("Session list. Unknown data in list. Bug");
 				
 			} else {
 				
-				gsql_session_close (session);
+				g_signal_emit_by_name (G_OBJECT (session), "close");
 				
 			}
 			
+			gsql_engine_menu_set_status (session->engine, FALSE);
+			
 			list = g_list_next (list);
 		}
+		
+		GSQL_DEBUG ("Have no unsaved. Session list processed");
 	}
 	
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	if (dialog)
+		gtk_widget_destroy (GTK_WIDGET (dialog));
 	
 }
 
