@@ -30,21 +30,12 @@
 #include "engine_menu.h"
 #include "engine_menucb.h"
 
-static GtkToggleActionEntry enginemenu_toggle_actions[] =
-{
-	{ "MySQLActionServerOutput", NULL, N_("Server output"), NULL, N_("Exit"), G_CALLBACK(on_server_output), FALSE }
-};
-
 static GtkActionEntry enginemenu_action[] = 
 {
 	{ "MySQLActionMenu", NULL, N_("MySQL") },
 
-	{ "MySQLActionEmptyRecycle", NULL, N_("Empty Recycle bin"), NULL, N_("Empty Recycle bin"), G_CALLBACK(on_empty_recycle_activate) },
-	{ "MySQLActionJobManager", NULL, N_("Job manager"), NULL, N_("Job manager"), G_CALLBACK(on_job_manager_activate) },
-	
-	{ "MySQLActionFindCode", NULL, N_("Find code"), NULL, N_("Find code"), G_CALLBACK(on_find_code_activate) },
-	{ "MySQLActionFindObject", NULL, N_("Find object"), NULL, N_("Find object"), G_CALLBACK(on_find_object_activate) },
-
+	{ "ActionMenuMySQLCharsetList", NULL,  N_("Charter Set"), NULL,  NULL, NULL },
+	{ "MySQLActionProcesses", NULL, N_("Show processes"), NULL, N_("Show processes"), G_CALLBACK(on_show_processes) }
 };
 
 static GtkActionGroup *action;
@@ -57,15 +48,42 @@ engine_menu_init (GSQLEngine *engine)
 
 	guint id;
 	GError * error; 
+	GtkWidget *widget;
+	GtkWidget *submenu;
+	GtkWidget *item;
+	GSList *group;
 	
 	action = gtk_action_group_new ("ActionsMenuMySQL");
 	
 	gtk_action_group_add_actions (action, enginemenu_action, 
 									G_N_ELEMENTS (enginemenu_action), NULL);
-	gtk_action_group_add_toggle_actions(action, enginemenu_toggle_actions,
-									G_N_ELEMENTS (enginemenu_toggle_actions), NULL);
 	engine->menu_id = gsql_menu_merge (PACKAGE_UI_DIR "/mysql/engine_mysql.ui", action);
 	engine->action = action;
+	
+	widget = gsql_menu_get_widget ("/MenuMain/PHolderEngines/MenuMySQL/MenuMySQLCharsetList");
+	
+	submenu = gtk_menu_new ();
+	
+	item = gtk_radio_menu_item_new_with_label (NULL, "latin1");
+	group =  gtk_radio_menu_item_get_group (item);
+
+
+	gtk_menu_shell_append (submenu, 
+						   item);
+	item = gtk_radio_menu_item_new_with_label (group, "utf8");
+
+
+	gtk_menu_shell_append (submenu, 
+						   item);
+	/*
+	 show variables
+where Variable_name = 'character_set_client'
+	 
+	 */
+	
+	gtk_menu_item_set_submenu (widget, submenu);
+	
+	gtk_widget_show_all (submenu);
 		
 	g_object_set(G_OBJECT(action), "visible", FALSE, NULL);
 	

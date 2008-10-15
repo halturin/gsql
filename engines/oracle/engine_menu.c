@@ -67,7 +67,7 @@ engine_menu_init (GSQLEngine *engine)
 									G_N_ELEMENTS (enginemenu_toggle_actions), NULL);
 	engine->menu_id = gsql_menu_merge (PACKAGE_UI_DIR "/oracle/engine_oracle.ui", action);
 	engine->action = action;
-	
+		
 	g_object_set(G_OBJECT(action), "visible", FALSE, NULL);
 	
 }

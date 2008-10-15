@@ -28,6 +28,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#define GSQLE_CONF_MYSQL_USE_CUSTOM_CHARSET	GSQL_CONF_ENGINES_ROOT_KEY "/mysql/use_custom_charset"
+#define GSQLE_CONF_MYSQL_CUSTOM_CHARSET	GSQL_CONF_ENGINES_ROOT_KEY "/mysql/custom_charset"
 
 G_BEGIN_DECLS
 

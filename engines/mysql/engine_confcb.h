@@ -30,6 +30,10 @@
 
 G_BEGIN_DECLS
 
+void
+on_use_custom_charset_check_toggled (GtkToggleButton *togglebutton,
+											gpointer user_data);
+
 G_END_DECLS
 
 #endif /* _ENGINE_CONFCB_H */

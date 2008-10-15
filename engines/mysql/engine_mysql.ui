@@ -1,18 +1,10 @@
 <!--*- xml -*-->
 <ui>
   <menubar name="MenuMain">
-    <menu name="MenuSearch" action="ActionMenuSearch">
-	   <placeholder name="PHolderSearch">
-	   		<menuitem name="MySQLFindCode" action="MySQLActionFindCode" />
-	   		<menuitem name="MySQLFineObject" action="MySQLActionFindObject" />
-	   </placeholder>
-    </menu>
     <placeholder name="PHolderEngines">
     <menu name="MenuMySQL" action="MySQLActionMenu">
-    		<menuitem name="MySQLServertOutput" action="MySQLActionServerOutput" />
-    		<separator name="Separator" />
-    		<menuitem name="MySQLEmptyRecycle" action="MySQLActionEmptyRecycle" />
-    		<menuitem name="MySQLJobManager " action="MySQLActionJobManager" />
+    		<menu name="MenuMySQLCharsetList" action="ActionMenuMySQLCharsetList" />
+    		<menuitem name="MySQLPeocesses" action="MySQLActionProcesses" />
    	</menu>
    	</placeholder>
   </menubar>

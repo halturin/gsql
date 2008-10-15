@@ -21,8 +21,27 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
+
+#include <libgsql/common.h>
 #include <libgsql/conf.h>
 #include "engine_conf.h"
 
 
+void
+on_use_custom_charset_check_toggled (GtkToggleButton *togglebutton,
+											gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	GtkWidget *charset_list = user_data;        
+	gboolean status;
+
+	status = gtk_toggle_button_get_active (togglebutton);
+    
+	gtk_widget_set_sensitive ( charset_list, status);        
+        
+	gsql_conf_value_set_boolean (GSQLE_CONF_MYSQL_USE_CUSTOM_CHARSET,
+							status);    
+    
+	return;
+};

@@ -1157,6 +1157,35 @@ on_custom_limit_checkbutton_toggled (GtkToggleButton *togglebutton,
 	}
 }
 
+
+static void
+emit_inserted_stoper (GtkTreeModel *tree_model,
+			GtkTreePath  *path,
+			GtkTreeIter  *iter,
+			gpointer      user_data)
+{	
+	g_signal_stop_emission_by_name(G_OBJECT(tree_model), "row-inserted");
+}
+
+static void
+emit_changed_stoper (GtkTreeModel *tree_model,
+			GtkTreePath  *path,
+			GtkTreeIter  *iter,
+			gpointer      user_data)
+{	
+	g_signal_stop_emission_by_name(G_OBJECT(tree_model), "row-changed");
+}
+
+static void
+emit_reordered_stoper (GtkTreeModel *tree_model,
+			GtkTreePath  *path,
+			GtkTreeIter  *iter,
+			gpointer      user_data)
+{	
+	g_signal_stop_emission_by_name(G_OBJECT(tree_model), "rows-reordered");
+}
+
+
 static void
 do_sql_fetch (GSQLEditor *editor)
 {
@@ -1167,6 +1196,7 @@ do_sql_fetch (GSQLEditor *editor)
 	GtkVBox *result_vbox;
 	GtkTreeView *result_treeview;
 	GtkListStore *liststore, *liststore_new;
+	static GtkListStore *ls_plug = NULL;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 	GtkWidget *column_header;
@@ -1180,7 +1210,9 @@ do_sql_fetch (GSQLEditor *editor)
 	gboolean sorting;
 	gboolean continue_fetch;
 	guint rows_limit = 0, rows_fetched = 0, rows;
-	guint signal_id = 0;	
+	static guint signal_inserted = 0;
+	static guint signal_reordered = 0;
+	static guint signal_changed = 0;
     
     cursor = editor->cursor;
     g_return_if_fail (gsql_cursor_get_state (cursor) == GSQL_CURSOR_STATE_OPEN);
@@ -1370,14 +1402,23 @@ do_sql_fetch (GSQLEditor *editor)
 	
 	GSQL_THREAD_LEAVE;
 	rows_fetched = 0;
-	editor->private->stop_fetch = FALSE;	
-	/* FIXME:
-		perfomance problem.
+	editor->private->stop_fetch = FALSE;
+	
+	GSQL_FIXME;
+	/* 	perfomance problem.
 		A treeview widget tries to redraw on every insert operation.
 		Any body knows how to avoid this trouble?
+		hack use.
 	 */
-	//gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), FALSE);
-	//gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview), NULL);
+	if (!continue_fetch)
+	{
+		g_signal_connect (liststore_new, "row-inserted", 
+						  G_CALLBACK (emit_inserted_stoper), NULL);
+		g_signal_connect (liststore_new, "row-changed", 
+						  G_CALLBACK (emit_changed_stoper), NULL);
+		g_signal_connect (liststore_new, "rows-reordered", 
+						  G_CALLBACK (emit_reordered_stoper), NULL);
+	}
 	
 	while ( (rows_fetched < rows_limit) &&
 		   (rows = gsql_cursor_fetch (cursor, 1) > 0))
@@ -1470,12 +1511,15 @@ do_sql_fetch (GSQLEditor *editor)
 	GSQL_THREAD_ENTER;
 	
 	/* FIXME:
-		perfomance problem.
-		getting back the treemodel.
+		perfomance problem. just hack.
+	 
+		(lt-gsql:2714): Gtk-CRITICAL **: gtk_tree_view_unref_tree_helper: assertion `node != NULL' failed
 	 */
+	
+	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
+							 	 NULL);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (result_treeview),
 							 	 GTK_TREE_MODEL(liststore_new));
-	//gtk_widget_set_sensitive (GTK_WIDGET (result_treeview), TRUE);
 	
 	GSQL_DEBUG ("Cursor state = [%d]", gsql_cursor_get_state (cursor));
 	

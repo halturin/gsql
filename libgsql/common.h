@@ -114,7 +114,7 @@ extern gboolean gsql_opt_debug_enable;
 
 //#ifdef HAVE_ENABLE_FIXME
 #define GSQL_FIXME \
-	g_warning ("FIXME: file [%s] line [%s]", __FILE__, __LINE__)
+	g_message ("FIXME: file [%s] line [%d]", __FILE__, __LINE__)
 //#else
 
 //#define GSQL_FIXME

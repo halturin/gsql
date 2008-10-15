@@ -26,42 +26,9 @@
 #include <engine_menucb.h>
 
 void
-on_server_output (GtkMenuItem * mi, gpointer data)
+on_show_processes (GtkMenuItem * mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 
 	return;
-};
- 
-void
-on_empty_recycle_activate (GtkMenuItem * mi, gpointer data)
-{
-	GSQL_TRACE_FUNC;
-
-	return;
-};
- 
-void
-on_job_manager_activate (GtkMenuItem * mi, gpointer data)
-{
-	GSQL_TRACE_FUNC;
-
-	return;
-};
- 
-void
-on_find_code_activate (GtkMenuItem * mi, gpointer data)
-{
-	GSQL_TRACE_FUNC;
-
-	return;
-};
- 
-void
-on_find_object_activate (GtkMenuItem * mi, gpointer data)
-{
-	GSQL_TRACE_FUNC;
-
-	return;
-};
- 
+}

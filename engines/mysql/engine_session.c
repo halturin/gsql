@@ -199,10 +199,13 @@ on_session_switch (GSQLSession *session, gpointer user_data)
 	{
 		
 		GSQL_DEBUG ("MySQL engine. Yes, It is mine");
+		gsql_engine_menu_set_status (session->engine, TRUE);
+		
 		
 	} else {
 		
-			GSQL_DEBUG ("MySQL engine. No, It is not mine");
+		GSQL_DEBUG ("MySQL engine. No, It is not mine");
+		gsql_engine_menu_set_status (session->engine, FALSE);
 	}
 	
 }
