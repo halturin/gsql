@@ -65,7 +65,7 @@ struct _GSQLEngine
 	GtkActionGroup *action;
 	guint menu_id;
 
-	gboolean	multi_statement; // multistatement support. default value FALSE
+	gboolean	multi_statement; /* multistatement support. default value FALSE */
 	gboolean	in_use;
 
 	gboolean	(*load) (GSQLEngine * engine);

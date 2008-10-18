@@ -58,6 +58,10 @@
 
 extern GtkWidget   *gsql_window;
 extern gpointer gsql_main_thread;
+/* debug routines */
+
+extern gboolean gsql_opt_trace_enable;
+extern gboolean gsql_opt_debug_enable;
 
 G_BEGIN_DECLS
 
@@ -83,43 +87,39 @@ gsql_marshal_VOID__STRING_STRING (GClosure  *closure,
 								  gpointer  *invocation,
 								  gpointer  *marshal);
 
-/* debug routines */
 
-extern gboolean gsql_opt_trace_enable;
-extern gboolean gsql_opt_debug_enable;
-
-//#ifdef HAVE_ENABLE_TRACE
+/* #ifdef HAVE_ENABLE_TRACE */
 
 #define GSQL_TRACE_FUNC \
 	if (gsql_opt_trace_enable) \
 		g_print("trace: [%p] %s [%s:%d]\n", (gpointer) g_thread_self(), __func__, __FILE__, __LINE__)
 
-//#else
+/* #else */
 
-//#define GSQL_TRACE_FUNC;
+/* #define GSQL_TRACE_FUNC; */
 
-//#endif
+/* #endif */
 
-//#ifdef HAVE_ENABLE_DEBUG
+/* #ifdef HAVE_ENABLE_DEBUG */
 
 #define GSQL_DEBUG(params...) \
 	if (gsql_opt_debug_enable) \
 		g_debug (params)
 
-//#else
+/* #else */
 
-//#define GSQL_DEBUG(params...)
+/* #define GSQL_DEBUG(params...) */
 
-//#endif
+/* #endif */
 
-//#ifdef HAVE_ENABLE_FIXME
+/* #ifdef HAVE_ENABLE_FIXME */
 #define GSQL_FIXME \
 	g_message ("FIXME: file [%s] line [%d]", __FILE__, __LINE__)
-//#else
+/* #else */
 
-//#define GSQL_FIXME
+/* #define GSQL_FIXME */
 
-//#endif
+/* #endif */
 
 #define GSQL_THREAD_ENTER \
 	if (gsql_main_thread !=(gpointer)  g_thread_self()) \
@@ -135,6 +135,7 @@ extern gboolean gsql_opt_debug_enable;
 
 gpointer
 gsql_thread_join (GThread *thread);
+
 
 G_END_DECLS
 

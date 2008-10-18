@@ -45,8 +45,8 @@ struct _GSQLVariable
 	
 	gpointer value;
 	
-	// There is pointer to a raw data. For example, casting to GSQL_TYPE_DATETIME 
-	// from the original RDBMS type.
+	/* There is pointer to a raw data. For example, casting to GSQL_TYPE_DATETIME */
+	/* from the original RDBMS type. */
 	gpointer raw;
 	void	 (*raw_to_value) (GSQLVariable *variable);
 	

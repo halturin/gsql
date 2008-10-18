@@ -163,12 +163,15 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	
 
 	model = gtk_tree_view_get_model(tv);
+	
 	n = gtk_tree_model_iter_n_children(model, iter);
+	
 	for (; n>1; n--)
 	{
 		gtk_tree_model_iter_children(model, &child, iter);
 		gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
-	};
+	}
+	
 	gtk_tree_model_iter_children(model, &child_last, iter);
 	
 	gtk_tree_model_get (model, iter,  
@@ -192,24 +195,26 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	if (gsql_cursor_open_with_bind(cursor, 
 								   FALSE, 
 								   GSQL_CURSOR_BIND_BY_POS, 
-								   G_TYPE_CHAR, owner, 
-								   -1) == GSQL_CURSOR_STATE_ERROR)
+								   G_TYPE_STRING, owner, 
+								   -1) != GSQL_CURSOR_STATE_OPEN)
 	{
-		g_object_unref (cursor);
+		gsql_cursor_close (cursor);
 		return;
-	};
+	}
 
 	var = g_list_nth_data(cursor->var_list,0);
 	
 	GSQL_DEBUG ("cursor state [%d]. Start fetching", gsql_cursor_get_state (cursor));
+	
 	if (var == NULL)
 	{
 		GSQL_DEBUG ("var is NULL");
 		return;
-	};
+	}
 	 
 	GSQL_DEBUG ("var->data = [%s]", (gchar *) var->value);
 	n = 0;
+	
 	while (gsql_cursor_fetch (cursor, 1) > 0)
 	{
 		n++;
@@ -258,8 +263,10 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 				GSQL_NAV_TREE_STRUCT,			NULL,
 				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
 				-1);
-	};
+	}
+	
 	GSQL_DEBUG ("Items fetched: [%d]", n);
+	
 	if (n > 0)
 	{
 		name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
@@ -275,8 +282,7 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	
 	gsql_cursor_close (cursor);
 
-	return;
-};
+}
 
 /*
  *  Static section:
@@ -451,8 +457,8 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 	if (gsql_cursor_open_with_bind(cursor, 
 								   FALSE, 
 								   GSQL_CURSOR_BIND_BY_POS, 
-								   G_TYPE_CHAR, owner,
-								   G_TYPE_CHAR, name,
+								   G_TYPE_STRING, owner,
+								   G_TYPE_STRING, name,
 								   -1) == GSQL_CURSOR_STATE_ERROR)
 	{
 		g_object_unref (cursor);

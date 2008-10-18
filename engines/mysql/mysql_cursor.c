@@ -147,7 +147,7 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 			is_null = 0;
 		switch (vtype)
 		{
-			case G_TYPE_CHAR:
+			case G_TYPE_STRING:
 			case G_TYPE_POINTER:
 				binds[n].buffer_type = MYSQL_TYPE_STRING;
 				binds[n].buffer = (char *) vlist->data;

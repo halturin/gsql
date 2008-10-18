@@ -56,11 +56,11 @@ typedef enum {
 	GSQL_CURSOR_STMT_INSERT,
 	GSQL_CURSOR_STMT_UPDATE,
 	GSQL_CURSOR_STMT_DELETE,
-	GSQL_CURSOR_STMT_DML, // Common stmt type for Ins, Upd, Del
+	GSQL_CURSOR_STMT_DML, /* Common stmt type for Ins, Upd, Del */
 	GSQL_CURSOR_STMT_CREATE,
 	GSQL_CURSOR_STMT_DROP,
 	GSQL_CURSOR_STMT_ALTER,
-	GSQL_CURSOR_STMT_DDL // commont stmt type for create, drop, alter
+	GSQL_CURSOR_STMT_DDL /* commont stmt type for create, drop, alter */
 } GSQLCursorStmtType;
 
 #define GSQL_CURSOR_TYPE 			(gsql_cursor_get_type ())
@@ -125,9 +125,6 @@ gsql_cursor_fetch (GSQLCursor *cursor, gint rows);
 
 void
 gsql_cursor_close (GSQLCursor *cursor);
-
-void
-gsql_cursor_bind_args_list_free (GList *list);
 
 void
 gsql_cursor_notify_set (GSQLCursor *cursor, gboolean notify);

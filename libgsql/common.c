@@ -35,6 +35,13 @@
 #include <gtk/gtk.h>
 #include <libgsql/common.h>
 
+GtkWidget   *gsql_window;
+gpointer gsql_main_thread;
+/* debug routines */
+
+gboolean gsql_opt_trace_enable;
+gboolean gsql_opt_debug_enable;
+
 static GList *pixmaps_directories = NULL;
 
 /* Use this function to set the directory containing installed pixmaps. */
@@ -184,4 +191,5 @@ gsql_thread_join (GThread *thread)
 	
 	return ret;
 }
+
 

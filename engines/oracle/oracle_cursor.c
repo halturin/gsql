@@ -97,7 +97,7 @@ oracle_cursor_open (GSQLCursor *cursor)
 	}
 
 	if ((!oracle_sql_prepare (cursor, cursor->sql)) || 
-		(oracle_sql_exec (cursor) != 0))
+		(!oracle_sql_exec (cursor)))
 	{
 		
 		OCIHandleFree ((dvoid *)spec_cursor->errhp, OCI_HTYPE_ERROR);
@@ -188,11 +188,7 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		g_free (spec_cursor);
 		return GSQL_CURSOR_STATE_ERROR;
 	}
-	
-	
-	
-	
-	
+
 	n = 0;
 	
 	while (vlist)
@@ -202,7 +198,7 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		
 		switch (vtype)
 		{
-			case G_TYPE_CHAR:
+			case G_TYPE_STRING:
 			case G_TYPE_POINTER:
 				ret = OCIBindByPos (spec_cursor->statement, &bindhp, spec_cursor->errhp, (ub4) n+1,
 							(dvoid *) vlist->data, (sb4)strlen(vlist->data)+1, (ub2) SQLT_STR,
@@ -213,15 +209,18 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 			
 			case G_TYPE_INT:
 			case G_TYPE_UINT:
+				GSQL_FIXME;
 				
 				break;
 			
 			case G_TYPE_UINT64:
 			case G_TYPE_INT64:
-				
+				GSQL_FIXME;
+			
 				break;
 			
 			case G_TYPE_DOUBLE:
+				GSQL_FIXME;
 				
 				break;
 				
@@ -229,14 +228,9 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		vlist = g_list_next (vlist);
 		n++;
 	}
+
 	
-	
-	
-	
-	
-	
-	
-	if (oracle_sql_exec (cursor) != 0)
+	if (!oracle_sql_exec (cursor))
 	{
 		
 		OCIHandleFree ((dvoid *)spec_cursor->errhp, OCI_HTYPE_ERROR);
@@ -255,9 +249,8 @@ oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		cursor->spec = NULL;
 		g_free (spec_cursor);
 		return GSQL_CURSOR_STATE_ERROR;
-	};
-		
-	
+	}
+			
 	for (i = 0; i < var_count; i++)
 	{
 
@@ -285,97 +278,158 @@ oracle_cursor_open_bind_by_name (GSQLCursor *cursor, GList *args)
 {
 	GSQL_TRACE_FUNC;
 
-	va_list vl;
-	char *bind, *holder;
-	int i = 0;
-	static OCIBind *bindhp = 0;
-	GSQLEOracleCursor *cur;
-	GSQLEOracleSession *o_session;
-	GSQLEOracleVariable *var;
-	OCIParam *param;
-	unsigned char op[2000];
+	GSQLEOracleCursor	*spec_cursor;
+	GSQLEOracleSession	*spec_session;
+	GSQLEOracleVariable *spec_var;
+	GSQLVariable		*var;
+	GList *vlist = args;
+	GList *vlist_value;
+	GType vtype;
+	guint  n, var_count=0;
 	sword ret;
+	OCIParam *param;
+	static OCIBind *bindhp = 0;
+	unsigned char op[2000];
+	gint i;
+	gchar *holder;
 	gchar buffer[GSQL_MESSAGE_LEN];
-	
-	/*
-	o_session = (GSQLEOracleSession *) session->spec;
-	cur = (GSQLEOracleCursor *) g_malloc0 (sizeof (GSQLEOracleCursor));
-	cur->session = session;
-	
-	if ( OCIHandleAlloc ((dvoid *)(o_session->envhp), 
-					   (dvoid **)&(cur->errhp),
-						OCI_HTYPE_ERROR, 0, (dvoid **) 0)
-		== OCI_ERROR
-		)
-	{
-			g_snprintf (buffer, MSG_LEN,"OCIHandleAlloc (allocate an error handle)... failed");
-			gsql_message_add (session->workspace, MSG_ERROR, buffer);
-		
-			g_free (cur);
-		 	return NULL;
-	};
     
-	if (oracle_sql_prepare(cur, sql) != 0)
-	{	
-		g_free(cur);
-		return NULL;
-	};
-    GSQL_DEBUG ("SQL = %s", sql);
-	va_start(vl, optrace);
-
-	do
+	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
+	
+	spec_session = (GSQLEOracleSession *) cursor->session->spec;
+	spec_cursor = g_malloc0 (sizeof (GSQLEOracleCursor));	
+	cursor->spec = spec_cursor;
+	
+	ret = OCIHandleAlloc ((dvoid *)(spec_session->envhp), 
+					   (dvoid **)&(spec_cursor->errhp),
+						OCI_HTYPE_ERROR, 0, (dvoid **) 0);
+	
+	if (ret == OCI_ERROR)
 	{
-		holder = va_arg(vl, char *);
-		if (holder == NULL)
-			break;
-		bind = va_arg(vl, char *);
+
+		GSQL_DEBUG("oracle_cursor_open: OCIHandleAlloc (allocate an error handle)... failed");
+		cursor->spec = NULL;
+		g_free (spec_cursor);
+		return GSQL_CURSOR_STATE_ERROR;
+	}
+
+	if (!oracle_sql_prepare (cursor, cursor->sql))
+	{
 		
-		i++;
-		ret = OCIBindByName (cur->statement, &bindhp, cur->errhp, 
+		OCIHandleFree ((dvoid *)spec_cursor->errhp, OCI_HTYPE_ERROR);
+		cursor->spec = NULL;
+		g_free (spec_cursor);
+		return GSQL_CURSOR_STATE_ERROR;
+	}
+	
+	n = 0;
+	
+	while (vlist)
+	{
+		vtype = (GType) vlist->data;
+		
+		/* bind by name means first item are name of bind point - it is always are string (gchar *) */
+		if (vtype != G_TYPE_STRING)
+		{
+			GSQL_DEBUG ("Wrong GSQL_CURSOR_BIND_BY_NAME usage");
+			return GSQL_CURSOR_STATE_ERROR;
+		}
+		
+		vlist = g_list_next (vlist);
+		holder = g_strdup ( (gchar *) vlist->data);
+		
+		vlist = g_list_next (vlist);
+		vtype = (GType) vlist->data;
+		vlist = g_list_next (vlist);
+		
+		switch (vtype)
+		{
+			case G_TYPE_STRING:
+			case G_TYPE_POINTER:
+			
+				ret = OCIBindByName (spec_cursor->statement, &bindhp, spec_cursor->errhp,
 							(CONST text *) holder,-1,
-							(dvoid *) bind, (sb4)strlen(bind)+1, (ub2) SQLT_STR,
+							(dvoid *) vlist->data, (sb4)strlen(vlist->data)+1, (ub2) SQLT_STR,
 							(dvoid *) 0, (ub2 *) 0, (ub2 *) 0, (ub4) 0, (ub4 *) 0,
 							(ub4) OCI_DEFAULT);
-		GSQL_DEBUG ("Bind by name: [\'%s\' = %s] [ret = %d]", holder, bind, ret);
-		if (oracle_check_error (cur, ret))
+				GSQL_DEBUG ("Bind by name: [\'%s\' = %s] [ret = %d]", holder, vlist->data, ret);
+				if (oracle_check_error (cursor, ret))
+				{
+					GSQL_DEBUG ("bind error");
+				}
+				
+				break;
+			
+			case G_TYPE_INT:
+			case G_TYPE_UINT:
+				GSQL_FIXME;
+				
+				break;
+			
+			case G_TYPE_UINT64:
+			case G_TYPE_INT64:
+				GSQL_FIXME;
+			
+				break;
+			
+			case G_TYPE_DOUBLE:
+				GSQL_FIXME;
+				
+				break;
+				
+		}
+		
+		g_free (holder);
+		
+		vlist = g_list_next (vlist);
+		n++;
+	}
+
+	
+	if (!oracle_sql_exec (cursor))
+	{
+		
+		OCIHandleFree ((dvoid *)spec_cursor->errhp, OCI_HTYPE_ERROR);
+		cursor->spec = NULL;
+		g_free (spec_cursor);
+		
+		return GSQL_CURSOR_STATE_ERROR;
+	}
+	
+	ret = OCIAttrGet (spec_cursor->statement, OCI_HTYPE_STMT, (dvoid*) &(var_count), 0,
+						OCI_ATTR_PARAM_COUNT, spec_cursor->errhp);
+	
+	if (oracle_check_error (cursor, ret))
+	{
+		
+		OCIHandleFree ((dvoid *)spec_cursor->errhp, OCI_HTYPE_ERROR);
+		cursor->spec = NULL;
+		g_free (spec_cursor);
+		return GSQL_CURSOR_STATE_ERROR;
+	}
+			
+	for (i = 0; i < var_count; i++)
+	{
+
+		ret = OCIParamGet (spec_cursor->statement, OCI_HTYPE_STMT,
+						spec_cursor->errhp, (void**) &param, i+1);
+                
+ 		if (oracle_check_error (cursor, ret))
 		{
-			g_free (cur);			
-			return NULL;
+			 g_free (spec_cursor);
+			 return GSQL_CURSOR_STATE_ERROR;
 		};
-	} while (1);
 
-	va_end(vl);
-        
-	if (oracle_sql_exec(cur) != 0)
-	{
-		g_free (cur);
-		return NULL;
-	};
-        
-	ret = OCIAttrGet(cur->statement, OCI_HTYPE_STMT, (dvoid*) &(cur->var_count), 0,
-						OCI_ATTR_PARAM_COUNT, cur->errhp);
-	
-	if (oracle_check_error (cur, ret))
-	{
-			 g_free (cur);
-			 return NULL;
-	};
+		var = gsql_variable_new ();
+		oracle_variable_init (cursor, var, param, i+1);
+		cursor->var_list = g_list_append (cursor->var_list, var);
+		OCIDescriptorFree (param, OCI_DTYPE_PARAM);
 
-	for (i = 0; i < cur->var_count; i++)
-	{	
-		OCIParamGet(cur->statement, OCI_HTYPE_STMT,
-						cur->errhp, (void**) &param, i+1);
-		var = oracle_variable_create(cur, param, i+1);
+	}
 		
-		cur->var_list = g_list_append(cur->var_list, var);
-		
-		OCIDescriptorFree(param, OCI_DTYPE_PARAM);
-	};
-	
-	return cur;	
-	 */
-	return GSQL_CURSOR_STATE_ERROR;
-};
+	return GSQL_CURSOR_STATE_OPEN;
+
+}
 
 
 gint 
@@ -496,10 +550,10 @@ oracle_sql_exec(GSQLCursor *cursor)
 							param);
 
 	
-	if ( oracle_check_error (cursor, ret))
+	if (oracle_check_error (cursor, ret))
 	{
-		 return -1;
-	};
+		 return FALSE;
+	}
 	
 	OCIAttrGet(spec_cursor->statement, OCI_HTYPE_STMT,
 				(dvoid*) &(spec_cursor->row_count), 0, OCI_ATTR_ROW_COUNT,
@@ -550,14 +604,14 @@ oracle_sql_exec(GSQLCursor *cursor)
 			
 		default:
 			GSQL_DEBUG ("Oracle engine: internal error occured. Unknown statement type.");
-			return -1;
+			return FALSE;
 			
 	}
 
 	if (spec_session->dbms_output)
 		oracle_dbms_output (cursor);
 
-	return ret;
+	return TRUE;
 };
 
 

@@ -624,7 +624,7 @@ gsql_message_add(GSQLWorkspace *workspace, gint type, gchar * msg)
 			
 	}
 
-	// in future... make the choose for 12/24 time format
+	// will do... to make the choose for 12/24 time format
 	// strftime(ctime, 16, "%r", localtime(&ttime);
 	strftime(ctime, 16, "%T", localtime(&ttime));
 	

@@ -2,8 +2,6 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY GSQLArchitecture SYSTEM "gsql-architecture.sgml">
-<!ENTITY GSQLWritingEngines SYSTEM "gsql-writing-engines.sgml">
-<!ENTITY GSQLWritingPlugins SYSTEM "gsql-writing-plugins.sgml">
 <!ENTITY version SYSTEM "version.xml">
 ]>
 <book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
@@ -20,7 +18,7 @@
       </author>
     </authorgroup>
     <copyright>
-      <year>2007</year>
+      <year>2006-2008</year>
       <holder>Taras Halturin</holder>
     </copyright>
     <title>GSQL Developers Reference Manual</title>
@@ -35,23 +33,29 @@
     </legalnotice>
   </bookinfo>
 
-  &GSQLArchitecture;
-  &GSQLWritingEngines;
-  &GSQLWritingPlugins;
+  <reference>
+    <title>API reference</title>
 
-  <chapter id="gsql-api">
-    <title>GSQL API</title>
-    <xi:include href="xml/gsql.xml"/>
-    <xi:include href="xml/engines.xml"/>
-    <xi:include href="xml/gsqldbnav.xml"/>
-    <xi:include href="xml/gsqleditor.xml"/>
-    <xi:include href="xml/gsqlmessages.xml"/>
-    <xi:include href="xml/gsqlsqlhandler.xml"/>
-    <xi:include href="xml/utils.xml"/>
-  </chapter>
-  
-  <chapter id="object-hierarchy">
-    <title>Object Hierarchy</title>
-    <xi:include href="xml/tree_index.sgml"/>
-  </chapter>
+
+<xi:include href="xml/content.xml"/>
+<xi:include href="xml/cursor.xml"/>
+<xi:include href="xml/cvariable.xml"/>
+<xi:include href="xml/navigation.xml"/>
+<xi:include href="xml/session.xml"/>
+<xi:include href="xml/sqleditor.xml"/>
+<xi:include href="xml/type_datetime.xml"/>
+<xi:include href="xml/workspace.xml"/>
+<xi:include href="xml/common.xml"/>
+<xi:include href="xml/conf.xml"/>
+<xi:include href="xml/editor.xml"/>
+<xi:include href="xml/engines.xml"/>
+<xi:include href="xml/menu.xml"/>
+<xi:include href="xml/notify.xml"/>
+<xi:include href="xml/plugins.xml"/>
+<xi:include href="xml/stock.xml"/>
+<xi:include href="xml/utils.xml"/>
+  </reference>
+
+  &GSQLArchitecture;
+
 </book>

@@ -1,0 +1,19 @@
+#include <libgsql/content.h>
+#include <libgsql/cursor.h>
+#include <libgsql/cvariable.h>
+#include <libgsql/navigation.h>
+#include <libgsql/session.h>
+#include <libgsql/sqleditor.h>
+#include <libgsql/type_datetime.h>
+#include <libgsql/workspace.h>
+
+
+gsql_content_get_type
+gsql_cursor_get_type
+gsql_variable_get_type
+gsql_navigation_get_type
+gsql_session_get_type
+gsql_editor_get_type
+gsql_type_datetime_get_type
+gsql_cell_renderer_datetime_get_type
+gsql_workspace_get_type

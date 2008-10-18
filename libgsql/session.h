@@ -91,6 +91,12 @@ gsql_session_set_active (GSQLSession *session);
 gchar *
 gsql_session_get_name (GSQLSession *session);
 
+const gchar *
+gsql_session_get_username (GSQLSession *session);
+
+const gchar *
+gsql_session_get_database_name (GSQLSession *session);
+
 GSQLWorkspace *
 gsql_session_get_workspace (GSQLSession *session);
 

@@ -38,6 +38,10 @@
 #include "nav_sql.h"
 #include "engine_stock.h"
 
+#include "nav_tree__columns.h"
+#include "nav_tree__constraints.h"
+#include "nav_tree__indexes.h"
+
 static void nav_tree_tables_event (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event);
@@ -63,20 +67,20 @@ static GSQLNavigationItem tables[] = {
 	{	COLUMNS_ID,
 		GSQL_STOCK_COLUMNS,
 		N_("Columns"), 
-		NULL,						// sql
+		sql_oracle_table_columns_owner,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_columns,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
 	{	INDEXES_ID,
 		GSQL_STOCK_INDEXES,
 		N_("Indexes"), 
-		NULL,						// sql
+		sql_oracle_indexes_owner,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_indexes,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
@@ -93,10 +97,10 @@ static GSQLNavigationItem tables[] = {
 	{	CONSTRAINTS_ID,
 		GSQL_STOCK_CONSTRAINT,
 		N_("Constraints"), 
-		NULL,						// sql
+		sql_oracle_table_constraints_owner,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_constraints,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
@@ -190,15 +194,15 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	GSQLVariable *var;
 	GtkListStore *details;
 
-	
-
 	model = gtk_tree_view_get_model(tv);
 	n = gtk_tree_model_iter_n_children(model, iter);
+	
 	for (; n>1; n--)
 	{
 		gtk_tree_model_iter_children(model, &child, iter);
 		gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
-	};
+	}
+	
 	gtk_tree_model_iter_children(model, &child_last, iter);
 	
 	gtk_tree_model_get (model, iter,  
@@ -222,25 +226,27 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	if (gsql_cursor_open_with_bind(cursor, 
 								   FALSE, 
 								   GSQL_CURSOR_BIND_BY_POS, 
-								   G_TYPE_CHAR, owner,
-								   G_TYPE_CHAR, "%",
+								   G_TYPE_STRING, owner,
+								   G_TYPE_STRING, "%",
 								   -1) == GSQL_CURSOR_STATE_ERROR)
 	{
-		g_object_unref (cursor);
+		gsql_cursor_close (cursor);
 		return;
-	};
+	}
 
 	var = g_list_nth_data(cursor->var_list,0);
 	
 	GSQL_DEBUG ("cursor state [%d]. Start fetching", gsql_cursor_get_state (cursor));
+	
 	if (var == NULL)
 	{
 		GSQL_DEBUG ("var is NULL");
 		return;
-	};
+	}
 	 
 	GSQL_DEBUG ("var->data = [%s]", (gchar *) var->value);
 	n = 0;
+	
 	while (gsql_cursor_fetch (cursor, 1) > 0)
 	{
 		n++;
@@ -258,6 +264,7 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);
 		}
+		
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
 					GSQL_NAV_TREE_ID,			TABLE_ID,
@@ -291,8 +298,10 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 				GSQL_NAV_TREE_STRUCT,			NULL,
 				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
 				-1);
-	};
+	}
+	
 	GSQL_DEBUG ("Items fetched: [%d]", n);
+	
 	if (n > 0)
 	{
 		name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
@@ -302,14 +311,13 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 							name,
 							-1);
 		g_free (name);
-	};
+	}
 	
 	gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
 	
 	gsql_cursor_close (cursor);
 
-	return;
-};
+}
 
 /*
  *  Static section:
@@ -481,8 +489,8 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 	if (gsql_cursor_open_with_bind(cursor, 
 								   FALSE, 
 								   GSQL_CURSOR_BIND_BY_POS, 
-								   G_TYPE_CHAR, owner,
-								   G_TYPE_CHAR, name,
+								   G_TYPE_STRING, owner,
+								   G_TYPE_STRING, name,
 								   -1) == GSQL_CURSOR_STATE_ERROR)
 	{
 		g_object_unref (cursor);

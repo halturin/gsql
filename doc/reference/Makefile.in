@@ -244,15 +244,13 @@ IGNORE_HFILES = egg* glue* e-*
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
-HTML_IMAGES = gsql-architecture.png
+HTML_IMAGES = gsql.schema.png
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.sgml building.sgml changes-2.0.sgml
 content_files = \
 	version.xml \
-	gsql-architecture.sgml\
-	gsql-writing-engines.sgml\
-	gsql-writing-plugins.sgml
+	gsql-architecture.sgml
 
 
 # SGML files where gtk-doc abbrevations (#GtkWidget) are expanded
@@ -272,10 +270,15 @@ expand_content_files =
 ####################################
 # Everything below here is generic #
 ####################################
+INCLUDES = \
+	$(PACKAGE_CFLAGS) \
+	-I$(top_builddir)/libgsql \
+	-I$(top_builddir)
+
 
 # if GTK_DOC_USE_LIBTOOL
 GTKDOC_CC = $(LIBTOOL) --mode=compile $(CC) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
-GTKDOC_LD = $(LIBTOOL) --mode=link $(CC) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS)
+GTKDOC_LD = $(LIBTOOL) --mode=link $(CC) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) $(PACKAGE_LIBS) $(top_builddir)/libgsql/libgsql.la
 # else
 # GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
 # GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS)

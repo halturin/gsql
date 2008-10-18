@@ -38,11 +38,6 @@
 #include <libgsql/stock.h>
 #include "gsql.h"
 
-GtkWidget *gsql_window;
-gpointer   gsql_main_thread;
-
-gboolean gsql_opt_trace_enable = FALSE;
-gboolean gsql_opt_debug_enable = FALSE;
 
 static GOptionEntry opts[] =
 {
@@ -63,6 +58,9 @@ main (int argc, char *argv[])
 	g_thread_init (NULL);
 	gdk_threads_init ();
 	gdk_threads_enter ();
+	
+	gsql_opt_trace_enable = FALSE;
+	gsql_opt_debug_enable = FALSE;
 	
 	g_option_context_add_main_entries(context, opts, GETTEXT_PACKAGE);
 	g_option_context_add_group(context, gtk_get_option_group(TRUE));

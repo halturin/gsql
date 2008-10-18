@@ -44,11 +44,10 @@ static GSQLEngine *
 gsql_engine_new (gchar * engine_file);
 
 /**
- * gsql_engines_lookup
+ * gsql_engines_lookup:
  * 
  * Looking up available engines at PACKAGE_ENGINES_DIR 
  *
- * Returns:
  */
 void
 gsql_engines_lookup ()

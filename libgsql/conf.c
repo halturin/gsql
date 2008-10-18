@@ -86,10 +86,14 @@ gsql_conf_nitify_add (gchar *path, GSQLConfNotifyFunc func, gpointer userdata)
 
 
 /**
- *	gsql_conf_value_get_int:
- *	@path: path to the key
- *	@return: int value
- */
+ * gsql_conf_value_get_int:
+ * @path: path to the key
+ *	
+ * Get the value by path
+ *
+ * Returns: int value
+ **/
+
 gint
 gsql_conf_value_get_int (gchar *path)
 {
@@ -113,10 +117,14 @@ gsql_conf_value_get_int (gchar *path)
 
 
 /**
- *	gsql_conf_value_get_string:
- *	@path: path to the key
- *	@return: string value. returned value should be freed by g_free()
- */
+ * gsql_conf_value_get_string:
+ * @path: path to the key
+ *
+ * Get the value by path
+ *
+ * Returns: string value. returned value should be freed by g_free()
+ **/
+
 gchar *
 gsql_conf_value_get_string (gchar *path)
 {

@@ -55,8 +55,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	GSQLNavigation *navigation;
 	GSQLEMySQLSession *mysql_session;
 	guint port = 0;
-					
-	gint connect_as = 0;
+	
 	widget = g_object_get_data (G_OBJECT (logon_widget), "username");
 	username = gtk_entry_get_text (GTK_ENTRY (widget));
 	widget = g_object_get_data (G_OBJECT (logon_widget), "password");
@@ -65,6 +64,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	database = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	widget = g_object_get_data (G_OBJECT (logon_widget), "hostname");
 	hostname = gtk_entry_get_text (GTK_ENTRY (widget));
+
 	
 	if ((g_utf8_strlen(database,128) <= 0) || (g_utf8_strlen(username,128) <= 0))
 	{
@@ -84,11 +84,14 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	
 	if (!mysql_session_open (mysql_session, username, password, database, hostname, port))
 	{
-		g_strlcpy (buffer, (const gchar *) mysql_error (mysql_session->mysql), 256);
+		if (buffer)
+			g_strlcpy (buffer, (const gchar *) mysql_error (mysql_session->mysql), 256);
+		
 		g_free (mysql_session->mysql);
 		g_free (mysql_session);
+		
 		return FALSE;
-	};
+	}
 	
 	session = gsql_session_new_with_attrs ("session-username", 
 										   g_strdup(username),
@@ -131,8 +134,9 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	gsql_message_add (workspace, GSQL_MESSAGE_NORMAL, buffer);
 	
 	GSQL_DEBUG ("New session created with name [%s]", gsql_session_get_name (session));
+	
 	return session;
-};
+}
 
 
 /* Static section:

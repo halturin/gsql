@@ -9,21 +9,9 @@
 			<title>GSQL Architecture</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="gsql-architecture.png" format="PNG"/>
+					<imagedata fileref="gsql.scheme.png" format="PNG"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
 	</para>
-	<sect1>
-		<title>Engines</title>
-		<para>
-			Engines are main components which are loaded in GSQL at run time.
-		</para>
-	</sect1>
-	<sect1>
-		<title>Plugins</title>
-		<para>
-			Plugins work description...
-		</para>
-	</sect1>
   </chapter>

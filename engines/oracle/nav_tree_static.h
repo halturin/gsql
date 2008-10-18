@@ -36,14 +36,16 @@
 
 
 #include "nav_tree__tables.h"
+#include "nav_tree__constraints.h"
+#include "nav_tree__indexes.h"
 
 /*
 #include "nav_tree__users.h"
 
-#include "nav_tree__indexes.h"
+
 #include "nav_tree__triggers.h"
 #include "nav_tree__views.h"
-#include "nav_tree__constraints.h"
+
 #include "nav_tree__procedures.h"
 #include "nav_tree__packages.h"
 #include "nav_tree__sequences.h"
@@ -96,17 +98,17 @@ static GSQLNavigationItem users_objects[] = {
 		sql_oracle_tables_owner,	// sql
 		NULL,						// object_popup
 		NULL,						// object_handler
-		nav_tree_tables_refresh,	// expand_handler
+		(GSQLNavigationHandler) nav_tree_tables_refresh,	// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 		
 	{	CONSTRAINTS_ID,
 		GSQL_STOCK_CONSTRAINT, 
 		N_("Constraints"), 
-		NULL, //sql_oracle_constraints_owner, 
+		sql_oracle_constraints_owner, 
 		NULL, 
 		NULL,
-		NULL,// nav_tree_refresh_constraints,
+		(GSQLNavigationHandler) nav_tree_refresh_constraints,
 		NULL,
 		NULL, 0 },
 		
@@ -123,10 +125,10 @@ static GSQLNavigationItem users_objects[] = {
 	{	INDEXES_ID,
 		GSQL_STOCK_INDEXES, 
 		N_("Indexes"), 
-		NULL,//sql_oracle_indexes_owner, 
+		sql_oracle_indexes_owner, 
 		NULL, 
 		NULL,
-		NULL,//nav_tree_refresh_indexes,
+		(GSQLNavigationHandler) nav_tree_refresh_indexes,
 		NULL,
 		NULL, 0 },
 		

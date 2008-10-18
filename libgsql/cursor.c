@@ -46,6 +46,8 @@ static void gsql_cursor_set_state (GSQLCursor *cursor, GSQLCursorState state);
 static GSQLCursorState gsql_cursor_open_with_vbind (GSQLCursor *cursor, 
 													GSQLCursorBindType btype, 
 													GList *args);
+static void gsql_cursor_bind_args_list_free (GList *list);
+
 
 enum {
 	SIG_CLOSE,
@@ -103,7 +105,15 @@ gsql_cursor_get_state (GSQLCursor *cursor)
 	return cursor->private->state;	
 }
 
-
+/**
+ * gsql_cursor_new:
+ * @session: A #GSQLSession
+ * @sql: SQL command
+ * 
+ * Creates a new #GSQLCursor object
+ * 
+ * Returns: the new #GSQLCursor 
+ **/
 
 GSQLCursor *
 gsql_cursor_new (GSQLSession *session, gchar *sql)
@@ -122,48 +132,38 @@ gsql_cursor_new (GSQLSession *session, gchar *sql)
 	return cursor;
 }
 
-void
-gsql_cursor_bind_args_list_free (GList *list)
-{
-	GList *l_item;
-	GList *v_item;
-	GType value_type;
-	g_return_if_fail (list != NULL);
-	gpointer value;
-	
-	l_item = g_list_first (list);
-	
-	while (l_item)
-	{
-		value_type = (GType) l_item->data;
-		
-		switch (value_type)
-		{
-			case G_TYPE_INT64:
-			case G_TYPE_FLOAT:
-			case G_TYPE_DOUBLE:
-				l_item = g_list_next(l_item);
-				value = l_item->data;
-				g_free(value);
-				break;
-				
-			default:
-				l_item = g_list_next(l_item);
-		
-		}
-	}
-}
+
 
 /**
  * gsql_cursor_open_with_bind:
  * @cursor: A #GSQLCursor
  * @background: bring to background
- * @btype: A #GSQLCursorBindType (by position, by name)
+ * @btype: A #GSQLCursorBindType (by position or by name)
  * @Varargs: pairs of type (GType) and value, terminated with -1
  *
- * Run the cursor statement and retrun a #GSQLCursorState.
+ * Run the cursor statement with binds. Draw attention to the args in example usage:
+ *
+ *	   gsql_cursor_open_with_bind (cursor, 
+ *								   FALSE, 
+ *								   GSQL_CURSOR_BIND_BY_POS,
+ *								   G_TYPE_STRING, owner,
+ *								   G_TYPE_INT, 23,
+ *								   -1)
+ *
+ *	   gsql_cursor_open_with_bind (cursor, 
+ *								   FALSE, 
+ *								   GSQL_CURSOR_BIND_BY_NAME,
+ *								   G_TYPE_STRING, "owner"
+ *								   G_TYPE_STRING, owner,
+ *								   G_TYPE_STRING, "type",
+ *								   G_TYPE_INT, 23,
+ *								   -1)
+ *
+ *
+ *
+ * Returns: the #GSQLCursorState
  * 
- */
+ **/
 
 GSQLCursorState
 gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorBindType btype, ...)
@@ -195,9 +195,9 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 					args_stop = 0;
 					break;
 				
-				case G_TYPE_CHAR:
+				case G_TYPE_STRING:
 				case G_TYPE_POINTER:
-					GSQL_DEBUG ("bind: TYPE_POINTER");
+					GSQL_DEBUG ("bind: TYPE_POINTER|TYPE_STRING");
 					l_args = g_list_append (l_args, (gpointer) value_type);
 					l_args = g_list_append (l_args, va_arg(args, void *));
 					break;
@@ -246,6 +246,7 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 	if (args_stop == -1)
 	{
 		gsql_cursor_bind_args_list_free (l_args);
+		gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_ERROR);
 		
 		return GSQL_CURSOR_STATE_ERROR;
 	}
@@ -274,20 +275,29 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 			gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_ERROR);
 			gsql_cursor_bind_args_list_free (l_args);
 			g_free (bg_struct);
+			
 			return GSQL_CURSOR_STATE_ERROR;
 		}
 		
-		gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_RUN);
+		gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_RUN);		
 		return GSQL_CURSOR_STATE_RUN;
 	}
 	
 	state = gsql_cursor_open_with_vbind (cursor, btype, l_args);
 	
-	gsql_cursor_set_state (cursor, state);
-	
 	return state;
 }
 
+/**
+ * gsql_cursor_open:
+ * @cursor: A #GSQLCursor
+ * @background: bring to background
+ *
+ * Run the cursor statement.
+ *
+ * Returns: the #GSQLCursorState
+ * 
+ **/
 
 GSQLCursorState
 gsql_cursor_open (GSQLCursor *cursor, gboolean background)
@@ -345,6 +355,15 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 	return state;
 }
 
+/**
+ * gsql_cursor_notify_set:
+ * @cursor: A #GSQLCursor
+ * @notify: set #TRUE if you would like get notify
+ *
+ * Set the notify property.
+ * 
+ **/
+
 void
 gsql_cursor_notify_set (GSQLCursor *cursor, gboolean notify)
 {
@@ -359,6 +378,17 @@ gsql_cursor_notify_set (GSQLCursor *cursor, gboolean notify)
 
 }
 
+/**
+ * gsql_cursor_get_variables:
+ * @cursor: A #GSQLCursor
+ * @notify: set #TRUE if you would like get notify
+ *
+ * Set the notify property.
+ *
+ * Returns: list of #GSQLVariable. Warning! Do not free.
+ * 
+ **/
+
 GList *
 gsql_cursor_get_variables (GSQLCursor *cursor)
 {
@@ -370,6 +400,14 @@ gsql_cursor_get_variables (GSQLCursor *cursor)
 
 	return cursor->var_list;
 }
+
+/**
+ * gsql_cursor_stop:
+ * @cursor: A #GSQLCursor
+ *
+ * Stop the statement execution.
+ *
+ **/
 
 void
 gsql_cursor_stop (GSQLCursor *cursor)
@@ -407,6 +445,17 @@ gsql_cursor_stop (GSQLCursor *cursor)
 	gsql_cursor_set_state (cursor, state);
 
 }
+
+/**
+ * gsql_cursor_fetch:
+ * @cursor: A #GSQLCursor
+ * @rows:  ***just reserved
+ *
+ * Fetch the result.
+ *
+ * Returns: the number fetched rows.
+ *
+ **/
 
 gint
 gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
@@ -458,6 +507,15 @@ gsql_cursor_fetch (GSQLCursor *cursor, gint rows)
 	
 }
 
+
+/**
+ * gsql_cursor_close:
+ * @cursor: A #GSQLCursor
+ *
+ * Close the cursor.
+ *
+ **/
+
 void
 gsql_cursor_close (GSQLCursor *cursor)
 {
@@ -494,6 +552,7 @@ gsql_cursor_close (GSQLCursor *cursor)
  *  gsql_cursor_open_internal
  *  gsql_cursor_set_state
  *  gsql_cursor_open_with_vbind
+ *  gsql_cursor_bind_args_list_free
  *
  */
 
@@ -504,7 +563,7 @@ gsql_cursor_set_state (GSQLCursor *cursor, GSQLCursorState state)
 
 	g_return_if_fail (cursor != NULL);
 	cursor->private->state = state;
-	
+
 	g_signal_emit_by_name (G_OBJECT (cursor), "state-changed");
 	
 }
@@ -514,8 +573,6 @@ static gpointer
 gsql_cursor_open_bg (gpointer params)
 {
 	GSQL_TRACE_FUNC;
-
-	GSQLCursorState state;
 
 	struct CursorOpenBGStruct *bg_struct = params;
 	
@@ -527,12 +584,12 @@ gsql_cursor_open_bg (gpointer params)
 	{
 		
 		GSQL_DEBUG ("... in BG: gsql_cursor_open_with_vbind");
-		state = gsql_cursor_open_with_vbind (cursor, bg_struct->btype, bg_struct->args);
+		gsql_cursor_open_with_vbind (cursor, bg_struct->btype, bg_struct->args);
 		
 	} else
 	{
 		GSQL_DEBUG ("... in BG: gsql_cursor_open");
-		state = gsql_cursor_open (cursor, FALSE);
+		gsql_cursor_open (cursor, FALSE);
 	}
 
 	g_free (bg_struct);
@@ -545,44 +602,74 @@ gsql_cursor_open_with_vbind (GSQLCursor *cursor, GSQLCursorBindType btype, GList
 {
 	GSQL_TRACE_FUNC;
 	
-	GSQLCursorState state = GSQL_CURSOR_STATE_OPEN;
+	GSQLCursorState state = GSQL_CURSOR_STATE_RUN;
+	guint n;
 	
 	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_NONE);
+	g_return_val_if_fail (args != NULL, GSQL_CURSOR_STATE_NONE);
 	
 	if (!gsql_session_lock (cursor->session))
-					return GSQL_CURSOR_STATE_ERROR;
+	{
+		gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_ERROR);
+		return GSQL_CURSOR_STATE_ERROR;
+	}
+	
+	n = g_list_length (args);
 
 	switch (btype)
 	{
 		case GSQL_CURSOR_BIND_BY_NAME:
 			GSQL_DEBUG ("Bind by name");
+	
+			if ((n < 4) || (n % 4 ))
+			{
+				GSQL_DEBUG ("Wrong GSQL_CURSOR_BIND_BY_NAME usage. The number of arguments does not comply with conditions.");
+				state = GSQL_CURSOR_STATE_NONE;
+				break;
+			}
+			
 			if (cursor->session->engine->cursor_open_with_bind_by_name != NULL)
 			{
-				cursor->session->engine->cursor_open_with_bind_by_name (cursor, args);
+				gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_RUN);
+				state = cursor->session->engine->cursor_open_with_bind_by_name (cursor, args);
 			}
 			else 
 			{
 				GSQL_DEBUG("[%s] bind by name not implemented",
 						cursor->session->engine->info.name);
+				state = GSQL_CURSOR_STATE_NONE;
 			}
 			break;
 		
 		case GSQL_CURSOR_BIND_BY_POS:
 			GSQL_DEBUG ("Bind by pos");
+			
+			if ((n < 2) || (n % 2))
+			{
+				GSQL_DEBUG ("Wrong GSQL_CURSOR_BIND_BY_POS usage. The number of arguments does not comply with conditions.");
+				state = GSQL_CURSOR_STATE_NONE;
+				break;
+			}
+			
 			if (cursor->session->engine->cursor_open_with_bind != NULL)
 			{
-				cursor->session->engine->cursor_open_with_bind (cursor, args);
+				gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_RUN);
+				state = cursor->session->engine->cursor_open_with_bind (cursor, args);
 			}
 			else 
 			{
 				GSQL_DEBUG("[%s] bind by position not implemented",
 						cursor->session->engine->info.name);
+				state = GSQL_CURSOR_STATE_NONE;
 			}
 			break;
 			
 		default:
 			GSQL_DEBUG ("Unknown GSQLCursorBindType [%d]", (gint) btype);
+			state = GSQL_CURSOR_STATE_NONE;
 	}
+	
+	gsql_cursor_set_state (cursor, state);
 	
 	gsql_session_unlock (cursor->session);
 	
@@ -684,3 +771,34 @@ gsql_cursor_init (GSQLCursor *obj)
 
 }
 
+static void
+gsql_cursor_bind_args_list_free (GList *list)
+{
+	GList *l_item;
+	GList *v_item;
+	GType value_type;
+	g_return_if_fail (list != NULL);
+	gpointer value;
+	
+	l_item = g_list_first (list);
+	
+	while (l_item)
+	{
+		value_type = (GType) l_item->data;
+		
+		switch (value_type)
+		{
+			case G_TYPE_INT64:
+			case G_TYPE_FLOAT:
+			case G_TYPE_DOUBLE:
+				l_item = g_list_next(l_item);
+				value = l_item->data;
+				g_free(value);
+				break;
+				
+			default:
+				l_item = g_list_next(l_item);
+		
+		}
+	}
+}

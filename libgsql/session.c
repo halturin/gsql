@@ -345,7 +345,27 @@ gsql_session_get_name (GSQLSession *session)
 	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
 
 	return session->private->name;
-};
+}
+
+const gchar *
+gsql_session_get_username (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
+
+	return session->private->username;
+}
+
+const gchar *
+gsql_session_get_database_name (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
+
+	return session->private->database;
+}
 
 gint
 gsql_sessions_count (void)
@@ -451,7 +471,7 @@ gsql_session_lock (GSQLSession *session)
 	
 	return TRUE;
 	
-};
+}
 
 void
 gsql_session_unlock (GSQLSession *session)
@@ -547,7 +567,8 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 		
 	} else {
 		
-		slist = g_list_append (slist, session);
+		if (session)
+			slist = g_list_append (slist, session);
 	}
 	
 	GSQL_DEBUG ("Sessions hash len: [%d]", g_list_length (slist));

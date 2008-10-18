@@ -40,7 +40,13 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__tables.h          \
 	nav_tree__tables_cb.c          \
 	nav_tree__tables_cb.h          \
-	nav_objects.c
+	nav_objects.c          \
+	nav_tree__columns.c          \
+	nav_tree__columns.h          \
+	nav_tree__constraints.c          \
+	nav_tree__constraints.h          \
+	nav_tree__indexes.c          \
+	nav_tree__indexes.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \

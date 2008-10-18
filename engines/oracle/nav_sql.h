@@ -67,7 +67,7 @@ order by owner,table_name,privilege";
 static const gchar sql_oracle_privileges[] = 
 "select privilege,grantor,grantee,grantable \
 from all_tab_privs \
-where table_schema = :owner \
+where table_schema = UPPER(:owner) \
 and table_name = :name";
 
 
@@ -106,7 +106,7 @@ a.data_precision,a.data_scale,a.nullable,a.column_id, \
 a.data_default,a.num_distinct, \
 cast(a.low_value as varchar2(500)) low_value, \
 cast(a.high_value as varchar2(500)) high_value, \
-a.char_length,:owner object_owner,a.table_name object_name \
+a.char_length,UPPER(:owner) object_owner,a.table_name object_name \
 from user_tab_columns a \
 where a.table_name = :name \
 order by a.column_id";
@@ -138,19 +138,19 @@ and a.table_name=UPPER(:2) \
 order by a.column_id";
 
 static const gchar sql_oracle_table_triggers[] = 
-"select trigger_name object_name, :owner owner,\
+"select trigger_name object_name, UPPER(:owner) owner,\
 trigger_type, triggering_event, base_object_type, \
 table_owner,table_name, status \
 from sys.all_triggers \
-where table_owner=:owner and table_name=:object_name ";
+where table_owner=UPPER(:owner) and table_name=:object_name ";
 
 static const gchar sql_oracle_table_indexes[] = 
-"select index_name object_name, :owner owner, \
+"select index_name object_name, UPPER(:owner) owner, \
 uniqueness,index_type,table_owner,table_name, \
 partitioned, status,temporary \
 from sys.all_indexes \
-where table_owner=:owner \
-and table_name=:object_name \
+where table_owner=UPPER(:owner) \
+and table_name=:name \
 and index_type<>'LOB'";
 
 static const gchar sql_oracle_table_constraints[] = 
@@ -158,7 +158,7 @@ static const gchar sql_oracle_table_constraints[] =
 decode(constraint_type,'C','Check','P','Primary','U','Unique','R','Foreign','...') constraint_type_name, \
 table_name, search_condition, r_owner, r_constraint_name, delete_rule, \
 status , deferrable, deferred, validated, generated, bad, last_change, rely \
-from sys.dba_constraints where owner = :owner \
+from sys.dba_constraints where owner = UPPER(:owner) \
 and table_name = :name \
 order by constraint_name";
 
@@ -167,7 +167,7 @@ static const gchar sql_oracle_table_constraints_owner[] =
 decode(constraint_type,'C','Check','P','Primary','U','Unique','R','Foreign','...') constraint_type_name, \
 table_name, search_condition, r_owner, r_constraint_name, delete_rule, \
 status , deferrable, deferred, validated, generated, bad, last_change, rely \
-from sys.all_constraints where owner = :owner \
+from sys.all_constraints where owner = UPPER(:owner) \
 and table_name = :name \
 order by constraint_name";
 
@@ -175,11 +175,11 @@ order by constraint_name";
 /************ Indexes *************/
 
 static const gchar sql_oracle_indexes_owner[] = 
-"select a.object_name, :owner owner, a.object_id,a.created,a.last_ddl_time, \
+"select a.object_name, UPPER(:owner) owner, a.object_id,a.created,a.last_ddl_time, \
 a.status,b.uniqueness,b.index_type,b.table_owner,b.table_name, \
 b.partitioned, b.temporary \
 from user_objects a,user_indexes b \
-where b.index_name like :object_name \
+where b.index_name like :name \
 and b.index_type<>'LOB' \
 and a.object_name=b.index_name \
 and a.object_type='INDEX' \
@@ -188,9 +188,9 @@ order by a.object_name";
 
 static const gchar sql_oracle_index_columns_owner[] = 
 "select a.column_name,a.column_length,a.column_position,b.column_expression, \
- a.descend,:owner object_owner,a.index_name object_name \
+ a.descend, UPPER(:owner) object_owner,a.index_name object_name \
  from user_ind_columns a,user_ind_expressions b \
-where a.index_name=:name \
+where a.index_name like :name \
 and b.index_name(+)=a.index_name \
 and b.column_position(+)=a.column_position \
 order by a.column_position";
@@ -201,10 +201,10 @@ a.status,b.uniqueness,b.index_type, b.table_owner,b.table_name, \
 b.partitioned, b.temporary \
 from (select a.owner owner,a.object_name,a.object_id,a.created, \
 	  a.last_ddl_time, a.status from sys.dba_objects a \
-	  where a.owner like :owner \
+	  where a.owner like UPPER(:owner) \
 	  and a.object_type = 'INDEX') a, sys.dba_indexes b \
-where b.owner like :owner \
-and b.index_name like :object_name \
+where b.owner like UPPER(:owner) \
+and b.index_name like :name \
 and b.index_type<>'LOB' \
 and a.object_name=b.index_name \
 and b.dropped='NO' \
@@ -225,7 +225,7 @@ order by a.column_position";
 /************ Triggers *************/
 
 static const gchar sql_oracle_triggers_owner[] =
-"select a.object_name, :owner owner, a.object_id,a.created,a.last_ddl_time, \
+"select a.object_name, UPPER(:owner) owner, a.object_id,a.created,a.last_ddl_time, \
 a.status, b.trigger_type, b.triggering_event, b.base_object_type, \
 b.table_owner,b.table_name, b.status \
 from user_objects a,user_triggers b \
@@ -239,10 +239,10 @@ order by a.object_name";
 
 static const gchar sql_oracle_trigger_columns_owner[] = 
 "select a.column_name,a.column_usage, \
-a.column_list,:owner object_owner,a.trigger_name object_name \
+a.column_list,UPPER(:owner) object_owner,a.trigger_name object_name \
 from user_trigger_cols a \
 where a.trigger_name=:name \
-and a.table_owner=:owner \
+and a.table_owner=UPPER(:owner) \
 and a.table_name= (select table_name \
 					from user_triggers \
 					where trigger_name = :name)";
@@ -253,10 +253,10 @@ b.trigger_type, b.triggering_event,b.base_object_type,b.table_owner,\
 b.table_name,b.status \
 from (select a.owner,a.object_name,a.object_id,a.created,a.last_ddl_time,\
 		a.status  from sys.dba_objects a  \
-	  where a.owner like :owner \
+	  where a.owner like UPPER(:owner) \
 	  and a.object_type='TRIGGER') a, \
      sys.dba_triggers b \
-where b.owner like :owner \
+where b.owner like UPPER(:owner) \
 and b.trigger_name like :object_name \
 and a.object_name=b.trigger_name \
 and b.trigger_name not in (select object_name \
@@ -355,7 +355,7 @@ order by object_type, a.object_name";
 /************ User's Objects *************/
 
 static const gchar sql_oracle_users_objects_owner[] = 
-"select a.object_name, :owner owner, a.object_id,a.created, \
+"select a.object_name, UPPER(:owner) owner, a.object_id,a.created, \
 a.last_ddl_time,a.status \
 from user_objects a \
 where object_name like :object_name \
@@ -366,7 +366,7 @@ static const gchar sql_oracle_users_objects[] =
 "select a.object_name, owner, a.object_id,a.created,a.last_ddl_time, \
 decode(a.status,'VALID',0,'INVALID',1,2) status \
 from sys.dba_objects a \
-where a.owner like :owner \
+where a.owner like UPPER(:owner) \
 and object_name like :object_name \
 and object_type=:object_type \
 order by a.object_name";
@@ -378,7 +378,7 @@ static const gchar sql_oracle_constraints[] =
 decode(constraint_type,'C','Check','P','Primary','U','Unique','R','Foreign','...') constraint_type_name, \
 table_name, search_condition, r_owner, r_constraint_name, delete_rule, \
 status , deferrable, deferred, validated, generated, bad, last_change, rely \
-from sys.dba_constraints where owner=:owner \
+from sys.dba_constraints where owner=UPPER(:owner) \
 and constraint_name like :name \
 and not constraint_type in ('V','O') \
 order by constraint_name";
@@ -388,18 +388,18 @@ static const gchar sql_oracle_constraints_owner[] =
 decode(constraint_type,'C','Check','P','Primary','U','Unique','R','Foreign','...') constraint_type_name, \
 table_name, search_condition, r_owner, r_constraint_name, delete_rule, \
 status , deferrable, deferred, validated, generated, bad, last_change, rely \
-from sys.all_constraints where owner=:owner \
+from sys.all_constraints where owner=UPPER(:owner) \
 and constraint_name like :name \
 and not constraint_type in ('V','O')";
 
 static const gchar sql_oracle_constraints_columns[] = 
 " select column_name,decode(position,null,0,position) position \
 from sys.all_cons_columns \
-where owner = :owner \
+where owner = UPPER(:owner) \
 and constraint_name = :name \
 and table_name = (select table_name \
 				  from sys.all_constraints \
-				  where owner = :owner \
+				  where owner = UPPER(:owner) \
 				  and constraint_name = :name )";
 
 /************ Arguments *************/
@@ -412,7 +412,7 @@ type_name,type_subname,type_link,pls_type \
 from all_arguments \
 where object_id = ( select a.object_id \
 					from sys.all_objects a \
-					where a.owner = :owner \
+					where a.owner = UPPER(:owner) \
 					and object_name = :name \
 					and object_type = :type ) \
 and data_type is not null \
@@ -425,7 +425,7 @@ static const gchar sql_oracle_entries[] =
 from all_arguments \
 where object_id = ( select a.object_id \
 					from sys.all_objects a \
-					where a.owner like :owner \
+					where a.owner like UPPER(:owner) \
 					and object_name like :name \
 					and object_type=:type ) \
 group by object_name,overload";
@@ -440,7 +440,7 @@ sn.error,sn.type, sn.next, sn.start_with, sn.refresh_group,sn.update_trig,sn.upd
 sn.query, sn.refresh_method, sn.fr_operations, sn.cr_operations, sn.master_rollback_seg, \
 sn.status,sn.refresh_mode, sn.prebuilt \
 from sys.dba_snapshots sn, sys.dba_mview_refresh_times sr \
-where sn.owner like :owner \
+where sn.owner like UPPER(:owner) \
 and sr.owner = sn.owner \
 and sr.name = sn.name \
 and sr.master_owner = sn.master_owner \
@@ -454,7 +454,7 @@ sn.error,sn.type, sn.next, sn.start_with, sn.refresh_group,sn.update_trig,sn.upd
 sn.query, sn.refresh_method, sn.fr_operations, sn.cr_operations, sn.master_rollback_seg, \
 sn.status,sn.refresh_mode, sn.prebuilt \
 from sys.all_snapshots sn, sys.all_mview_refresh_times sr \
-where sn.owner like :owner \
+where sn.owner like UPPER(:owner) \
 and sr.owner = sn.owner \
 and sr.name = sn.name \
 and sr.master_owner = sn.master_owner \
@@ -465,14 +465,14 @@ static const gchar sql_oracle_mview_logs[] =
 "select log_table,log_trigger,current_snapshots, \
 rowids,primary_key,filter_columns,snapshot_id \
 from sys.dba_snapshot_logs \
-where log_owner=:owner \
+where log_owner=UPPER(:owner) \
 and master=:name";
 
 static const gchar sql_oracle_mview_logs_owner[] =
 "select log_table,log_trigger,current_snapshots, \
 rowids,primary_key,filter_columns,snapshot_id \
 from sys.all_snapshot_logs \
-where log_owner=:owner \
+where log_owner=UPPER(:owner) \
 and master=:name";
 
 
@@ -482,14 +482,14 @@ static const gchar sql_oracle_synonyms[] =
 "select a.object_name,a.owner,a.object_id,a.created,a.last_ddl_time, a.status, \
 s.table_owner,s.table_name,s.db_link \
 from (select a.owner,a.object_name,a.object_id,a.created,a.last_ddl_time, \
-		a.status from sys.dba_objects a where a.owner = :owner) a, sys.dba_synonyms s \
-where s.owner = :owner \
+		a.status from sys.dba_objects a where a.owner = UPPER(:owner)) a, sys.dba_synonyms s \
+where s.owner = UPPER(:owner) \
 and s.synonym_name like :name \
 and a.object_name=s.synonym_name \
 order by a.object_name";
 
 static const gchar sql_oracle_synonyms_owner[] =
-"select a.object_name, :owner owner, a.object_id,a.created,a.last_ddl_time, \
+"select a.object_name, UPPER(:owner) owner, a.object_id,a.created,a.last_ddl_time, \
 a.status,s.table_owner, \
 s.table_name,s.db_link \
 from user_objects a,user_synonyms s \
@@ -504,7 +504,7 @@ static const gchar sql_oracle_dblinks[] =
 "select owner,db_link object_name, created, username, \
 host, owner dblink_type,created last_ddl_time \
 from all_db_links \
-where owner like :owner \
+where owner like UPPER(:owner) \
 and db_link like :name";
 
 
