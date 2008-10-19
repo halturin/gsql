@@ -60,8 +60,11 @@ am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	engine_session.lo engine_menu.lo engine_menucb.lo \
 	engine_conf.lo engine_confcb.lo engine_stock.lo oracle.lo \
 	oracle_var.lo oracle_cursor.lo nav_tree__tables.lo \
-	nav_tree__tables_cb.lo nav_objects.lo nav_tree__columns.lo \
-	nav_tree__constraints.lo nav_tree__indexes.lo
+	nav_objects.lo nav_tree__columns.lo nav_tree__constraints.lo \
+	nav_tree__indexes.lo nav_tree__triggers.lo nav_tree__depend.lo \
+	nav_tree__mviews.lo nav_tree__schemas.lo \
+	nav_tree__procedures.lo nav_tree__arguments.lo \
+	nav_tree__packages.lo
 libgsqlengine_oracle_la_OBJECTS =  \
 	$(am_libgsqlengine_oracle_la_OBJECTS)
 libgsqlengine_oracle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -278,22 +281,33 @@ libgsqlengine_oracle_la_SOURCES = \
 	oracle.h          \
 	nav_objects.h          \
 	nav_sql.h          \
-	nav_tree_static.h          \
 	oracle_var.c          \
 	oracle_var.h          \
 	oracle_cursor.c          \
 	oracle_cursor.h          \
 	nav_tree__tables.c          \
 	nav_tree__tables.h          \
-	nav_tree__tables_cb.c          \
-	nav_tree__tables_cb.h          \
 	nav_objects.c          \
 	nav_tree__columns.c          \
 	nav_tree__columns.h          \
 	nav_tree__constraints.c          \
 	nav_tree__constraints.h          \
 	nav_tree__indexes.c          \
-	nav_tree__indexes.h
+	nav_tree__indexes.h          \
+	nav_tree__triggers.h          \
+	nav_tree__triggers.c          \
+	nav_tree__depend.c          \
+	nav_tree__depend.h          \
+	nav_tree__mviews.c          \
+	nav_tree__mviews.h          \
+	nav_tree__schemas.c          \
+	nav_tree__schemas.h          \
+	nav_tree__procedures.c          \
+	nav_tree__procedures.h          \
+	nav_tree__arguments.c          \
+	nav_tree__arguments.h          \
+	nav_tree__packages.c          \
+	nav_tree__packages.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
@@ -387,11 +401,17 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine_session.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine_stock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_objects.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__arguments.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__columns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__constraints.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__depend.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__indexes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__mviews.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__packages.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__procedures.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__schemas.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tables.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tables_cb.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__triggers.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle_var.Plo@am__quote@

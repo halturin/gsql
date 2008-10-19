@@ -1,9 +1,9 @@
 /***************************************************************************
- *            nav_tree__tables_cb.h
+ *            nav_tree__packages.h
  *
- *  Mon Nov  5 22:59:59 2007
- *  Copyright  2006  Halturin Taras
- *  halturin@gmail.com
+ *  Thu Oct 18 23:32:14 2007
+ *  Copyright  2007  Taras Halturin
+ *  <halturin@gmail.com>
  ****************************************************************************/
 
 /*
@@ -22,40 +22,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
-#ifndef _NAV_TREE__TABLES_CB_H
-#define _NAV_TREE__TABLES_CB_H
+#ifndef _NAV_TREE__PACKAGES_H
+#define _NAV_TREE__PACKAGES_H
 
 #include <glib.h>
-#include <gtk/gtk.h>
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
 void
-on_nav_tree_popup_tables_create (GtkMenuItem * menuitem, 
-								 gpointer user_data);
-
-void
-on_nav_tree_popup_tables_drop (GtkMenuItem * menuitem, 
-								 gpointer user_data);
-
-void
-on_nav_tree_popup_tables_alter (GtkMenuItem * menuitem, 
-								 gpointer user_data);
-
-void
-on_nav_tree_popup_tables_browse (GtkMenuItem * menuitem, 
-								 gpointer user_data);
-
-void
-on_nav_tree_popup_tables_browse_update (GtkMenuItem * menuitem, 
-								 gpointer user_data);
-
-void
-on_nav_tree_popup_tables_analyze (GtkMenuItem * menuitem, 
-								 gpointer user_data);
+nav_tree_refresh_packages (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter);
 
 G_END_DECLS
 
-#endif /* _NAV_TREE__TABLES_CB_H */
+#endif /* _NAV_TREE__PACKAGES_H */
 
  

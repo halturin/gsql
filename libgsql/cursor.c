@@ -141,7 +141,7 @@ gsql_cursor_new (GSQLSession *session, gchar *sql)
  * @btype: A #GSQLCursorBindType (by position or by name)
  * @Varargs: pairs of type (GType) and value, terminated with -1
  *
- * Run the cursor statement with binds. Draw attention to the args in example usage:
+ * Run the cursor statement with binds. Pay attention to the args in example usage:
  *
  *	   gsql_cursor_open_with_bind (cursor, 
  *								   FALSE, 

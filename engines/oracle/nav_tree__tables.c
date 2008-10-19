@@ -41,6 +41,9 @@
 #include "nav_tree__columns.h"
 #include "nav_tree__constraints.h"
 #include "nav_tree__indexes.h"
+#include "nav_tree__triggers.h"
+#include "nav_tree__depend.h"
+#include "nav_tree__mviews.h"
 
 static void nav_tree_tables_event (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
@@ -87,10 +90,10 @@ static GSQLNavigationItem tables[] = {
 	{	TRIGGERS_ID,
 		GSQL_STOCK_TRIGGERS,
 		N_("Triggers"), 
-		NULL,						// sql
+		sql_oracle_triggers_owner,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_triggers,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
@@ -107,30 +110,30 @@ static GSQLNavigationItem tables[] = {
 	{	MVIEWS_LOG_ID,
 		GSQLE_ORACLE_STOCK_MVIEW_LOGS,
 		N_("MView Logs"), 
-		NULL,						// sql
+		sql_oracle_mview_logs_owner,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_mviews,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
 	{	DEPENDSON_ID,
 		GSQLE_ORACLE_STOCK_DEPENDS_ON,
 		N_("Depends On"), 
-		NULL,						// sql
+		sql_oracle_depends_on,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_depend,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
 	{	DEPENDENT_ID,
 		GSQLE_ORACLE_STOCK_DEPENDENT,
 		N_("Dependent Objects"), 
-		NULL,						// sql
+		sql_oracle_dependent_objects,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_depend,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0}					// child, childs
 };
@@ -221,6 +224,9 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	
 	session = gsql_session_get_active ();
 	
+	if (strncmp (owner, gsql_session_get_username (session), 64))
+		sql = (gchar *) sql_oracle_tables;
+	
 	cursor = gsql_cursor_new (session, sql);
 	
 	if (gsql_cursor_open_with_bind(cursor, 
@@ -258,8 +264,8 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 			name = (gchar *) var->value;
 			// make a key for a hash of details
 			memset (key, 0, 256);
-			g_snprintf (key, 255, "%s%d%s",
-				   name, TABLE_ID, name);
+			g_snprintf (key, 255, "%x%s%d%s",
+						session, owner, TABLE_ID, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);
@@ -547,7 +553,7 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 	content = gsql_content_new (session, GTK_STOCK_FILE);
 	
 	source = (GtkWidget *) gsql_source_editor_new (sql);
-	editor = gsql_editor_new (source);
+	editor = gsql_editor_new (session, source);
 	gsql_content_set_child (content, GTK_WIDGET (editor));
 	
 	workspace = gsql_session_get_workspace (session);

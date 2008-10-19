@@ -114,6 +114,8 @@ static GtkToggleActionEntry sqleditor_toggle_acts[] =
 
 struct _GSQLEditorPrivate
 {
+	GSQLSession *session;
+	
 	GtkUIManager   *ui;
 	
 	GtkWidget *source;
@@ -185,11 +187,11 @@ gsql_editor_get_type ()
 	}
 	
 	return obj_type;	
-};
+}
 
 
 GSQLEditor *
-gsql_editor_new (GtkWidget *source)
+gsql_editor_new (GSQLSession *session, GtkWidget *source)
 {
 	GSQL_TRACE_FUNC;
 
@@ -214,6 +216,18 @@ gsql_editor_new (GtkWidget *source)
 	GtkWidget *custom_limit_checkbutton;
 	GSQLEditorFActionCB f_action;
 	guint limit_step, limit_max;
+	
+	if (!GSQL_IS_SESSION (session))
+	{
+		session = gsql_session_get_active ();
+		
+		if (!session)
+		{
+			GSQL_DEBUG ("Have no active session");
+			return NULL;
+		}
+	}
+	
 	
 	if (source == NULL)
 		source = gsql_source_editor_new (NULL);
@@ -410,6 +424,7 @@ gsql_editor_new (GtkWidget *source)
 	g_signal_connect (G_OBJECT (editor), "parent-set", 
 					  G_CALLBACK (on_editor_set_parent),
 					  NULL);
+	editor->private->session = session;
 	
 	return editor;
 }
@@ -699,7 +714,7 @@ do_sql_run (GSQLEditor *sqleditor)
 	GTimer *timer;
 	gulong  microsec;
 	
-	session = gsql_session_get_active ();
+	session = sqleditor->private->session;
 	workspace = gsql_session_get_workspace (session);
 	
 	source = GTK_SOURCE_VIEW (sqleditor->private->source);

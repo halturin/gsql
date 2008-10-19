@@ -355,15 +355,14 @@ oracle_check_error (GSQLCursor *cursor, gint ret)
 			OCIErrorGet ((dvoid *) spec_cursor->errhp, (ub4) 1, (text *) NULL, &errcode,
                         msgbuf, (ub4) GSQL_MESSAGE_LEN, (ub4) OCI_HTYPE_ERROR);
 			
-			pos =  g_utf8_normalize (msgbuf, GSQL_MESSAGE_LEN, G_NORMALIZE_DEFAULT);
+			pos = g_strrstr (msgbuf, "\n");
+			if (pos) *pos = 0;
 			
-			mess = gsql_utils_escape_string (pos);
+			mess = gsql_utils_escape_string (msgbuf);
 			
 			gsql_message_add (workspace, GSQL_MESSAGE_WARNING, mess);
 			
 			g_free (mess);
-			g_free (pos);
-
 			break;
 		
 		case OCI_ERROR:                 
@@ -373,7 +372,7 @@ oracle_check_error (GSQLCursor *cursor, gint ret)
 						 msgbuf, (ub4) GSQL_MESSAGE_LEN, (ub4) OCI_HTYPE_ERROR);
 
 			pos = g_strrstr (msgbuf, "\n");
-			if (pos != NULL ) *pos = 0;
+			if (pos) *pos = 0;
 
 			if ((errcode == 1403)||(errcode == 100)) // No data found (sql/ansi mode)
 			{

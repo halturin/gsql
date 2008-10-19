@@ -180,7 +180,7 @@ gsql_files_open_file (GSQLSession *session, gchar *file, gchar *encoding)
 	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (sbuffer), &iter);
 	gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (sbuffer), &iter);
 	
-	editor = gsql_editor_new (source);
+	editor = gsql_editor_new (session, source);
 	
 	content = gsql_content_new (session, GTK_STOCK_FILE);
 	gsql_content_set_child (content, GTK_WIDGET (editor));

@@ -195,6 +195,7 @@ gsql_workspace_new (GSQLSession *session)
 	//	'Details' page: icons column
 	
 	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	renderer = gtk_cell_renderer_pixbuf_new();
 	
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
@@ -204,15 +205,16 @@ gsql_workspace_new (GSQLSession *session)
 	
 	//	'Details' page: attribute column
 	
-	renderer = gtk_cell_renderer_text_new();
+	renderer = gtk_cell_renderer_text_new();						   
 	column = gtk_tree_view_column_new_with_attributes (_("Attribute"),
 						renderer,
 						NULL);
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	
 	g_object_set(renderer,
 					"wrap-mode", PANGO_WRAP_WORD,
-				 	"wrap-width", 500,
+				 	//"wrap-width", 500,
 					NULL);
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", 1);
 	
@@ -222,10 +224,17 @@ gsql_workspace_new (GSQLSession *session)
 	//  'Details' page: value column
 	
 	renderer = gtk_cell_renderer_text_new();
+	g_object_set(renderer,
+					"wrap-mode", PANGO_WRAP_WORD,
+				 	"wrap-width", 500,
+					NULL);
+	
 	column = gtk_tree_view_column_new_with_attributes (_("Value"),
 						renderer,
 						NULL);
 	gtk_tree_view_column_add_attribute (column, renderer, "markup", 2);
+	gtk_tree_view_column_set_resizable (column, TRUE);
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	
 	gtk_tree_view_append_column (GTK_TREE_VIEW (workspace->private->details_page), 
 								 column);
@@ -239,7 +248,8 @@ gsql_workspace_new (GSQLSession *session)
 	
 	gtk_list_store_set(GTK_LIST_STORE(lstore), &iter,
 							   0, GTK_STOCK_INFO,
-							   1, N_(
+							   1, " ",
+							   2, N_(
 		"In this area a detailed information about the selected object from"
 		" the tree of database objects is displayed. In case when a class of"
 		" objects is selected, e.g. Triggers, a list of objects will be displayed."

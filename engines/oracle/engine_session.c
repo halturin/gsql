@@ -31,7 +31,7 @@
 #include <string.h>
 #include "engine_session.h"
 #include "engine_menu.h"
-#include "nav_tree_static.h"
+#include "nav_tree__schemas.h"
 
 
 static void on_session_close (GSQLSession *session, gpointer user_data);
@@ -118,15 +118,11 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 										   NULL);
 	session->spec = spec;
 	
-	/* 
-	 I know, this is the hack, but i think the 'workaround' sounds better :).
-	 It is need for the cursor run at this place.
-	 However the variable 'session->engine' will set to the original value.
-	 */
-	// <workaround>
+	GSQL_FIXME;
+	/* <workaround> */
 	engine = g_object_get_data (G_OBJECT (logon_widget), "engine");
 	session->engine = engine;
-	// </workaround>
+	/* </workaround> */
 	
 	cursor = gsql_cursor_new (session, sql);
 	c_state = gsql_cursor_open (cursor, FALSE); 
@@ -152,8 +148,9 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	workspace = gsql_workspace_new (session);
 	navigation = gsql_workspace_get_navigation (workspace);
 	
-	gsql_navigation_set_root (navigation, GSQLE_ORACLE_STOCK_ORACLE, g_strdup (username), 
-							  root_objects, G_N_ELEMENTS (root_objects));
+	nav_tree_set_root (navigation, username);
+	
+	
 	
 	g_signal_connect (G_OBJECT (session), "close",
 					  G_CALLBACK (on_session_close), session);

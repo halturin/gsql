@@ -71,7 +71,7 @@ G_BEGIN_DECLS
 GType gsql_editor_get_type (void);
 
 GSQLEditor *
-gsql_editor_new (GtkWidget *source);
+gsql_editor_new (GSQLSession *session, GtkWidget *source);
 
 void
 gsql_editor_run_sql (GSQLEditor *editor);

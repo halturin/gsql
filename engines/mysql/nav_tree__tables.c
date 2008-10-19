@@ -515,7 +515,7 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 	content = gsql_content_new (session, GTK_STOCK_FILE);
 	
 	source = (GtkWidget *) gsql_source_editor_new (sql);
-	editor = gsql_editor_new (source);
+	editor = gsql_editor_new (session, source);
 	gsql_content_set_child (content, GTK_WIDGET (editor));
 	
 	workspace = gsql_session_get_workspace (session);

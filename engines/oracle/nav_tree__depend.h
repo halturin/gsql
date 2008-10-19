@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_objects.h
+ *            nav_tree__depends_on.h
  *
- *  Mon Sep 17 00:41:07 2007
+ *  Thu Oct 11 00:09:25 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -22,69 +22,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
-#ifndef _NAV_OBJECTS_H
-#define _NAV_OBJECTS_H
+#ifndef _NAV_TREE__DEPEND_H
+#define _NAV_TREE__DEPEND_H
 
 #include <glib.h>
-
-enum {
-
-	MY_SCHEMA_ID  = NAV_TREE_ROOT_ID + 1,
-	ALL_SCHEMAS_ID,
-	
-	USERS_ID,
-	USER_ID,
-	
-
-	TABLES_ID,
-	TABLE_ID,
-
-	COLUMNS_ID,
-	COLUMN_ID,
-	
-
-	CONSTRAINTS_ID,
-	CONSTRAINT_ID,
-	
-	VIEWS_ID,
-	VIEW_ID,
-	
-	INDEXES_ID,
-	INDEX_ID,
-	
-	TRIGGERS_ID,
-	TRIGGER_ID,
-	
-	PROCEDURES_ID,
-	PROCEDURE_ID,
-	
-	FUNCTIONS_ID,
-	FUNCTION_ID,
-	
-	PACKAGES_ID,
-	PACKAGE_ID,
-	
-	SEQUENCES_ID,
-	SEQUENCE_ID,
-	
-	PRIVILEGES_ID,
-	PRIVILEGE_ID,
-	
-	PROCESSES_ID,
-	PROCESS_ID,
-	
-	INSTANCE_PROPERTIES_ID,
-	SERVER_OPTIONS_ID,
-	
-	UNKNOWN_OBJECT_ID
-};
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
-void mysql_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store);
+void
+nav_tree_refresh_depend (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter);
 
 G_END_DECLS
 
-#endif /* _NAV_OBJECTS_H */
+#endif /* _NAV_TREE__DEPEND_H */
 
  

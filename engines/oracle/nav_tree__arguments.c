@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_tree__constraints.c
+ *            nav_tree__arguments.c
  *
- *  Mon Oct 15 00:15:25 2007
+ *  Tue Oct 16 01:33:13 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -21,7 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
+
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <string.h>
@@ -32,26 +32,12 @@
 #include <libgsql/cvariable.h>
 #include "nav_objects.h"
 #include "engine_stock.h"
-#include "nav_tree__columns.h"
 #include "nav_sql.h"
 
-static GSQLNavigationItem constraints[] = {
-	{	COLUMNS_ID,
-		GSQL_STOCK_COLUMNS,
-		N_("Columns"), 
-		sql_oracle_constraints_columns,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		nav_tree_refresh_columns,						// expand_handler
-		NULL,						// event_handler
-		NULL, 0}
-};
-
-
 void
-nav_tree_refresh_constraints (GSQLNavigation *navigation,
-						 	GtkTreeView *tv,
-						 	GtkTreeIter *iter)
+nav_tree_refresh_arguments (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter)
 {
 	GSQL_TRACE_FUNC;
 
@@ -64,20 +50,21 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 	gint 		id;
 	gint		i,n;
 	GtkTreeIter child;
-	GtkTreeIter parent;
 	GtkTreeIter child_fake;
 	GtkTreeIter	child_last;
-	GSQLCursor *cursor;
-	GSQLVariable *var, *var_t;
+	GtkTreeIter parent;
 	GSQLSession *session;
-	GSQLWorkspace *workspace;
 	GSQLCursorState state;
+	GSQLCursor *cursor;
 	GtkListStore *details;
+	GSQLVariable *var, *var_t;
 	gchar *name;
 	gchar key[256];
-	gchar *stock = NULL;
-	gchar *tbl = "%";
 	gchar *parent_realname = NULL;
+	gchar *parent_type = NULL;
+	gchar *stock = GSQL_STOCK_ARGUMENTS;
+	gint  i_type;
+
 	
 	model = gtk_tree_view_get_model(tv);
 	n = gtk_tree_model_iter_n_children(model, iter);
@@ -93,15 +80,14 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_REALNAME, 
 						&realname, -1);
+	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_SQL, 
 						&sql, -1);
-	g_return_if_fail (sql != NULL);
 	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_OWNER, 
 						&owner, -1);
-	GSQL_DEBUG ("realname:[%s]    sql:[%s]   owner:[%s]", realname, sql, owner);
 	
 	session = gsql_session_get_active ();
 	
@@ -117,27 +103,24 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 						GSQL_NAV_TREE_REALNAME, 
 						&parent_realname, -1);
 	
-	if (strncmp (owner, gsql_session_get_username (session), 64))
+	switch (id)
 	{
-		sql = (gchar *) sql_oracle_constraints;
+		case FUNCTION_ID:
+			parent_type = "FUNCTION";
+			break;
 		
-		if ((id == TABLE_ID) && (parent_realname != NULL))
-		{
-			tbl = parent_realname;
-			sql = (gchar *) sql_oracle_table_constraints;
-		}
+		case PROCEDURE_ID:
+			parent_type = "PROCEDURE";
+			break;
 		
-	} else {
+		case PACKAGE_ID:
+			parent_type = "PACKAGE";
+			break;
 		
-		sql = (gchar *) sql_oracle_constraints_owner;
-		
-		if ((id == TABLE_ID) && (parent_realname != NULL))
-		{
-			tbl = parent_realname;
-			sql = (gchar *) sql_oracle_table_constraints_owner;
-		}
+		default:
+			GSQL_DEBUG ("Args list refresh - unknow ID");
+			return;
 	}
-
 	
 	cursor = gsql_cursor_new (session, sql);
 	state = gsql_cursor_open_with_bind (cursor,
@@ -145,12 +128,14 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 										GSQL_CURSOR_BIND_BY_NAME,
 										G_TYPE_STRING, ":owner",
 										G_TYPE_STRING, owner,
-										G_TYPE_STRING, ":name",
-										G_TYPE_STRING, tbl,
+										G_TYPE_STRING, ":object_name",
+										G_TYPE_STRING, parent_realname,
+										G_TYPE_STRING, ":object_type",
+										G_TYPE_STRING, parent_type,
 										-1);
 	
 	var = g_list_nth_data(cursor->var_list,0);
-	var_t = g_list_nth_data(cursor->var_list,1);
+	var_t = g_list_nth_data(cursor->var_list,0);
 	
 	if (state != GSQL_CURSOR_STATE_OPEN)
 	{
@@ -160,11 +145,36 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 	
 	i = 0;
 	
-	while (gsql_cursor_fetch (cursor, 1) > 0)
+	while (gsql_cursor_fetch (cursor, 1) > 0)	
 	{
-		i++;
+		i++;			
+
+		name = (gchar *) var->value;
 		
-		if ((var->value_type != G_TYPE_STRING) || (var_t->value_type != G_TYPE_STRING))
+		if (var_t->raw_to_value)
+		{
+			var_t->raw_to_value (var_t);
+		} else {
+			
+			GSQL_DEBUG ("Bug!!!");
+		}
+		
+		i_type = *(gint *) var_t->value;
+		
+		if (id == PACKAGE_ID)
+		{
+			switch (i_type)
+			{
+				case 0: // procedure entry
+					stock = GSQL_STOCK_PROCEDURES;
+					break;
+				case 1: // function entry
+					stock = GSQL_STOCK_FUNCTIONS;
+					break;
+			}
+		}
+		
+		if (var->value_type != G_TYPE_STRING)
 		{
 			GSQL_DEBUG ("The name of object should be a string (char *). Is the bug");
 			name = N_("Incorrect data");
@@ -172,44 +182,17 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 			name = (gchar *) var->value;
 			// make a key for a hash of details
 			memset (key, 0, 256);
-			g_snprintf (key, 255, "%x%s%d%s",
-				   session, owner, CONSTRAINT_ID, name);
+			g_snprintf (key, 256, "%x%s%d%s%s",
+				   session, owner, ARGUMENT_ID, parent_realname, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);
 		}
 
-
-		switch (*(gchar *) var_t->value)
-		{
-			case 'R':
-				GSQL_DEBUG ("Constraint type: c_type = R (foreign key)");
-				stock = GSQL_STOCK_CONSTRAINT_F;
-				break;
-
-			case 'P':
-				GSQL_DEBUG ("Constraint type: c_type = P (primary key)");
-				stock = GSQL_STOCK_CONSTRAINT_P;
-				break;
-
-			case 'C':
-				GSQL_DEBUG ("Constraint type: c_type = C (check key)");
-				stock = GSQL_STOCK_CONSTRAINT_C;
-				break;
-
-			case 'U':
-				GSQL_DEBUG ("Constraint type: c_type = U (unique key)");
-				stock = GSQL_STOCK_CONSTRAINT_U;
-				break;
-
-			default:
-				GSQL_DEBUG ("Constraint type: c_type = ??? (wtf?)");
-				stock = GSQL_STOCK_CONSTRAINT;
-		}
 		
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-					GSQL_NAV_TREE_ID,			CONSTRAINT_ID,
+					GSQL_NAV_TREE_ID,			ARGUMENT_ID,
 					GSQL_NAV_TREE_OWNER,		owner,
 					GSQL_NAV_TREE_IMAGE,		stock,
 					GSQL_NAV_TREE_NAME,			name,
@@ -220,30 +203,12 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
 					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
 					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
-					GSQL_NAV_TREE_STRUCT, constraints,
+					GSQL_NAV_TREE_STRUCT, NULL,
 					GSQL_NAV_TREE_DETAILS, details,
-					GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(constraints),
+					GSQL_NAV_TREE_NUM_ITEMS, 0,
 					-1);
-		
-
-		gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
-		gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
-				GSQL_NAV_TREE_ID,				-1,
-				GSQL_NAV_TREE_IMAGE,			NULL,
-				GSQL_NAV_TREE_NAME,				N_("Processing..."),
-				GSQL_NAV_TREE_REALNAME,			NULL,
-				GSQL_NAV_TREE_ITEM_INFO,		NULL,
-				GSQL_NAV_TREE_SQL,				NULL,
-				GSQL_NAV_TREE_OBJECT_POPUP,		NULL,
-				GSQL_NAV_TREE_OBJECT_HANDLER,	NULL,
-				GSQL_NAV_TREE_EXPAND_HANDLER,	NULL,
-				GSQL_NAV_TREE_EVENT_HANDLER,	NULL,
-				GSQL_NAV_TREE_STRUCT,			NULL,
-				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
-				-1);
 	}
 	
-		
 	GSQL_DEBUG ("Items fetched: [%d]", i);
 	
 	if (i > 0)
@@ -261,4 +226,3 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 	
 	gsql_cursor_close (cursor);
 }
-

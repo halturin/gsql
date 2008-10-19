@@ -191,8 +191,8 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 			name = (gchar *) var->value;
 			// make a key for a hash of details
 			memset (key, 0, 256);
-			g_snprintf (key, 255, "%s%d%s",
-				   name, COLUMN_ID, name);
+			g_snprintf (key, 255, "%d%s%d%s",
+				   id, owner, COLUMN_ID, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);

@@ -30,7 +30,7 @@
 #include <libgsql/stock.h>
 #include <libgsql/session.h>
 #include <libgsql/navigation.h>
-#include "oracle_var.h"
+#include <libgsql/cvariable.h>
 #include "nav_objects.h"
 #include "engine_stock.h"
 #include "nav_tree__columns.h"
@@ -124,8 +124,6 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 		
 	} else {
 		
-		sql = (gchar *) sql_oracle_indexes;
-		
 		if ((id == TABLE_ID) && (parent_realname != NULL))
 		{
 			tbl = parent_realname;
@@ -167,8 +165,8 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 			name = (gchar *) var->value;
 			// make a key for a hash of details
 			memset (key, 0, 256);
-			g_snprintf (key, 255, "%s%d%s",
-				   owner, INDEX_ID, name);
+			g_snprintf (key, 255, "%x%s%d%d%s",
+						session, owner, id, INDEX_ID, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);

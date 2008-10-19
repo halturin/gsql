@@ -142,7 +142,7 @@ static const gchar sql_oracle_table_triggers[] =
 trigger_type, triggering_event, base_object_type, \
 table_owner,table_name, status \
 from sys.all_triggers \
-where table_owner=UPPER(:owner) and table_name=:object_name ";
+where table_owner=UPPER(:owner) and table_name=:name ";
 
 static const gchar sql_oracle_table_indexes[] = 
 "select index_name object_name, UPPER(:owner) owner, \
@@ -229,7 +229,7 @@ static const gchar sql_oracle_triggers_owner[] =
 a.status, b.trigger_type, b.triggering_event, b.base_object_type, \
 b.table_owner,b.table_name, b.status \
 from user_objects a,user_triggers b \
-where b.trigger_name like :object_name \
+where b.trigger_name like :name \
 and a.object_name=b.trigger_name \
  and a.object_type='TRIGGER' \
 and b.trigger_name not in (select object_name \
@@ -257,7 +257,7 @@ from (select a.owner,a.object_name,a.object_id,a.created,a.last_ddl_time,\
 	  and a.object_type='TRIGGER') a, \
      sys.dba_triggers b \
 where b.owner like UPPER(:owner) \
-and b.trigger_name like :object_name \
+and b.trigger_name like :name \
 and a.object_name=b.trigger_name \
 and b.trigger_name not in (select object_name \
 			from DBA_recyclebin  \
@@ -269,8 +269,8 @@ static const gchar sql_oracle_trigger_columns[] =
 a.column_list,a.trigger_owner object_owner, \
 a.trigger_name object_name \
 from sys.dba_trigger_cols a \
-where a.trigger_owner=:1 \
-and a.trigger_name=:2";
+where a.trigger_owner=UPPER(:owner) \
+and a.trigger_name=:nane";
 
 /************ Depends On *************/
 
@@ -309,7 +309,10 @@ decode(a.object_type, \
 from sys.all_objects a \
 where a.object_id in (select DISTINCT referenced_object_id object_id \
 						from public_dependency \
-						where object_id=:obj_id) \
+						where object_id=(select object_id \
+				 from sys.all_objects \
+				 where owner = UPPER (:owner) \
+				 and object_name=:name)) \
 order by object_type, a.object_name";
 
 /************ Dependent Objects *************/
@@ -348,7 +351,10 @@ decode(a.object_type, \
 'CONSUMER GROUP',29,0) object_type \
 from sys.all_objects a \
 where a.object_id in (select DISTINCT object_id from public_dependency \
-where referenced_object_id = :obj_id) \
+where referenced_object_id = (select object_id \
+				 from sys.all_objects \
+				 where owner = UPPER (:owner) \
+				 and object_name=:name)) \
 order by object_type, a.object_name";
 
 
@@ -413,8 +419,8 @@ from all_arguments \
 where object_id = ( select a.object_id \
 					from sys.all_objects a \
 					where a.owner = UPPER(:owner) \
-					and object_name = :name \
-					and object_type = :type ) \
+					and object_name = :object_name \
+					and object_type = :object_type ) \
 and data_type is not null \
 order by sequence";
 
@@ -426,8 +432,8 @@ from all_arguments \
 where object_id = ( select a.object_id \
 					from sys.all_objects a \
 					where a.owner like UPPER(:owner) \
-					and object_name like :name \
-					and object_type=:type ) \
+					and object_name like :object_name \
+					and object_type=:object_type ) \
 group by object_name,overload";
 
 
