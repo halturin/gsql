@@ -312,7 +312,8 @@ where a.object_id in (select DISTINCT referenced_object_id object_id \
 						where object_id=(select object_id \
 				 from sys.all_objects \
 				 where owner = UPPER (:owner) \
-				 and object_name=:name)) \
+				 and object_name=:object_name \
+				 and object_type like :object_type )) \
 order by object_type, a.object_name";
 
 /************ Dependent Objects *************/
@@ -354,7 +355,8 @@ where a.object_id in (select DISTINCT object_id from public_dependency \
 where referenced_object_id = (select object_id \
 				 from sys.all_objects \
 				 where owner = UPPER (:owner) \
-				 and object_name=:name)) \
+				 and object_name=:object_name \
+				 and object_type like :object_type)) \
 order by object_type, a.object_name";
 
 

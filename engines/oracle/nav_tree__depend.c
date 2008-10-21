@@ -105,14 +105,27 @@ nav_tree_refresh_depend (GSQLNavigation *navigation,
 						GSQL_NAV_TREE_REALNAME, 
 						&parent_realname, -1);
 	
+	switch (id)
+	{
+		case PACKAGE_ID:
+			tbl = "PACKAGE";
+			break;
+			
+		case PACKAGE_BODY_ID:
+			tbl = "PACKAGE BODY";
+			break;
+	}
+	
 	cursor = gsql_cursor_new (session, sql);
 	state = gsql_cursor_open_with_bind (cursor,
 										FALSE,
 										GSQL_CURSOR_BIND_BY_NAME,
 										G_TYPE_STRING, ":owner",
 										G_TYPE_STRING, owner,
-										G_TYPE_STRING, ":name",
+										G_TYPE_STRING, ":object_name",
 										G_TYPE_STRING, parent_realname,
+										G_TYPE_STRING, ":object_type",
+										G_TYPE_STRING, tbl,
 										-1);
 	
 	if (state != GSQL_CURSOR_STATE_OPEN)

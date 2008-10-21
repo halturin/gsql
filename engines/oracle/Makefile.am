@@ -57,7 +57,19 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__arguments.c          \
 	nav_tree__arguments.h          \
 	nav_tree__packages.c          \
-	nav_tree__packages.h
+	nav_tree__packages.h          \
+	nav_tree__sequences.c          \
+	nav_tree__sequences.h          \
+	nav_tree__synonyms.c          \
+	nav_tree__synonyms.h          \
+	nav_tree__dblinks.c          \
+	nav_tree__dblinks.h          \
+	nav_tree__libraries.c          \
+	nav_tree__libraries.h          \
+	nav_tree__privileges.c          \
+	nav_tree__privileges.h          \
+	nav_tree__roles.c          \
+	nav_tree__roles.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \

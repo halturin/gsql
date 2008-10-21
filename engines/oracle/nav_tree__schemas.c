@@ -43,6 +43,12 @@
 #include "nav_tree__schemas.h"
 #include "nav_tree__procedures.h"
 #include "nav_tree__packages.h"
+#include "nav_tree__sequences.h"
+#include "nav_tree__synonyms.h"
+#include "nav_tree__dblinks.h"
+#include "nav_tree__libraries.h"
+#include "nav_tree__privileges.h"
+#include "nav_tree__roles.h"
 
 /*
 #include "nav_tree__users.h"
@@ -53,15 +59,15 @@
 
 
 
-#include "nav_tree__sequences.h"
 
-#include "nav_tree__synonyms.h"
-#include "nav_tree__dblinks.h"
-#include "nav_tree__libraries.h"
+
+
+
+
 #include "nav_tree__operators.h"
 #include "nav_tree__indextypes.h"
-#include "nav_tree__roles.h"
-#include "nav_tree__privileges.h"
+
+
 #include "nav_tree__tablespaces.h"
 #include "nav_tree__srv_inst.h"
 #include "nav_tree__recycle.h"
@@ -151,7 +157,8 @@ static GSQLNavigationItem users_objects[] = {
 		GSQL_STOCK_PROCEDURES, 
 		N_("Procedures"), 
 		sql_oracle_users_objects_owner, 
-		NULL, 
+		NULL,
+		NULL,
 		(GSQLNavigationHandler) nav_tree_refresh_procedures,
 		NULL,
 		NULL, 0 },
@@ -189,10 +196,10 @@ static GSQLNavigationItem users_objects[] = {
 	{	SEQUENCES_ID, 
 		GSQL_STOCK_SEQUENCES, 
 		N_("Sequences"), 
-		NULL, //sql_oracle_users_objects_owner, 
+		sql_oracle_users_objects_owner, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_sequences,
+		(GSQLNavigationHandler) nav_tree_refresh_sequences,
 		NULL,
 		NULL, 0 },
 		
@@ -214,20 +221,20 @@ static GSQLNavigationItem users_objects[] = {
 	{	SYNONYMS_ID, 
 		GSQLE_ORACLE_STOCK_SYNONYMS, 
 		N_("Synonyms"), 
-		NULL, //sql_oracle_synonyms_owner, 
+		sql_oracle_synonyms_owner, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_synonyms,
+		(GSQLNavigationHandler) nav_tree_refresh_synonyms,
 		NULL,
 		NULL, 0 },
 		
 	{	DATABASE_LINKS_ID, 
 		GSQLE_ORACLE_STOCK_DB_LINK, 
 		N_("Database Links"), 
-		NULL, //sql_oracle_dblinks, 
+		sql_oracle_dblinks, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_dblinks,
+		(GSQLNavigationHandler) nav_tree_refresh_dblinks,
 		NULL,
 		NULL, 0 },
 		
@@ -249,10 +256,10 @@ static GSQLNavigationItem users_objects[] = {
 	{	LIBRARIES_ID, 
 		GSQLE_ORACLE_STOCK_LIBRARIES, 
 		N_("Libraries"), 
-		NULL,//sql_oracle_users_objects_owner, 
+		sql_oracle_users_objects_owner, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_libraries,
+		(GSQLNavigationHandler) nav_tree_refresh_libraries,
 		NULL,
 		NULL, 0 },
 		
@@ -319,20 +326,20 @@ static GSQLNavigationItem root_objects[] = {
 	{	SESSION_PRIVILEGES_ID, 
 		GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES, 
 		N_("Session Privileges"), 
-		NULL, //sql_oracle_session_privileges, 
+		sql_oracle_session_privileges, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_privileges,
+		(GSQLNavigationHandler) nav_tree_refresh_privileges,
 		NULL,
 		NULL, 0 },
 		
 	{	ENABLED_ROLES_ID,
 		GSQLE_ORACLE_STOCK_ENABLED_ROLES,
 		N_("Enabled Roles"), 
-		NULL, //sql_oracle_enabled_roles, 
+		sql_oracle_enabled_roles, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_roles,
+		(GSQLNavigationHandler) nav_tree_refresh_roles,
 		NULL,
 		NULL, 0 },
 		
@@ -398,10 +405,10 @@ static GSQLNavigationItem root_objects[] = {
 	{	ROLES_ID,
 		GSQLE_ORACLE_STOCK_ROLES,
 		N_("Roles"), 
-		NULL, //sql_oracle_roles, 
+		sql_oracle_roles, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_roles,
+		(GSQLNavigationHandler) nav_tree_refresh_roles,
 		NULL,
 		NULL, 0 },
 		

@@ -64,7 +64,10 @@ am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	nav_tree__indexes.lo nav_tree__triggers.lo nav_tree__depend.lo \
 	nav_tree__mviews.lo nav_tree__schemas.lo \
 	nav_tree__procedures.lo nav_tree__arguments.lo \
-	nav_tree__packages.lo
+	nav_tree__packages.lo nav_tree__sequences.lo \
+	nav_tree__synonyms.lo nav_tree__dblinks.lo \
+	nav_tree__libraries.lo nav_tree__privileges.lo \
+	nav_tree__roles.lo
 libgsqlengine_oracle_la_OBJECTS =  \
 	$(am_libgsqlengine_oracle_la_OBJECTS)
 libgsqlengine_oracle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -307,7 +310,19 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__arguments.c          \
 	nav_tree__arguments.h          \
 	nav_tree__packages.c          \
-	nav_tree__packages.h
+	nav_tree__packages.h          \
+	nav_tree__sequences.c          \
+	nav_tree__sequences.h          \
+	nav_tree__synonyms.c          \
+	nav_tree__synonyms.h          \
+	nav_tree__dblinks.c          \
+	nav_tree__dblinks.h          \
+	nav_tree__libraries.c          \
+	nav_tree__libraries.h          \
+	nav_tree__privileges.c          \
+	nav_tree__privileges.h          \
+	nav_tree__roles.c          \
+	nav_tree__roles.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
@@ -404,12 +419,18 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__arguments.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__columns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__constraints.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__dblinks.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__depend.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__indexes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__libraries.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__mviews.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__packages.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__privileges.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__procedures.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__roles.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__schemas.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__sequences.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__synonyms.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tables.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__triggers.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle.Plo@am__quote@
