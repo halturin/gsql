@@ -69,7 +69,25 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__privileges.c          \
 	nav_tree__privileges.h          \
 	nav_tree__roles.c          \
-	nav_tree__roles.h
+	nav_tree__roles.h          \
+	nav_tree__resourcs.c          \
+	nav_tree__resourcs.h          \
+	nav_tree__tablespaces.c          \
+	nav_tree__tablespaces.h          \
+	nav_tree__users.c          \
+	nav_tree__users.h          \
+	nav_tree__srv_inst.c          \
+	nav_tree__srv_inst.h          \
+	nav_tree__rollback.c          \
+	nav_tree__rollback.h          \
+	nav_tree__redo_logs.c          \
+	nav_tree__redo_logs.h          \
+	nav_tree__recycle.c          \
+	nav_tree__recycle.h          \
+	nav_tree__operators.c          \
+	nav_tree__operators.h          \
+	nav_tree__indextypes.c          \
+	nav_tree__indextypes.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \

@@ -332,8 +332,10 @@ gsql_session_get_workspace (GSQLSession *session)
 		return session->private->workspace;
 	
 	else
-		
-		return active_session->private->workspace;
+		if (GSQL_IS_SESSION (active_session))
+			return active_session->private->workspace;
+		else 
+			return NULL;
 }
 
 

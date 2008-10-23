@@ -73,31 +73,36 @@ void
 on_empty_recycle_activate (GtkMenuItem * mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+	
+	GSQLSession *session;
+	GSQLCursor *cursor;
+	gchar *sql = "purge recyclebin";
+	
+	session = gsql_session_get_active ();
+	
+	cursor = gsql_cursor_new (session, sql);
+	
+	gsql_cursor_open (cursor, FALSE);
+	
+	gsql_cursor_close (cursor);
 
-	return;
-};
+}
  
 void
 on_job_manager_activate (GtkMenuItem * mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
-
-	return;
-};
+}
  
 void
 on_find_code_activate (GtkMenuItem * mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
-
-	return;
-};
+}
  
 void
 on_find_object_activate (GtkMenuItem * mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
+}
 
-	return;
-};
- 

@@ -67,7 +67,11 @@ am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	nav_tree__packages.lo nav_tree__sequences.lo \
 	nav_tree__synonyms.lo nav_tree__dblinks.lo \
 	nav_tree__libraries.lo nav_tree__privileges.lo \
-	nav_tree__roles.lo
+	nav_tree__roles.lo nav_tree__resourcs.lo \
+	nav_tree__tablespaces.lo nav_tree__users.lo \
+	nav_tree__srv_inst.lo nav_tree__rollback.lo \
+	nav_tree__redo_logs.lo nav_tree__recycle.lo \
+	nav_tree__operators.lo nav_tree__indextypes.lo
 libgsqlengine_oracle_la_OBJECTS =  \
 	$(am_libgsqlengine_oracle_la_OBJECTS)
 libgsqlengine_oracle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -322,7 +326,25 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__privileges.c          \
 	nav_tree__privileges.h          \
 	nav_tree__roles.c          \
-	nav_tree__roles.h
+	nav_tree__roles.h          \
+	nav_tree__resourcs.c          \
+	nav_tree__resourcs.h          \
+	nav_tree__tablespaces.c          \
+	nav_tree__tablespaces.h          \
+	nav_tree__users.c          \
+	nav_tree__users.h          \
+	nav_tree__srv_inst.c          \
+	nav_tree__srv_inst.h          \
+	nav_tree__rollback.c          \
+	nav_tree__rollback.h          \
+	nav_tree__redo_logs.c          \
+	nav_tree__redo_logs.h          \
+	nav_tree__recycle.c          \
+	nav_tree__recycle.h          \
+	nav_tree__operators.c          \
+	nav_tree__operators.h          \
+	nav_tree__indextypes.c          \
+	nav_tree__indextypes.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
@@ -422,17 +444,26 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__dblinks.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__depend.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__indexes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__indextypes.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__libraries.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__mviews.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__operators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__packages.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__privileges.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__procedures.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__recycle.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__redo_logs.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__resourcs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__roles.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__rollback.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__schemas.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__sequences.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__srv_inst.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__synonyms.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tables.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tablespaces.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__triggers.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__users.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle_var.Plo@am__quote@

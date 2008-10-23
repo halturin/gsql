@@ -174,7 +174,7 @@ nav_tree_refresh_procedures (GSQLNavigation *navigation,
 	
 	i = 0;
 	
-	while (gsql_cursor_fetch (cursor, 1) > 0)			
+	while (gsql_cursor_fetch (cursor, 1) > 0)
 	{
 		i++;
 		

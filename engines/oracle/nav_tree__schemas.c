@@ -49,50 +49,42 @@
 #include "nav_tree__libraries.h"
 #include "nav_tree__privileges.h"
 #include "nav_tree__roles.h"
-
-/*
+#include "nav_tree__tablespaces.h"
+#include "nav_tree__resourcs.h"
 #include "nav_tree__users.h"
-
-
-
-#include "nav_tree__views.h"
-
-
-
-
-
-
-
-
+#include "nav_tree__srv_inst.h"
+#include "nav_tree__rollback.h"
+#include "nav_tree__redo_logs.h"
+#include "nav_tree__recycle.h"
 #include "nav_tree__operators.h"
 #include "nav_tree__indextypes.h"
 
 
-#include "nav_tree__tablespaces.h"
-#include "nav_tree__srv_inst.h"
-#include "nav_tree__recycle.h"
-#include "nav_tree__rollback.h"
-#include "nav_tree__redo_logs.h"
+/*
+#include "nav_tree__views.h"
+
+
+
 */
 
 static GSQLNavigationItem current_instance[] = {
 	{	INSTANCE_PROPERTIES_ID,					// id
 		GSQLE_ORACLE_STOCK_INST_PROP,			// stock
 		N_("Instance Properties"),				// name
-		NULL,//sql_oracle_instance_props,			// sql
+		sql_oracle_instance_props,			// sql
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,	// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_srv_inst,	// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },
 		
 	{	SERVER_OPTIONS_ID,						// id
 		GSQLE_ORACLE_STOCK_SRV_OPTIONS,			// stock
 		N_("Server Options"),					// name
-		NULL, //sql_oracle_server_opts,			// sql
+		sql_oracle_server_opts,			// sql
 		NULL,									// object_popup
 		NULL,									// object_handler
-		NULL, //nav_tree_refresh_srv_inst,		// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_srv_inst,		// expand_handler
 		NULL,									// event_handler
 		NULL, 0}
 };
@@ -285,18 +277,20 @@ static GSQLNavigationItem users_objects[] = {
 	{	INDEX_TYPES_ID, 
 		GSQLE_ORACLE_STOCK_INDEX_TYPES, 
 		N_("Index Types"), 
-		NULL, //sql_oracle_users_objects_owner, 
+		sql_oracle_users_objects_owner,
+		NULL,
 		NULL, 
-		NULL, //nav_tree_refresh_indextypes,
+		(GSQLNavigationHandler) nav_tree_refresh_indextypes,
+		NULL,
 		NULL, 0 },
 		
 	{	OPERATORS_ID, 
 		GSQLE_ORACLE_STOCK_OPERATORS, 
 		N_("Operators"), 
-		NULL, //sql_oracle_users_objects_owner, 
+		sql_oracle_users_objects_owner, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_operators,
+		(GSQLNavigationHandler) nav_tree_refresh_operators,
 		NULL,
 		NULL, 0 },
 		
@@ -351,20 +345,20 @@ static GSQLNavigationItem root_objects[] = {
 	{	TABLESPACE_QUOTAS_ID,
 		GSQLE_ORACLE_STOCK_TABLESPC_QUOTAS,
 		N_("Tablespace Quotas"), 
-		NULL, //sql_oracle_tablespaces_quotas, 
+		sql_oracle_tablespaces_quotas, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_tablespaces,
+		(GSQLNavigationHandler) nav_tree_refresh_tablespaces,
 		NULL,
 		NULL, 0 },
 		
 	{	FREE_SPACE_ID,
 		GSQLE_ORACLE_STOCK_FREE_SPACE,
 		N_("Free Space"), 
-		NULL, //sql_oracle_tablespaces_free_space, 
+		sql_oracle_tablespaces_free_space, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_tablespaces,
+		(GSQLNavigationHandler) nav_tree_refresh_tablespaces,
 		NULL,
 		NULL, 0 },
 		
@@ -395,10 +389,10 @@ static GSQLNavigationItem root_objects[] = {
 	{	USERS_ID,
 		GSQL_STOCK_USERS,
 		N_("Users"), 
-		NULL, //sql_oracle_all_users, 
+		sql_oracle_all_users, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_users,
+		(GSQLNavigationHandler) nav_tree_refresh_users,
 		NULL,
 		NULL, 0 },
 		
@@ -420,30 +414,30 @@ static GSQLNavigationItem root_objects[] = {
 	{	TABLESPACES_ID,
 		GSQLE_ORACLE_STOCK_TABLESPCS,
 		N_("Tablespaces"), 
-		NULL, //sql_oracle_tablespaces, 
+		sql_oracle_tablespaces, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_tablespaces,
+		(GSQLNavigationHandler) nav_tree_refresh_tablespaces,
 		NULL,
 		NULL, 0 },
 		
 	{	ROLLBACK_SEGMENTS_ID,
 		GSQLE_ORACLE_STOCK_ROLLBACK_SEGS,
 		N_("Rollback Segments"), 
-		NULL, //sql_oracle_rollbacks, 
+		sql_oracle_rollbacks, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_rollbacks,
+		(GSQLNavigationHandler) nav_tree_refresh_rollbacks,
 		NULL,
 		NULL, 0 },
 		
 	{	REDO_LOG_GROUPS_ID,
 		GSQLE_ORACLE_STOCK_REDO_LOG_GROUPS,
 		N_("Redo Log Groups"), 
-		NULL, //sql_oracle_redo_log_groups, 
+		sql_oracle_redo_log_groups, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_redologs,
+		(GSQLNavigationHandler) nav_tree_refresh_redologs,
 		NULL,
 		NULL, 0 },
 		
@@ -460,10 +454,10 @@ static GSQLNavigationItem root_objects[] = {
 	{	RECYCLE_BIN_ID,
 		GSQLE_ORACLE_STOCK_RECYLE_BIN,
 		N_("Recycle Bin"), 
-		NULL,//sql_oracle_recycle_owner, 
+		sql_oracle_recycle_owner, 
 		NULL, 
 		NULL,
-		NULL,//nav_tree_refresh_recycle,
+		(GSQLNavigationHandler) nav_tree_refresh_recycle,
 		NULL,
 		NULL, 0 }
 };

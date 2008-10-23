@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_tree__roles.c
+ *            nav_tree__rollback.c
  *
- *  Sun Oct 21 20:08:35 2007
+ *  Sun Oct 28 18:17:21 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -34,44 +34,10 @@
 #include "engine_stock.h"
 #include "nav_sql.h"
 
-#include "nav_tree__privileges.h"
-#include "nav_tree__roles.h"
 
-static GSQLNavigationItem roles[] = {
-	
-	{	GRANTED_ROLES_ID,
-		GSQLE_ORACLE_STOCK_GRANTED_ROLES,
-		N_("Granted Roles"), 
-		sql_oracle_granted_roles,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_roles,							// expand_handler
-		NULL,						// event_handler
-		NULL, 0},
-	
-	{	SYSTEM_PRIVILEGES_ID,
-		GSQLE_ORACLE_STOCK_SYS_PRIVILEGES,
-		N_("System Privileges"), 
-		sql_oracle_system_privileges, 						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_privileges,					// expand_handler
-		NULL,						// event_handler
-		NULL, 0},
-	
-	{	OBJECT_PRIVILEGES_ID,
-		GSQLE_ORACLE_STOCK_OBJ_PRIVILEGES,
-		N_("Object Privileges"),
-		sql_oracle_object_privileges,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_privileges,					// expand_handler
-		NULL,						// event_handler
-		NULL, 0}
-};
-
+ 
 void
-nav_tree_refresh_roles (GSQLNavigation *navigation,
+nav_tree_refresh_rollbacks (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter)
 {
@@ -83,21 +49,18 @@ nav_tree_refresh_roles (GSQLNavigation *navigation,
 	gchar			*sql = NULL;
 	gchar			*realname = NULL;
 	gchar			*owner = NULL;
-	gint 		id, i_id;
+	gint 		id;
 	gint		i,n;
 	GtkTreeIter child;
 	GtkTreeIter child_fake;
 	GtkTreeIter	child_last;
 	GtkTreeIter parent;
 	GSQLCursor *cursor;
-	GSQLVariable *var;
-	GSQLSession *session;
 	GSQLCursorState state;
+	GSQLVariable *var, *var_owner, *var_status;
+	GSQLSession *session;
+	gchar *name = "%", *tmp, *status;
 	gchar key[256];
-	gchar *stock;
-	gchar *name = "%";
-	void *tree_struct;
-	void *tree_expand;
 	
 	model = gtk_tree_view_get_model(tv);
 	n = gtk_tree_model_iter_n_children(model, iter);
@@ -113,61 +76,26 @@ nav_tree_refresh_roles (GSQLNavigation *navigation,
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_REALNAME, 
 						&realname, -1);
+	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_SQL, 
 						&sql, -1);
-	
-	gtk_tree_model_get (model, iter,  
-						GSQL_NAV_TREE_OWNER, 
-						&owner, -1);
 
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_ID, 
 						&id, -1);
-	switch (id)
-	{
-		case ROLES_ID:
-			stock = GSQLE_ORACLE_STOCK_ROLES;
-			i_id = ROLE_ID;
-			n = G_N_ELEMENTS(roles);
-			tree_expand = NULL;
-			tree_struct = roles;
-			break;
 		
-		case ENABLED_ROLES_ID:
-			stock = GSQLE_ORACLE_STOCK_ENABLED_ROLES;
-			i_id = ENABLED_ROLE_ID;
-			n = G_N_ELEMENTS(roles);
-			tree_expand = NULL;
-			tree_struct = roles;
-			break;
-		
-		case GRANTED_ROLES_ID:
-			stock = GSQLE_ORACLE_STOCK_GRANTED_ROLES;
-			i_id = GRANTED_ROLE_ID;
-			tree_expand = nav_tree_refresh_roles;
-			tree_struct = NULL;
-			
-			gtk_tree_model_iter_parent (model, &parent, iter);
-			gtk_tree_model_get (model, &parent,  
-						GSQL_NAV_TREE_REALNAME, 
-						&name, -1);
-			break;
-		default:
-			printf ("undefined id of ROLE\n");
-			return;
-	}
+	GSQL_DEBUG ("sql: %s", sql);
 	
 	session = gsql_session_get_active ();
-	cursor = gsql_cursor_new (session, sql);
 	
+	cursor = gsql_cursor_new (session, sql);
 	state = gsql_cursor_open_with_bind (cursor,
 										FALSE,
 										GSQL_CURSOR_BIND_BY_NAME,
 										G_TYPE_STRING, ":name",
 										G_TYPE_STRING, name,
 										-1);
-	var = g_list_nth_data(cursor->var_list,0);
 	
 	if (state != GSQL_CURSOR_STATE_OPEN)
 	{
@@ -175,18 +103,25 @@ nav_tree_refresh_roles (GSQLNavigation *navigation,
 		return;		
 	}
 	
+	var = g_list_nth_data(cursor->var_list, 0);
+	var_owner = g_list_nth_data(cursor->var_list, 1);
+	var_status = g_list_nth_data(cursor->var_list, 2);
+	
 	i = 0;
 	
-	while (gsql_cursor_fetch (cursor, 1) > 0)			
+	while (gsql_cursor_fetch (cursor, 1) > 0)	
 	{
-		i++;		
-
+		i++;
+		
 		if (var->value_type != G_TYPE_STRING)
 		{
 			GSQL_DEBUG ("The name of object should be a string (char *). Is the bug");
 			name = N_("Incorrect data");
 		} else {
 			name = (gchar *) var->value;
+			owner = (gchar *) var_owner->value;
+			status = (gchar *) var_status->value;
+			
 			// make a key for a hash of details
 			memset (key, 0, 256);
 			g_snprintf (key, 255, "%x%s%d%s",
@@ -195,42 +130,28 @@ nav_tree_refresh_roles (GSQLNavigation *navigation,
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);
 		}
-
+		
+		tmp = g_strdup_printf("%s.%s = %s",owner, name, status);
+		
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-					GSQL_NAV_TREE_ID,			i_id,
+					GSQL_NAV_TREE_ID,			id,
 					GSQL_NAV_TREE_OWNER,		owner,
-					GSQL_NAV_TREE_IMAGE,		stock,
-					GSQL_NAV_TREE_NAME,			name,
+					GSQL_NAV_TREE_IMAGE,		GSQLE_ORACLE_STOCK_ROLLBACK_SEGS,
+					GSQL_NAV_TREE_NAME,			tmp,
 					GSQL_NAV_TREE_REALNAME, 	name,
 					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
 					GSQL_NAV_TREE_SQL,			NULL,
 					GSQL_NAV_TREE_OBJECT_POPUP, NULL,
 					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
-					GSQL_NAV_TREE_EXPAND_HANDLER, tree_expand,
+					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
 					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
-					GSQL_NAV_TREE_STRUCT, tree_struct,
+					GSQL_NAV_TREE_STRUCT, NULL,
 					GSQL_NAV_TREE_DETAILS, details,
-					GSQL_NAV_TREE_NUM_ITEMS, n,
+					GSQL_NAV_TREE_NUM_ITEMS, 0,
 					-1);
-
-		if (!tree_expand)
-		{
-			gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
-			gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
-				GSQL_NAV_TREE_ID,				-1,
-				GSQL_NAV_TREE_IMAGE,			NULL,
-				GSQL_NAV_TREE_NAME,				N_("Processing..."),
-				GSQL_NAV_TREE_REALNAME,			NULL,
-				GSQL_NAV_TREE_ITEM_INFO,		NULL,
-				GSQL_NAV_TREE_SQL,				NULL,
-				GSQL_NAV_TREE_OBJECT_HANDLER,	NULL,
-				GSQL_NAV_TREE_EXPAND_HANDLER,	NULL,
-				GSQL_NAV_TREE_STRUCT,			NULL,
-				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
-				-1);
-		}
 	}
+	
 	
 	GSQL_DEBUG ("Items fetched: [%d]", i);
 	
@@ -249,4 +170,3 @@ nav_tree_refresh_roles (GSQLNavigation *navigation,
 	
 	gsql_cursor_close (cursor);
 }
-
