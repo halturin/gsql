@@ -115,8 +115,6 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 	
 	session = gsql_session_get_active ();
 	
-	// get parent iter. if this iter are TABLE_ID then
-	// we looking for table's constraints only.
 	gtk_tree_model_iter_parent (model, &parent, iter);
 	
 	gtk_tree_model_get (model, &parent,  
@@ -134,7 +132,7 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 		
 	} else {
 		
-		if ((id == TABLE_ID) && (parent_realname != NULL))
+		if ( ((id == TABLE_ID) || (id == VIEW_ID)) && (parent_realname != NULL) )
 		{
 			tbl = parent_realname;
 			sql = (gchar *) sql_oracle_table_triggers;

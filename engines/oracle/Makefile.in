@@ -71,7 +71,8 @@ am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	nav_tree__tablespaces.lo nav_tree__users.lo \
 	nav_tree__srv_inst.lo nav_tree__rollback.lo \
 	nav_tree__redo_logs.lo nav_tree__recycle.lo \
-	nav_tree__operators.lo nav_tree__indextypes.lo
+	nav_tree__operators.lo nav_tree__indextypes.lo \
+	nav_tree__views.lo
 libgsqlengine_oracle_la_OBJECTS =  \
 	$(am_libgsqlengine_oracle_la_OBJECTS)
 libgsqlengine_oracle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -344,7 +345,9 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__operators.c          \
 	nav_tree__operators.h          \
 	nav_tree__indextypes.c          \
-	nav_tree__indextypes.h
+	nav_tree__indextypes.h          \
+	nav_tree__views.c          \
+	nav_tree__views.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
@@ -464,6 +467,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tablespaces.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__triggers.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__users.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__views.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oracle_var.Plo@am__quote@

@@ -58,14 +58,8 @@
 #include "nav_tree__recycle.h"
 #include "nav_tree__operators.h"
 #include "nav_tree__indextypes.h"
-
-
-/*
 #include "nav_tree__views.h"
 
-
-
-*/
 
 static GSQLNavigationItem current_instance[] = {
 	{	INSTANCE_PROPERTIES_ID,					// id
@@ -118,10 +112,10 @@ static GSQLNavigationItem users_objects[] = {
 	{	VIEWS_ID, 
 		GSQL_STOCK_VIEWS, 
 		N_("Views"), 
-		NULL, //sql_oracle_users_objects_owner, 
+		sql_oracle_users_objects_owner, 
 		NULL, 
 		NULL,
-		NULL, //nav_tree_refresh_views,
+		(GSQLNavigationHandler) nav_tree_refresh_views,
 		NULL,
 		NULL, 0 },
 		

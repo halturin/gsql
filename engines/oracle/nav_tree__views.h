@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_tree__tables.h
+ *            nav_tree__views.h
  *
- *  Sun Sep 23 02:12:28 2007
+ *  Sun Oct 14 20:59:25 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -22,24 +22,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
-#ifndef _NAV_TREE__TABLES_H
-#define _NAV_TREE__TABLES_H
+#ifndef _NAV_TREE__VIEWS_H
+#define _NAV_TREE__VIEWS_H
 
 #include <glib.h>
-#include <libgsql/session.h>
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
 void
-nav_tree_tables_refresh (GSQLNavigation *navigation,
+nav_tree_refresh_views (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
-						 GtkTreeIter *iter, guint event);
-						 
-void
-nav_tree_tables_browse (gchar *name, gchar *owner);
+						 GtkTreeIter *iter);
 
 G_END_DECLS
 
-#endif /* _NAV_TREE__TABLES_H */
+#endif /* _NAV_TREE__VIEWS_H */
 
  

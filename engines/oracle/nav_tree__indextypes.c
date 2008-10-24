@@ -192,7 +192,6 @@ nav_tree_refresh_indextypes (GSQLNavigation *navigation,
 				-1);
 	}
 	
-	
 	GSQL_DEBUG ("Items fetched: [%d]", i);
 	
 	if (i > 0)

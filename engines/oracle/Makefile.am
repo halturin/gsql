@@ -87,7 +87,9 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__operators.c          \
 	nav_tree__operators.h          \
 	nav_tree__indextypes.c          \
-	nav_tree__indextypes.h
+	nav_tree__indextypes.h          \
+	nav_tree__views.c          \
+	nav_tree__views.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \

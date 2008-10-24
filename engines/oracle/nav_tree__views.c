@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_tree__tables.c
+ *            nav_tree__views.c
  *
- *  Sun Sep 23 02:12:14 2007
+ *  Sun Oct 14 20:59:11 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -22,52 +22,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <glib/gprintf.h>
 #include <string.h>
-
-#include <libgsql/session.h>
+#include <libgsql/common.h>
 #include <libgsql/stock.h>
-#include <libgsql/sqleditor.h>
-
-#include "oracle_var.h"
+#include <libgsql/session.h>
+#include <libgsql/navigation.h>
+#include <libgsql/cvariable.h>
 #include "nav_objects.h"
-
-#include "nav_sql.h"
 #include "engine_stock.h"
 
-#include "nav_tree__columns.h"
-#include "nav_tree__constraints.h"
+#include "nav_tree__tables.h"
 #include "nav_tree__indexes.h"
+#include "nav_tree__columns.h"
 #include "nav_tree__triggers.h"
 #include "nav_tree__depend.h"
-#include "nav_tree__mviews.h"
-#include "nav_tree__tables.h"
+#include "nav_sql.h"
 
-static void nav_tree_tables_event (GSQLNavigation *navigation,
+static void nav_tree_views_event (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event);
-static void nav_tree_tables_popup (GSQLNavigation *navigation,
+static void nav_tree_views_popup (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event);
-static void nav_tree_tables_editor (GSQLNavigation *navigation,
+static void nav_tree_views_editor (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event);
 
 
-static void on_popup_table_create (GtkMenuItem * menuitem, 
+static void on_popup_view_create (GtkMenuItem * menuitem, 
 								 gpointer user_data);
-static void on_popup_table_drop (GtkMenuItem * menuitem, 
+static void on_popup_view_drop (GtkMenuItem * menuitem, 
 								 gpointer user_data);
-static void on_popup_table_alter (GtkMenuItem * menuitem, 
+static void on_popup_view_alter (GtkMenuItem * menuitem, 
 								 gpointer user_data);
-static void on_popup_table_browse (GtkMenuItem * menuitem, 
+static void on_popup_view_browse (GtkMenuItem * menuitem, 
 								 gpointer user_data);
 
 
-static GSQLNavigationItem tables[] = {
+static GSQLNavigationItem views[] = {
+	
 	{	COLUMNS_ID,
 		GSQL_STOCK_COLUMNS,
 		N_("Columns"), 
@@ -78,16 +75,6 @@ static GSQLNavigationItem tables[] = {
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
-	{	INDEXES_ID,
-		GSQL_STOCK_INDEXES,
-		N_("Indexes"), 
-		sql_oracle_indexes_owner,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_indexes,						// expand_handler
-		NULL,						// event_handler
-		NULL, 0},					// child, childs
-	
 	{	TRIGGERS_ID,
 		GSQL_STOCK_TRIGGERS,
 		N_("Triggers"), 
@@ -95,26 +82,6 @@ static GSQLNavigationItem tables[] = {
 		NULL, 						// object_popup
 		NULL,						// object_handler
 		(GSQLNavigationHandler) nav_tree_refresh_triggers,						// expand_handler
-		NULL,						// event_handler
-		NULL, 0},					// child, childs
-	
-	{	CONSTRAINTS_ID,
-		GSQL_STOCK_CONSTRAINT,
-		N_("Constraints"), 
-		sql_oracle_table_constraints_owner,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_constraints,					// expand_handler
-		NULL,						// event_handler
-		NULL, 0},					// child, childs
-	
-	{	MVIEWS_LOG_ID,
-		GSQLE_ORACLE_STOCK_MVIEW_LOGS,
-		N_("MView Logs"), 
-		sql_oracle_mview_logs_owner,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_mviews,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
@@ -139,65 +106,68 @@ static GSQLNavigationItem tables[] = {
 		NULL, 0}					// child, childs
 };
 
-
-static gchar table_ui[] = 
-" <ui> "
-"  <popup name=\"NavObjects\" action=\"ActionNavObjects\"> "
-"  		<placeholder name=\"PHolderNavObjectDo\"> "
-"  				<menuitem name=\"OracleTableCreate\" action=\"OracleActionTableCreate\" />	"
-"  				<menuitem name=\"OracleTableDrop\" action=\"OracleActionTableDrop\" />		"
-"  				<menuitem name=\"OracleTableAlter\" action=\"OracleActionTableAlter\" />		"
-"  				<menuitem name=\"OracleTableBrowse\" action=\"OracleActionTableBrowse\" />	"
-"	    </placeholder> "
-"  </popup> "
-"</ui>";
-
-static GtkActionEntry table_acts[] = 
+static GtkActionEntry view_actions[] = 
 {
-	{ "OracleActionTableCreate", GTK_STOCK_NEW, 
+	{ "OracleActionPopupNavViewCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
 		N_("Create table"), 
-		G_CALLBACK(on_popup_table_create) },
+		G_CALLBACK(on_popup_view_create) },
 	
-	{ "OracleActionTableDrop", GTK_STOCK_DELETE, 
+	{ "OracleActionPopupNavViewDrop", GTK_STOCK_DELETE, 
 		N_("Drop..."), NULL, 
 		N_("Drop table"), 
-		G_CALLBACK(on_popup_table_drop) },
+		G_CALLBACK(on_popup_view_drop) },
 	
-	{ "OracleActionTableAlter", NULL, 
+	{ "OracleActionPopupNavViewAlter", NULL, 
 		N_("Alter..."), NULL, 
 		N_("Alter table"), 
-		G_CALLBACK(on_popup_table_alter) },
+		G_CALLBACK(on_popup_view_alter) },
 	
-	{ "OracleActionTableBrowse", NULL, 
+	{ "OracleActionPopupNavViewBrowse", NULL, 
 		N_("Browse data"), NULL, 
 		N_("Browse data"), 
-		G_CALLBACK(on_popup_table_browse) }
+		G_CALLBACK(on_popup_view_browse) },
+
 };
 
+static gchar view_ui[] = 
+" <ui>																									"
+"  <popup name=\"NavObjects\" action=\"ActionNavObjects\">												"
+" 		<placeholder name=\"PHolderNavObjectDo\" >													"
+"  				<menuitem name=\"OracleNavViewCreate\" action=\"OracleActionPopupNavViewCreate\" />		"
+"  				<menuitem name=\"OracleNavViewDrop\" action=\"OracleActionPopupNavViewDrop\" />			"
+"  				<menuitem name=\"OracleNavViewAlter\" action=\"OracleActionPopupNavViewAlter\" />		"
+"  				<menuitem name=\"OracleNavViewBrowse\" action=\"OracleActionPopupNavViewBrowse\" />		"
+"  		</placeholder>																				"
+"  </popup>																								"
+"</ui> ";
 
 void
-nav_tree_tables_refresh (GSQLNavigation *navigation,
+nav_tree_refresh_views (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
-						 GtkTreeIter *iter, guint event)
+						 GtkTreeIter *iter)
 {
 	GSQL_TRACE_FUNC;
+
 	GtkTreeModel *model;
+	GtkListStore *details;
+	GSQLNavigation *nav = NULL;
+	gchar			*sql = NULL;
+	gchar			*realname = NULL;
+	gchar			*owner = NULL;
+	gint 		id;
+	gint		i,n;
 	GtkTreeIter child;
 	GtkTreeIter child_fake;
 	GtkTreeIter	child_last;
-	gint n;
-	gchar	   key[256];
-	gchar		*sql = NULL;
-	gchar		*realname = NULL;
-	gchar		*name = NULL;
-	gchar		*owner = NULL;
-	GSQLCursor * cursor;
-	GSQLSession *session;
-	GSQLWorkspace *workspace;
+	GSQLCursor *cursor;
 	GSQLVariable *var;
-	GtkListStore *details;
+	GSQLCursorState state;
+	GSQLSession *session;
+	gchar *name;
+	gchar key[256];
 
+	
 	model = gtk_tree_view_get_model(tv);
 	n = gtk_tree_model_iter_n_children(model, iter);
 	
@@ -212,51 +182,46 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_REALNAME, 
 						&realname, -1);
+	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_SQL, 
 						&sql, -1);
-	g_return_if_fail (sql != NULL);
 	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_OWNER, 
 						&owner, -1);
-	GSQL_DEBUG ("realname:[%s]    sql:[%s]   owner:[%s]", realname, sql, owner); 
-	//g_return_if_fail (owner != NULL);
 	
 	session = gsql_session_get_active ();
 	
 	if (strncmp (owner, gsql_session_get_username (session), 64))
-		sql = (gchar *) sql_oracle_tables;
+		sql = (gchar *) sql_oracle_users_objects;
 	
 	cursor = gsql_cursor_new (session, sql);
 	
-	if (gsql_cursor_open_with_bind(cursor, 
-								   FALSE, 
-								   GSQL_CURSOR_BIND_BY_POS, 
-								   G_TYPE_STRING, owner,
-								   G_TYPE_STRING, "%",
-								   -1) == GSQL_CURSOR_STATE_ERROR)
-	{
-		gsql_cursor_close (cursor);
-		return;
-	}
-
+	state = gsql_cursor_open_with_bind (cursor,
+										FALSE,
+										GSQL_CURSOR_BIND_BY_NAME,
+										G_TYPE_STRING, ":owner",
+										G_TYPE_STRING, owner,
+										G_TYPE_STRING, ":object_name",
+										G_TYPE_STRING, "%",
+										G_TYPE_STRING, ":object_type",
+										G_TYPE_STRING, "VIEW",
+										-1);
 	var = g_list_nth_data(cursor->var_list,0);
 	
-	GSQL_DEBUG ("cursor state [%d]. Start fetching", gsql_cursor_get_state (cursor));
-	
-	if (var == NULL)
+	if (state != GSQL_CURSOR_STATE_OPEN)
 	{
-		GSQL_DEBUG ("var is NULL");
-		return;
+		gsql_cursor_close (cursor);
+		return;		
 	}
-	 
-	GSQL_DEBUG ("var->data = [%s]", (gchar *) var->value);
-	n = 0;
+	
+	i = 0;
 	
 	while (gsql_cursor_fetch (cursor, 1) > 0)
 	{
-		n++;
+		i++;			
+
 		if (var->value_type != G_TYPE_STRING)
 		{
 			GSQL_DEBUG ("The name of object should be a string (char *). Is the bug");
@@ -266,7 +231,7 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 			// make a key for a hash of details
 			memset (key, 0, 256);
 			g_snprintf (key, 255, "%x%s%d%s",
-						session, owner, TABLE_ID, name);
+						session, owner, VIEW_ID, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);
@@ -274,22 +239,22 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 		
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-					GSQL_NAV_TREE_ID,			TABLE_ID,
+					GSQL_NAV_TREE_ID,			VIEW_ID,
 					GSQL_NAV_TREE_OWNER,		owner,
-					GSQL_NAV_TREE_IMAGE,		GSQL_STOCK_TABLES,
+					GSQL_NAV_TREE_IMAGE,		GSQL_STOCK_VIEWS,
 					GSQL_NAV_TREE_NAME,			name,
 					GSQL_NAV_TREE_REALNAME, 	name,
 					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
 					GSQL_NAV_TREE_SQL,			NULL,
-					GSQL_NAV_TREE_OBJECT_POPUP, nav_tree_tables_popup,
-					GSQL_NAV_TREE_OBJECT_HANDLER, NULL, //FIXME: nav_tree_tables_editor,
+					GSQL_NAV_TREE_OBJECT_POPUP, nav_tree_views_popup,
+					GSQL_NAV_TREE_OBJECT_HANDLER, NULL, // FIXME:nav_tree_views_editor,
 					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
-					GSQL_NAV_TREE_EVENT_HANDLER, nav_tree_tables_event,
-					GSQL_NAV_TREE_STRUCT, tables,
+					GSQL_NAV_TREE_EVENT_HANDLER, nav_tree_views_event,
+					GSQL_NAV_TREE_STRUCT, views,
 					GSQL_NAV_TREE_DETAILS, details,
-					GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(tables),
+					GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(views),
 					-1);
-
+		
 		gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
 		gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
 				GSQL_NAV_TREE_ID,				-1,
@@ -305,14 +270,14 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 				GSQL_NAV_TREE_STRUCT,			NULL,
 				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
 				-1);
-	}
+	};
 	
-	GSQL_DEBUG ("Items fetched: [%d]", n);
+	GSQL_DEBUG ("Items fetched: [%d]", i);
 	
-	if (n > 0)
+	if (i > 0)
 	{
 		name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
-												realname, n);
+												realname, i);
 		gtk_tree_store_set (GTK_TREE_STORE(model), iter,
 							GSQL_NAV_TREE_NAME, 
 							name,
@@ -323,26 +288,10 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 	gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
 	
 	gsql_cursor_close (cursor);
-
 }
 
-/*
- *  Static section:
- *
- *  nav_tree_tables_event
- *  nav_tree_tables_popup
- *  nav_tree_tables_editor
- *
- *  on_popup_table_create
- *  on_popup_table_drop
- *  on_popup_table_alter
- *  on_popup_table_browse
- *
- */
-
-
 static void
-nav_tree_tables_event (GSQLNavigation *navigation,
+nav_tree_views_event (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event)
 {
@@ -357,7 +306,7 @@ nav_tree_tables_event (GSQLNavigation *navigation,
 			
 		case GDK_F3:
 			GSQL_DEBUG ("F3 pressed");
-			on_popup_table_browse (NULL, NULL);
+			on_popup_view_browse (NULL, NULL);
 			break;
 			
 		case GDK_Delete:
@@ -366,8 +315,9 @@ nav_tree_tables_event (GSQLNavigation *navigation,
 	}
 }
 
+
 static void
-nav_tree_tables_popup (GSQLNavigation *navigation,
+nav_tree_views_popup (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event)
 {
@@ -376,10 +326,10 @@ nav_tree_tables_popup (GSQLNavigation *navigation,
 	
 	if (!actions)
 	{
-		actions = gtk_action_group_new ("OraclePopupTableActions");
-		gtk_action_group_add_actions (actions, table_acts, 
-								  G_N_ELEMENTS (table_acts), NULL);
-		gsql_navigation_menu_merge (navigation, table_ui, actions);
+		actions = gtk_action_group_new ("OraclePopupViewActions");
+		gtk_action_group_add_actions (actions, view_actions, 
+								  G_N_ELEMENTS (view_actions), NULL);
+		gsql_navigation_menu_merge (navigation, view_ui, actions);
 	}
 	
 	gsql_navigation_menu_popup (navigation, actions);
@@ -387,43 +337,46 @@ nav_tree_tables_popup (GSQLNavigation *navigation,
 }
 
 static void
-nav_tree_tables_editor (GSQLNavigation *navigation,
+nav_tree_views_editor (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event)
 {
 	GSQL_TRACE_FUNC;
 }
 
+
+
+
+
 static void
-on_popup_table_create (GtkMenuItem * menuitem, 
+on_popup_view_create (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 }
 
 static void
-on_popup_table_drop (GtkMenuItem * menuitem, 
+on_popup_view_drop (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 }
 
 static void
-on_popup_table_alter (GtkMenuItem * menuitem, 
+on_popup_view_alter (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 }
 
 static void
-on_popup_table_browse (GtkMenuItem * menuitem, 
+on_popup_view_browse (GtkMenuItem * menuitem, 
 								 gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 	
 	GSQLSession *session = NULL;
 	GSQLContent *content = NULL;
-	GSQLEditor *editor;
 	GtkWidget *source;
 	GSQLWorkspace *workspace;
 	GSQLNavigation *navigation;
@@ -459,102 +412,3 @@ on_popup_table_browse (GtkMenuItem * menuitem,
 	nav_tree_tables_browse (name, owner);
 
 }
-
-
-void
-nav_tree_tables_browse (gchar *name, gchar *owner)
-{
-	GSQL_TRACE_FUNC;
-	
-	GSQLSession *session;
-	GSQLCursor  *cursor;
-	GSQLContent *content;
-	GSQLEditor *editor;
-	GSQLWorkspace *workspace;
-	GtkWidget *source;
-	
-	gint tmp_int = 0;
-	gchar * sql = "select ";
-	gchar * tmp = NULL;
-	GSQLVariable *var;
-	
-	session = gsql_session_get_active ();
-	
-	cursor = gsql_cursor_new (session, 
-							  (gchar *) sql_oracle_table_columns);
-	GSQL_DEBUG ("owner [%s] name [%s]", owner, name);
-	if (gsql_cursor_open_with_bind(cursor, 
-								   FALSE, 
-								   GSQL_CURSOR_BIND_BY_POS, 
-								   G_TYPE_STRING, owner,
-								   G_TYPE_STRING, name,
-								   -1) == GSQL_CURSOR_STATE_ERROR)
-	{
-		g_object_unref (cursor);
-		return;
-	}
-
-	var = g_list_nth_data(cursor->var_list,0);
-	
-
-	if (var == NULL)
-	{
-		GSQL_DEBUG ("var is NULL");
-		return;
-	};
-	 
-	GSQL_DEBUG ("var->data = [%s]", (gchar *) var->value);
-	
-	while (gsql_cursor_fetch (cursor, 1) > 0)
-	{
-		
-		if (var->value_type != G_TYPE_STRING)
-		{
-			GSQL_DEBUG ("The name of object should be a string (char *). Is the bug");
-			name = N_("Incorrect data");
-		}
-		
-		tmp = g_utf8_strdown (var->value, var->value_length);
-		
-		if (tmp_int == 0)
-		{
-
-			sql = g_strconcat (sql, "a.", tmp, NULL);
-			GSQL_DEBUG ("making SQL: [clumns = %s] [sql = %s]", tmp, sql);
-
-		}
-		else
-		{                                                        
-			sql = g_strconcat (sql, ((tmp_int % 4) == 0) ? ", \n\t ": ", ",
-									"a.", tmp, NULL);
-			GSQL_DEBUG ("making SQL: [clumns = %s] [sql = %s]", tmp, sql);
-
-		}
-		
-		g_free (tmp);
-		tmp_int++;
-		
-	}
-	
-	sql = g_strconcat (sql,"\nfrom ", g_utf8_strdown (owner, strlen (owner)),
-					   		".", g_utf8_strdown (name, strlen (name)),
-										 " a\n", NULL);
-	GSQL_DEBUG ("SQL formed: %s", sql);
-	
-	content = gsql_content_new (session, GTK_STOCK_FILE);
-	
-	source = (GtkWidget *) gsql_source_editor_new (sql);
-	editor = gsql_editor_new (session, source);
-	gsql_content_set_child (content, GTK_WIDGET (editor));
-	
-	workspace = gsql_session_get_workspace (session);
-	gsql_workspace_add_content (workspace, content);
-	gsql_content_set_name_full (content, name, name);
-	
-	gsql_cursor_close (cursor);
-	g_free (sql);
-	
-	gsql_editor_run_sql (editor);
-
-}
-
