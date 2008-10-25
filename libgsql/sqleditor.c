@@ -845,7 +845,7 @@ do_sql_run (GSQLEditor *sqleditor)
 			sqleditor->cursor = NULL;
 		}
 		
-		cursor = gsql_cursor_new (session, sql);
+		sqleditor->cursor = cursor = gsql_cursor_new (session, sql);
 		
 		if (cursor)
 		{
@@ -879,7 +879,6 @@ do_sql_run (GSQLEditor *sqleditor)
 				set stepping flag
 			*/
 			sqleditor->private->stepping = TRUE;
-			sqleditor->cursor = cursor;
 			cursor->stmt_affected_rows = 0;
 			
 			//=========================================================
@@ -904,6 +903,9 @@ do_sql_run (GSQLEditor *sqleditor)
 				
 				if (sqleditor->private->stop_on_error)
 					sqleditor->private->stepping = TRUE;
+				
+				gsql_cursor_close (cursor);
+				sqleditor->cursor = NULL;
 				
 				GSQL_THREAD_LEAVE;
 				
@@ -1116,8 +1118,11 @@ on_sql_stop (GtkToolButton *button, gpointer data)
 	GSQL_TRACE_FUNC;
 	
 	GSQLEditor *sqleditor = data;
+	GSQLCursor *cursor;
 	
 	g_return_if_fail (GSQL_IS_EDITOR (sqleditor));
+	
+	gsql_cursor_stop (sqleditor->cursor);
 	
 }
 

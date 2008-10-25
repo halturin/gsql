@@ -49,6 +49,8 @@ on_cursor_close (GSQLCursor *cursor, gpointer user_data)
 	
 	g_return_if_fail (GSQL_IS_CURSOR(cursor));
 	
+	gsql_cursor_stop (cursor);
+	
 	if (cursor->spec != NULL)
 	{
 		spec = (GSQLEOracleCursor *)cursor->spec;
@@ -141,7 +143,29 @@ oracle_cursor_open (GSQLCursor *cursor)
 	
 	
 	return GSQL_CURSOR_STATE_OPEN;
-};
+}
+
+GSQLCursorState 
+oracle_cursor_stop (GSQLCursor *cursor)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLSession *session;
+	GSQLEOracleSession *spec_session;
+	GSQLEOracleCursor *spec_cursor;
+	
+	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
+	
+	session = cursor->session;
+	spec_session = session->spec;
+	spec_cursor = cursor->spec;
+	
+	OCIBreak (spec_session->svchp, spec_cursor->errhp);
+	OCIReset (spec_session->svchp, spec_cursor->errhp);
+	
+	return GSQL_CURSOR_STATE_STOP;
+	
+}
 
 GSQLCursorState
 oracle_cursor_open_bind (GSQLCursor *cursor, GList *args)

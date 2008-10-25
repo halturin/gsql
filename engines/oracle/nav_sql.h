@@ -515,6 +515,250 @@ from all_db_links \
 where owner like UPPER(:owner) \
 and db_link like :name";
 
+/************* Object types ************/
+static const gchar sql_oracle_object_types_owner[] = 
+/*
+select a.object_name, :owner owner,a.object_id,a.created,a.last_ddl_time,
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection,
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods,
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type,
+c.upper_bound,c.elem_type_owner,c.elem_type_name,
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod,
+c.length,c.precision,c.scale,c.elem_storage,
+decode(c.nulls_stored,'YES','Y','N') nulls_stored
+from user_coll_types c,user_types b,user_objects a
+where b.type_name like :object_name
+and a.object_name=b.type_name
+and a.object_type='TYPE'
+and c.type_name(+)=a.object_name
+and c.elem_type_owner is not null
+UNION ALL select a.object_name, :owner owner,a.object_id,a.created,a.last_ddl_time,
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection,
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods,
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type,c.upper_bound,c.elem_type_owner
+,decode(c.elem_type_name, 'TIMESTAMP WITH TZ','TIMESTAMP WITH TIME ZONE',
+'TIMESTAMP WITH LOCAL TZ','TIMESTAMP WITH LOCAL TIME ZONE',c.elem_type_name) elem_type_name,
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod,
+c.length,c.precision,c.scale,c.elem_storage,
+decode(c.nulls_stored,'YES','Y','N') nulls_stored
+from user_coll_types c,user_types b,user_objects a
+where b.type_name like :object_name
+and a.object_name=b.type_name
+and a.object_type='TYPE'
+and c.type_name(+)=a.object_name
+and c.elem_type_owner is null*/
+
+
+"select a.object_name, :owner owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection, \
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods, \
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type, \
+c.upper_bound,c.elem_type_owner,c.elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod, \
+c.length,c.precision,c.scale,c.elem_storage, \
+decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from user_coll_types c,user_types b,user_objects a \
+where b.type_name like :object_name \
+and a.object_name=b.type_name \
+and b.typecode != 'COLLECTION' \
+and a.object_type='TYPE' \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is not null \
+UNION ALL select a.object_name, :owner owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection, \
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods, \
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type,c.upper_bound,c.elem_type_owner \
+,decode(c.elem_type_name, 'TIMESTAMP WITH TZ','TIMESTAMP WITH TIME ZONE', \
+'TIMESTAMP WITH LOCAL TZ','TIMESTAMP WITH LOCAL TIME ZONE',c.elem_type_name) elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod, \
+c.length,c.precision,c.scale,c.elem_storage, \
+decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from user_coll_types c,user_types b,user_objects a \
+where b.type_name like :object_name \
+and b.typecode != 'COLLECTION' \
+and a.object_name=b.type_name \
+and a.object_type='TYPE' \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is null \
+order by 1";
+
+static const gchar sql_oracle_object_types[] = 
+"select a.object_name, a.owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status, \
+decode(b.typecode,'COLLECTION','Y','N') collection,decode(b.incomplete,'YES','Y','N') incomplete, \
+b.attributes,b.methods,decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type, \
+c.upper_bound,c.elem_type_owner,c.elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod,c.length, \
+c.precision,c.scale,c.elem_storage,decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from sys.dba_coll_types c,sys.dba_types b,sys.dba_objects a \
+where b.owner like :owner \
+and b.type_name like :object_name \
+and b.typecode != 'COLLECTION' \
+and a.owner=:owner \
+and a.object_name=b.type_name \
+and a.object_type='TYPE' \
+and c.owner(+)=:owner \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is not null \
+UNION ALL select a.object_name, a.owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection, \
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods, \
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type,c.upper_bound,c.elem_type_owner, \
+decode(c.elem_type_name, 'TIMESTAMP WITH TZ','TIMESTAMP WITH TIME ZONE', \
+'TIMESTAMP WITH LOCAL TZ','TIMESTAMP WITH LOCAL TIME ZONE',c.elem_type_name) elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod,c.length, \
+c.precision,c.scale,c.elem_storage,decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from sys.dba_coll_types c,sys.dba_types b,sys.dba_objects a \
+where b.owner like :owner \
+and b.type_name like :object_name \
+and b.typecode != 'COLLECTION' \
+and a.owner=:owner \
+and a.object_name=b.type_name \
+and a.object_type='TYPE' \
+and c.owner(+)=:owner \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is null \
+order by 1";
+
+/************ Collection Types *************/
+
+static const gchar sql_oracle_collection_types_owner[] =
+"select a.object_name, :owner owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection, \
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods, \
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type, \
+c.upper_bound,c.elem_type_owner,c.elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod, \
+c.length,c.precision,c.scale,c.elem_storage, \
+decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from user_coll_types c,user_types b,user_objects a \
+where b.type_name like :object_name \
+and a.object_name=b.type_name \
+and b.typecode = 'COLLECTION' \
+and a.object_type='TYPE' \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is not null \
+UNION ALL select a.object_name, :owner owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection, \
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods, \
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type,c.upper_bound,c.elem_type_owner \
+,decode(c.elem_type_name, 'TIMESTAMP WITH TZ','TIMESTAMP WITH TIME ZONE', \
+'TIMESTAMP WITH LOCAL TZ','TIMESTAMP WITH LOCAL TIME ZONE',c.elem_type_name) elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod, \
+c.length,c.precision,c.scale,c.elem_storage, \
+decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from user_coll_types c,user_types b,user_objects a \
+where b.type_name like :object_name \
+and b.typecode = 'COLLECTION' \
+and a.object_name=b.type_name \
+and a.object_type='TYPE' \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is null \
+order by 1";
+
+static const gchar sql_oracle_collection_types[] = 
+"select a.object_name, a.owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status, \
+decode(b.typecode,'COLLECTION','Y','N') collection,decode(b.incomplete,'YES','Y','N') incomplete, \
+b.attributes,b.methods,decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type, \
+c.upper_bound,c.elem_type_owner,c.elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod,c.length, \
+c.precision,c.scale,c.elem_storage,decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from sys.dba_coll_types c,sys.dba_types b,sys.dba_objects a \
+where b.owner like :owner \
+and b.type_name like :object_name \
+and b.typecode = 'COLLECTION' \
+and a.owner=:owner \
+and a.object_name=b.type_name \
+and a.object_type='TYPE' \
+and c.owner(+)=:owner \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is not null \
+UNION ALL select a.object_name, a.owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,decode(b.typecode,'COLLECTION','Y','N') collection, \
+decode(b.incomplete,'YES','Y','N') incomplete,b.attributes,b.methods, \
+decode(c.coll_type,'TABLE',0,'VARYING ARRAY',1,2) coll_type,c.upper_bound,c.elem_type_owner, \
+decode(c.elem_type_name, 'TIMESTAMP WITH TZ','TIMESTAMP WITH TIME ZONE', \
+'TIMESTAMP WITH LOCAL TZ','TIMESTAMP WITH LOCAL TIME ZONE',c.elem_type_name) elem_type_name, \
+decode(c.elem_type_mod,'REF',1,'POINTER',2,0) elem_type_mod,c.length, \
+c.precision,c.scale,c.elem_storage,decode(c.nulls_stored,'YES','Y','N') nulls_stored \
+from sys.dba_coll_types c,sys.dba_types b,sys.dba_objects a \
+where b.owner like :owner \
+and b.type_name like :object_name \
+and b.typecode = 'COLLECTION' \
+and a.owner=:owner \
+and a.object_name=b.type_name \
+and a.object_type='TYPE' \
+and c.owner(+)=:owner \
+and c.type_name(+)=a.object_name \
+and c.elem_type_owner is null \
+order by 1";
+
+/************ Store tables ************/
+
+static const gchar sql_oracle_store_tables_owner[]=
+"select a.object_name,:owner owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status, \
+decode(b.partitioned,'YES','Y','NO','N') partitioned,'Y' object_table, \
+'N' external_table,decode(b.nested,'YES','Y','N') nested, \
+decode(b.IOT_Type,'IOT',1,'IOT_OVERFLOW',2,0) IOT_Type,b.IOT_Name,b.temporary \
+from user_objects a,user_object_tables b \
+where b.table_name like :object_name \
+and a.object_name=b.table_name \
+and a.object_type='TABLE' \
+and ( b.nested = 'YES' or b.IOT_Type = 'IOT_OVERFLOW' ) \
+union all \
+select a.object_name,:owner owner,a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status,'N' partitioned,'N' object_table, \
+'Y' external_table,'N' nested,0 IOT_Type,'' IOT_Name,'N' temporary \
+from user_objects a,user_external_tables b \
+where b.table_name like :object_name \
+and a.object_name=b.table_name \
+and a.object_type='TABLE'";
+
+static const gchar sql_oracle_store_tables[] =
+"select a.object_name, :owner owner, \
+a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status, \
+decode(b.partitioned,'YES','Y','NO','N') partitioned,'N' object_table,'N' external_table, \
+decode(b.nested,'YES','Y','N') nested, \
+decode(b.IOT_Type,'IOT',1,'IOT_OVERFLOW',2,0) IOT_Type, \
+b.IOT_Name,b.temporary \
+from sys.dba_objects a,sys.dba_tables b \
+where b.owner=:owner \
+and b.table_name like :object_name \
+and a.owner=:owner \
+and a.object_name=b.table_name \
+and a.object_type='TABLE' \
+and ( b.nested = 'YES' or b.IOT_Type = 'IOT_OVERFLOW' ) \
+and b.dropped='NO' \
+union all \
+select a.object_name, :owner owner, \
+a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status, \
+decode(b.partitioned,'YES','Y','NO','N') partitioned,'Y' object_table,'N' external_table, \
+decode(b.nested,'YES','Y','N') nested, \
+decode(b.IOT_Type,'IOT',1,'IOT_OVERFLOW',2,0) IOT_Type, \
+b.IOT_Name,b.temporary \
+from sys.dba_objects a,sys.dba_object_tables b \
+where b.owner=:owner \
+and b.table_name like :object_name \
+and a.owner=:owner \
+and a.object_name=b.table_name \
+and a.object_type='TABLE' \
+and ( b.nested = 'YES' or b.IOT_Type = 'IOT_OVERFLOW' ) \
+union all \
+select a.object_name,:owner owner, \
+a.object_id,a.created,a.last_ddl_time, \
+decode(a.status,'VALID',0,'INVALID',1,2) status, \
+'N' partitioned,'N' object_table,'Y' external_table,'N' nested,0 IOT_Type,'' IOT_Name, \
+'N' temporary  \
+from sys.dba_objects a,sys.dba_external_tables b \
+where b.owner=:owner \
+and b.table_name like :object_name \
+and a.owner=:owner \
+and a.object_name=b.table_name \
+and a.object_type='TABLE'";
 
 /************ Tablespaces *************/
 

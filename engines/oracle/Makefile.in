@@ -72,7 +72,8 @@ am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	nav_tree__srv_inst.lo nav_tree__rollback.lo \
 	nav_tree__redo_logs.lo nav_tree__recycle.lo \
 	nav_tree__operators.lo nav_tree__indextypes.lo \
-	nav_tree__views.lo
+	nav_tree__views.lo nav_tree__objects.lo nav_tree__queues.lo \
+	nav_tree__dimens.lo nav_tree__storetabs.lo
 libgsqlengine_oracle_la_OBJECTS =  \
 	$(am_libgsqlengine_oracle_la_OBJECTS)
 libgsqlengine_oracle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -347,7 +348,15 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__indextypes.c          \
 	nav_tree__indextypes.h          \
 	nav_tree__views.c          \
-	nav_tree__views.h
+	nav_tree__views.h          \
+	nav_tree__objects.c          \
+	nav_tree__objects.h          \
+	nav_tree__queues.c          \
+	nav_tree__queues.h          \
+	nav_tree__dimens.c          \
+	nav_tree__dimens.h          \
+	nav_tree__storetabs.c          \
+	nav_tree__storetabs.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
@@ -446,14 +455,17 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__constraints.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__dblinks.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__depend.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__dimens.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__indexes.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__indextypes.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__libraries.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__mviews.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__objects.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__operators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__packages.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__privileges.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__procedures.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__queues.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__recycle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__redo_logs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__resourcs.Plo@am__quote@
@@ -462,6 +474,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__schemas.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__sequences.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__srv_inst.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__storetabs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__synonyms.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tables.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__tablespaces.Plo@am__quote@

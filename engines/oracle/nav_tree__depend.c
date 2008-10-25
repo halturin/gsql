@@ -114,6 +114,14 @@ nav_tree_refresh_depend (GSQLNavigation *navigation,
 		case PACKAGE_BODY_ID:
 			tbl = "PACKAGE BODY";
 			break;
+		
+		case OBJECT_TYPES_ID:
+			tbl = "TYPE";
+			break;
+		
+		case OBJECT_TYPE_BODIES_ID:
+			tbl = "TYPE BODY";
+			break;
 	}
 	
 	cursor = gsql_cursor_new (session, sql);

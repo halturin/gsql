@@ -148,7 +148,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	workspace = gsql_workspace_new (session);
 	navigation = gsql_workspace_get_navigation (workspace);
 	
-	nav_tree_set_root (navigation, username);
+	nav_tree_set_root (navigation, (gchar *) username);
 	
 	
 	

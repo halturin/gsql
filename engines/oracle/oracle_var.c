@@ -184,7 +184,7 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 		
 		default:
 		{
-			GSQL_DEBUG ("Variable = DEFAULT");
+			GSQL_DEBUG ("Variable = DEFAULT (type=[%d])", spec_var->data_type);
 			spec_var->variable_len = FALSE;
 			variable->value_type = G_TYPE_STRING;
 			variable->value_length = 4000;

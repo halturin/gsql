@@ -182,6 +182,8 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 	gpointer l_value_num;
 	gfloat  *l_value_float;
 	
+	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
+	
 	va_start (args, btype);
 	
 	do
@@ -336,7 +338,10 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 				
 				
 				if (!gsql_session_lock (cursor->session))
+				{
+					gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_ERROR);
 					return GSQL_CURSOR_STATE_ERROR;
+				}
 				
 				gsql_cursor_set_state (cursor, GSQL_CURSOR_STATE_RUN);
 				state = cursor->session->engine->cursor_open (cursor);
@@ -420,7 +425,7 @@ gsql_cursor_stop (GSQLCursor *cursor)
 	
 	g_return_if_fail (GSQL_IS_CURSOR (cursor));
 
-	if ((gsql_cursor_get_state (cursor) != GSQL_CURSOR_STATE_RUN) ||
+	if ((gsql_cursor_get_state (cursor) != GSQL_CURSOR_STATE_RUN) &&
 		(gsql_cursor_get_state (cursor) != GSQL_CURSOR_STATE_FETCH))
 		return;
 	

@@ -59,6 +59,10 @@
 #include "nav_tree__operators.h"
 #include "nav_tree__indextypes.h"
 #include "nav_tree__views.h"
+#include "nav_tree__objects.h"
+#include "nav_tree__queues.h"
+#include "nav_tree__dimens.h"
+#include "nav_tree__storetabs.h"
 
 
 static GSQLNavigationItem current_instance[] = {
@@ -226,17 +230,32 @@ static GSQLNavigationItem users_objects[] = {
 		
 	{	OBJECT_TYPES_ID, 
 		GSQLE_ORACLE_STOCK_OBJ_TYPES, 
-		N_("Object Types"), NULL, NULL, NULL, NULL, NULL,
+		N_("Object Types"), 
+		sql_oracle_object_types_owner,
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_objects, 
+		NULL,
 		NULL, 0 },
 		
 	{	OBJECT_TYPE_BODIES_ID, 
 		GSQLE_ORACLE_STOCK_OBJ_TYPE_BODIES, 
-		N_("Object Type Bodies"), NULL, NULL, NULL, NULL, NULL,
+		N_("Object Type Bodies"), 
+		sql_oracle_users_objects_owner,
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_objects, 
+		NULL,
 		NULL, 0 },
 		
 	{	COLLECTION_TYPES_ID, 
 		GSQLE_ORACLE_STOCK_COLLECTIONS_TYPES, 
-		N_("Collection Types"), NULL, NULL, NULL, NULL, NULL,
+		N_("Collection Types"), 
+		sql_oracle_collection_types_owner, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_objects,
+		NULL,
 		NULL, 0 },
 		
 	{	LIBRARIES_ID, 
@@ -251,7 +270,12 @@ static GSQLNavigationItem users_objects[] = {
 		
 	{	QUEUES_ID, 
 		GSQLE_ORACLE_STOCK_QUEUES, 
-		N_("Queues"), NULL, NULL, NULL, NULL, NULL,
+		N_("Queues"), 
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_queues, 
+		NULL,
 		NULL, 0 },
 		
 	{	JAVA_SOURCE_ID, 
@@ -290,8 +314,14 @@ static GSQLNavigationItem users_objects[] = {
 		
 	{	DIMENSIONS_ID, 
 		GSQLE_ORACLE_STOCK_DIMENSIONS, 
-		N_("Dimensions"), NULL, NULL, NULL, NULL, NULL,
+		N_("Dimensions"), 
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_dimens, 
+		NULL,
 		NULL, 0 },
+	
 	{	RESOURCE_PLANS_ID, 
 		GSQLE_ORACLE_STOCK_RESOURCE_PLANS, 
 		N_("Resource Plans"), NULL, NULL, NULL, NULL, NULL,
@@ -302,7 +332,12 @@ static GSQLNavigationItem users_objects[] = {
 		NULL, 0 },
 	{	STORE_TABLES_ID, 
 		GSQLE_ORACLE_STOCK_STORE_TABLES, 
-		N_("Store Tables"), NULL, NULL, NULL, NULL, NULL,
+		N_("Store Tables"),  
+		sql_oracle_store_tables_owner, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_storetabs, 
+		NULL,
 		NULL, 0 }
 };
 

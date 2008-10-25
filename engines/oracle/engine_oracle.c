@@ -92,6 +92,7 @@ engine_load (GSQLEngine *engine)
 	engine->cursor_open_with_bind = oracle_cursor_open_bind;
 	engine->cursor_open_with_bind_by_name = oracle_cursor_open_bind_by_name;
 	engine->cursor_open = oracle_cursor_open;
+	engine->cursor_stop = oracle_cursor_stop;
 	engine->cursor_fetch = oracle_cursor_fetch;
 	
 	engine->multi_statement = TRUE;
