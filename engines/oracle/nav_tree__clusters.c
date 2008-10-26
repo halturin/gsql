@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_tree__indexes.c
+ *            nav_tree__clusters.c
  *
- *  Sun Sep 30 21:42:40 2007
+ *  Sun Oct 21 17:22:23 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -21,7 +21,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -31,33 +30,43 @@
 #include <libgsql/session.h>
 #include <libgsql/navigation.h>
 #include <libgsql/cvariable.h>
-#include "nav_objects.h"
 #include "engine_stock.h"
-#include "nav_tree__columns.h"
 #include "nav_sql.h"
 
-static GSQLNavigationItem indexes[] = {
-	{   COLUMNS_ID,
-		GSQL_STOCK_COLUMNS,
-		N_("Columns"), 
-		sql_oracle_index_columns_owner,						// sql
-		NULL, 						// object_popup
-		NULL,						// object_handler
-		nav_tree_refresh_columns,						// expand_handler
-		NULL,						// event_handler
-		NULL, 0}
+#include "nav_tree__columns.h"
+#include "nav_tree__indexes.h"
+
+static GSQLNavigationItem clusters[] = {
+		{	COLUMNS_ID,
+			GSQL_STOCK_COLUMNS,
+			N_("Columns"), 
+			sql_oracle_table_columns_owner,						// sql
+			NULL, 						// object_popup
+			NULL,						// object_handler
+			(GSQLNavigationHandler) nav_tree_refresh_columns,						// expand_handler
+			NULL,						// event_handler
+			NULL, 0},					// child, childs
+	
+		{	INDEXES_ID,
+			GSQL_STOCK_INDEXES,
+			N_("Indexes"), 
+			sql_oracle_cluster_indexes_owner,						// sql
+			NULL, 						// object_popup
+			NULL,						// object_handler
+			(GSQLNavigationHandler) nav_tree_refresh_indexes,						// expand_handler
+			NULL,						// event_handler
+			NULL, 0}					// child, childs
 };
 
-
 void
-nav_tree_refresh_indexes (GSQLNavigation *navigation,
+nav_tree_refresh_clusters (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter)
 {
 	GSQL_TRACE_FUNC;
 
 	GtkTreeModel *model;
-	GtkListStore *detail;
+	GtkListStore *details;
 	GSQLNavigation *nav = NULL;
 	gchar			*sql = NULL;
 	gchar			*realname = NULL;
@@ -65,28 +74,22 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 	gint 		id;
 	gint		i,n;
 	GtkTreeIter child;
-	GtkTreeIter parent;
 	GtkTreeIter child_fake;
 	GtkTreeIter	child_last;
 	GSQLCursor *cursor;
-	GSQLVariable *var, *var_t;
-	GSQLSession *session;
-	GSQLWorkspace *workspace;
+	GSQLVariable *var;
 	GSQLCursorState state;
-	GtkListStore *details;
+	GSQLSession *session;
 	gchar *name;
 	gchar key[256];
-	gchar *stock = NULL;
-	gchar *tbl = "%";
-	gchar *parent_realname = NULL;
 	
 	model = gtk_tree_view_get_model(tv);
 	n = gtk_tree_model_iter_n_children(model, iter);
 	
 	for (; n>1; n--)
 	{
-		gtk_tree_model_iter_children (model, &child, iter);
-		gtk_tree_store_remove (GTK_TREE_STORE(model), &child);
+		gtk_tree_model_iter_children(model, &child, iter);
+		gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
 	}
 	
 	gtk_tree_model_iter_children(model, &child_last, iter);
@@ -94,68 +97,35 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_REALNAME, 
 						&realname, -1);
+	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_SQL, 
 						&sql, -1);
-	g_return_if_fail (sql != NULL);
-	
+
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_OWNER, 
 						&owner, -1);
-	
-	session = gsql_session_get_active ();
-	
-	// get parent iter. if this iter are TABLE_ID then
-	// we looking for table's constraints only.
-	gtk_tree_model_iter_parent (model, &parent, iter);
-	
-	gtk_tree_model_get (model, &parent,  
+
+	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_ID, 
 						&id, -1);
+	session = gsql_session_get_active ();
 	
-	gtk_tree_model_get (model, &parent,  
-						GSQL_NAV_TREE_REALNAME, 
-						&parent_realname, -1);
-
-	switch (id)
-	{
-		case TABLE_ID:
-			if (parent_realname != NULL)
-			{
-				tbl = parent_realname;
-				sql = (gchar *) sql_oracle_table_indexes;
-			}
-			
-			break;
-			
-		case CLUSTER_ID:
-		
-			tbl = parent_realname;
-			
-			if (strncmp (owner, gsql_session_get_username (session), 64))
-				sql = (gchar *) sql_oracle_cluster_indexes;			
-			
-			break;
-			
-		default:
-		
-			if (strncmp (owner, gsql_session_get_username (session), 64))
-				sql = (gchar *) sql_oracle_indexes;
-			
-	}
-
-	GSQL_DEBUG ("realname:[%s]    sql:[%s]   owner:[%s]", realname, sql, owner);
+	if (strncmp (owner, gsql_session_get_username (session), 64))
+		sql = (gchar *) sql_oracle_users_objects;
 	
 	cursor = gsql_cursor_new (session, sql);
+	
 	state = gsql_cursor_open_with_bind (cursor,
 										FALSE,
 										GSQL_CURSOR_BIND_BY_NAME,
 										G_TYPE_STRING, ":owner",
 										G_TYPE_STRING, owner,
-										G_TYPE_STRING, ":name",
-										G_TYPE_STRING, tbl,
+										G_TYPE_STRING, ":object_name",
+										G_TYPE_STRING, "%",
+										G_TYPE_STRING, ":object_type",
+										G_TYPE_STRING, "CLUSTER",
 										-1);
-	
 	var = g_list_nth_data(cursor->var_list,0);
 	
 	if (state != GSQL_CURSOR_STATE_OPEN)
@@ -166,10 +136,10 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 	
 	i = 0;
 	
-	while (gsql_cursor_fetch (cursor, 1) > 0)
+	while (gsql_cursor_fetch (cursor, 1) > 0)			
 	{
-		i++;
-		
+		i++;	
+
 		if (var->value_type != G_TYPE_STRING)
 		{
 			GSQL_DEBUG ("The name of object should be a string (char *). Is the bug");
@@ -178,8 +148,8 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 			name = (gchar *) var->value;
 			// make a key for a hash of details
 			memset (key, 0, 256);
-			g_snprintf (key, 255, "%x%s%d%d%s",
-						session, owner, id, INDEX_ID, name);
+			g_snprintf (key, 255, "%x%s%d%s",
+				   session, owner, CLUSTER_ID, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			oracle_navigation_fill_details (cursor, details);
@@ -187,9 +157,9 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 		
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-					GSQL_NAV_TREE_ID,			INDEX_ID,
+					GSQL_NAV_TREE_ID,			CLUSTER_ID,
 					GSQL_NAV_TREE_OWNER,		owner,
-					GSQL_NAV_TREE_IMAGE,		GSQL_STOCK_INDEXES,
+					GSQL_NAV_TREE_IMAGE,		GSQLE_ORACLE_STOCK_CLUSTERS,
 					GSQL_NAV_TREE_NAME,			name,
 					GSQL_NAV_TREE_REALNAME, 	name,
 					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
@@ -198,11 +168,11 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
 					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
 					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
-					GSQL_NAV_TREE_STRUCT, indexes,
+					GSQL_NAV_TREE_STRUCT, clusters,
 					GSQL_NAV_TREE_DETAILS, details,
-					GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(indexes),
+					GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(clusters),
 					-1);
-	
+
 		gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
 		gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
 				GSQL_NAV_TREE_ID,				-1,
@@ -218,7 +188,9 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 				GSQL_NAV_TREE_STRUCT,			NULL,
 				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
 				-1);
+
 	}
+	
 	GSQL_DEBUG ("Items fetched: [%d]", i);
 	
 	if (i > 0)
@@ -235,5 +207,4 @@ nav_tree_refresh_indexes (GSQLNavigation *navigation,
 	gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
 	
 	gsql_cursor_close (cursor);
-
 }

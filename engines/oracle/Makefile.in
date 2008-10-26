@@ -73,7 +73,8 @@ am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	nav_tree__redo_logs.lo nav_tree__recycle.lo \
 	nav_tree__operators.lo nav_tree__indextypes.lo \
 	nav_tree__views.lo nav_tree__objects.lo nav_tree__queues.lo \
-	nav_tree__dimens.lo nav_tree__storetabs.lo
+	nav_tree__dimens.lo nav_tree__storetabs.lo \
+	nav_tree__clusters.lo
 libgsqlengine_oracle_la_OBJECTS =  \
 	$(am_libgsqlengine_oracle_la_OBJECTS)
 libgsqlengine_oracle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -356,7 +357,9 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__dimens.c          \
 	nav_tree__dimens.h          \
 	nav_tree__storetabs.c          \
-	nav_tree__storetabs.h
+	nav_tree__storetabs.h          \
+	nav_tree__clusters.c          \
+	nav_tree__clusters.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
@@ -451,6 +454,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine_stock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_objects.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__arguments.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__clusters.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__columns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__constraints.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nav_tree__dblinks.Plo@am__quote@

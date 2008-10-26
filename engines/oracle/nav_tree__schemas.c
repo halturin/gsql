@@ -63,6 +63,7 @@
 #include "nav_tree__queues.h"
 #include "nav_tree__dimens.h"
 #include "nav_tree__storetabs.h"
+#include "nav_tree__clusters.h"
 
 
 static GSQLNavigationItem current_instance[] = {
@@ -195,7 +196,12 @@ static GSQLNavigationItem users_objects[] = {
 		
 	{	CLUSTERS_ID, 
 		GSQLE_ORACLE_STOCK_CLUSTERS, 
-		N_("Clusters"), NULL, NULL, NULL, NULL, NULL,
+		N_("Clusters"), 
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL,
+		(GSQLNavigationHandler) nav_tree_refresh_clusters,
+		NULL,
 		NULL, 0 },
 		
 	{	MVIEWS_ID, 

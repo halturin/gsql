@@ -122,7 +122,8 @@ nav_tree_refresh_objects (GSQLNavigation *navigation,
 		case OBJECT_TYPES_ID:
 			if (strncmp (owner, gsql_session_get_username (session), 64))
 				sql = (gchar *) sql_oracle_object_types;
-	
+			
+			GSQL_DEBUG ("types SQL: %s", sql);
 	
 			cursor = gsql_cursor_new (session, sql);
 			state = gsql_cursor_open_with_bind (cursor,
@@ -164,6 +165,7 @@ nav_tree_refresh_objects (GSQLNavigation *navigation,
 			if (strncmp (owner, gsql_session_get_username (session), 64))
 				sql = (gchar *) sql_oracle_collection_types;
 			
+			GSQL_DEBUG ("collection SQL: %s", sql);
 			cursor = gsql_cursor_new (session, sql);
 			state = gsql_cursor_open_with_bind (cursor,
 												FALSE,
