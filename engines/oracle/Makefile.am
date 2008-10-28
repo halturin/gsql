@@ -99,7 +99,9 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__storetabs.c          \
 	nav_tree__storetabs.h          \
 	nav_tree__clusters.c          \
-	nav_tree__clusters.h
+	nav_tree__clusters.h          \
+	nav_tree__java.c          \
+	nav_tree__java.h
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \

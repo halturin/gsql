@@ -43,7 +43,7 @@ on_gsql_prefs_show_dbnav_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_WORKSPACE_SHOW_NAVIGATE,
 								status);
-	return;
+
 };
 
 void
@@ -57,8 +57,8 @@ on_gsql_prefs_show_message_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_WORKSPACE_SHOW_MESSAGES,
 							status);
-	return;
-};
+
+}
 
 void
 on_gsql_prefs_restore_sizepos_check_toggled (GtkToggleButton  *togglebutton,
@@ -71,7 +71,21 @@ on_gsql_prefs_restore_sizepos_check_toggled (GtkToggleButton  *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS,
 							status);
-	return;
+
+}
+
+void
+on_gsql_prefs_widescreen_toggled (GtkToggleButton  *togglebutton,
+										gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	gboolean status;
+        
+	status = gtk_toggle_button_get_active (togglebutton);
+	gsql_conf_value_set_boolean (GSQL_CONF_WORKSPACE_WIDESCREEN,
+							status);
+
 }
 
 void 

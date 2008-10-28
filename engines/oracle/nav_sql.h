@@ -923,6 +923,22 @@ from v$log where group# like :name order by group#";
 static const gchar sql_oracle_redo_log_members[] =
 "select member, type from v$logfile where group# = :name";
 
+/*********** Resources *****************/
+
+static const gchar sql_oracle_profiles[] = 
+"select distinct profile from sys.dba_profiles where profile like :name order by profile";
+
+static const gchar sql_oracle_resource_limits[] =
+"select resource_name,limit from user_resource_limits \
+where resource_name like :name order by resource_name";
+
+static const gchar sql_oracle_resources[] = 
+"select resource_name, decode(resource_type,'KERNEL',0,'PASSWORD',1,2) resource_type, limit \
+from sys.dba_profiles where profile=:name";
+
+
+
+
 #endif /* _NAV_SQL_H */
 
  

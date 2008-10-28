@@ -141,8 +141,7 @@ gsql_workspace_new (GSQLSession *session)
 	GSQL_TRACE_FUNC;
 	
 	GSQLWorkspace 		*workspace;
-	/* FIXME: layout choosing */
-	gboolean			vertical_layout = FALSE;
+	gboolean			widescreen_layout = FALSE;
 	GtkTreeViewColumn 	*column;
 	GtkCellRenderer 	*renderer;
 	GtkTreeSelection 	*selection;
@@ -359,7 +358,10 @@ gsql_workspace_new (GSQLSession *session)
 								
 	
 	root = gtk_hpaned_new ();
-	if (vertical_layout)
+								
+	widescreen_layout = gsql_conf_value_get_boolean (GSQL_CONF_WORKSPACE_WIDESCREEN);
+
+	if (widescreen_layout)
 	{
 		root_inside = gtk_hpaned_new ();
 		

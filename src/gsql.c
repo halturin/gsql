@@ -42,6 +42,7 @@
 #include <libgsql/common.h>
 #include <libgsql/engines.h>
 #include <libgsql/menu.h>
+#include "gsqlconf.h"
 
 extern GtkWidget *gsql_window;
 
@@ -56,14 +57,34 @@ gsql_window_create (void)
 	GtkWidget * notebook;
 	GtkWidget *toolbar;
 	GtkWidget *statusbar;
-        
+	gint w,h,x,y;
+	gboolean restore_xywh;
+       
 	gsql_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	HOOKUP_OBJECT_NO_REF (gsql_window, gsql_window, "gsql_window");
 	
 	gtk_window_set_title (GTK_WINDOW (gsql_window), "GSQL");
-	gtk_window_set_default_size (GTK_WINDOW (gsql_window), 800, 700);
-	gtk_window_set_position(GTK_WINDOW (gsql_window), GTK_WIN_POS_CENTER);
-        
+	restore_xywh = gsql_conf_value_get_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS);
+	
+	if (restore_xywh)
+	{
+		w = gsql_conf_value_get_int (GSQL_CONF_UI_SIZE_X);
+		h = gsql_conf_value_get_int (GSQL_CONF_UI_SIZE_Y);
+	
+		x = gsql_conf_value_get_int (GSQL_CONF_UI_POS_X);
+		y = gsql_conf_value_get_int (GSQL_CONF_UI_POS_Y);
+
+		GSQL_DEBUG ("x[%d] y[%d] w[%d] h[%d]", x, y, w, h);
+		
+		gtk_window_move (GTK_WINDOW (gsql_window), x, y);
+		gtk_window_set_default_size (GTK_WINDOW (gsql_window), w, h);
+		
+	} else {
+	
+		gtk_window_set_default_size (GTK_WINDOW (gsql_window), 800, 700);
+		gtk_window_set_position(GTK_WINDOW (gsql_window), GTK_WIN_POS_CENTER);
+	}
+	
 	gsql_window_icon_pixbuf = create_pixbuf ("gsql.png");
 	
 	if (gsql_window_icon_pixbuf)
@@ -121,9 +142,29 @@ gsql_window_clean_exit()
 {
 	GSQL_TRACE_FUNC;
 	
+	gint w,h,x,y;
+	gboolean restore_xywh;
+	
 	if (!gsql_session_close_all ())
 		return;
-
+	
+    restore_xywh = gsql_conf_value_get_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS);
+	
+	if (restore_xywh)
+	{
+		
+		gtk_window_get_position (GTK_WINDOW (gsql_window), &x, &y);
+		
+		gsql_conf_value_set_int (GSQL_CONF_UI_POS_X, x);
+		gsql_conf_value_set_int (GSQL_CONF_UI_POS_Y, y);
+	
+		gtk_window_get_size (GTK_WINDOW (gsql_window), &w, &h);
+		
+		gsql_conf_value_set_int (GSQL_CONF_UI_SIZE_X, w);
+		gsql_conf_value_set_int (GSQL_CONF_UI_SIZE_Y, h);
+		
+	}
+	
 	gnome_accelerators_sync ();
 	gtk_main_quit ();
 	

@@ -64,6 +64,8 @@
 #include "nav_tree__dimens.h"
 #include "nav_tree__storetabs.h"
 #include "nav_tree__clusters.h"
+#include "nav_tree__java.h"
+#include "nav_tree__resourcs.h"
 
 
 static GSQLNavigationItem current_instance[] = {
@@ -284,18 +286,34 @@ static GSQLNavigationItem users_objects[] = {
 		NULL,
 		NULL, 0 },
 		
-	{	JAVA_SOURCE_ID, 
+	{	JAVA_SOURCES_ID, 
 		GSQLE_ORACLE_STOCK_JAVA_SOURCE, 
-		N_("Java Source"), NULL, NULL, NULL, NULL, NULL,
+		N_("Java Source"), 
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL,
+		(GSQLNavigationHandler) nav_tree_refresh_java,
+		NULL,
 		NULL, 0 },
+	
 	{	JAVA_CLASSES_ID, 
 		GSQLE_ORACLE_STOCK_JAVA_CLASSES, 
-		N_("Java Classes"), NULL, NULL, NULL, NULL, NULL,
+		N_("Java Classes"),  
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL,
+		(GSQLNavigationHandler) nav_tree_refresh_java,
+		NULL,
 		NULL, 0 },
 		
 	{	JAVA_RESOURCES_ID, 
 		GSQLE_ORACLE_STOCK_JAVA_RESOURCES, 
-		N_("Java Resources"), NULL, NULL, NULL, NULL, NULL,
+		N_("Java Resources"),  
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL,
+		(GSQLNavigationHandler) nav_tree_refresh_java,
+		NULL,
 		NULL, 0 },
 		
 	{	INDEX_TYPES_ID, 
@@ -330,12 +348,24 @@ static GSQLNavigationItem users_objects[] = {
 	
 	{	RESOURCE_PLANS_ID, 
 		GSQLE_ORACLE_STOCK_RESOURCE_PLANS, 
-		N_("Resource Plans"), NULL, NULL, NULL, NULL, NULL,
+		N_("Resource Plans"),  
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_resources, 
+		NULL,
 		NULL, 0 },
+	
 	{	CONSUMER_GROUPS_ID, 
 		GSQLE_ORACLE_STOCK_CONSUMER_GROUPS, 
-		N_("Consumer Groups"), NULL, NULL, NULL, NULL, NULL,
+		N_("Consumer Groups"),  
+		sql_oracle_users_objects_owner, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_resources, 
+		NULL,
 		NULL, 0 },
+	
 	{	STORE_TABLES_ID, 
 		GSQLE_ORACLE_STOCK_STORE_TABLES, 
 		N_("Store Tables"),  
@@ -374,7 +404,12 @@ static GSQLNavigationItem root_objects[] = {
 		
 	{	RESOURCE_LIMITS_ID,
 		GSQLE_ORACLE_STOCK_RESOURCE_LIMITS,
-		N_("Resource Limits"), NULL, NULL, NULL, NULL, NULL,
+		N_("Resource Limits"),   
+		sql_oracle_resource_limits, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_resources, 
+		NULL,
 		NULL, 0 },
 		
 	{	TABLESPACE_QUOTAS_ID,
@@ -443,7 +478,12 @@ static GSQLNavigationItem root_objects[] = {
 		
 	{	PROFILES_ID,
 		GSQLE_ORACLE_STOCK_PROFILES,
-		N_("Profiles"), NULL, NULL, NULL, NULL, NULL,
+		N_("Profiles"), 
+		sql_oracle_profiles, 
+		NULL, 
+		NULL, 
+		(GSQLNavigationHandler) nav_tree_refresh_resources, 
+		NULL,
 		NULL, 0 },
 		
 	{	TABLESPACES_ID,

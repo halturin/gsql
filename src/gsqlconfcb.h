@@ -39,6 +39,10 @@ void
 on_gsql_prefs_restore_sizepos_check_toggled (GtkToggleButton  *togglebutton,
 											gpointer user_data);
 
+void
+on_gsql_prefs_widescreen_toggled (GtkToggleButton  *togglebutton,
+										gpointer user_data);
+
 void 
 on_fetch_limit_step_changed (GtkSpinButton *button, gpointer data);
 

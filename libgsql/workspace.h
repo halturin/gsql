@@ -40,10 +40,12 @@ typedef struct _GSQLWorkspacePrivate	GSQLWorkspacePrivate;
 
 #define GSQL_CONF_WORKSPACE_SHOW_NAVIGATE			GSQL_CONF_ROOT_KEY "/workspace/show_navarea"
 #define GSQL_CONF_WORKSPACE_SHOW_MESSAGES			GSQL_CONF_ROOT_KEY "/workspace/show_messarea"
+#define GSQL_CONF_WORKSPACE_WIDESCREEN				GSQL_CONF_ROOT_KEY "/workspace/widescreen"
 
 #include <libgsql/content.h>
 #include <libgsql/navigation.h>
 #include <libgsql/session.h>
+#include <libgsql/conf.h>
 
 struct _GSQLWorkspace
 {

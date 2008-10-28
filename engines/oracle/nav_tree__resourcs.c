@@ -34,11 +34,275 @@
 #include "engine_stock.h"
 #include "nav_sql.h"
 
+#include "nav_tree__resourcs.h"
+
+static GSQLNavigationItem profiles[] = {
+		{	RESOURCES_ID,
+			GSQLE_ORACLE_STOCK_RESOURCES,
+			N_("Resources"), 
+			sql_oracle_resources,						// sql
+			NULL, 						// object_popup
+			NULL,						// object_handler
+			(GSQLNavigationHandler) nav_tree_refresh_resources,						// expand_handler
+			NULL,						// event_handler
+			NULL, 0}					// child, childs
+};
+
+
 void
 nav_tree_refresh_resources (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter)
 {
-	GSQL_TRACE_FUNC;
+		GSQL_TRACE_FUNC;
 
+	GtkTreeModel *model;
+	GtkListStore *details;
+	GSQLNavigation *nav = NULL;
+	gchar			*sql = NULL;
+	gchar			*realname = NULL;
+	gchar			*owner = NULL;
+	gint 		id, parent_id;
+	gint		i,n;
+	GtkTreeIter child, parent;
+	GtkTreeIter child_fake;
+	GtkTreeIter	child_last;
+	GSQLCursor *cursor;
+	GSQLVariable *var;
+	GSQLSession *session;
+	GSQLCursorState state;
+	gchar *name, *parent_name;
+	gchar key[256];
+	gchar *stock;
+	gchar *o_type;
+	void * o_struct;
+	
+	model = gtk_tree_view_get_model(tv);
+	n = gtk_tree_model_iter_n_children(model, iter);
+	
+	for (; n>1; n--)
+	{
+		gtk_tree_model_iter_children(model, &child, iter);
+		gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
+	}
+	
+	gtk_tree_model_iter_children(model, &child_last, iter);
+	
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_REALNAME, 
+						&realname, -1);
+	
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_SQL, 
+						&sql, -1);
+	
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_OWNER, 
+						&owner, -1);
+
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_ID, 
+						&id, -1);
+	
+	session = gsql_session_get_active ();
+	
+	switch (id)
+	{
+		case RESOURCE_LIMITS_ID:
+			cursor = gsql_cursor_new (session, sql);
+			state = gsql_cursor_open_with_bind (cursor,
+										FALSE,
+										GSQL_CURSOR_BIND_BY_NAME,
+										G_TYPE_STRING, ":name",
+										G_TYPE_STRING, "%",
+										-1);
+			stock = GSQLE_ORACLE_STOCK_RESOURCE_LIMITS;
+			o_struct = NULL;
+			n = 0;
+			break;
+			
+		case PROFILES_ID:
+			cursor = gsql_cursor_new (session, sql);
+			state = gsql_cursor_open_with_bind (cursor,
+										FALSE,
+										GSQL_CURSOR_BIND_BY_NAME,
+										G_TYPE_STRING, ":name",
+										G_TYPE_STRING, "%",
+										-1);
+			id = PROFILE_ID;
+			stock = GSQLE_ORACLE_STOCK_PROFILES;
+			o_struct = profiles;
+			n = G_N_ELEMENTS (profiles);
+			break;
+			
+		case RESOURCES_ID:
+			GSQL_DEBUG ("rr1");
+			gtk_tree_model_iter_parent (model, &parent, iter);
+			GSQL_DEBUG ("rr2");
+			gtk_tree_model_get (model, &parent,  
+								GSQL_NAV_TREE_ID, 
+								&parent_id, -1);
+			GSQL_DEBUG ("rr3");
+			gtk_tree_model_get (model, &parent,  
+						GSQL_NAV_TREE_REALNAME, 
+						&parent_name, -1);
+			GSQL_DEBUG ("rr4");
+			if (parent_id != PROFILE_ID)
+			{
+				GSQL_DEBUG ("Resources in profile BUG");
+				return;				
+			}
+			GSQL_DEBUG ("rr5");
+			GSQL_DEBUG ("sql = [%s] name=[%s]", sql, parent_name);
+			cursor = gsql_cursor_new (session, sql);
+			state = gsql_cursor_open_with_bind (cursor,
+										FALSE,
+										GSQL_CURSOR_BIND_BY_NAME,
+										G_TYPE_STRING, ":name",
+										G_TYPE_STRING, parent_name,
+										-1);
+			GSQL_DEBUG ("rr6");
+			stock = GSQLE_ORACLE_STOCK_RESOURCES;
+			id = RESOURCE_ID;
+			o_struct = NULL;
+			n = 0;
+			break;
+			
+			
+		case RESOURCE_PLANS_ID:
+			if (strncmp (owner, gsql_session_get_username (session), 64))
+					sql = (gchar *) sql_oracle_users_objects;
+	
+			cursor = gsql_cursor_new (session, sql);
+			state = gsql_cursor_open_with_bind (cursor,
+												FALSE,
+												GSQL_CURSOR_BIND_BY_NAME,
+												G_TYPE_STRING, ":owner",
+												G_TYPE_STRING, owner,
+												G_TYPE_STRING, ":object_name",
+												G_TYPE_STRING, "%",
+												G_TYPE_STRING, ":object_type",
+												G_TYPE_STRING, "RESOURCE PLAN",
+												-1);
+			
+			stock = GSQLE_ORACLE_STOCK_RESOURCE_PLANS;
+			o_struct = NULL;
+			n = 0;
+			break;
+			
+		case CONSUMER_GROUPS_ID:
+			if (strncmp (owner, gsql_session_get_username (session), 64))
+					sql = (gchar *) sql_oracle_users_objects;
+	
+			cursor = gsql_cursor_new (session, sql);
+			state = gsql_cursor_open_with_bind (cursor,
+												FALSE,
+												GSQL_CURSOR_BIND_BY_NAME,
+												G_TYPE_STRING, ":owner",
+												G_TYPE_STRING, owner,
+												G_TYPE_STRING, ":object_name",
+												G_TYPE_STRING, "%",
+												G_TYPE_STRING, ":object_type",
+												G_TYPE_STRING, "CONSUMER GROUP",
+												-1);
+			
+			stock = GSQLE_ORACLE_STOCK_CONSUMER_GROUPS;
+			id = CONSUMER_GROUP_ID;
+			o_struct = NULL;
+			n = 0;
+			break;
+		
+		default:
+			GSQL_DEBUG ("Resources. Unhandled type [%]", id);
+			return;
+		
+	}
+	
+	
+	
+	
+	
+	var = g_list_nth_data(cursor->var_list,0);
+	
+	if (state != GSQL_CURSOR_STATE_OPEN)
+	{
+		gsql_cursor_close (cursor);
+		return;		
+	}
+	
+	i = 0;
+	
+	while (gsql_cursor_fetch (cursor, 1) > 0)
+	{
+		i++;
+		
+		if (var->value_type != G_TYPE_STRING)
+		{
+			GSQL_DEBUG ("The name of object should be a string (char *). Is the bug");
+			name = N_("Incorrect data");
+		} else {
+			name = (gchar *) var->value;
+			// make a key for a hash of details
+			memset (key, 0, 256);
+			g_snprintf (key, 255, "%x%s%d%s",
+				   session, owner, id, name);
+			
+			details = gsql_navigation_get_details (navigation, key);
+			oracle_navigation_fill_details (cursor, details);
+		}
+		
+		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
+		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
+					GSQL_NAV_TREE_ID,			id,
+					GSQL_NAV_TREE_OWNER,		owner,
+					GSQL_NAV_TREE_IMAGE,		stock,
+					GSQL_NAV_TREE_NAME,			name,
+					GSQL_NAV_TREE_REALNAME, 	name,
+					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
+					GSQL_NAV_TREE_SQL,			NULL,
+					GSQL_NAV_TREE_OBJECT_POPUP, NULL,
+					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
+					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
+					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
+					GSQL_NAV_TREE_STRUCT, o_struct,
+					GSQL_NAV_TREE_DETAILS, details,
+					GSQL_NAV_TREE_NUM_ITEMS, n,
+					-1);
+		
+		if (n)
+		{
+			gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
+			gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
+					GSQL_NAV_TREE_ID,				-1,
+					GSQL_NAV_TREE_IMAGE,			NULL,
+					GSQL_NAV_TREE_NAME,				N_("Processing..."),
+					GSQL_NAV_TREE_REALNAME,			NULL,
+					GSQL_NAV_TREE_ITEM_INFO,		NULL,
+					GSQL_NAV_TREE_SQL,				NULL,
+					GSQL_NAV_TREE_OBJECT_POPUP,		NULL,
+					GSQL_NAV_TREE_OBJECT_HANDLER,	NULL,
+					GSQL_NAV_TREE_EXPAND_HANDLER,	NULL,
+					GSQL_NAV_TREE_EVENT_HANDLER,	NULL,
+					GSQL_NAV_TREE_STRUCT,			NULL,
+					GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
+					-1);
+		}
+	}
+	
+	GSQL_DEBUG ("Items fetched: [%d]", i);
+	
+	if (i > 0)
+	{
+		name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
+												realname, i);
+		gtk_tree_store_set (GTK_TREE_STORE(model), iter,
+							GSQL_NAV_TREE_NAME, 
+							name,
+							-1);
+		g_free (name);
+	}
+	
+	gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
+	
+	gsql_cursor_close (cursor);
 }

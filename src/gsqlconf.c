@@ -67,6 +67,7 @@ gsql_conf_dialog()
 	GtkWidget *show_navarea_check;
 	GtkWidget *show_messarea_check;
 	GtkWidget *restore_sizepos_check;
+	GtkWidget *widescreen_layout_check;
 	GtkWidget *datetime_format_entry;
 	GtkWidget *datetime_preview_button;
 	GtkWidget *datetime_preview_entry;
@@ -98,6 +99,7 @@ gsql_conf_dialog()
 	show_navarea_check = glade_xml_get_widget (gxml, "show_navarea_check");
 	show_messarea_check = glade_xml_get_widget (gxml, "show_messarea_check");
     restore_sizepos_check = glade_xml_get_widget (gxml, "restore_sizepos_check");
+	widescreen_layout_check = glade_xml_get_widget (gxml, "widescreen_layout_check");
 	datetime_format_entry = glade_xml_get_widget (gxml, "datetime_format_entry");
 	datetime_preview_button = glade_xml_get_widget (gxml, "datetime_preview_button");
 	datetime_preview_entry = glade_xml_get_widget (gxml, "datetime_preview_entry");
@@ -177,6 +179,10 @@ gsql_conf_dialog()
         
 	gconf_bool_value = gsql_conf_value_get_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (restore_sizepos_check), gconf_bool_value);
+	
+	gconf_bool_value = gsql_conf_value_get_boolean (GSQL_CONF_WORKSPACE_WIDESCREEN);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widescreen_layout_check), gconf_bool_value);
+	
 	
 	gconf_int_value = gsql_conf_value_get_int (GSQL_CONF_SQL_FETCH_STEP);
 	
