@@ -195,17 +195,3 @@ on_gsql_window_delete(GtkWidget * wd, GdkEvent * event, gpointer data)
 	return TRUE;
 }
 
-
-void
-on_session_close_header_button_activate (GtkButton *button,
-											gpointer user_data)
-{
-	GSQL_TRACE_FUNC;
-
-	GSQLSession *session;
-
-	session = GSQL_SESSION (user_data);
-
-	g_signal_emit_by_name (G_OBJECT (session), "close");
-
-}

@@ -41,6 +41,8 @@ oracle_session_open (GSQLEOracleSession *oracle_session,
 					 gchar *password,
 					 gchar *database, 
 					 gchar *buffer);
+void 
+oracle_session_reopen (GSQLSession *session);
 
 gboolean
 oracle_session_close (GSQLSession *session, gchar *buffer);

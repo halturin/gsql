@@ -167,6 +167,14 @@ gsql_source_editor_new(gchar * buffer_body)
 
 	lang = gtk_source_language_manager_get_language (lm, "gsql");
 	
+	if (!lang)
+	{
+		GSQL_DEBUG ("Could not find 'gsql' syntax theme. Set default 'sql'");
+
+		lm = gtk_source_language_manager_get_default ();
+		lang = gtk_source_language_manager_get_language (lm, "sql");
+	}
+	
 	gtk_source_buffer_set_language  (buffer, lang);
 
 	gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
@@ -323,7 +331,10 @@ gsql_source_editor_property_set (gpointer src)
 		conf_string = gsql_conf_value_get_string_at_root (GNOME_SYSTEM_FONT);
 	else 
 		conf_string = gsql_conf_value_get_string (GSQL_CONF_EDITOR_FONT_NAME);                
-
+	
+	if (!conf_string)
+		conf_string = gsql_conf_value_get_string_at_root (GNOME_SYSTEM_FONT);
+	
 	font_desc = pango_font_description_from_string (conf_string);
 	gtk_widget_modify_font (GTK_WIDGET (source), font_desc);
        

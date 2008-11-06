@@ -52,10 +52,6 @@ on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
 											guint            page_num,
 											gpointer         user_data);
 
-void
-on_session_close_header_button_activate (GtkButton *button,
-											gpointer user_data);
-
 G_END_DECLS
 		
 #endif /* _GSQLCB_H */

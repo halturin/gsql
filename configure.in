@@ -24,7 +24,7 @@ AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
 
-PKG_CHECK_MODULES(PACKAGE, [libgnomeui-2.0 gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0])
+PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 

@@ -199,7 +199,7 @@ on_session_reopen (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	return;
+	oracle_session_reopen (session);
 }
 
 static void

@@ -82,6 +82,9 @@ gsql_session_new (void);
 GSQLSession *
 gsql_session_new_with_attrs (gchar *attr_name,...);
 
+GtkAction *
+gsql_session_get_action (GSQLSession *session, gchar *name);
+
 GSQLSession *
 gsql_session_get_active (void);
 
@@ -93,6 +96,9 @@ gsql_session_get_name (GSQLSession *session);
 
 const gchar *
 gsql_session_get_username (GSQLSession *session);
+
+const gchar *
+gsql_session_get_password (GSQLSession *session);
 
 const gchar *
 gsql_session_get_database_name (GSQLSession *session);

@@ -461,7 +461,7 @@ gsql_source_buffer_get_delim_block (GtkTextIter * iter,
 	tmp = g_strchug (str);
 	tmp = g_strchomp (tmp);
 	
-	if (sql == NULL)
+	if (tmp == NULL)
 		return NULL;
 		
 	sql = g_strdup (tmp);

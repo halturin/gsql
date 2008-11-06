@@ -304,7 +304,51 @@ oracle_session_close (GSQLSession *session, gchar *buffer)
 	g_free(o_session);
 	
 	return TRUE;
-};
+}
+
+
+
+void 
+oracle_session_reopen (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLEOracleSession *oracle_session;
+	gchar buffer[256];
+	GSQLWorkspace *workspace;
+	
+	gchar *username;
+	gchar *database;
+	gchar *password;
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	oracle_session = (GSQLEOracleSession *) session->spec;
+	workspace = gsql_session_get_workspace (session);
+	
+	OCISessionEnd (oracle_session->svchp, oracle_session->errhp, 
+				   oracle_session->usrhp, OCI_DEFAULT);
+	OCIServerDetach (oracle_session->srvhp, oracle_session->errhp, 
+					 OCI_DEFAULT);
+	OCIHandleFree ((dvoid *)oracle_session->errhp, OCI_HTYPE_ERROR);
+	OCIHandleFree ((dvoid *)oracle_session->srvhp, OCI_HTYPE_SERVER);
+	OCIHandleFree ((dvoid *)oracle_session->svchp, OCI_HTYPE_SVCCTX);
+	OCIHandleFree ((dvoid *)oracle_session->usrhp, OCI_HTYPE_SESSION);
+	OCIHandleFree ((dvoid *)oracle_session->envhp, OCI_HTYPE_ENV);
+	
+	username = gsql_session_get_username (session);
+	password = gsql_session_get_password (session);
+	database = gsql_session_get_database_name (session);
+	
+	oracle_session_open (oracle_session,
+						 username,
+						 password,
+						 database,
+						 buffer);
+	
+	gsql_message_add (workspace, GSQL_MESSAGE_NORMAL, N_("Session reconnected"));
+
+}
 
 static void
 oracle_client_info (gchar *buf)
@@ -319,7 +363,7 @@ oracle_client_info (gchar *buf)
 	g_snprintf(buf, 64, "%s [%s] (%s) on %s [%s]", PROJECT_NAME, VERSION, PROJECT_URL, u.sysname, u.release);
 
 	return;
-};
+}
 
 gboolean 
 oracle_check_error (GSQLCursor *cursor, gint ret)

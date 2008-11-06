@@ -301,6 +301,19 @@ gsql_session_set_attrs (GSQLSession *session, gchar *attr_name,...)
 	return;	
 }
 
+GtkAction *
+gsql_session_get_action (GSQLSession *session, gchar *name)
+{
+	GSQL_TRACE_FUNC;
+	
+	GtkAction *act;
+	
+	act = gtk_action_group_get_action (session_actions, name);
+	
+	return act;
+}
+
+
 void 
 gsql_session_set_workspace (GSQLSession *session, GSQLWorkspace *workspace)
 {
@@ -357,6 +370,16 @@ gsql_session_get_username (GSQLSession *session)
 	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
 
 	return session->private->username;
+}
+
+const gchar *
+gsql_session_get_password (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
+
+	return session->private->password;
 }
 
 const gchar *

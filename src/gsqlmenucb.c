@@ -339,7 +339,6 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 	GtkWidget   *sessions;
 	GtkWidget	*header;
 	gchar 		*session_name;
-	GtkWidget	*close;
 	gint 		ret;
 
 	gchar logon_message[256];
@@ -372,7 +371,7 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
                                                         0,
 														GTK_MESSAGE_ERROR,
 														GTK_BUTTONS_OK,
-														logon_message);
+														"%s", logon_message);
 			gtk_dialog_run (msg);
 			gtk_widget_destroy ((GtkWidget *) msg);
 			
@@ -393,12 +392,8 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 
 	header = gsql_utils_header_new (create_pixmap(session->engine->file_logo),
 									   session_name, NULL,
-									   TRUE, (gint) 1);
-	close = (GtkWidget *) g_object_get_data (G_OBJECT(header), "close_button");
-
-	g_signal_connect (G_OBJECT (close), "clicked",
-						G_CALLBACK (on_session_close_header_button_activate),
-						session);
+									   FALSE, (gint) 1);
+	
 	gtk_widget_show (GTK_WIDGET (session));
 	
 	ret = gtk_notebook_append_page (GTK_NOTEBOOK(sessions),
