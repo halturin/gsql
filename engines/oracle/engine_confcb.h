@@ -31,6 +31,22 @@
 G_BEGIN_DECLS
 
 void
+env_type_renderer_edited_cb (GtkCellRendererText *renderer,
+							  gchar		*c_path,
+							  gchar		*new_text,
+							  gpointer  user_data);
+
+void
+env_type_renderer_canceled_cb (GtkCellRendererText *renderer,							  
+							  gpointer  user_data);
+
+void
+env_value_renderer_edited_cb (GtkCellRendererText *renderer,
+							  gchar		*c_path,
+							  gchar		*new_text,
+							  gpointer  user_data);
+
+void
 on_conf_use_system_env_check_toggled (GtkToggleButton *togglebutton,
 											gpointer user_data);
 
@@ -38,9 +54,6 @@ void
 on_conf_oracle_env_add_button_activate (GtkButton *button,
 											gpointer user_data);
 
-void
-on_conf_oracle_env_edit_button_activate (GtkButton *button,
-											gpointer user_data);
 
 void
 on_conf_oracle_env_del_button_activate (GtkButton *button,

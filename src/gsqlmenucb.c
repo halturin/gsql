@@ -174,8 +174,87 @@ on_file_close_all_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 
-	return;
-};
+	GtkDialog *dialog;
+	GSQLSession *session;
+	GSQLWorkspace *workspace;
+	guint ret;
+	GtkTreeView *tv;
+	GtkTreeModel *model;
+	GtkTreeIter iter, child;
+	GSQLContent *content;
+	gboolean  bvalue;
+	guint n;
+	GList *clist;
+	
+	session = gsql_session_get_active ();
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	workspace = gsql_session_get_workspace (session);
+	
+	dialog = gsql_session_unsaved_dialog (session);
+	
+	if (dialog)
+	{
+		ret = gtk_dialog_run(dialog);
+		
+		switch (ret)
+		{
+			case GTK_RESPONSE_CLOSE:
+			case GTK_RESPONSE_OK:
+				tv = GTK_TREE_VIEW (g_object_get_data (G_OBJECT (dialog), "treeview"));
+				model = gtk_tree_view_get_model (tv);
+				
+				gtk_tree_model_get_iter_first (model, &iter);
+				
+				for (n=0; n < gtk_tree_model_iter_n_children (model, &iter); n++)
+				{
+					gtk_tree_model_iter_nth_child (model, &child, &iter, n);
+					gtk_tree_model_get (model, &child,
+										3, &content, -1);
+					gtk_tree_model_get (model, &child,  
+										0, &bvalue, -1);
+					
+					if (!bvalue)
+						continue;
+					
+					if (GSQL_IS_CONTENT (content))
+					{
+						if (ret == GTK_RESPONSE_OK)
+							g_signal_emit_by_name (content, "save");
+						
+						gtk_widget_destroy (GTK_WIDGET (content));
+							
+					} else {
+						
+						GSQL_DEBUG ("It is not GSQLContent");
+					}
+				}
+			
+				break;
+				
+			case GTK_RESPONSE_CANCEL:
+				gtk_widget_destroy (GTK_WIDGET (dialog));
+				return;
+
+		}
+		
+		gtk_widget_destroy (GTK_WIDGET (dialog));	
+		
+	}
+	
+	clist = gsql_workspace_get_content_list (workspace);
+	
+	while (clist)
+	{
+		content = clist->data;
+		
+		gtk_widget_destroy (GTK_WIDGET (content));
+		
+		clist = g_list_next (clist);
+	}
+	
+}
 
 void
 on_file_reload_activate (GtkMenuItem *mi, gpointer data)

@@ -94,8 +94,8 @@ static void on_sqleditor_fetch_limit_set (gpointer data);
 static GtkActionEntry sqleditor_acts[] = 
 {
 
-	{ "ActionSQLEditorRun", GSQL_STOCK_SQL_RUN, N_("Run"), "F9", N_("Run"), NULL},
-	{ "ActionSQLEditorRunStep", GSQL_STOCK_SQL_RUN_STEP, N_("Run Step"), "F8", N_("Run Step"), NULL},
+	{ "ActionSQLEditorRun", GSQL_STOCK_SQL_RUN, N_("Run"), "F9", N_("Run  [ F9 ]"), NULL},
+	{ "ActionSQLEditorRunStep", GSQL_STOCK_SQL_RUN_STEP, N_("Run Step"), "F8", N_("Run Step  [ F8 ]"), NULL},
 	{ "ActionSQLEditorStop", GTK_STOCK_STOP, N_("Stop Execution"), NULL, N_("Stop Execution"), NULL },
 	
 	{ "ActionSQLEditorFetch", GSQL_STOCK_SQL_FETCH_NEXT, N_("Fetch next"), NULL, N_("Fetch next"), NULL },

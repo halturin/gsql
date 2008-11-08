@@ -110,12 +110,12 @@ static GtkActionEntry view_actions[] =
 {
 	{ "OracleActionPopupNavViewCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
-		N_("Create table"), 
+		N_("Create a new view  [ Ins ]"), 
 		G_CALLBACK(on_popup_view_create) },
 	
 	{ "OracleActionPopupNavViewDrop", GTK_STOCK_DELETE, 
 		N_("Drop..."), NULL, 
-		N_("Drop table"), 
+		N_("Drop this view  [ Del ]"), 
 		G_CALLBACK(on_popup_view_drop) },
 	
 	{ "OracleActionPopupNavViewAlter", NULL, 
@@ -125,7 +125,7 @@ static GtkActionEntry view_actions[] =
 	
 	{ "OracleActionPopupNavViewBrowse", NULL, 
 		N_("Browse data"), NULL, 
-		N_("Browse data"), 
+		N_("Open SQL editor to browse the data  [ F3 ]"), 
 		G_CALLBACK(on_popup_view_browse) },
 
 };

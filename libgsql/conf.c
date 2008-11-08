@@ -166,7 +166,7 @@ gsql_conf_value_get_boolean (gchar *path)
 		g_error_free (error);
 	
 	return value;
-};
+}
 
 void
 gsql_conf_value_set_int (gchar *path, gint value)
@@ -218,3 +218,4 @@ gsql_conf_value_set_boolean (gchar *path, gboolean value)
 		g_error_free (error);
 	
 }
+

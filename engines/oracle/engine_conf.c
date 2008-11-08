@@ -27,12 +27,20 @@
 #include "engine_conf.h"
 #include "engine_confcb.h"
 
-//LD_LIBRARY_PATH
-//ORACLE_HOME
-//ORACLE_SID
-//TNS_ADMIN
-//NLS_LANG
+const gchar *env_types[] = 
+{
+	"ORACLE_HOME",
+	"TNS_ADMIN",
+	"ORACLE_BASE",
+	"ORACLE_SID",
+	"NLS_LANG",
+	"TMP",
+	"TMPDIR",
+	"SHELL",
+	"EDITOR"
+};
 
+static GtkListStore *ls_types;
 
 
 GtkWidget *
@@ -48,7 +56,7 @@ engine_conf_widget_create ()
 	GtkWidget *oracle_env_hbox;
 	GtkWidget *oracle_env_scroll;
 	GtkWidget *oracle_env_treeview;
-	GtkListStore * liststore;        
+	GtkListStore *liststore;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 	GtkTreeIter iter;
@@ -62,6 +70,10 @@ engine_conf_widget_create ()
 	GtkWidget *oracle_options_vbox;
 	GtkWidget *oracle_enable_trace_check;
 	GtkWidget *oracle_options_label;
+	GtkWidget *lbl;
+	gchar	  **env_list, *env_all = NULL;
+	gchar *env_name, *env_value;
+	guint i;
 	
 	gboolean gconf_bool_value;
 	
@@ -87,6 +99,12 @@ engine_conf_widget_create ()
 	gtk_widget_show (use_system_env_check);
 	gtk_box_pack_start (GTK_BOX (oracle_env_vbox), use_system_env_check, FALSE, FALSE, 0);
 
+	lbl = gtk_label_new (N_("<small> Warning: the changes will affect after restart GSQL</small>"));
+	gtk_label_set_use_markup (lbl, TRUE);
+	gtk_misc_set_alignment (GTK_MISC (lbl), 0, 0.5);
+	gtk_widget_show (lbl);
+	gtk_box_pack_start (GTK_BOX (oracle_env_vbox), lbl, FALSE, FALSE, 0);
+	
 	oracle_env_hbox = gtk_hbox_new (FALSE, 0);
 	gtk_widget_show (oracle_env_hbox);
 	gtk_box_pack_start (GTK_BOX (oracle_env_vbox), oracle_env_hbox, TRUE, TRUE, 0);
@@ -106,15 +124,44 @@ engine_conf_widget_create ()
 									G_TYPE_STRING,  // env name
 									G_TYPE_STRING);  // env value
 
+	if (!ls_types)
+	{
+		ls_types = gtk_list_store_new (1, G_TYPE_STRING);
+		for (i = 0; i < G_N_ELEMENTS (env_types); i++)
+		{
+			gtk_list_store_append (ls_types, &iter);
+			gtk_list_store_set (ls_types, &iter,
+							0, env_types[i],
+							-1);		
+		}
+	}
+	
 	oracle_env_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (liststore));
 	column = gtk_tree_view_column_new ();
-	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_resizable (column, TRUE);
+	renderer = gtk_cell_renderer_combo_new ();
+
+	g_object_set(renderer, "model", ls_types, 
+						   "text-column", 0,
+						   "editable", TRUE, 
+						   "has-entry", TRUE,
+							NULL);
+	
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_add_attribute (column, renderer,
-                                            "markup", 2);
+	gtk_tree_view_column_add_attribute (column, 
+										renderer,
+										"text", 
+										0);
 	gtk_tree_view_column_set_title (column, _("Name"));
 	gtk_tree_view_append_column (GTK_TREE_VIEW(oracle_env_treeview), 
 									column);
+	g_signal_connect (G_OBJECT(renderer), "edited", 
+					  G_CALLBACK(env_type_renderer_edited_cb), liststore);
+	
+	g_signal_connect (G_OBJECT(renderer), "editing-canceled",
+					  G_CALLBACK(env_type_renderer_canceled_cb), 
+					  oracle_env_treeview);
 	
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_text_new ();
@@ -122,11 +169,14 @@ engine_conf_widget_create ()
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute (column, 
 										renderer,
-										"markup", 
-										3);
+										"text", 
+										1);
 	gtk_tree_view_column_set_title (column, _("Value"));
 	gtk_tree_view_append_column (GTK_TREE_VIEW(oracle_env_treeview), 
 									column);
+	
+	g_signal_connect (G_OBJECT(renderer), "edited", 
+					  G_CALLBACK(env_value_renderer_edited_cb), liststore);
 
 	gtk_widget_show (oracle_env_treeview);
 	gtk_container_add (GTK_CONTAINER (oracle_env_scroll), oracle_env_treeview);
@@ -140,10 +190,6 @@ engine_conf_widget_create ()
 	oracle_env_add_button = gtk_button_new_with_mnemonic (_("Add"));
 	gtk_widget_show (oracle_env_add_button);
 	gtk_box_pack_start (GTK_BOX (oracle_buttons_vbox), oracle_env_add_button, FALSE, FALSE, 0);
-        
-	oracle_env_edit_button = gtk_button_new_with_mnemonic (_("Edit"));
-	gtk_widget_show (oracle_env_edit_button);
-	gtk_box_pack_start (GTK_BOX (oracle_buttons_vbox), oracle_env_edit_button, FALSE, FALSE, 0);
 
 	oracle_env_del_button = gtk_button_new_with_mnemonic (_("Delete"));
 	gtk_widget_show (oracle_env_del_button);
@@ -159,8 +205,10 @@ engine_conf_widget_create ()
 	gtk_box_pack_start (GTK_BOX (oracle_page_vbox), oracle_options_frame, TRUE, TRUE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (oracle_options_frame), 2);
 	gtk_frame_set_shadow_type (GTK_FRAME (oracle_options_frame), GTK_SHADOW_NONE);
-        
-	alignment9 = gtk_alignment_new (0.5, 0.5, 1, 1);
+      
+	
+	GSQL_FIXME;
+	/*alignment9 = gtk_alignment_new (0.5, 0.5, 1, 1);
 	gtk_widget_show (alignment9);
 	gtk_container_add (GTK_CONTAINER (oracle_options_frame), alignment9);
 	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment9), 0, 0, 12, 0);
@@ -177,29 +225,48 @@ engine_conf_widget_create ()
 	gtk_widget_show (oracle_options_label);
 	gtk_frame_set_label_widget (GTK_FRAME (oracle_options_frame), oracle_options_label);
 	gtk_label_set_use_markup (GTK_LABEL (oracle_options_label), TRUE);
-	
+	*/
 	g_signal_connect ((gpointer) use_system_env_check, "toggled",
 						G_CALLBACK (on_conf_use_system_env_check_toggled),
 						NULL);
-	g_signal_connect ((gpointer) oracle_env_add_button, "activate",
+	
+	g_signal_connect ((gpointer) oracle_env_add_button, "clicked",
 						G_CALLBACK (on_conf_oracle_env_add_button_activate),
-						NULL);
-	g_signal_connect ((gpointer) oracle_env_edit_button, "activate",
-						G_CALLBACK (on_conf_oracle_env_edit_button_activate),
-						NULL);
-	g_signal_connect ((gpointer) oracle_env_del_button, "activate",
+						oracle_env_treeview);
+
+	g_signal_connect ((gpointer) oracle_env_del_button, "clicked",
 						G_CALLBACK (on_conf_oracle_env_del_button_activate),
-						NULL);
+						oracle_env_treeview);
+	/*
 	g_signal_connect ((gpointer) oracle_enable_trace_check, "toggled",
 						G_CALLBACK (on_conf_oracle_enable_trace_check_toggled),
 						NULL);
-
+	*/
 	gconf_bool_value = gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_USE_SYS_ENV);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (use_system_env_check), gconf_bool_value);
-        
+    
+	env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
+	env_list = g_strsplit (env_all, ",", 100);
+	
+	for (i = 0; env_list[i]; i ++)
+	{
+		env_name = env_list[i++];
+		env_value = env_list[i];
+
+		gtk_list_store_append (liststore, &iter);
+		gtk_list_store_set (liststore, &iter,
+							0, env_name,
+							1, env_value,
+							-1);
+		
+	}
+	
+	g_strfreev (env_list);
+	/*
 	gconf_bool_value = gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_ENABLE_TRACE);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (oracle_enable_trace_check), gconf_bool_value);
-
+	*/
+	
 	return oracle_page_vbox;
 };
 

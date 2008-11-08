@@ -153,7 +153,7 @@ conf_renderer_edited_cb (GtkCellRendererText *renderer,
 	
 	path = gtk_tree_path_new_from_string (c_path);
 	gtk_tree_model_get_iter (GTK_TREE_MODEL(lstore), &iter, path);
-	g_free (path);
+	gtk_tree_path_free (path);
 	
 	gtk_tree_model_get (GTK_TREE_MODEL (lstore), &iter,
 						0, &engine_id, -1);
@@ -166,9 +166,7 @@ conf_renderer_edited_cb (GtkCellRendererText *renderer,
 		gtk_list_store_set(GTK_LIST_STORE(lstore), &iter,
 					   3, new_text,
 					   -1);
-	};
+	}
 	
-	
-	return;
-};
+}
 

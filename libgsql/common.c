@@ -36,6 +36,8 @@
 #include <libgsql/common.h>
 
 GtkWidget   *gsql_window;
+GtkWidget   *statusbar;
+
 gpointer gsql_main_thread;
 /* debug routines */
 

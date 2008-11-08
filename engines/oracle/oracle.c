@@ -336,9 +336,9 @@ oracle_session_reopen (GSQLSession *session)
 	OCIHandleFree ((dvoid *)oracle_session->usrhp, OCI_HTYPE_SESSION);
 	OCIHandleFree ((dvoid *)oracle_session->envhp, OCI_HTYPE_ENV);
 	
-	username = gsql_session_get_username (session);
-	password = gsql_session_get_password (session);
-	database = gsql_session_get_database_name (session);
+	username = (gchar *) gsql_session_get_username (session);
+	password = (gchar *) gsql_session_get_password (session);
+	database = (gchar *) gsql_session_get_database_name (session);
 	
 	oracle_session_open (oracle_session,
 						 username,

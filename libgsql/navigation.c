@@ -28,6 +28,8 @@
 
 #include <gdk/gdkkeysyms.h>
 
+extern GtkWidget *statusbar;
+
 struct _GSQLNavigationPrivate
 {
 	GtkWidget		*root;
@@ -77,6 +79,15 @@ static void on_navigation_popup_copyname (GtkMenuItem *menuitem,
 static void on_navigation_popup_refresh (GtkMenuItem *menuitem, 
 											gpointer user_data);
 
+static void ui_connect_proxy_cb (GtkUIManager *manager,
+								 GtkAction *action,
+								 GtkWidget *proxy,
+								 gpointer userdata);
+
+static void ui_disconnect_proxy_cb (GtkUIManager *manager,
+								 GtkAction *action,
+								 GtkWidget *proxy,
+								 gpointer userdata);
 
 static GtkWidgetClass *parent_class;
 
@@ -93,13 +104,13 @@ static gchar navigation_ui[] =
 static GtkActionEntry navigation_acts[] = 
 {
 	{ "NavObjectActionCopyName", NULL, 
-		N_("Copy name"), "<control>C", 
-		N_("Copy name"), 
+		N_("Copy name"), NULL, 
+		N_("Copy this name  [ Ctrl+C ]"), 
 		G_CALLBACK (on_navigation_popup_copyname) },
 	
 	{ "NavObjectActionRefresh", GTK_STOCK_REFRESH, 
 		N_("Refresh"), NULL, 
-		N_("Refresh"), 
+		N_("Refresh the current list of objects [ F5 ]"), 
 		G_CALLBACK (on_navigation_popup_refresh) }
 };
 
@@ -474,6 +485,8 @@ gsql_navigation_get_model (GSQLNavigation *navigation)
  *  on_navigation_popup_menu
  *  on_navigation_popup_copyname 
  *  on_navigation_popup_refresh
+ *  ui_connect_proxy_cb
+ *  ui_disconnect_proxy_cb
  */
 
 
@@ -568,6 +581,13 @@ gsql_navigation_init (GSQLNavigation *obj)
 											  details_hash_remove_value_notify);
 	obj->private->ui = gtk_ui_manager_new ();
 	
+	g_signal_connect (obj->private->ui, "connect_proxy",
+					  G_CALLBACK (ui_connect_proxy_cb),
+					  NULL);
+	
+	g_signal_connect (obj->private->ui, "disconnect_proxy",
+					  G_CALLBACK (ui_disconnect_proxy_cb),
+					  NULL);
 	
 	action = gtk_action_group_new ("NavObjectActions");
 	gtk_action_group_add_actions (action, navigation_acts, 
@@ -1031,4 +1051,68 @@ details_hash_remove_value_notify (gpointer data)
 
 	g_object_unref (G_OBJECT (data));
 
+}
+
+static void
+menu_item_select_cb (GtkMenuItem *proxy, gpointer userdata)
+{
+	GtkAction *action;
+	gchar *tip = NULL;
+	
+	action = g_object_get_data (G_OBJECT (proxy),  "gtk-action");
+	g_return_if_fail (action != NULL);
+	
+	g_object_get (G_OBJECT (action), "tooltip", &tip, NULL);
+	
+	if (tip)
+	{
+		gtk_statusbar_push (GTK_STATUSBAR (statusbar), 0, tip);
+		
+		g_free (tip);
+	}
+	
+}
+
+static void
+menu_item_deselect_cb (GtkMenuItem *proxy, gpointer userdata)
+{
+	gtk_statusbar_pop (GTK_STATUSBAR (statusbar), 0);	
+}
+
+static void 
+ui_connect_proxy_cb (GtkUIManager *manager,
+								 GtkAction *action,
+								 GtkWidget *proxy,
+								 gpointer userdata)
+{
+	GSQL_TRACE_FUNC;
+	
+	if (GTK_IS_MENU_ITEM (proxy))
+	{
+		g_signal_connect (proxy, "select",
+						  G_CALLBACK (menu_item_select_cb), NULL);
+		g_signal_connect (proxy, "deselect",
+						  G_CALLBACK (menu_item_deselect_cb), NULL);	
+	}
+	
+}
+
+static void 
+ui_disconnect_proxy_cb (GtkUIManager *manager,
+								 GtkAction *action,
+								 GtkWidget *proxy,
+								 gpointer userdata)
+{
+	GSQL_TRACE_FUNC;
+	
+	if (GTK_IS_MENU_ITEM (proxy))
+	{
+		g_signal_handlers_disconnect_by_func (proxy, 
+											  G_CALLBACK (menu_item_select_cb), 
+											  NULL);
+		g_signal_handlers_disconnect_by_func (proxy, 
+											  G_CALLBACK (menu_item_deselect_cb), 
+											  NULL);
+	}
+	
 }

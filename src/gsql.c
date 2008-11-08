@@ -45,6 +45,13 @@
 #include "gsqlconf.h"
 
 extern GtkWidget *gsql_window;
+extern GtkWidget *statusbar;
+
+static void
+set_non_homogeneus (GtkWidget *widget, gpointer data)
+{
+	gtk_tool_item_set_homogeneous (GTK_TOOL_ITEM (widget), FALSE);
+}
 
 void
 gsql_window_create (void)
@@ -56,7 +63,7 @@ gsql_window_create (void)
 	GtkWidget * gsqlmenu;	
 	GtkWidget * notebook;
 	GtkWidget *toolbar;
-	GtkWidget *statusbar;
+
 	gint w,h,x,y;
 	gboolean restore_xywh;
        
@@ -105,6 +112,9 @@ gsql_window_create (void)
 	
 	toolbar = gsql_menu_get_widget("/ToolbarMain");
 	gtk_box_pack_start (GTK_BOX (mainvbox), toolbar, FALSE, FALSE, 0);
+	
+	gtk_container_foreach (GTK_CONTAINER (toolbar),
+						   (GtkCallback) set_non_homogeneus, NULL);
                
 	notebook = gtk_notebook_new ();
 	

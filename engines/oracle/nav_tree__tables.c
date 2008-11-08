@@ -156,22 +156,22 @@ static GtkActionEntry table_acts[] =
 {
 	{ "OracleActionTableCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
-		N_("Create table"), 
+		N_("Create a new table  [ Ins ]"), 
 		G_CALLBACK(on_popup_table_create) },
 	
 	{ "OracleActionTableDrop", GTK_STOCK_DELETE, 
 		N_("Drop..."), NULL, 
-		N_("Drop table"), 
+		N_("Drop this table  [ Del ]"), 
 		G_CALLBACK(on_popup_table_drop) },
 	
 	{ "OracleActionTableAlter", NULL, 
 		N_("Alter..."), NULL, 
-		N_("Alter table"), 
+		N_("Alter this table"), 
 		G_CALLBACK(on_popup_table_alter) },
 	
 	{ "OracleActionTableBrowse", NULL, 
 		N_("Browse data"), NULL, 
-		N_("Browse data"), 
+		N_("Open SQL editor to browse the data  [ F3 ]"), 
 		G_CALLBACK(on_popup_table_browse) }
 };
 

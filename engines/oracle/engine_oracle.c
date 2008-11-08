@@ -64,6 +64,11 @@ engine_load (GSQLEngine *engine)
 {
 	GSQL_TRACE_FUNC;
 	gchar *env = NULL;
+	gboolean use_sys_env = TRUE;
+	gchar *env_all, *env_name, *env_value;
+	gchar **env_list;
+	gint i;
+	gchar *tmp;
 
 	engine->info.author = ENGINE_AUTHOR;
 	engine->info.id = ENGINE_ID;
@@ -100,12 +105,25 @@ engine_load (GSQLEngine *engine)
 	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/oracle");
 	engine_stock_init();
 	
-	//FIXME
-	env = getenv ("NLS_LANG");
+	if (!gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_USE_SYS_ENV))
+	{
+		env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
+		env_list = g_strsplit (env_all, ",", 100);
 	
-	if (!env)
-		putenv ("NLS_LANG=AMERICAN_AMERICA.UTF8");
+		for (i = 0; env_list[i]; i ++)
+		{
+			env_name = env_list[i++];
+			env_value = env_list[i];
 		
+			tmp = g_strdup_printf ("%s=%s", env_name, env_value);
+			putenv (tmp);
+			g_free (tmp);
+		}
+	
+		g_strfreev (env_list);
+	
+	}
+
     return TRUE;
 };
 

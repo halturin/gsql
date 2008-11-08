@@ -19,6 +19,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <gconf/gconf.h>
 
 #define GSQL_CONF_ROOT_KEY "/apps/gsql"
 #define GSQL_CONF_ENGINES_ROOT_KEY GSQL_CONF_ROOT_KEY "/engines"
@@ -52,6 +53,7 @@ gsql_conf_value_set_string (gchar *path, gchar *value);
 
 void
 gsql_conf_value_set_boolean (gchar *path, gboolean value);
+
 
 void
 gsql_conf_nitify_add (gchar *path, GSQLConfNotifyFunc func, gpointer userdata);
