@@ -99,8 +99,8 @@ engine_conf_widget_create ()
 	gtk_widget_show (use_system_env_check);
 	gtk_box_pack_start (GTK_BOX (oracle_env_vbox), use_system_env_check, FALSE, FALSE, 0);
 
-	lbl = gtk_label_new (N_("<small> Warning: the changes will affect after restart GSQL</small>"));
-	gtk_label_set_use_markup (lbl, TRUE);
+	lbl = gtk_label_new (N_("<small> Warning: changes would be applied after restart</small>"));
+	gtk_label_set_use_markup (GTK_LABEL (lbl), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (lbl), 0, 0.5);
 	gtk_widget_show (lbl);
 	gtk_box_pack_start (GTK_BOX (oracle_env_vbox), lbl, FALSE, FALSE, 0);

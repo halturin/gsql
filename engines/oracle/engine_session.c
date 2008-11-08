@@ -133,7 +133,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	{
 		lst = g_list_first (cursor->var_list);
 		variable = GSQL_VARIABLE (lst->data);
-		g_snprintf (info, 32, "%s", variable->value);
+		g_snprintf (info, 32, "%s", (gchar *) variable->value);
 		
 	} else {
 		g_snprintf (info, 32, "%s", "0.0.0.0");
@@ -206,8 +206,125 @@ static void
 on_session_duplicate (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
+	
+	GSQLSession *new_session;
+	GSQLEOracleSession *new_spec, *spec;
+	gchar *username, *database, *password;
+	GSQLWorkspace *new_workspace, *workspace;
+	GSQLNavigation *navigation;
+	gchar buffer[256], info[32];
+	GSQLCursor *cursor;
+	GSQLVariable *variable;
+	GSQLCursorState c_state;
+	GtkWidget   *sessions;
+	gchar *session_name;
+	GList *lst;
+	GtkWidget	*header;
+	gint ret;
+	gchar *sql = "select version from product_component_version "
+	 			 "where instr(lower(product),'oracle') >0  "
+				 "and rownum <2 ";
+	
+	GSQL_FIXME;
+	/* Do rework this function, not yet, later. It seems like a hack :) */
+	
+	spec = session->spec;
+	
+	new_spec = g_malloc0 (sizeof (GSQLEOracleSession));
+	new_spec->mode = spec->mode;
+	
+	username = (gchar *) gsql_session_get_username (session);
+	password = (gchar *) gsql_session_get_password (session);
+	database = (gchar *) gsql_session_get_database_name (session);
 
-	return;
+	workspace = gsql_session_get_workspace (session);
+	
+	if (!oracle_session_open (new_spec, username, password, database, buffer)) 
+	{	
+		g_free (spec);
+		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, buffer);
+		
+		return;
+	}
+	
+	new_session = gsql_session_new_with_attrs ("session-username", 
+										   username,
+										   "session-password",
+										   password,
+										   "session-database",
+										   database,
+										   NULL);
+	new_session->spec = new_spec;	
+	new_session->engine = session->engine;
+
+	cursor = gsql_cursor_new (session, sql);
+	c_state = gsql_cursor_open (cursor, FALSE); 
+	
+	memset ((void *) info, 0, 32);
+	
+	if ((c_state == GSQL_CURSOR_STATE_OPEN) && (gsql_cursor_fetch (cursor, 1)))
+	{
+		lst = g_list_first (cursor->var_list);
+		variable = GSQL_VARIABLE (lst->data);
+		g_snprintf (info, 32, "%s", (gchar *) variable->value);
+		
+	} else {
+		g_snprintf (info, 32, "%s", "0.0.0.0");
+	}
+	
+	gsql_cursor_close (cursor);
+	
+	gsql_session_set_attrs (new_session, "session-info",
+							info,
+							NULL);	 
+	
+	new_workspace = gsql_workspace_new (new_session);
+	navigation = gsql_workspace_get_navigation (new_workspace);
+	
+	nav_tree_set_root (navigation, (gchar *) username);
+	
+	
+	
+	g_signal_connect (G_OBJECT (new_session), "close",
+					  G_CALLBACK (on_session_close), new_session);
+	g_signal_connect (G_OBJECT (new_session), "reopen",
+					  G_CALLBACK (on_session_reopen), new_session);
+	g_signal_connect (G_OBJECT (new_session), "duplicate",
+					  G_CALLBACK (on_session_duplicate), new_session);
+	g_signal_connect (G_OBJECT (new_session), "commit",
+					  G_CALLBACK (on_session_commit), new_session);
+	g_signal_connect (G_OBJECT (new_session), "rollback",
+					  G_CALLBACK (on_session_rollback), new_session);
+	g_signal_connect (G_OBJECT (new_session), "switch",
+					  G_CALLBACK (on_session_switch), new_session);
+	
+	g_snprintf(buffer, 256,
+			   _("Connect to the Oracle database \"<b>%s</b>\" succesfully\n"
+				 "<small>(%s)</small>"), 
+			   g_utf8_strup (database, g_utf8_strlen (database, 128)),
+			   new_spec->server_version);
+	
+	gsql_message_add (new_workspace, GSQL_MESSAGE_NORMAL, buffer);
+	
+	GSQL_DEBUG ("New session created with name [%s]", gsql_session_get_name (new_session));
+	
+	sessions = g_object_get_data(G_OBJECT(gsql_window), "sessions");
+	
+	session_name = gsql_session_get_name (new_session);
+	header = gsql_utils_header_new (create_pixmap(new_session->engine->file_logo),
+									   session_name, NULL,
+									   FALSE, (gint) 1);
+	
+	gtk_widget_show (GTK_WIDGET (new_session));
+	
+	ret = gtk_notebook_append_page (GTK_NOTEBOOK(sessions),
+							  GTK_WIDGET (new_session), 
+							  header);
+
+	gtk_notebook_set_current_page (GTK_NOTEBOOK(sessions), ret);
+	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(sessions),
+							  GTK_WIDGET (new_session), TRUE);
+	
 }
 
 static void
