@@ -34,6 +34,7 @@
 #include "engine_stock.h"
 #include "nav_tree__columns.h"
 #include "nav_tree__depend.h"
+#include "nav_tree__procedures.h"
 #include "nav_sql.h"
 
 
@@ -190,7 +191,7 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
 					GSQL_NAV_TREE_SQL,			NULL,
 					GSQL_NAV_TREE_OBJECT_POPUP, NULL,
-					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
+					GSQL_NAV_TREE_OBJECT_HANDLER, nav_tree_code_editor,
 					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
 					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
 					GSQL_NAV_TREE_STRUCT, triggers,

@@ -37,12 +37,6 @@ gsql_files_menu_init();
 void
 gsql_files_open_file (GSQLSession *session, gchar *file, gchar *encoding);
 
-gboolean
-gsql_files_save_file (GSQLContent *content);
-
-void
-gsql_files_reload_file (GSQLContent *content, gchar *file, gchar *encoding);
-
 G_END_DECLS
 
 #endif /* _GSQLFILES_H */

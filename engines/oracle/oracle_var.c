@@ -115,7 +115,7 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 		case SQLT_VNU:
 		case SQLT_INT:
 		{
-			GSQL_DEBUG ("Variable = SQLT_NUM");
+			GSQL_DEBUG ("Variable = SQLT_NUM [%d]", spec_var->data_type);
 			spec_var->data_type = SQLT_VNU;
 			scale = precision = 0;
 			spec_var->variable_len = FALSE;
@@ -129,7 +129,7 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 			if (scale == 0 && precision > 0 && precision < 10) 
 			{
 				variable->value_type = G_TYPE_INT;
-				variable->value = g_malloc0 (sizeof (gint64));
+				variable->value = g_malloc0 (sizeof (gint));
 				
 			} else 
 				if (scale == 0 || (scale == -127 && precision == 0))
@@ -295,14 +295,14 @@ oracle_raw_to_value (GSQLVariable *variable)
 				GSQL_DEBUG ("G_TYPE_INT displaying");
 				gint_value = (gint *) variable->value;
 				
-				OCINumberToInt ( errhp,
+				OCINumberToInt ( spec_var->errhp,
 								(CONST OCINumber *) spec_var->data,
 								(uword) sizeof(gint),
 								OCI_NUMBER_SIGNED,
  								(dvoid *) gint_value);
 				
 				return;
-			};
+			}
 			
 			if (variable->value_type == G_TYPE_INT64)
 			{
@@ -327,7 +327,7 @@ oracle_raw_to_value (GSQLVariable *variable)
 								(text *) gchar_value);
 				
 				if (ret != OCI_SUCCESS)
-					GSQL_DEBUG ("Error [OCINumberToText]: %s", oracle_get_error_string (errhp));
+					GSQL_DEBUG ("Error [OCINumberToText]: %s", oracle_get_error_string (spec_var->errhp));
 				
 				*gint64_value = (gint64) atoll (gchar_value);
 				
@@ -340,12 +340,12 @@ oracle_raw_to_value (GSQLVariable *variable)
 			
 			gdouble_value = (gdouble *) variable->value;
 			
-			ret = OCINumberToReal(errhp,
+			ret = OCINumberToReal(spec_var->errhp,
 							(CONST OCINumber *) spec_var->data, 
 							sizeof(gdouble), (dvoid*) gdouble_value);
 			
 			if (ret != OCI_SUCCESS)
-				GSQL_DEBUG ("OCINumberToReal failed with error: %s", oracle_get_error_string (errhp));
+				GSQL_DEBUG ("OCINumberToReal failed with error: %s", oracle_get_error_string (spec_var->errhp));
 			
 			if (gdouble_value == NULL)
 				GSQL_DEBUG ("gdouble_value is NULL");

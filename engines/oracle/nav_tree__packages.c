@@ -36,6 +36,7 @@
 
 #include "nav_tree__depend.h"
 #include "nav_tree__arguments.h"
+#include "nav_tree__procedures.h"
 
 static GSQLNavigationItem packages[] = {
 	{   ENTRIES_ID,
@@ -218,7 +219,7 @@ nav_tree_refresh_packages (GSQLNavigation *navigation,
 					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
 					GSQL_NAV_TREE_SQL,			NULL,
 					GSQL_NAV_TREE_OBJECT_POPUP, NULL,
-					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
+					GSQL_NAV_TREE_OBJECT_HANDLER, nav_tree_code_editor,
 					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
 					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
 					GSQL_NAV_TREE_STRUCT, s_elements,

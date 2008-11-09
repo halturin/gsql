@@ -35,6 +35,11 @@ nav_tree_refresh_procedures (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter);
 
+void
+nav_tree_code_editor (GSQLNavigation *navigation,
+					GtkTreeView *tv,
+					GtkTreeIter *iter);
+
 G_END_DECLS
 
 #endif /* _NAV_TREE__PROCEDURES_H */

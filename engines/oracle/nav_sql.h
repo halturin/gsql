@@ -413,6 +413,12 @@ and object_name like :object_name \
 and object_type=:object_type \
 order by a.object_name";
 
+/************ Sources *****************/
+
+static const gchar sql_oracle_code_source[] = 
+"select text from sys.all_source where owner=UPPER(:owner) \
+and name=:object_name and type=:object_type order by line";
+
 /************ Constraints *************/
 
 static const gchar sql_oracle_constraints[] = 
