@@ -8,7 +8,9 @@ mysql_engine_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@/mysql
 
 mysql_engine_pixmaps_DATA = \
 	mysql.png          \
-	close.png
+	process.list.png          \
+	global.variables.png          \
+	session.variables.png
 
 
 EXTRA_DIST = $(mysql_engine_pixmaps_DATA)

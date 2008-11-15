@@ -24,6 +24,7 @@
 #include <libgsql/common.h>
 #include <libgsql/cvariable.h>
 #include <libgsql/type_datetime.h>
+#include <libgsql/utils.h>
 
 #include "mysql.h"
 #include "mysql_var.h"
@@ -31,6 +32,29 @@
 
 static void mysql_time_to_datetime (GSQLVariable *variable);
 static void on_variable_free (GSQLVariable *var, gpointer user_data);
+
+static void
+mysql_variable_clear_foreach (gpointer item, gpointer user_data)
+{
+	GSQLVariable *var = item;
+	GSQLEMySQLVariable *var_spec;
+	
+	var_spec = var->spec;
+
+	if (var_spec->bind->buffer)
+		memset (var_spec->bind->buffer, 0, var_spec->bind->buffer_length);
+}
+	
+
+void
+mysql_variable_clear (GSQLCursor *cursor)
+{
+	
+	g_return_if_fail (GSQL_IS_CURSOR (cursor));
+	
+	g_list_foreach (cursor->var_list, mysql_variable_clear_foreach, NULL);
+	
+}
 
 gboolean
 mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bind)
@@ -56,12 +80,18 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 	switch (field->type)
 	{
 		case MYSQL_TYPE_FLOAT:  
-		case MYSQL_TYPE_DOUBLE:
+		case MYSQL_TYPE_DOUBLE:	
 		case MYSQL_TYPE_NEWDECIMAL:
 		case MYSQL_TYPE_DECIMAL:
-			GSQL_DEBUG ("Cast to G_TYPE_DOUBLE");
+
+			//if (field->type == MYSQL_TYPE_NEWDECIMAL)
+				//bind->buffer_type = MYSQL_TYPE_DECIMAL;
+			
+			bind->buffer_type = MYSQL_TYPE_DOUBLE;
+			
+			GSQL_DEBUG ("Cast to G_TYPE_DOUBLE (type: [%d])", field->type);
 			variable->value_type = G_TYPE_DOUBLE;
-			variable->value_length = 8;
+			variable->value_length = sizeof (gdouble);
 			variable->value = g_malloc0 (variable->value_length);
 			bind->buffer = variable->value;
 			bind->buffer_length = variable->value_length;
@@ -72,7 +102,7 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 		case MYSQL_TYPE_TINY:
 			GSQL_DEBUG ("Cast to G_TYPE_INT");
 			variable->value_type = G_TYPE_INT;
-			variable->value_length = 4;
+			variable->value_length = sizeof(gint);
 			variable->value = g_malloc0 (variable->value_length);
 			bind->buffer = variable->value;
 			bind->buffer_length = variable->value_length;
@@ -82,7 +112,7 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 		case MYSQL_TYPE_INT24:
 			GSQL_DEBUG ("Cast to G_TYPE_INT64");
 			variable->value_type = G_TYPE_INT64;
-			variable->value_length = 8;
+			variable->value_length = sizeof(gint64);
 			variable->value = g_malloc0 (variable->value_length);
 			bind->buffer = variable->value;
 			bind->buffer_length = variable->value_length;
@@ -116,7 +146,14 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 		
 		default:
 			GSQL_DEBUG ("MySQL: Unsupported type [%d]", field->type);
-			ret = FALSE;
+			GSQL_DEBUG ("Cast Unhandled type to G_TYPE_STRING");
+			variable->value_type = GSQL_TYPE_UNSUPPORTED;
+			
+			variable->value_length = 4096; //FIXME
+			variable->value = g_malloc0 (variable->value_length);
+			bind->buffer = variable->value;
+			bind->buffer_length = variable->value_length;
+			
 	}
 	variable->field_name = g_strdup (field->name);
 	g_signal_connect (G_OBJECT (variable), "on-free", G_CALLBACK (on_variable_free), NULL);
@@ -144,65 +181,8 @@ on_variable_free (GSQLVariable *var, gpointer user_data)
 	
 	g_free (var->spec);
 	g_free (var->value);
-	
-	return;
+
 }
-
-/*
-void *
-mysql_variable_data_to_display_format (GSQLEMySQLVariable *var)
-{
-	GSQL_TRACE_FUNC;
-
-	void *res = NULL;
-	MYSQL_TIME *time;
-	gchar * gchar_value;
-	gint *gint_value = NULL;
-	gint64 *gint64_value = NULL;
-	gdouble *gdouble_value = NULL;
-
-	g_return_val_if_fail (var != NULL, NULL);
-	
-	switch (var->variable_type)
-	{
-		case G_TYPE_STRING:
-			if ((var->field->type == MYSQL_TYPE_DATE) ||
-				(var->field->type == MYSQL_TYPE_TIME) ||
-				(var->field->type == MYSQL_TYPE_DATETIME))
-			{
-				time = (MYSQL_TIME *) var->data;
-				gchar_value = g_strdup_printf ("%02d-%02d-%04d %02d:%02d:%02d",
-                     time->day, time->month, time->year, 
-                     time->hour, time->minute, time->second);
-			} else
-			gchar_value = g_utf8_normalize ((gchar *) var->data, 
-											var->data_length, 
-											G_NORMALIZE_DEFAULT);
-			return gchar_value;
-		
-		case G_TYPE_INT:
-			gint_value = g_malloc0 (sizeof(gint));
-			*gint_value = *((gint *)(var->data));
-			return gint_value;
-			
-		case G_TYPE_INT64:
-			gint64_value = g_malloc0 (sizeof(gint64));
-			*gint64_value = *((gint64 *)(var->data));
-			return gint64_value;
-		
-		case G_TYPE_DOUBLE:
-			gdouble_value = g_malloc0 (sizeof(gdouble));
-			*gdouble_value = *((gdouble *) (var->data));
-			return gdouble_value;
-		
-		default:
-			GSQL_DEBUG ("(details) Unsupported type: %d", var->variable_type);
-			break;
-	};
-	
-	return res;
-};
-*/
 
 static void 
 mysql_time_to_datetime (GSQLVariable *variable)

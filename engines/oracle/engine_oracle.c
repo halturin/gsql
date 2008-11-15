@@ -108,6 +108,10 @@ engine_load (GSQLEngine *engine)
 	if (!gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_USE_SYS_ENV))
 	{
 		env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
+		
+		if (!env_all)
+			return TRUE;
+		
 		env_list = g_strsplit (env_all, ",", 100);
 	
 		for (i = 0; env_list[i]; i ++)

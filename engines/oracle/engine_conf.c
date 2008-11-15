@@ -246,6 +246,10 @@ engine_conf_widget_create ()
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (use_system_env_check), gconf_bool_value);
     
 	env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
+	
+	if (!env_all)
+		return oracle_page_vbox;
+	
 	env_list = g_strsplit (env_all, ",", 100);
 	
 	for (i = 0; env_list[i]; i ++)
@@ -268,30 +272,10 @@ engine_conf_widget_create ()
 	*/
 	
 	return oracle_page_vbox;
-};
-
-void
-engine_conf_widget_free (GtkWidget *conf_widget)
-{
-	GSQL_TRACE_FUNC;
-
-	return;
-};
-
-void
-engine_conf_environment_load (GtkListStore *env, gboolean *use_system)
-{
-	GSQL_TRACE_FUNC;
-
-	if (use_system)
-	{
-		return;
-	};
-	return;
 }
 
 void
-engine_conf_environment_save (GtkListStore *env)
+engine_conf_widget_free (GtkWidget *conf_widget)
 {
 	GSQL_TRACE_FUNC;
 

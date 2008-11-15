@@ -27,6 +27,8 @@
 #include <libgsql/engines.h>
 #include <libgsql/common.h>
 #include <libgsql/editor.h>
+#include <libgsql/utils.h>
+
 #include "engine_session.h"
 #include "engine_menu.h"
 #include "nav_tree_static.h"
@@ -79,6 +81,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	mysql_session = g_malloc0 (sizeof (GSQLEMySQLSession));
 	mysql_session->use = FALSE;
 	
+	GSQL_FIXME;
 	if (!port)
 		port = 3306;
 	
@@ -160,16 +163,124 @@ static void
 on_session_reopen (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
+	
+	GSQLWorkspace *workspace;
+	
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	workspace = gsql_session_get_workspace (session);
 
-	return;
+	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE,
+					  N_("Restoring the connection is automatic"));
 }
 
 static void
 on_session_duplicate (GSQLSession *session, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
+	
+	GSQLSession *new_session;
+	GSQLEMySQLSession *new_spec, *spec;
+	gchar *username, *database, *password, *hostname;
+	GSQLWorkspace *new_workspace, *workspace;
+	GSQLNavigation *navigation;
+	gchar buffer[256], info[32];
+	GtkWidget   *sessions;
+	gchar *session_name;
+	GList *lst;
+	GtkWidget	*header;
+	gint ret;
+	guint port = 0;
 
-	return;
+	GSQL_FIXME;
+	/* Do rework this function, not yet, later. It seems like a hack :) */
+	
+	spec = session->spec;
+	
+	new_spec = g_malloc0 (sizeof (GSQLEMySQLSession));
+	
+	username = (gchar *) gsql_session_get_username (session);
+	password = (gchar *) gsql_session_get_password (session);
+	database = (gchar *) gsql_session_get_database_name (session);
+	hostname = (gchar *) gsql_session_get_hostname (session);
+
+	workspace = gsql_session_get_workspace (session);
+	
+	GSQL_FIXME;
+	if (!port)
+		port = 3306;
+	
+	if (!mysql_session_open (new_spec, username, password, database, hostname, port))
+	{
+		if (buffer)
+			g_strlcpy (buffer, (const gchar *) mysql_error (new_spec->mysql), 256);
+		
+		g_free (new_spec->mysql);
+		g_free (new_spec);
+		
+		return;
+	}
+
+	new_session = gsql_session_new_with_attrs ("session-username", 
+										   g_strdup(username),
+										   "session-password",
+										   g_strdup (password),
+										   "session-database",
+										   g_strdup (database),
+										   "session-hostname",
+										   g_strdup (hostname),
+										   "session-info",
+										   g_strdup (new_spec->server_version),
+										   NULL);
+
+	new_session->spec = new_spec;
+	new_session->engine = session->engine;
+
+	new_workspace = gsql_workspace_new (new_session);
+	navigation = gsql_workspace_get_navigation (new_workspace);
+	
+	gsql_navigation_set_root (navigation, GSQLE_MYSQL_STOCK_MYSQL, g_strdup (database), 
+							  root_objects, G_N_ELEMENTS (root_objects));
+	GSQL_DEBUG ("44444444444");
+	g_signal_connect (G_OBJECT (new_session), "close",
+					  G_CALLBACK (on_session_close), new_session);
+	g_signal_connect (G_OBJECT (new_session), "reopen",
+					  G_CALLBACK (on_session_reopen), new_session);
+	g_signal_connect (G_OBJECT (new_session), "duplicate",
+					  G_CALLBACK (on_session_duplicate), new_session);
+	g_signal_connect (G_OBJECT (new_session), "commit",
+					  G_CALLBACK (on_session_commit), new_session);
+	g_signal_connect (G_OBJECT (new_session), "rollback",
+					  G_CALLBACK (on_session_rollback), new_session);
+	g_signal_connect (G_OBJECT (new_session), "switch",
+					  G_CALLBACK (on_session_switch), new_session);
+	
+	g_snprintf(buffer, 256,
+			   _("Connect to the MySQL database \"<b>%s</b>\" succesfully\n"
+				 "<small>(%s)</small>"), 
+			   g_utf8_strup (database, g_utf8_strlen (database, 128)),
+			   new_spec->server_version);
+	
+	gsql_message_add (new_workspace, GSQL_MESSAGE_NORMAL, buffer);
+	
+	GSQL_DEBUG ("New session created with name [%s]", gsql_session_get_name (new_session));
+	
+	sessions = g_object_get_data(G_OBJECT(gsql_window), "sessions");
+	
+	session_name = gsql_session_get_name (new_session);
+	header = gsql_utils_header_new (create_pixmap(new_session->engine->file_logo),
+									   session_name, NULL,
+									   FALSE, (gint) 1);
+	
+	gtk_widget_show (GTK_WIDGET (new_session));
+	
+	ret = gtk_notebook_append_page (GTK_NOTEBOOK(sessions),
+							  GTK_WIDGET (new_session), 
+							  header);
+
+	gtk_notebook_set_current_page (GTK_NOTEBOOK(sessions), ret);
+	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(sessions),
+							  GTK_WIDGET (new_session), TRUE);
 }
 
 static void

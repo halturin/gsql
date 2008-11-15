@@ -61,7 +61,7 @@ mysql_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store)
 			GSQL_DEBUG ("Skip variable[%d]", n);
 			n++; lst = g_list_next (lst);
 			continue;
-		};
+		}
 		
 		switch (var->value_type)
 		{
@@ -69,14 +69,17 @@ mysql_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store)
 				g_snprintf (attr_value, 1024, "%s", 
 							(gchar *) var->value );
 				break;
+				
 			case G_TYPE_INT64:
 				g_snprintf (attr_value, 1024, "%d", 
 							*((gint64*) var->value) );
 				break;
+				
 			case G_TYPE_INT:
 				g_snprintf (attr_value, 1024, "%d", 
 							*((gint*) var->value));
 				break;
+				
 			case G_TYPE_DOUBLE:
 				g_snprintf (attr_value, 1024, "%f", 
 							*((gdouble*) var->value));
@@ -95,16 +98,18 @@ mysql_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store)
 				
 				g_snprintf (attr_value, 1024, N_("<value>"));
 				
-			};
+		}
+		
 		n++; lst = g_list_next (lst);
+		
 		gtk_list_store_append(store, &iter);
 		gtk_list_store_set(store, &iter,
 							GSQL_NAV_DETAILS_STOCK, NULL, //FIXME
 							GSQL_NAV_DETAILS_NAME, attr_name,
 							GSQL_NAV_DETAILS_VALUE, attr_value,
 							  -1);
-	};
+	}
 
-	return;
+
 }
 

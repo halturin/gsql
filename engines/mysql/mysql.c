@@ -45,6 +45,7 @@ mysql_session_open (GSQLEMySQLSession *spec_session,
 	gboolean use_custom_charset = FALSE;
 	MYSQL *mysql;
 	GSQLEMySQLSession *spec;
+	my_bool reconnect = 1;
 	
 	mysql = g_malloc0 (sizeof (MYSQL));
 	mysql_init (mysql);	
@@ -71,6 +72,8 @@ mysql_session_open (GSQLEMySQLSession *spec_session,
 	
 	mysql_autocommit(mysql, 0);
 	
+	mysql_options(mysql, MYSQL_OPT_RECONNECT, &reconnect);
+	
 	spec_session->server_version = (gchar *) mysql_get_server_info (mysql);
 	
 	return TRUE;
@@ -88,7 +91,7 @@ mysql_session_close (GSQLSession *session, gchar *buffer)
 	gsql_session_close (session);
 
 	mysql_close (spec_session->mysql);
-
+	
 	g_free (spec_session);
 
 	return TRUE;

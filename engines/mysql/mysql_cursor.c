@@ -83,9 +83,9 @@ mysql_cursor_prepare (GSQLCursor *cursor)
 	{
 		g_sprintf (error_str, "Prepare failed: %s", 
 				   gsql_utils_escape_string (mysql_stmt_error (e_cursor->statement)));
-                GSQL_DEBUG (error_str);
-                workspace = gsql_session_get_workspace (cursor->session);
-                gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
+
+		workspace = gsql_session_get_workspace (cursor->session);
+		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 
 		mysql_stmt_reset (e_cursor->statement);
 		return FALSE;
@@ -121,7 +121,8 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 	if (!mysql_cursor_prepare (cursor))
 	{
 		return GSQL_CURSOR_STATE_ERROR;
-	};
+	}
+	
 	e_cursor = cursor->spec;
 	binds_count = mysql_stmt_param_count(e_cursor->statement);
 
@@ -132,7 +133,7 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		mysql_stmt_reset (e_cursor->statement);
 
 		return GSQL_CURSOR_STATE_ERROR;
-	};
+	}
 
 	binds = g_new0 (MYSQL_BIND, binds_count);
 	n = 0;
@@ -176,10 +177,11 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 				binds[n].is_null= (my_bool*) &is_null;
 				break;
 				
-		};
+		}
+		
 		vlist = g_list_next (vlist);
 		n++;
-	};
+	}
 
 	if ((mysql_stmt_bind_param (e_cursor->statement, binds)) ||
 		(!(e_cursor->result = mysql_stmt_result_metadata(e_cursor->statement))) ||
@@ -187,13 +189,12 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		
 	{
 		g_sprintf (error_str, "Error occured: %s", mysql_stmt_error (e_cursor->statement));
-		GSQL_DEBUG (error_str);
 		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 		g_free (binds);
 		mysql_stmt_reset (e_cursor->statement);
 
 		return GSQL_CURSOR_STATE_ERROR;		
-	};
+	}
 	
 	mysql_cursor_statement_detect (cursor);
 	
@@ -215,12 +216,11 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		var = gsql_variable_new ();
 		mysql_variable_init (var, &fields[n], &binds[n]);
 		cursor->var_list = g_list_append (cursor->var_list, var);
-	};
+	}
 	
 	if (mysql_stmt_bind_result (e_cursor->statement, binds))
 	{
 		g_sprintf (error_str, "Error occured: %s", mysql_stmt_error (e_cursor->statement));
-		GSQL_DEBUG (error_str);
 		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 		g_free (binds);
 		mysql_stmt_reset (e_cursor->statement);
@@ -232,7 +232,7 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 	
 	return GSQL_CURSOR_STATE_OPEN;
 
-};
+}
 
 
 GSQLCursorState
@@ -260,6 +260,7 @@ mysql_cursor_open (GSQLCursor *cursor)
 	{
 		return GSQL_CURSOR_STATE_ERROR;
 	}
+	
 	e_cursor = cursor->spec;
 	
 	e_cursor->result = mysql_stmt_result_metadata(e_cursor->statement);
@@ -298,7 +299,6 @@ mysql_cursor_open (GSQLCursor *cursor)
 	if (mysql_stmt_bind_result (e_cursor->statement, binds))
 	{
 		g_sprintf (error_str, "Error occured: %s", mysql_stmt_error (e_cursor->statement));
-		GSQL_DEBUG (error_str);
 		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 		g_free (binds);
 		mysql_stmt_reset (e_cursor->statement);
@@ -321,6 +321,8 @@ mysql_cursor_fetch (GSQLCursor *cursor, gint rows)
 	
 	g_return_if_fail (GSQL_CURSOR (cursor) != NULL);
 	e_cursor = cursor->spec;
+	
+	mysql_variable_clear (cursor);
 	
 	if (ret = mysql_stmt_fetch (e_cursor->statement))
 	{

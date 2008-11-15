@@ -912,6 +912,15 @@ on_navigation_key_press (GtkWidget *tv, GdkEventKey *event,
 			on_navigation_expand (GTK_TREE_VIEW (tv), &parent, path, data);
 			
 			return FALSE;
+			
+		case GDK_c:
+			if (event->state & GDK_CONTROL_MASK)
+			{
+				GSQL_DEBUG ("Ctrl+C process");
+				on_navigation_popup_copyname (NULL, NULL);
+			}
+			
+			return FALSE;
 
 		default:
 			// check for event handler

@@ -37,11 +37,13 @@ gsql_notify_send (GSQLSession *session, gchar *subject, gchar *message)
 	GSQL_TRACE_FUNC;
 
 	gchar subj[256];
+	gchar *session_name;
 
-	if (!session)
-		return;
+	g_return_if_fail (GSQL_IS_SESSION (session));
 	
-	snprintf (subj, 256, "%s:\n<span foreground=\"#466480\">%s</span>", "FIXME" /*session->session_name*/, subject);
+	session_name = gsql_session_get_name (session);
+	
+	snprintf (subj, 256, "%s:\n%s", session_name, subject);
 
 	if (!notify_is_initted())
 		notify_init (PROJECT_NAME);

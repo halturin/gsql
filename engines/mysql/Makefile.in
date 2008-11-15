@@ -68,7 +68,12 @@ am_libgsqlengine_mysql_la_OBJECTS =  \
 	libgsqlengine_mysql_la-mysql_cursor.lo \
 	libgsqlengine_mysql_la-nav_tree__tables.lo \
 	libgsqlengine_mysql_la-mysql_var.lo \
-	libgsqlengine_mysql_la-nav_objects.lo
+	libgsqlengine_mysql_la-nav_objects.lo \
+	libgsqlengine_mysql_la-nav_tree__users.lo \
+	libgsqlengine_mysql_la-nav_tree__constraints.lo \
+	libgsqlengine_mysql_la-nav_tree__triggers.lo \
+	libgsqlengine_mysql_la-nav_tree__indexes.lo \
+	libgsqlengine_mysql_la-nav_tree__columns.lo
 libgsqlengine_mysql_la_OBJECTS = $(am_libgsqlengine_mysql_la_OBJECTS)
 libgsqlengine_mysql_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
@@ -290,7 +295,17 @@ libgsqlengine_mysql_la_SOURCES = \
 	nav_tree__tables.h          \
 	mysql_var.c          \
 	mysql_var.h          \
-	nav_objects.c
+	nav_objects.c          \
+	nav_tree__users.c          \
+	nav_tree__users.h          \
+	nav_tree__constraints.c          \
+	nav_tree__constraints.h          \
+	nav_tree__triggers.c          \
+	nav_tree__triggers.h          \
+	nav_tree__indexes.c          \
+	nav_tree__indexes.h          \
+	nav_tree__columns.c          \
+	nav_tree__columns.h
 
 libgsqlengine_mysql_la_CFLAGS = \
 	$(MYSQL_CFLAGS)
@@ -386,7 +401,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-mysql_cursor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-mysql_var.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_objects.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_tree__columns.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_tree__constraints.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_tree__indexes.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_tree__tables.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_tree__triggers.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgsqlengine_mysql_la-nav_tree__users.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -492,6 +512,41 @@ libgsqlengine_mysql_la-nav_objects.lo: nav_objects.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='nav_objects.c' object='libgsqlengine_mysql_la-nav_objects.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -c -o libgsqlengine_mysql_la-nav_objects.lo `test -f 'nav_objects.c' || echo '$(srcdir)/'`nav_objects.c
+
+libgsqlengine_mysql_la-nav_tree__users.lo: nav_tree__users.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -MT libgsqlengine_mysql_la-nav_tree__users.lo -MD -MP -MF $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__users.Tpo -c -o libgsqlengine_mysql_la-nav_tree__users.lo `test -f 'nav_tree__users.c' || echo '$(srcdir)/'`nav_tree__users.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__users.Tpo $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__users.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='nav_tree__users.c' object='libgsqlengine_mysql_la-nav_tree__users.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -c -o libgsqlengine_mysql_la-nav_tree__users.lo `test -f 'nav_tree__users.c' || echo '$(srcdir)/'`nav_tree__users.c
+
+libgsqlengine_mysql_la-nav_tree__constraints.lo: nav_tree__constraints.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -MT libgsqlengine_mysql_la-nav_tree__constraints.lo -MD -MP -MF $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__constraints.Tpo -c -o libgsqlengine_mysql_la-nav_tree__constraints.lo `test -f 'nav_tree__constraints.c' || echo '$(srcdir)/'`nav_tree__constraints.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__constraints.Tpo $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__constraints.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='nav_tree__constraints.c' object='libgsqlengine_mysql_la-nav_tree__constraints.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -c -o libgsqlengine_mysql_la-nav_tree__constraints.lo `test -f 'nav_tree__constraints.c' || echo '$(srcdir)/'`nav_tree__constraints.c
+
+libgsqlengine_mysql_la-nav_tree__triggers.lo: nav_tree__triggers.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -MT libgsqlengine_mysql_la-nav_tree__triggers.lo -MD -MP -MF $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__triggers.Tpo -c -o libgsqlengine_mysql_la-nav_tree__triggers.lo `test -f 'nav_tree__triggers.c' || echo '$(srcdir)/'`nav_tree__triggers.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__triggers.Tpo $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__triggers.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='nav_tree__triggers.c' object='libgsqlengine_mysql_la-nav_tree__triggers.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -c -o libgsqlengine_mysql_la-nav_tree__triggers.lo `test -f 'nav_tree__triggers.c' || echo '$(srcdir)/'`nav_tree__triggers.c
+
+libgsqlengine_mysql_la-nav_tree__indexes.lo: nav_tree__indexes.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -MT libgsqlengine_mysql_la-nav_tree__indexes.lo -MD -MP -MF $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__indexes.Tpo -c -o libgsqlengine_mysql_la-nav_tree__indexes.lo `test -f 'nav_tree__indexes.c' || echo '$(srcdir)/'`nav_tree__indexes.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__indexes.Tpo $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__indexes.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='nav_tree__indexes.c' object='libgsqlengine_mysql_la-nav_tree__indexes.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -c -o libgsqlengine_mysql_la-nav_tree__indexes.lo `test -f 'nav_tree__indexes.c' || echo '$(srcdir)/'`nav_tree__indexes.c
+
+libgsqlengine_mysql_la-nav_tree__columns.lo: nav_tree__columns.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -MT libgsqlengine_mysql_la-nav_tree__columns.lo -MD -MP -MF $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__columns.Tpo -c -o libgsqlengine_mysql_la-nav_tree__columns.lo `test -f 'nav_tree__columns.c' || echo '$(srcdir)/'`nav_tree__columns.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__columns.Tpo $(DEPDIR)/libgsqlengine_mysql_la-nav_tree__columns.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='nav_tree__columns.c' object='libgsqlengine_mysql_la-nav_tree__columns.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgsqlengine_mysql_la_CFLAGS) $(CFLAGS) -c -o libgsqlengine_mysql_la-nav_tree__columns.lo `test -f 'nav_tree__columns.c' || echo '$(srcdir)/'`nav_tree__columns.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

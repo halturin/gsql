@@ -144,9 +144,9 @@ static gchar table_ui[] =
 " <ui> "
 "  <popup name=\"NavObjects\" action=\"ActionNavObjects\"> "
 "  		<placeholder name=\"PHolderNavObjectDo\"> "
-"  				<menuitem name=\"OracleTableCreate\" action=\"OracleActionTableCreate\" />	"
-"  				<menuitem name=\"OracleTableDrop\" action=\"OracleActionTableDrop\" />		"
-"  				<menuitem name=\"OracleTableAlter\" action=\"OracleActionTableAlter\" />		"
+//"  				<menuitem name=\"OracleTableCreate\" action=\"OracleActionTableCreate\" />	"
+//"  				<menuitem name=\"OracleTableDrop\" action=\"OracleActionTableDrop\" />		"
+//"  				<menuitem name=\"OracleTableAlter\" action=\"OracleActionTableAlter\" />		"
 "  				<menuitem name=\"OracleTableBrowse\" action=\"OracleActionTableBrowse\" />	"
 "	    </placeholder> "
 "  </popup> "
@@ -154,7 +154,7 @@ static gchar table_ui[] =
 
 static GtkActionEntry table_acts[] = 
 {
-	{ "OracleActionTableCreate", GTK_STOCK_NEW, 
+/*	{ "OracleActionTableCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
 		N_("Create a new table  [ Ins ]"), 
 		G_CALLBACK(on_popup_table_create) },
@@ -168,7 +168,7 @@ static GtkActionEntry table_acts[] =
 		N_("Alter..."), NULL, 
 		N_("Alter this table"), 
 		G_CALLBACK(on_popup_table_alter) },
-	
+*/	
 	{ "OracleActionTableBrowse", NULL, 
 		N_("Browse data"), NULL, 
 		N_("Open SQL editor to browse the data  [ F3 ]"), 

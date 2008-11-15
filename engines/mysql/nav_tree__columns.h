@@ -1,11 +1,3 @@
-/***************************************************************************
- *            engine_stock.h
- *
- *  Fri Sep  7 22:36:21 2007
- *  Copyright  2007  Taras Halturin
- *  <halturin@gmail.com>
- ****************************************************************************/
-
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,23 +14,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
-#ifndef _ENGINE_STOCK_H
-#define _ENGINE_STOCK_H
+#ifndef _NAV_TREE__COLUMNS_H
+#define _NAV_TREE__COLUMNS_H
 
 #include <glib.h>
-
-#define GSQLE_MYSQL_STOCK_MYSQL				"gsqle-mysql-mysql"
-#define GSQLE_MYSQL_STOCK_PROCESS_LIST		"gsqle-mysql-process-list"
-#define GSQLE_MYSQL_STOCK_SESSION_VARIABLES "gsqle-mysql-session-variables"
-#define GSQLE_MYSQL_STOCK_GLOBAL_VARIABLES  "gsqle-mysql-global-variables"
+#include <gtk/gtk.h>
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
 void
-engine_stock_init ();
+nav_tree_refresh_columns (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter, guint event);
 
 G_END_DECLS
 
-#endif /* _ENGINE_STOCK_H */
+#endif /* _NAV_TREE__COLUMNS_H */
 
  

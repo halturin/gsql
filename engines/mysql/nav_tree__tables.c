@@ -38,6 +38,11 @@
 #include "nav_objects.h"
 #include "nav_sql.h"
 
+#include "nav_tree__constraints.h"
+#include "nav_tree__triggers.h"
+#include "nav_tree__indexes.h"
+#include "nav_tree__columns.h"
+
 
 static void nav_tree_tables_event (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
@@ -67,37 +72,37 @@ static GSQLNavigationItem tables[] = {
 		NULL,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_columns,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
 	{	INDEXES_ID,
 		GSQL_STOCK_INDEXES,
 		N_("Indexes"), 
-		NULL,						// sql
+		sql_mysql_indexes,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_indexes,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
 	{	TRIGGERS_ID,
 		GSQL_STOCK_TRIGGERS,
 		N_("Triggers"), 
-		NULL,						// sql
+		sql_mysql_triggers,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_triggers,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0},					// child, childs
 	
 	{	CONSTRAINTS_ID,
 		GSQL_STOCK_CONSTRAINT,
 		N_("Constraints"), 
-		NULL,						// sql
+		sql_mysql_constraints,						// sql
 		NULL, 						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_constraints,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0}					// child, childs
 };
@@ -106,9 +111,9 @@ static gchar table_ui[] =
 " <ui> "
 "  <popup name=\"NavObjects\" action=\"ActionNavObjects\"> "
 "  		<placeholder name=\"PHolderNavObjectDo\"> "
-"  				<menuitem name=\"MySQLTableCreate\" action=\"MySQLActionTableCreate\" />	"
-"  				<menuitem name=\"MySQLTableDrop\" action=\"MySQLActionTableDrop\" />		"
-"  				<menuitem name=\"MySQLTableAlter\" action=\"MySQLActionTableAlter\" />		"
+//"  				<menuitem name=\"MySQLTableCreate\" action=\"MySQLActionTableCreate\" />	"
+//"  				<menuitem name=\"MySQLTableDrop\" action=\"MySQLActionTableDrop\" />		"
+//"  				<menuitem name=\"MySQLTableAlter\" action=\"MySQLActionTableAlter\" />		"
 "  				<menuitem name=\"MySQLTableBrowse\" action=\"MySQLActionTableBrowse\" />	"
 "	    </placeholder> "
 "  </popup> "
@@ -116,7 +121,7 @@ static gchar table_ui[] =
 
 static GtkActionEntry table_acts[] = 
 {
-	{ "MySQLActionTableCreate", GTK_STOCK_NEW, 
+/*	{ "MySQLActionTableCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
 		N_("Create table"), 
 		G_CALLBACK(on_popup_table_create) },
@@ -130,7 +135,7 @@ static GtkActionEntry table_acts[] =
 		N_("Alter..."), NULL, 
 		N_("Alter table"), 
 		G_CALLBACK(on_popup_table_alter) },
-	
+*/	
 	{ "MySQLActionTableBrowse", NULL, 
 		N_("Browse data"), NULL, 
 		N_("Browse data"), 
@@ -510,7 +515,7 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 	sql = g_strconcat (sql,"\nfrom ", g_utf8_strdown (owner, strlen (owner)),
 					   		".", g_utf8_strdown (name, strlen (name)),
 										 " a\n", NULL);
-	GSQL_DEBUG ("SQL formed: %s");
+	GSQL_DEBUG ("SQL formed: %s", sql);
 	
 	content = gsql_content_new (session, GTK_STOCK_FILE);
 	

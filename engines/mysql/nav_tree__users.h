@@ -1,7 +1,7 @@
 /***************************************************************************
- *            engine_stock.c
+ *            nav_tree__users.h
  *
- *  Fri Sep  7 22:35:44 2007
+ *  Sun Sep 23 02:11:44 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -21,27 +21,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+ 
+#ifndef _NAV_TREE__USERS_H
+#define _NAV_TREE__USERS_H
 
+#include <glib.h>
+#include <libgsql/navigation.h>
 
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <libgsql/stock.h>
-#include <libgsql/common.h>
-
-#include "engine_stock.h"
-
-static GSQLStockIcon stock_icons[] = 
-{
-	{ GSQLE_MYSQL_STOCK_MYSQL,				"mysql.png" },
-	{ GSQLE_MYSQL_STOCK_PROCESS_LIST,		"process.list.png" },
-	{ GSQLE_MYSQL_STOCK_SESSION_VARIABLES,	"session.variables.png" },
-	{ GSQLE_MYSQL_STOCK_GLOBAL_VARIABLES,	"global.variables.png" }
-};
+G_BEGIN_DECLS
 
 void
-engine_stock_init ()
-{
-	GSQL_TRACE_FUNC;
+nav_tree_refresh_users (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter);
 
-	gsql_factory_add (stock_icons, G_N_ELEMENTS(stock_icons));
-	return;
-}
+G_END_DECLS
+
+#endif /* _NAV_TREE__USERS_H */
+
+ 

@@ -35,7 +35,10 @@
 #include "nav_sql.h"
 
 #include "nav_tree__tables.h"
-
+#include "nav_tree__users.h"
+#include "nav_tree__constraints.h"
+#include "nav_tree__triggers.h"
+#include "nav_tree__indexes.h"
 
 /* 	
 	The users_objects struct used as child for "My Scheme" 
@@ -57,7 +60,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_constraints, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_constraints,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	VIEWS_ID, 
@@ -75,7 +78,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_indexes, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_indexes,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	TRIGGERS_ID,
@@ -84,7 +87,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_triggers, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_triggers,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	PROCEDURES_ID, 
@@ -118,6 +121,27 @@ static GSQLNavigationItem users_objects[] = {
 };
 
 
+static GSQLNavigationItem variables[] = {
+	{	SESSION_VARIABLES_ID,					// id
+		GSQLE_MYSQL_STOCK_SESSION_VARIABLES,			// stock
+		N_("Session Variables"),				// name
+		sql_mysql_session_variables,			// sql
+		NULL,						// object_popup
+		NULL,						// object_handler
+		NULL,						// expand_handler
+		NULL,						// event_handler
+		NULL, 0 },					// child, childs
+	{	GLOBAL_VARIABLES_ID,
+		GSQLE_MYSQL_STOCK_SESSION_VARIABLES, 
+		N_("Global Variables"), 
+		sql_mysql_global_variables, 
+		NULL,						// object_popup
+		NULL,						// object_handler
+		NULL,						// expand_handler
+		NULL,						// event_handler
+		NULL, 0 }
+};
+
 /* 	
 	The root_objects struct used as root tree
 */
@@ -149,20 +173,31 @@ static GSQLNavigationItem root_objects[] = {
 		sql_mysql_users, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_users,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 
 // process list
-    {   PROCESSES_ID,
-		GSQL_STOCK_USERS,
-		N_("Processes"),
-		sql_mysql_processes,
+    {   PROCESS_LIST_ID,
+		GSQLE_MYSQL_STOCK_PROCESS_LIST,
+		N_("Process List"),
+		NULL,
 		NULL,						// object_popup
 		NULL,						// object_handler
 		NULL,						// expand_handler
 		NULL,						// event_handler
-		NULL, 0 }					// child, childs
+		NULL, 0 },					// child, childs
+		
+// variables
+    {   VARIABLES_ID,
+		GSQLE_MYSQL_STOCK_SESSION_VARIABLES,
+		N_("Variables"),
+		NULL,
+		NULL,						// object_popup
+		NULL,						// object_handler
+		NULL,						// expand_handler
+		NULL,						// event_handler
+		variables, G_N_ELEMENTS (variables) }					// child, childs
 };
 
 

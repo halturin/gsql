@@ -846,6 +846,8 @@ do_sql_run (GSQLEditor *sqleditor)
 		}
 		
 		sqleditor->cursor = cursor = gsql_cursor_new (session, sql);
+		cursor->linked_widget = GTK_WIDGET (source);
+		gsql_cursor_notify_set (cursor, TRUE);
 		
 		if (cursor)
 		{
@@ -1484,6 +1486,12 @@ do_sql_fetch (GSQLEditor *editor)
 					if (var->value_type == GSQL_TYPE_DATETIME)
 					{
 						g_value_set_boxed (&values[l], var->value);
+						break;
+					}
+					
+					if (var->value_type == GSQL_TYPE_UNSUPPORTED)
+					{
+						g_value_set_string (&values[l], N_("GSQL: Unsupported type"));
 						break;
 					}
 

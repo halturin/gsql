@@ -25,6 +25,7 @@
 #include <libgsql/common.h>
 #include <libgsql/session.h>
 #include <libgsql/type_datetime.h>
+#include <libgsql/utils.h>
 
 #include <string.h>
 #include "engine_session.h"
@@ -186,7 +187,7 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 		{
 			GSQL_DEBUG ("Variable = DEFAULT (type=[%d])", spec_var->data_type);
 			spec_var->variable_len = FALSE;
-			variable->value_type = G_TYPE_STRING;
+			variable->value_type = GSQL_TYPE_UNSUPPORTED;
 			variable->value_length = 4000;
 			variable->value = spec_var->data = g_malloc0 (variable->value_length + 1);
 		}

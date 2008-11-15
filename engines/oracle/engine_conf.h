@@ -43,11 +43,6 @@ engine_conf_widget_create ();
 void
 engine_conf_widget_free (GtkWidget *conf_widget);
 
-void
-engine_conf_environment_load (GtkListStore *env, gboolean *use_system);
-
-void
-engine_conf_environment_save (GtkListStore *env);
 
 G_END_DECLS
 

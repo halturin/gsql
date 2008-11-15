@@ -548,3 +548,19 @@ gsql_utils_escape_string (gchar *message)
 	return g_string_free (str, FALSE);
 }
 
+GType
+gsql_type_unsupported_get_type (void)
+{
+	static GType unsupported_type = 0;
+	
+	if (!unsupported_type)
+	{
+		unsupported_type = g_type_register_static_simple (G_TYPE_STRING, 
+												   "GSQLTypeUnsupported",
+												   0, NULL, 0, NULL, 0);
+		
+	}
+		
+	return unsupported_type;
+	
+}

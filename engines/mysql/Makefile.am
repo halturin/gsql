@@ -39,7 +39,17 @@ libgsqlengine_mysql_la_SOURCES = \
 	nav_tree__tables.h          \
 	mysql_var.c          \
 	mysql_var.h          \
-	nav_objects.c
+	nav_objects.c          \
+	nav_tree__users.c          \
+	nav_tree__users.h          \
+	nav_tree__constraints.c          \
+	nav_tree__constraints.h          \
+	nav_tree__triggers.c          \
+	nav_tree__triggers.h          \
+	nav_tree__indexes.c          \
+	nav_tree__indexes.h          \
+	nav_tree__columns.c          \
+	nav_tree__columns.h
 
 libgsqlengine_mysql_la_CFLAGS = \
 	$(MYSQL_CFLAGS)

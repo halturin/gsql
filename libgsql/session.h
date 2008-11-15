@@ -103,6 +103,9 @@ gsql_session_get_password (GSQLSession *session);
 const gchar *
 gsql_session_get_database_name (GSQLSession *session);
 
+const gchar *
+gsql_session_get_hostname (GSQLSession *session);
+
 GSQLWorkspace *
 gsql_session_get_workspace (GSQLSession *session);
 

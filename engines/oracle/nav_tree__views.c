@@ -108,7 +108,7 @@ static GSQLNavigationItem views[] = {
 
 static GtkActionEntry view_actions[] = 
 {
-	{ "OracleActionPopupNavViewCreate", GTK_STOCK_NEW, 
+/*	{ "OracleActionPopupNavViewCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
 		N_("Create a new view  [ Ins ]"), 
 		G_CALLBACK(on_popup_view_create) },
@@ -122,7 +122,7 @@ static GtkActionEntry view_actions[] =
 		N_("Alter..."), NULL, 
 		N_("Alter table"), 
 		G_CALLBACK(on_popup_view_alter) },
-	
+*/	
 	{ "OracleActionPopupNavViewBrowse", NULL, 
 		N_("Browse data"), NULL, 
 		N_("Open SQL editor to browse the data  [ F3 ]"), 
@@ -134,9 +134,9 @@ static gchar view_ui[] =
 " <ui>																									"
 "  <popup name=\"NavObjects\" action=\"ActionNavObjects\">												"
 " 		<placeholder name=\"PHolderNavObjectDo\" >													"
-"  				<menuitem name=\"OracleNavViewCreate\" action=\"OracleActionPopupNavViewCreate\" />		"
-"  				<menuitem name=\"OracleNavViewDrop\" action=\"OracleActionPopupNavViewDrop\" />			"
-"  				<menuitem name=\"OracleNavViewAlter\" action=\"OracleActionPopupNavViewAlter\" />		"
+//"  				<menuitem name=\"OracleNavViewCreate\" action=\"OracleActionPopupNavViewCreate\" />		"
+//"  				<menuitem name=\"OracleNavViewDrop\" action=\"OracleActionPopupNavViewDrop\" />			"
+//"  				<menuitem name=\"OracleNavViewAlter\" action=\"OracleActionPopupNavViewAlter\" />		"
 "  				<menuitem name=\"OracleNavViewBrowse\" action=\"OracleActionPopupNavViewBrowse\" />		"
 "  		</placeholder>																				"
 "  </popup>																								"

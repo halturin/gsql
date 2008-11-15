@@ -82,6 +82,8 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 					       NULL);
 	
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
+	
 	encoding_list = gsql_enconding_list ();
 	hbox = gtk_hbox_new (FALSE, 3);
 	label = gtk_label_new (N_("Charset"));

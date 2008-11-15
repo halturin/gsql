@@ -49,6 +49,9 @@ mysql_variable_init (GSQLVariable *variable, MYSQL_FIELD *field, MYSQL_BIND *bin
 void
 mysql_variable_free (GSQLEMySQLVariable *var);
 
+void
+mysql_variable_clear (GSQLCursor *cursor);
+
 /*void *
 mysql_variable_data_to_display_format (GSQLEMySQLVariable *var);
 */

@@ -28,6 +28,8 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
+#define GSQL_TYPE_UNSUPPORTED (gsql_type_unsupported_get_type ())
+
 G_BEGIN_DECLS
 
   /* create a header pack for GtkNotebook */

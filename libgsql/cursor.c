@@ -348,6 +348,24 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 				gsql_cursor_set_state (cursor, state);
 					
 				gsql_session_unlock (cursor->session);
+				
+				gsql_cursor_set_state (cursor, state);
+	
+				if ((state == GSQL_CURSOR_STATE_OPEN) && (cursor->private->notify_on_finish))
+				{
+					GSQL_DEBUG ("widgets status: [content->widget = %d] [gsql_window = %d]",
+		
+					GTK_WIDGET_DRAWABLE (cursor->linked_widget), 
+					gtk_window_is_active ( GTK_WINDOW (gsql_window)));
+		
+					if ((!GTK_WIDGET_DRAWABLE (cursor->linked_widget)) ||
+						(!gtk_window_is_active ( GTK_WINDOW (gsql_window))))
+					{
+						//gtk_window_set_urgency_hint (GTK_WINDOW (gsql_window), TRUE);
+						gsql_notify_send (cursor->session, "SQL execution complete", cursor->sql);	
+					}
+		
+				}
 			}
 			else 
 			{

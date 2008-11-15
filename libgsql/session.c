@@ -392,6 +392,16 @@ gsql_session_get_database_name (GSQLSession *session)
 	return session->private->database;
 }
 
+const gchar *
+gsql_session_get_hostname (GSQLSession *session)
+{
+	GSQL_TRACE_FUNC;
+	
+	g_return_val_if_fail (GSQL_IS_SESSION (session), NULL);
+
+	return session->private->hostname;
+}
+
 gint
 gsql_sessions_count (void)
 {
@@ -1246,13 +1256,13 @@ on_menu_session_close (GtkMenuItem *mi, gpointer data)
 				}
 			
 				break;
-				
-			case GTK_RESPONSE_CANCEL:
-				gtk_widget_destroy (GTK_WIDGET (dialog));
-				return;
-				
+					
 			case GTK_RESPONSE_CLOSE:
 				break;
+				
+			default:
+				gtk_widget_destroy (GTK_WIDGET (dialog));
+				return;
 		}
 		
 		gtk_widget_destroy (GTK_WIDGET (dialog));

@@ -31,17 +31,28 @@
 /************ Root objects *************/
 
 static const gchar sql_mysql_all_schemas[] = 
-"SELECT SCHEMA_NAME FROM information_schema.schemata order by schema_name";
+"SELECT SCHEMA_NAME, CATALOG_NAME, DEFAULT_CHARACTER_SET_NAME, \
+ DEFAULT_COLLATION_NAME, SQL_PATH \
+FROM information_schema.schemata order by schema_name";
 
 static const gchar sql_mysql_users[] =
-"select  replace(GRANTEE, '\'','') disp, GRANTEE \
- from information_schema.USER_PRIVILEGES group by replace(GRANTEE, '\'',''), GRANTEE";
+"select replace(GRANTEE, \"'\",\"\") disp, GRANTEE \
+ from information_schema.USER_PRIVILEGES \
+ group by replace(GRANTEE, \"'\",\"\"), GRANTEE";
 
 static const gchar sql_mysql_privileges[] =
-"select * from  information_schema.USER_PRIVILEGES where grantee = \"'root'@'think'\"";
+"select privilege_type, grantee, table_catalog, table_schema, is_grantable \
+from information_schema.SCHEMA_PRIVILEGES \
+where table_schema = ?";
 
 static const gchar sql_mysql_processes[]=
 "show full PROCESSLIST";
+
+static const gchar sql_mysql_session_variables[]=
+"show session variables";
+
+static const gchar sql_mysql_global_variables[]=
+"show global variables";
 
 /*********** User's objects *************/
 static const gchar sql_mysql_tables[] = 
@@ -59,18 +70,46 @@ collation_name, column_type, column_key, extra, privileges, column_comment \
 from information_schema.columns where table_schema = ? and table_name = ? ";
 
 static const gchar sql_mysql_constraints[]=
-"select * from information_schema.TABLE_CONSTRAINTS where CONSTRAINT_SCHEMA = :schema";
+"select concat(constraint_name,'(',table_schema,'.',table_name,')') cname, \
+ substr(constraint_type, 1, 1) c_type, \
+ constraint_catalog, constraint_schema, \
+ table_schema, table_name, constraint_type \
+ from information_schema.TABLE_CONSTRAINTS \
+ where table_schema = ? \
+ and table_name like ?";
 
 static const gchar sql_mysql_views[] =
-"select * from information_schema.views where TABLE_SCHEMA = :schema";
+"select table_name, table_schema, table_catalog, view_definition, \
+check_option, is_updatable, definer, security_type from information_schema.views \
+where TABLE_SCHEMA = :schema";
 
 static const gchar sql_mysql_indexes[] =
-"select index_name, TABLE_NAME, INDEX_TYPE from information_schema.statistics  \
- where table_schema = :schema \
+"select concat(index_name,'(',table_schema,'.',table_name,')') c_name, \
+ index_name, TABLE_NAME, INDEX_TYPE \
+ from information_schema.statistics  \
+ where table_schema = ? \
+ and table_name like ? \
  group by index_name, TABLE_NAME";
+
+static const gchar sql_mysql_index_columns[]=
+"select COLUMN_NAME, TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME, \
+NON_UNIQUE, INDEX_SCHEMA, INDEX_NAME, SEQ_IN_INDEX, \
+COLLATION, CARDINALITY, SUB_PART, PACKED, NULLABLE, \
+INDEX_TYPE, COMMENT \
+ from information_schema.statistics  \
+where index_schema = ? \
+and concat(index_name,'(',index_schema,'.',table_name,')') = ? \
+order by seq_in_index";
  
 static const gchar sql_mysql_triggers[] =
-"select * from information_schema.triggers where TRIGGER_SCHEMA = :schema";
+"select TRIGGER_NAME, TRIGGER_CATALOG, TRIGGER_SCHEMA, EVENT_MANIPULATION, \
+ EVENT_OBJECT_CATALOG, EVENT_OBJECT_SCHEMA, EVENT_OBJECT_TABLE, \
+ ACTION_ORDER, ACTION_CONDITION, ACTION_ORIENTATION, ACTION_TIMING, \
+ ACTION_REFERENCE_OLD_TABLE, ACTION_REFERENCE_NEW_TABLE, \
+ ACTION_REFERENCE_OLD_ROW, ACTION_REFERENCE_NEW_ROW, \
+ CREATED, SQL_MODE, DEFINER \
+ from information_schema.triggers where EVENT_OBJECT_SCHEMA = ?\
+ and EVENT_OBJECT_TABLE like ?";
  
 static const gchar sql_mysql_routines[] =
 "select * from information_schema.routines where routine_type = 'PROCEDURE' and ROUTINE_SCHEMA =:schema";
