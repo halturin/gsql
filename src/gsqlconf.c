@@ -74,6 +74,7 @@ gsql_conf_dialog()
 	
 	GtkWidget *use_system_font_check;
 	GtkWidget *font_button;
+	GtkWidget *combo_scheme;
 	GtkWidget *insert_space_check;
 	GtkWidget *tab_width_spin;
 	GtkWidget *display_line_num_check;
@@ -86,8 +87,13 @@ gsql_conf_dialog()
 	GtkWidget *fetch_limit_max;
 	
 	GtkListStore *plugins_list;
+	GtkListStore *color_scheme;
 	GtkTreeViewColumn *column;
+	GtkTreeIter	 *s_iter = NULL;
 	GtkCellRenderer *renderer;
+	GtkSourceStyleSchemeManager* manager;
+	const gchar* const *styles;
+	const gchar* const *style;
 	
 	gxml = glade_xml_new (GSQL_GLADE_DIALOGS, "gsql_prefs_dialog", NULL);
 
@@ -106,6 +112,8 @@ gsql_conf_dialog()
 		
 	font_button = glade_xml_get_widget (gxml, "font_button");
 	use_system_font_check = glade_xml_get_widget (gxml, "use_system_font_check");
+	combo_scheme = glade_xml_get_widget (gxml, "combo_scheme");
+	
 	insert_space_check = glade_xml_get_widget (gxml, "insert_space_check");
 	tab_width_spin = glade_xml_get_widget (gxml, "tab_width_spin");
 	display_line_num_check = glade_xml_get_widget (gxml, "display_line_num_check");
@@ -216,6 +224,62 @@ gsql_conf_dialog()
     gtk_widget_set_sensitive (font_button, !gconf_bool_value);
 	
 	HOOKUP_OBJECT_NO_REF(use_system_font_check, font_button, "font_button");
+	
+	color_scheme = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING,
+									   G_TYPE_STRING);
+	
+	manager = gtk_source_style_scheme_manager_get_default();
+	styles = gtk_source_style_scheme_manager_get_scheme_ids (manager);
+	
+	gconf_gchar_value = gsql_conf_value_get_string (GSQL_CONF_EDITOR_COLOR_SCHEME);
+	
+	for (style = styles; *style != NULL; style++)
+	{
+		GtkTreeIter iter;
+		GtkSourceStyleScheme* scheme;
+		const gchar* id;
+		
+		scheme = gtk_source_style_scheme_manager_get_scheme (manager, *style);
+		id = gtk_source_style_scheme_get_id (scheme);
+		
+		gtk_list_store_append (color_scheme, &iter);
+		gtk_list_store_set (color_scheme, &iter,
+							0, gtk_source_style_scheme_get_name (scheme),
+							1, gtk_source_style_scheme_get_description (scheme),
+							2, id,
+							-1);
+		
+		if ((gconf_gchar_value) && (g_str_equal (id, gconf_gchar_value)))
+		{
+			s_iter = gtk_tree_iter_copy (&iter);
+		}
+	}
+	
+	gtk_combo_box_set_model (GTK_COMBO_BOX (combo_scheme), GTK_TREE_MODEL (color_scheme));
+	
+	if (s_iter)
+	{
+		gtk_combo_box_set_active_iter (GTK_COMBO_BOX (combo_scheme),
+									   s_iter);
+		
+		gtk_tree_iter_free (s_iter);
+	}
+	
+	g_signal_connect (combo_scheme, "changed", G_CALLBACK (on_color_scheme_changed), 
+					  color_scheme);
+	
+	gtk_cell_layout_clear (GTK_CELL_LAYOUT(combo_scheme));
+	
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT(combo_scheme), renderer, TRUE);
+	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT(combo_scheme), renderer,
+								   "text", 0);
+	
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT(combo_scheme), renderer, FALSE);
+	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT(combo_scheme), renderer,
+								   "text", 1);
+	g_object_set (renderer, "style", PANGO_STYLE_ITALIC, NULL);
 	
 	gconf_bool_value = gsql_conf_value_get_boolean (GSQL_CONF_EDITOR_USE_SPACE);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (insert_space_check), gconf_bool_value);

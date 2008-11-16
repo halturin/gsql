@@ -1,7 +1,7 @@
 /***************************************************************************
- *            nav_tree_static.h
+ *            nav_tree__schemas.c
  *
- *  Tue Sep 18 22:25:53 2007
+ *  Tue Sep 18 22:20:44 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -21,15 +21,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
-#ifndef _NAV_TREE_STATIC_H
-#define _NAV_TREE_STATIC_H
 
 #include <glib.h>
 
 #include <libgsql/common.h>
 #include <libgsql/stock.h>
+#include <libgsql/session.h>
 #include <libgsql/navigation.h>
+#include <libgsql/cursor.h>
+#include <libgsql/cvariable.h>
+
 #include "engine_stock.h"
 #include "nav_objects.h"
 #include "nav_sql.h"
@@ -39,6 +40,12 @@
 #include "nav_tree__constraints.h"
 #include "nav_tree__triggers.h"
 #include "nav_tree__indexes.h"
+#include "nav_tree__views.h"
+#include "nav_tree__procedures.h"
+#include "nav_tree__privileges.h"
+#include "nav_tree__schemas.h"
+#include "nav_tree__variables.h"
+#include "nav_tree__processlist.h"
 
 /* 	
 	The users_objects struct used as child for "My Scheme" 
@@ -60,7 +67,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_constraints, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_constraints,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_constraints,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	VIEWS_ID, 
@@ -69,7 +76,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_views, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_views,							// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	INDEXES_ID,
@@ -96,7 +103,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_routines, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_procedures,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	FUNCTIONS_ID, 
@@ -105,7 +112,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_routines, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_procedures,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{
@@ -115,7 +122,7 @@ static GSQLNavigationItem users_objects[] = {
 		sql_mysql_privileges,
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_privileges,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0 }					// child, childs
 };
@@ -128,7 +135,7 @@ static GSQLNavigationItem variables[] = {
 		sql_mysql_session_variables,			// sql
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_variables ,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 	{	GLOBAL_VARIABLES_ID,
@@ -137,7 +144,7 @@ static GSQLNavigationItem variables[] = {
 		sql_mysql_global_variables, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_variables ,					// expand_handler
 		NULL,						// event_handler
 		NULL, 0 }
 };
@@ -163,7 +170,7 @@ static GSQLNavigationItem root_objects[] = {
 		sql_mysql_all_schemas, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_schemas,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 // root. all users
@@ -173,7 +180,7 @@ static GSQLNavigationItem root_objects[] = {
 		sql_mysql_users, 
 		NULL,						// object_popup
 		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_users,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_users,							// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 
@@ -181,10 +188,10 @@ static GSQLNavigationItem root_objects[] = {
     {   PROCESS_LIST_ID,
 		GSQLE_MYSQL_STOCK_PROCESS_LIST,
 		N_("Process List"),
-		NULL,
+		sql_mysql_processes,
 		NULL,						// object_popup
 		NULL,						// object_handler
-		NULL,						// expand_handler
+		(GSQLNavigationHandler) nav_tree_refresh_processlist,						// expand_handler
 		NULL,						// event_handler
 		NULL, 0 },					// child, childs
 		
@@ -200,7 +207,134 @@ static GSQLNavigationItem root_objects[] = {
 		variables, G_N_ELEMENTS (variables) }					// child, childs
 };
 
+void
+nav_tree_refresh_schemas (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter)
+{
+	GSQL_TRACE_FUNC;
 
-#endif /* _NAV_TREE_STATIC_H */
+	GtkTreeModel *model;
+	GtkListStore *detail;
+	GSQLNavigation *nav = NULL;
+	gchar			*sql = NULL;
+	gchar			*realname = NULL;
+	gint 		id;
+	gint		i,n;
+	GtkTreeIter child, parent;
+	GtkTreeIter child_fake;
+	GtkTreeIter	child_last;
+	GSQLCursor *cursor;
+	GSQLCursorState state;
+	GSQLVariable *var;
+	GSQLSession *session;
+	gchar *name, *parent_realname;
 
- 
+	
+	model = gtk_tree_view_get_model(tv);
+	n = gtk_tree_model_iter_n_children(model, iter);
+	
+	for (; n>1; n--)
+	{
+		gtk_tree_model_iter_children (model, &child, iter);
+		gtk_tree_store_remove (GTK_TREE_STORE(model), &child);
+	}
+	
+	gtk_tree_model_iter_children(model, &child_last, iter);
+	
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_SQL, 
+						&sql, -1);
+	
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_REALNAME, 
+						&realname, -1);
+	
+	session = gsql_session_get_active ();
+
+	gtk_tree_model_iter_parent (model, &parent, iter);	
+	gtk_tree_model_get (model, &parent,  
+						GSQL_NAV_TREE_REALNAME, 
+						&parent_realname, -1);
+	
+	cursor = gsql_cursor_new (session, sql);
+	state = gsql_cursor_open (cursor, FALSE);
+
+	var = g_list_nth_data(cursor->var_list,0);
+	
+	if (state != GSQL_CURSOR_STATE_OPEN)
+	{
+		gsql_cursor_close (cursor);
+		return;		
+	}
+	
+	i = 0;
+	
+	while (gsql_cursor_fetch (cursor, 1) > 0)	
+	{
+		i++;		
+		name = (gchar *) var->value;
+		
+		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
+		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
+					GSQL_NAV_TREE_ID,			ALL_SCHEMAS_ID,
+					GSQL_NAV_TREE_OWNER,		name,
+					GSQL_NAV_TREE_IMAGE,		GSQL_STOCK_ALL_SCHEMAS,
+					GSQL_NAV_TREE_NAME,			name,
+					GSQL_NAV_TREE_REALNAME, 	name,
+					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
+					GSQL_NAV_TREE_SQL,			NULL,
+					GSQL_NAV_TREE_OBJECT_POPUP, NULL,
+					GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
+					GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
+					GSQL_NAV_TREE_EVENT_HANDLER, NULL,
+					GSQL_NAV_TREE_STRUCT, users_objects,
+					GSQL_NAV_TREE_DETAILS, NULL,
+					GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(users_objects),
+					-1);
+
+		gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
+		gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
+				GSQL_NAV_TREE_ID,				-1,
+				GSQL_NAV_TREE_IMAGE,			NULL,
+				GSQL_NAV_TREE_NAME,				N_("Processing..."),
+				GSQL_NAV_TREE_REALNAME,			NULL,
+				GSQL_NAV_TREE_ITEM_INFO,		NULL,
+				GSQL_NAV_TREE_SQL,				NULL,
+				GSQL_NAV_TREE_OBJECT_POPUP,		NULL,
+				GSQL_NAV_TREE_OBJECT_HANDLER,	NULL,
+				GSQL_NAV_TREE_EXPAND_HANDLER,	NULL,
+				GSQL_NAV_TREE_EVENT_HANDLER,	NULL,
+				GSQL_NAV_TREE_STRUCT,			NULL,
+				GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
+				-1);
+	}
+	
+	GSQL_DEBUG ("Items fetched: [%d]", i);
+	
+	if (i > 0)
+	{
+		name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
+												realname, i);
+		gtk_tree_store_set (GTK_TREE_STORE(model), iter,
+							GSQL_NAV_TREE_NAME, 
+							name,
+							-1);
+		g_free (name);
+	}
+	
+	gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
+	
+	gsql_cursor_close (cursor);
+}
+
+
+void
+nav_tree_set_root (GSQLNavigation *navigation,  gchar *username)
+{
+	GSQL_TRACE_FUNC;
+	
+	gsql_navigation_set_root (navigation, GSQLE_MYSQL_STOCK_MYSQL, username, 
+							  root_objects, G_N_ELEMENTS (root_objects));
+	
+}

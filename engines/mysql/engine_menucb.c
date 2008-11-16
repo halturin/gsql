@@ -27,14 +27,6 @@
 #include <engine_menucb.h>
 
 void
-on_show_processes (GtkMenuItem * mi, gpointer data)
-{
-	GSQL_TRACE_FUNC;
-
-	return;
-}
-
-void
 on_charter_set_activate (GtkMenuItem * mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;

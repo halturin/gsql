@@ -1,8 +1,8 @@
 /***************************************************************************
- *            nav_tree__triggers.c
+ *            nav_tree__variables.c
  *
- *  Tue Oct  2 00:39:40 2007
- *  Copyright  2007  Taras Halturin
+ *  Sun Nov 16 02:11:30 2008
+ *  Copyright  2008  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
 
@@ -34,43 +34,39 @@
 #include "engine_stock.h"
 #include "nav_sql.h"
 
+
 void
-nav_tree_refresh_triggers (GSQLNavigation *navigation,
+nav_tree_refresh_variables (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter)
 {
 	GSQL_TRACE_FUNC;
 
 	GtkTreeModel *model;
-	GtkListStore *detail;
+	GtkListStore *details;
 	GSQLNavigation *nav = NULL;
 	gchar			*sql = NULL;
 	gchar			*realname = NULL;
-	gchar			*owner = NULL;
 	gint 		id;
 	gint		i,n;
 	GtkTreeIter child;
-	GtkTreeIter parent;
 	GtkTreeIter child_fake;
 	GtkTreeIter	child_last;
 	GSQLCursor *cursor;
-	GSQLVariable *var, *var_t;
-	GSQLSession *session;
-	GSQLWorkspace *workspace;
+	GSQLVariable *var;
 	GSQLCursorState state;
-	GtkListStore *details;
-	gchar *name;
+	GSQLSession *session;
+	gchar *name, *stock, *owner;
 	gchar key[256];
-	gchar *tbl = "%";
-	gchar *parent_realname = NULL;
 
+	
 	model = gtk_tree_view_get_model(tv);
 	n = gtk_tree_model_iter_n_children(model, iter);
 	
 	for (; n>1; n--)
 	{
-		gtk_tree_model_iter_children (model, &child, iter);
-		gtk_tree_store_remove (GTK_TREE_STORE(model), &child);
+		gtk_tree_model_iter_children(model, &child, iter);
+		gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
 	}
 	
 	gtk_tree_model_iter_children(model, &child_last, iter);
@@ -82,36 +78,42 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_SQL, 
 						&sql, -1);
-	
 	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_OWNER, 
 						&owner, -1);
 	
-	session = gsql_session_get_active ();
-	
-	gtk_tree_model_iter_parent (model, &parent, iter);
-	
-	gtk_tree_model_get (model, &parent,  
+	gtk_tree_model_get (model, iter,  
 						GSQL_NAV_TREE_ID, 
 						&id, -1);
-	
-	gtk_tree_model_get (model, &parent,  
-						GSQL_NAV_TREE_REALNAME, 
-						&parent_realname, -1);
 
+	session = gsql_session_get_active ();
 	
-	if (((id == TABLE_ID)||(id == VIEW_ID)) && (parent_realname != NULL))
-		tbl = parent_realname;
+	g_return_if_fail (sql);
+	
+	switch (id)
+	{
+		case GLOBAL_VARIABLES_ID:
+			id = GLOBAL_VARIABLE_ID;
+			stock = GSQLE_MYSQL_STOCK_GLOBAL_VARIABLES;
+			
+			break;
+			
+		case SESSION_VARIABLES_ID:
+			id = SESSION_VARIABLE_ID;
+			stock = GSQLE_MYSQL_STOCK_SESSION_VARIABLES;
+				
+			break;
+			
+		default:
+			GSQL_DEBUG ("Unknown variables_id in the navigation");
+			return;
+	}
+	
 	
 	cursor = gsql_cursor_new (session, sql);
-	state = gsql_cursor_open_with_bind (cursor,
-										FALSE,
-										GSQL_CURSOR_BIND_BY_POS,
-										G_TYPE_STRING, owner,
-										G_TYPE_STRING, tbl,
-										-1);
+	state = gsql_cursor_open (cursor, FALSE);
 	
-	var = g_list_nth_data(cursor->var_list,0);
+	var = g_list_nth_data(cursor->var_list, 0);
 	
 	if (state != GSQL_CURSOR_STATE_OPEN)
 	{
@@ -133,8 +135,8 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 			name = (gchar *) var->value;
 			// make a key for a hash of details
 			memset (key, 0, 256);
-			g_snprintf (key, 255, "%x%s%d%d%s",
-						session, owner, id, TRIGGER_ID, name);
+			g_snprintf (key, 255, "%x%s%d%s",
+				   session, name, USER_ID, name);
 			
 			details = gsql_navigation_get_details (navigation, key);
 			mysql_navigation_fill_details (cursor, details);
@@ -142,9 +144,9 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 		
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-					GSQL_NAV_TREE_ID,			TRIGGER_ID,
+					GSQL_NAV_TREE_ID,			id,
 					GSQL_NAV_TREE_OWNER,		owner,
-					GSQL_NAV_TREE_IMAGE,		GSQL_STOCK_TRIGGERS,
+					GSQL_NAV_TREE_IMAGE,		stock,
 					GSQL_NAV_TREE_NAME,			name,
 					GSQL_NAV_TREE_REALNAME, 	name,
 					GSQL_NAV_TREE_ITEM_INFO, 	NULL,
@@ -157,7 +159,9 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 					GSQL_NAV_TREE_DETAILS, details,
 					GSQL_NAV_TREE_NUM_ITEMS, 0,
 					-1);
+		
 	}
+	
 	GSQL_DEBUG ("Items fetched: [%d]", i);
 	
 	if (i > 0)

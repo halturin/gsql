@@ -31,7 +31,7 @@
 
 #include "engine_session.h"
 #include "engine_menu.h"
-#include "nav_tree_static.h"
+#include "nav_tree__schemas.h"
 
 
 static void on_session_close (GSQLSession *session, gpointer user_data);
@@ -112,8 +112,7 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	workspace = gsql_workspace_new (session);
 	navigation = gsql_workspace_get_navigation (workspace);
 	
-	gsql_navigation_set_root (navigation, GSQLE_MYSQL_STOCK_MYSQL, g_strdup (database), 
-							  root_objects, G_N_ELEMENTS (root_objects));
+	nav_tree_set_root (navigation, (gchar *) g_strdup (database));
 	
 	g_signal_connect (G_OBJECT (session), "close",
 					  G_CALLBACK (on_session_close), session);
@@ -239,9 +238,8 @@ on_session_duplicate (GSQLSession *session, gpointer user_data)
 	new_workspace = gsql_workspace_new (new_session);
 	navigation = gsql_workspace_get_navigation (new_workspace);
 	
-	gsql_navigation_set_root (navigation, GSQLE_MYSQL_STOCK_MYSQL, g_strdup (database), 
-							  root_objects, G_N_ELEMENTS (root_objects));
-	GSQL_DEBUG ("44444444444");
+	nav_tree_set_root (navigation, (gchar *) g_strdup (database));
+	
 	g_signal_connect (G_OBJECT (new_session), "close",
 					  G_CALLBACK (on_session_close), new_session);
 	g_signal_connect (G_OBJECT (new_session), "reopen",

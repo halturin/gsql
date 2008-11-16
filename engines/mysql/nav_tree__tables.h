@@ -35,6 +35,9 @@ void
 nav_tree_tables_refresh (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event);
+						 
+void
+nav_tree_tables_browse (gchar *name, gchar *owner);
 
 G_END_DECLS
 

@@ -53,7 +53,7 @@ static void nav_tree_tables_popup (GSQLNavigation *navigation,
 static void nav_tree_tables_editor (GSQLNavigation *navigation,
 						 GtkTreeView *tv,
 						 GtkTreeIter *iter, guint event);
-static void nav_tree_tables_browse (gchar *name, gchar *owner);
+
 
 static void on_popup_table_create (GtkMenuItem * menuitem, 
 								 gpointer user_data);
@@ -138,7 +138,7 @@ static GtkActionEntry table_acts[] =
 */	
 	{ "MySQLActionTableBrowse", NULL, 
 		N_("Browse data"), NULL, 
-		N_("Browse data"), 
+		N_("Open SQL editor to browse the data  [ F3 ]"), 
 		G_CALLBACK(on_popup_table_browse) }
 };
 
@@ -289,155 +289,7 @@ nav_tree_tables_refresh (GSQLNavigation *navigation,
 
 }
 
-/*
- *  Static section:
- *
- *  nav_tree_tables_event
- *  nav_tree_tables_popup
- *  nav_tree_tables_editor
- *
- *  on_popup_table_create
- *  on_popup_table_drop
- *  on_popup_table_alter
- *  on_popup_table_browse
- *
- */
-
-
-static void
-nav_tree_tables_event (GSQLNavigation *navigation,
-						 GtkTreeView *tv,
-						 GtkTreeIter *iter, guint event)
-{
-	GSQL_TRACE_FUNC;
-	
-	switch (event)
-	{
-		
-		case GDK_Insert:
-			GSQL_DEBUG ("Insert pressed");
-			break;
-		case GDK_F3:
-			GSQL_DEBUG ("F3 pressed");
-			on_popup_table_browse (NULL, NULL);
-			break;
-		case GDK_Delete:
-			GSQL_DEBUG ("Delete pressed");
-			break;
-	};
-	
-	return;
-};
-
-static void
-nav_tree_tables_popup (GSQLNavigation *navigation,
-						 GtkTreeView *tv,
-						 GtkTreeIter *iter, guint event)
-{
-	GSQL_TRACE_FUNC;
-	static GtkActionGroup *actions = NULL;
-	
-	if (!actions)
-	{
-		actions = gtk_action_group_new ("MySQLPopupTableActions");
-		gtk_action_group_add_actions (actions, table_acts, 
-								  G_N_ELEMENTS (table_acts), NULL);
-		gsql_navigation_menu_merge (navigation, table_ui, actions);
-	}
-	gsql_navigation_menu_popup (navigation, actions);
-	
-	return;
-};
-
-static void
-nav_tree_tables_editor (GSQLNavigation *navigation,
-						 GtkTreeView *tv,
-						 GtkTreeIter *iter, guint event)
-{
-	GSQL_TRACE_FUNC;
-	
-	
-	
-	return;	
-};
-
-static void
-on_popup_table_create (GtkMenuItem * menuitem, 
-								 gpointer user_data)
-{
-	GSQL_TRACE_FUNC;
-	
-	return;
-};
-
-static void
-on_popup_table_drop (GtkMenuItem * menuitem, 
-								 gpointer user_data)
-{
-	GSQL_TRACE_FUNC;
-	
-	return;
-};
-
-static void
-on_popup_table_alter (GtkMenuItem * menuitem, 
-								 gpointer user_data)
-{
-	GSQL_TRACE_FUNC;
-	
-	return;
-};
-
-static void
-on_popup_table_browse (GtkMenuItem * menuitem, 
-								 gpointer user_data)
-{
-	GSQL_TRACE_FUNC;
-	
-	GSQLSession *session = NULL;
-	GSQLContent *content = NULL;
-	GSQLEditor *editor;
-	GtkWidget *source;
-	GSQLWorkspace *workspace;
-	GSQLNavigation *navigation;
-	GtkTreeIter *iter = NULL;
-	gchar *name, *realname, *owner;
-	GtkTreeModel *model;
-	
-	session = gsql_session_get_active ();
-	g_return_if_fail (GSQL_IS_SESSION (session));
-	
-	workspace = gsql_session_get_workspace (session);
-	navigation = gsql_workspace_get_navigation (workspace);
-	iter = gsql_navigation_get_active_iter (navigation);
-	
-	if (!iter)
-	{
-		GSQL_DEBUG ("Have no selection");
-		return;
-	};
-	
-	model = gsql_navigation_get_model (navigation);
-	
-	gtk_tree_model_get (model, iter,  
-						GSQL_NAV_TREE_REALNAME, 
-						&realname, -1);
-	gtk_tree_model_get (model, iter,  
-						GSQL_NAV_TREE_NAME, 
-						&name, -1);
-	gtk_tree_model_get (model, iter,  
-						GSQL_NAV_TREE_OWNER, 
-						&owner, -1);
-	
-	nav_tree_tables_browse (name, owner);
-	
-	
-	
-	
-}
-
-
-static void
+void
 nav_tree_tables_browse (gchar *name, gchar *owner)
 {
 	GSQL_TRACE_FUNC;
@@ -533,3 +385,148 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 	gsql_editor_run_sql (editor);
 	
 }
+
+/*
+ *  Static section:
+ *
+ *  nav_tree_tables_event
+ *  nav_tree_tables_popup
+ *  nav_tree_tables_editor
+ *
+ *  on_popup_table_create
+ *  on_popup_table_drop
+ *  on_popup_table_alter
+ *  on_popup_table_browse
+ *
+ */
+
+
+static void
+nav_tree_tables_event (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter, guint event)
+{
+	GSQL_TRACE_FUNC;
+	
+	switch (event)
+	{
+		
+		case GDK_Insert:
+			GSQL_DEBUG ("Insert pressed");
+			break;
+		case GDK_F3:
+			GSQL_DEBUG ("F3 pressed");
+			on_popup_table_browse (NULL, NULL);
+			break;
+		case GDK_Delete:
+			GSQL_DEBUG ("Delete pressed");
+			break;
+	}
+	
+
+}
+
+static void
+nav_tree_tables_popup (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter, guint event)
+{
+	GSQL_TRACE_FUNC;
+	static GtkActionGroup *actions = NULL;
+	
+	if (!actions)
+	{
+		actions = gtk_action_group_new ("MySQLPopupTableActions");
+		gtk_action_group_add_actions (actions, table_acts, 
+								  G_N_ELEMENTS (table_acts), NULL);
+		gsql_navigation_menu_merge (navigation, table_ui, actions);
+	}
+	
+	gsql_navigation_menu_popup (navigation, actions);
+	
+}
+
+static void
+nav_tree_tables_editor (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter, guint event)
+{
+	GSQL_TRACE_FUNC;
+	
+	
+
+}
+
+static void
+on_popup_table_create (GtkMenuItem * menuitem, 
+								 gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+
+}
+
+static void
+on_popup_table_drop (GtkMenuItem * menuitem, 
+								 gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+
+}
+
+static void
+on_popup_table_alter (GtkMenuItem * menuitem, 
+								 gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+
+}
+
+static void
+on_popup_table_browse (GtkMenuItem * menuitem, 
+								 gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLSession *session = NULL;
+	GSQLContent *content = NULL;
+	GSQLEditor *editor;
+	GtkWidget *source;
+	GSQLWorkspace *workspace;
+	GSQLNavigation *navigation;
+	GtkTreeIter *iter = NULL;
+	gchar *name, *realname, *owner;
+	GtkTreeModel *model;
+	
+	session = gsql_session_get_active ();
+	g_return_if_fail (GSQL_IS_SESSION (session));
+	
+	workspace = gsql_session_get_workspace (session);
+	navigation = gsql_workspace_get_navigation (workspace);
+	iter = gsql_navigation_get_active_iter (navigation);
+	
+	if (!iter)
+	{
+		GSQL_DEBUG ("Have no selection");
+		return;
+	}
+	
+	model = gsql_navigation_get_model (navigation);
+	
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_REALNAME, 
+						&realname, -1);
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_NAME, 
+						&name, -1);
+	gtk_tree_model_get (model, iter,  
+						GSQL_NAV_TREE_OWNER, 
+						&owner, -1);
+	
+	nav_tree_tables_browse (name, owner);
+}
+
+
+

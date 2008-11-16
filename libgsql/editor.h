@@ -30,10 +30,12 @@
 #include <gtksourceview/gtksourceview.h>
 #include <gtksourceview/gtksourcebuffer.h>
 #include <gtksourceview/gtksourcelanguagemanager.h>
+#include <gtksourceview/gtksourcestyleschememanager.h>
 #include <libgsql/conf.h>
 
 #define GSQL_CONF_EDITOR_USE_SYSTEM_FONT	GSQL_CONF_ROOT_KEY "/editor/use_system_font"
 #define GSQL_CONF_EDITOR_FONT_NAME			GSQL_CONF_ROOT_KEY "/editor/font_name"
+#define GSQL_CONF_EDITOR_COLOR_SCHEME		GSQL_CONF_ROOT_KEY "/editor/color_scheme"
 #define GSQL_CONF_EDITOR_USE_SPACE			GSQL_CONF_ROOT_KEY "/editor/use_space_instead_tab"
 #define GSQL_CONF_EDITOR_TAB_WIDTH			GSQL_CONF_ROOT_KEY "/editor/tab_width"
 #define GSQL_CONF_EDITOR_SHOW_LINE_NUM		GSQL_CONF_ROOT_KEY "/editor/show_line_number"

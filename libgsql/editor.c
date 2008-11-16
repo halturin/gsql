@@ -197,6 +197,9 @@ gsql_source_editor_new(gchar * buffer_body)
 	gsql_conf_nitify_add (GSQL_CONF_EDITOR_FONT_NAME,
 								gsql_source_editor_property_set,
 								(gpointer) source);
+	gsql_conf_nitify_add (GSQL_CONF_EDITOR_COLOR_SCHEME,
+								gsql_source_editor_property_set,
+								(gpointer) source);
 	gsql_conf_nitify_add (GSQL_CONF_EDITOR_USE_SPACE,
 								gsql_source_editor_property_set,
 								(gpointer) source);
@@ -320,11 +323,12 @@ gsql_source_editor_property_set (gpointer src)
 	GSQL_TRACE_FUNC;
 	
 	GtkWidget *source = src;
+	
 	PangoFontDescription * font_desc;
 	gchar * conf_string;
 	gboolean conf_boolean;
 	gint conf_int;
-        
+
 	conf_boolean = gsql_conf_value_get_boolean (GSQL_CONF_EDITOR_USE_SYSTEM_FONT);
     
 	if (conf_boolean)
@@ -337,6 +341,17 @@ gsql_source_editor_property_set (gpointer src)
 	
 	font_desc = pango_font_description_from_string (conf_string);
 	gtk_widget_modify_font (GTK_WIDGET (source), font_desc);
+	
+	conf_string = gsql_conf_value_get_string (GSQL_CONF_EDITOR_COLOR_SCHEME);
+
+	if (conf_string)
+	{
+		GtkSourceBuffer *buff = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (src)));
+		GtkSourceStyleSchemeManager* manager = gtk_source_style_scheme_manager_get_default();
+		GtkSourceStyleScheme* scheme = gtk_source_style_scheme_manager_get_scheme (manager,
+																				   conf_string);
+		gtk_source_buffer_set_style_scheme (buff, scheme);
+	}
        
 	conf_boolean = gsql_conf_value_get_boolean (GSQL_CONF_EDITOR_HIGHLIGHT_LINE);
 	gtk_source_view_set_highlight_current_line (GTK_SOURCE_VIEW (source), 
@@ -487,7 +502,7 @@ on_editor_indent_activate (GtkMenuItem *mi, gpointer data)
 	
 	
 	
-	return;
+
 }
 
 void 
@@ -497,7 +512,7 @@ on_editor_unindent_activate (GtkMenuItem *mi, gpointer data)
 	
 	
 	
-	return;
+
 }
 
 void 
@@ -507,7 +522,7 @@ on_editor_comment_activate (GtkMenuItem *mi, gpointer data)
 	
 	
 	
-	return;
+
 }
 
 void 
@@ -517,7 +532,7 @@ on_editor_uncomment_activate (GtkMenuItem *mi, gpointer data)
 	
 	
 	
-	return;
+
 }
 
 void 
@@ -527,7 +542,7 @@ on_editor_upper_case_activate (GtkMenuItem *mi, gpointer data)
 	
 	
 	
-	return;
+
 }
 
 void 
@@ -537,6 +552,6 @@ on_editor_lower_case_activate (GtkMenuItem *mi, gpointer data)
 	
 	
 	
-	return;
+
 }
 

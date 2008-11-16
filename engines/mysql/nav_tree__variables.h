@@ -1,8 +1,8 @@
 /***************************************************************************
- *            engine_menucb.h
+ *            nav_tree__variables.h
  *
- *  Wed Sep  5 02:24:26 2007
- *  Copyright  2007  Taras Halturin
+ *  Sun Nov 16 02:11:30 2008
+ *  Copyright  2008  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
 
@@ -22,20 +22,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
-#ifndef _ENGINE_MENUCB_H
-#define _ENGINE_MENUCB_H
+#ifndef _NAV_TREE__VARIABLES_H
+#define _NAV_TREE__VARIABLES_H
 
 #include <glib.h>
-#include <gtk/gtk.h>
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
-
 void
-on_charter_set_activate (GtkMenuItem * mi, gpointer data);
- 
+nav_tree_refresh_variables (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter);
+
 G_END_DECLS
 
-#endif /* _ENGINE_MENUCB_H */
+#endif /* _NAV_TREE__VARIABLES_H */
 
  

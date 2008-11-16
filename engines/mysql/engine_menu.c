@@ -35,8 +35,7 @@ static GtkActionEntry enginemenu_action[] =
 {
 	{ "MySQLActionMenu", NULL, N_("MySQL") },
 
-	{ "ActionMenuMySQLCharsetList", NULL,  N_("Charter Set"), NULL,  NULL, NULL },
-	{ "MySQLActionProcesses", NULL, N_("Show processes"), NULL, N_("Show processes"), G_CALLBACK(on_show_processes) }
+	{ "ActionMenuMySQLCharsetList", NULL,  N_("Charter Set"), NULL,  NULL, NULL }
 };
 
 static GtkActionGroup *action;

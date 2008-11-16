@@ -44,7 +44,7 @@ on_gsql_prefs_show_dbnav_check_toggled (GtkToggleButton *togglebutton,
 	gsql_conf_value_set_boolean (GSQL_CONF_WORKSPACE_SHOW_NAVIGATE,
 								status);
 
-};
+}
 
 void
 on_gsql_prefs_show_message_check_toggled (GtkToggleButton *togglebutton,
@@ -130,8 +130,23 @@ on_gsql_prefs_use_system_font_check_toggled (GtkToggleButton *togglebutton,
 	gsql_conf_value_set_boolean (GSQL_CONF_EDITOR_USE_SYSTEM_FONT,
 							status);
     
-	return;
-};
+}
+
+void 
+on_color_scheme_changed (GtkComboBox* combo, GtkTreeModel* model)
+{
+	GSQL_TRACE_FUNC;
+	
+	GtkTreeIter iter;
+	gchar* id;
+	
+	gtk_combo_box_get_active_iter (combo, &iter);
+	
+	gtk_tree_model_get (gtk_combo_box_get_model(combo), &iter,
+						2, &id, -1);
+	
+	gsql_conf_value_set_string (GSQL_CONF_EDITOR_COLOR_SCHEME, id);
+}
 
 void
 on_gsql_prefs_insert_space_check_toggled (GtkToggleButton *togglebutton,
@@ -144,8 +159,7 @@ on_gsql_prefs_insert_space_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_EDITOR_USE_SPACE,
 							status);
-	return;
-};
+}
 
 void
 on_gsql_prefs_tab_width_spin_value_changed (GtkSpinButton *spin_button,
@@ -160,9 +174,7 @@ on_gsql_prefs_tab_width_spin_value_changed (GtkSpinButton *spin_button,
 
 	gsql_conf_value_set_int  (GSQL_CONF_EDITOR_TAB_WIDTH,
 							value);
-    
-        return;
-};
+}
 
 void
 on_gsql_prefs_display_line_num_check_toggled (GtkToggleButton *togglebutton,
@@ -175,8 +187,8 @@ on_gsql_prefs_display_line_num_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_EDITOR_SHOW_LINE_NUM,
 							status);
-	return;
-};
+
+}
 
 void
 on_gsql_prefs_highlight_line_check_toggled (GtkToggleButton *togglebutton,
@@ -189,8 +201,7 @@ on_gsql_prefs_highlight_line_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_EDITOR_HIGHLIGHT_LINE,
 							status);
-	return;
-};
+}
 
 void
 on_gsql_prefs_enable_text_wrap_check_toggled (GtkToggleButton *togglebutton,
@@ -203,8 +214,8 @@ on_gsql_prefs_enable_text_wrap_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_EDITOR_WRAPPING,
 							status);
-	return;
-};
+
+}
 
 void
 on_gsql_prefs_enable_auto_indent_check_toggled (GtkToggleButton *togglebutton,
@@ -217,8 +228,8 @@ on_gsql_prefs_enable_auto_indent_check_toggled (GtkToggleButton *togglebutton,
 	status = gtk_toggle_button_get_active (togglebutton);
 	gsql_conf_value_set_boolean (GSQL_CONF_EDITOR_AUTO_INDENT,
 							status);
-	return;
-};
+
+}
 
 
 
@@ -235,10 +246,9 @@ on_gsql_prefs_font_button_font_set (GtkFontButton * font_button,
 	{
 		gsql_conf_value_set_string (GSQL_CONF_EDITOR_FONT_NAME,
 									(gchar *) font);            
-	};
-        
-	return;
-};
+	}
+
+}
 
 void
 on_pref_plugins_configure_button_clicked (GtkButton *conf_button,
@@ -262,7 +272,6 @@ on_pref_plugins_configure_button_clicked (GtkButton *conf_button,
 	if (plugin->plugin_conf_dialog)
 		plugin->plugin_conf_dialog();
 	
-	return;
 }
 
 void
@@ -291,7 +300,7 @@ on_prefs_plugins_tree_view_cursor_changed (GtkTreeView *tv,
 	else
 		gtk_widget_set_sensitive (GTK_WIDGET(button), FALSE);
 		
-	return;
+
 }
 
 void
@@ -319,7 +328,7 @@ on_pref_datetime_preview (GtkButton *conf_button,
 	
 	text_preview = gsql_type_datetime_to_gchar (&test, NULL, 0);
 	gtk_entry_set_text (preview, text_preview);
-	return;
+
 }
 
 gboolean 

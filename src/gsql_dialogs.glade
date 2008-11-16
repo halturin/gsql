@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Nov  8 20:35:21 2008 -->
+<!--Generated with glade3 3.4.5 on Sun Nov 16 19:24:42 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="gsql_prefs_dialog">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -453,6 +453,7 @@
                 </child>
                 <child>
                   <widget class="GtkFrame" id="frame6">
+                    <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">GTK_SHADOW_NONE</property>
@@ -465,12 +466,8 @@
                         <property name="left_padding">18</property>
                         <property name="right_padding">2</property>
                         <child>
-                          <widget class="GtkTreeView" id="prefs_schemas_tree_view">
-                            <property name="height_request">100</property>
+                          <widget class="GtkComboBox" id="combo_scheme">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
-                            <property name="enable_search">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -479,7 +476,7 @@
                       <widget class="GtkLabel" id="label3">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Schemas&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Color scheme&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>

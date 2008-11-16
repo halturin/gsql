@@ -94,7 +94,7 @@ oracle_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store)
 						break;
 					}
 				
-					g_snprintf (attr_value, 1024, N_("&lt;value&gt;"));
+					g_snprintf (attr_value, 1024, N_("GSQL: Unsupported type"));
 				
 			}
 		}

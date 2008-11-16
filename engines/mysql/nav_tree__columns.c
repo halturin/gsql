@@ -96,7 +96,7 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 	switch (id)
 	{
 		case TABLE_ID:
-		//case VIEW_ID:
+		case VIEW_ID:
 			cursor = gsql_cursor_new (session, (gchar *) sql_mysql_table_columns);
 			state = gsql_cursor_open_with_bind (cursor,
 												FALSE,

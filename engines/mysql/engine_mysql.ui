@@ -4,7 +4,6 @@
     <placeholder name="PHolderEngines">
     <menu name="MenuMySQL" action="MySQLActionMenu">
     		<menu name="MenuMySQLCharsetList" action="ActionMenuMySQLCharsetList" />
-    		<menuitem name="MySQLPeocesses" action="MySQLActionProcesses" />
    	</menu>
    	</placeholder>
   </menubar>

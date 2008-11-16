@@ -1,7 +1,7 @@
 /***************************************************************************
- *            engine_menucb.h
+ *            nav_tree__privileges.h
  *
- *  Wed Sep  5 02:24:26 2007
+ *  Sun Oct 21 21:37:33 2007
  *  Copyright  2007  Taras Halturin
  *  <halturin@gmail.com>
  ****************************************************************************/
@@ -22,20 +22,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
-#ifndef _ENGINE_MENUCB_H
-#define _ENGINE_MENUCB_H
+#ifndef _NAV_TREE__PRIVILEGES_H
+#define _NAV_TREE__PRIVILEGES_H
 
 #include <glib.h>
-#include <gtk/gtk.h>
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
-
 void
-on_charter_set_activate (GtkMenuItem * mi, gpointer data);
- 
+nav_tree_refresh_privileges (GSQLNavigation *navigation,
+						 GtkTreeView *tv,
+						 GtkTreeIter *iter);
+
 G_END_DECLS
 
-#endif /* _ENGINE_MENUCB_H */
+#endif /* _NAV_TREE__PRIVILEGES_H */
 
  

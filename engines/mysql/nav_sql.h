@@ -60,7 +60,8 @@ static const gchar sql_mysql_tables[] =
  row_format, table_rows, avg_row_length, data_length, max_data_length, \
  index_length, data_free, auto_increment, create_time, update_time, check_time,\
  table_collation, checksum, create_options, table_comment \
- from information_schema.tables where table_schema = ? ";
+ from information_schema.tables where table_schema = ? \
+ and table_type <>'VIEW'";
 
 static const gchar sql_mysql_table_columns[] =
 "select column_name, table_catalog, table_schema, table_name, ordinal_position, \
@@ -81,7 +82,7 @@ static const gchar sql_mysql_constraints[]=
 static const gchar sql_mysql_views[] =
 "select table_name, table_schema, table_catalog, view_definition, \
 check_option, is_updatable, definer, security_type from information_schema.views \
-where TABLE_SCHEMA = :schema";
+where TABLE_SCHEMA = ?";
 
 static const gchar sql_mysql_indexes[] =
 "select concat(index_name,'(',table_schema,'.',table_name,')') c_name, \
@@ -112,7 +113,8 @@ static const gchar sql_mysql_triggers[] =
  and EVENT_OBJECT_TABLE like ?";
  
 static const gchar sql_mysql_routines[] =
-"select * from information_schema.routines where routine_type = 'PROCEDURE' and ROUTINE_SCHEMA =:schema";
+"select * from information_schema.routines where routine_type = ? \
+ and ROUTINE_SCHEMA = ?";
 
 
 #endif /* _NAV_SQL_H */

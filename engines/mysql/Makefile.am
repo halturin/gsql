@@ -31,7 +31,6 @@ libgsqlengine_mysql_la_SOURCES = \
 	mysql.c          \
 	mysql.h          \
 	nav_objects.h          \
-	nav_tree_static.h          \
 	nav_sql.h          \
 	mysql_cursor.c          \
 	mysql_cursor.h          \
@@ -49,7 +48,19 @@ libgsqlengine_mysql_la_SOURCES = \
 	nav_tree__indexes.c          \
 	nav_tree__indexes.h          \
 	nav_tree__columns.c          \
-	nav_tree__columns.h
+	nav_tree__columns.h          \
+	nav_tree__views.c          \
+	nav_tree__views.h          \
+	nav_tree__procedures.c          \
+	nav_tree__procedures.h          \
+	nav_tree__privileges.c          \
+	nav_tree__privileges.h          \
+	nav_tree__schemas.c          \
+	nav_tree__schemas.h          \
+	nav_tree__variables.c          \
+	nav_tree__variables.h          \
+	nav_tree__processlist.c          \
+	nav_tree__processlist.h
 
 libgsqlengine_mysql_la_CFLAGS = \
 	$(MYSQL_CFLAGS)

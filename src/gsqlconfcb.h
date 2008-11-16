@@ -57,6 +57,9 @@ void
 on_gsql_prefs_font_button_font_set (GtkFontButton *widget,
 											gpointer user_data);
 
+void 
+on_color_scheme_changed (GtkComboBox* combo, GtkTreeModel* model);
+
 void
 on_gsql_prefs_insert_space_check_toggled (GtkToggleButton *togglebutton,
 											gpointer user_data);
