@@ -9,7 +9,6 @@ INCLUDES = \
 	$(PACKAGE_CFLAGS)
 
 AM_CFLAGS =\
-	$(ORACLE_CFLAGS)\
 	 -Wall\
 	 -O1\
 	 -g

@@ -55,7 +55,7 @@ libgsqlLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(libgsql_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgsqlengine_mysql_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(top_builddir)/libgsql/libgsql.la
 am_libgsqlengine_mysql_la_OBJECTS =  \
 	libgsqlengine_mysql_la-engine_mysql.lo \
 	libgsqlengine_mysql_la-engine_session.lo \
@@ -329,7 +329,8 @@ libgsqlengine_mysql_la_CFLAGS = \
 
 libgsqlengine_mysql_la_LIBADD = \
 	$(PACKAGE_LIBS)          \
-	$(MYSQL_LIBS)
+	$(MYSQL_LIBS)          \
+	$(top_builddir)/libgsql/libgsql.la
 
 INCLUDES = \
 	$(PACKAGE_CFLAGS)

@@ -1,5 +1,5 @@
-usr/lib/gsql/engines/libgsqlengine_mysql*.so
-usr/share/pixmaps/gsql/mysql/*
-usr/share/gsql/glade/mysql/*
-usr/share/gsql/ui/mysql/*
-usr/share/gsql/template/mysql/*
+debian/tmp/usr/lib/gsql/engines/libgsqlengine_mysql*.so*
+debian/tmp/usr/share/pixmaps/gsql/mysql/*
+#debian/tmp/usr/share/gsql/glade/mysql/*
+debian/tmp/usr/share/gsql/ui/mysql/*
+#debian/tmp/usr/share/gsql/template/mysql/*

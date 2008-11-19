@@ -65,9 +65,10 @@ libgsqlengine_mysql_la_SOURCES = \
 libgsqlengine_mysql_la_CFLAGS = \
 	$(MYSQL_CFLAGS)
 
-libgsqlengine_mysql_la_LIBADD = \
+libgsqlengine_mysql_la_LIBADD =          \
 	$(PACKAGE_LIBS)          \
-	$(MYSQL_LIBS)
+	$(MYSQL_LIBS)          \
+	$(top_builddir)/libgsql/libgsql.la
 
 INCLUDES = \
 	$(PACKAGE_CFLAGS)

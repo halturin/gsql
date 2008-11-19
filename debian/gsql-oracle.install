@@ -1,5 +1,5 @@
-usr/lib/gsql/engines/libgsqlengine_oracle*.so
-usr/share/pixmaps/gsql/oracle/*
-usr/share/gsql/glade/oracle/*
-usr/share/gsql/ui/oracle/*
-usr/share/gsql/template/*
+debian/tmp/usr/lib/gsql/engines/libgsqlengine_oracle*.so*
+debian/tmp/usr/share/pixmaps/gsql/oracle/*
+#debian/tmp/usr/share/gsql/glade/oracle/*
+debian/tmp/usr/share/gsql/ui/oracle/*
+debian/tmp/usr/share/gsql/template/*

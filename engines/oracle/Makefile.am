@@ -105,7 +105,8 @@ libgsqlengine_oracle_la_SOURCES = \
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
-	$(ORACLE_LIBS) 
+	$(ORACLE_LIBS) \
+	$(top_builddir)/libgsql/libgsql.la
 
 libgsqlengine_oracle_la_LDFLAGS = \
 	$(ORACLE_LDFLAGS) 

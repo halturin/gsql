@@ -55,7 +55,7 @@ libgsqlLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(libgsql_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgsqlengine_oracle_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(top_builddir)/libgsql/libgsql.la
 am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	engine_session.lo engine_menu.lo engine_menucb.lo \
 	engine_conf.lo engine_confcb.lo engine_stock.lo oracle.lo \
@@ -365,7 +365,8 @@ libgsqlengine_oracle_la_SOURCES = \
 
 libgsqlengine_oracle_la_LIBADD = \
 	$(PACKAGE_LIBS) \
-	$(ORACLE_LIBS) 
+	$(ORACLE_LIBS) \
+	$(top_builddir)/libgsql/libgsql.la
 
 libgsqlengine_oracle_la_LDFLAGS = \
 	$(ORACLE_LDFLAGS) 

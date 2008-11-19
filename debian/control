@@ -1,17 +1,41 @@
 Source: gsql
-Section: unknown
-Priority: extra
+Section: gnome
+Priority: optional
 Maintainer: Taras Halturin <halturin@gmail.com>
-Build-Depends: debhelper (>= 5), autotools-dev
+Build-Depends: debhelper (>= 5), autotools-dev, libvte-dev, libgnomeui-dev, libgtk2.0-dev, libgtksourceview2.0-dev, libnotify-dev, libgconf2-dev, libgnomeui-dev, libgnome2-dev
 Standards-Version: 3.7.2
 
 Package: gsql
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Section: devel
+Conflicts: gsql (<= 0.2.0)
+Replaces: gsql (<= 0.2.0)
+Depends: libgtk2.0-0 (>= 2.14.1), libgtksourceview2.0-0 (>= 2.3), libgnomeui-0 (>= 2.22.0), libgconf2-4 (>= 2.13.5), libnotify1 (>= 0.4.4), libgnome2-0 (>= 2.17.3), libgnomeui-0 (>= 2.22.0)
+Description: A GNOME database development tool
+ Short desc. FIXME
 
 Package: gsql-doc
 Architecture: all
-Description: Documentation for gsql
- <insert long description, indented with spaces>
+Description: A GNOME database development tool - Documentation
+ Short desc. FIXME
+
+Package: gsql-mysql
+Architecture: any
+Depends: gsql (= ${binary:Version}), libmysqlclient15off
+Description: MySQL engine for GSQL
+ The GSQL can works with MySQL server, and this module
+ is necessary for that.
+
+Package: gsql-oracle
+Architecture: any
+Depends: gsql (= ${binary:Version}), oracle-xe-client
+Description: Oracle engine for GSQL
+ The GSQL can works with Oracle server, and this module
+ is necessary for that.
+
+
+Package: gsql-plugins
+Architecture: any
+Depends: gsql (= ${binary:Version}), libvte9
+Description: Plugins for GSQL
+ Short desc. FIXME

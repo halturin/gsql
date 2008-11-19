@@ -891,9 +891,13 @@ PACKAGE_LIBS
 ORACLE_LIBS
 ORACLE_CFLAGS
 ORACLE_LDFLAGS
+GSQL_ENGINE_ORACLE_TRUE
+GSQL_ENGINE_ORACLE_FALSE
 MYSQL_CONFIG
 MYSQL_CFLAGS
 MYSQL_LIBS
+GSQL_ENGINE_MYSQL_TRUE
+GSQL_ENGINE_MYSQL_FALSE
 GCONFTOOL
 GCONF_SCHEMA_CONFIG_SOURCE
 GCONF_SCHEMA_FILE_DIR
@@ -1534,7 +1538,7 @@ Optional Packages:
                           set oracle include dir (default ORACLE_HOME/subdirs)
   --with-oracle-libraries=DIR
                           set oracle lib dir (default ORACLE_HOME/lib)
-  --with-oci-version=[8, 8I, 9I, 10G]
+  --with-oci-version=[8, 8I, 9I, 10G, 10G_R2]
                           this is the version of the client, not the database.
   --with-instant-client
                           define if compiling against Oracle Instant Client.
@@ -8017,13 +8021,13 @@ if test "${lt_cv_nm_interface+set}" = set; then
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:8020: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:8024: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:8023: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:8027: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:8026: output\"" >&5)
+  (eval echo "\"\$as_me:8030: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -9133,7 +9137,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 9136 "configure"' > conftest.$ac_ext
+  echo '#line 9140 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -10506,11 +10510,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10509: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10513: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10513: \$? = $ac_status" >&5
+   echo "$as_me:10517: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -10830,11 +10834,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10833: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10837: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10837: \$? = $ac_status" >&5
+   echo "$as_me:10841: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -10935,11 +10939,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10938: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10942: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10942: \$? = $ac_status" >&5
+   echo "$as_me:10946: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10990,11 +10994,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10993: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10997: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10997: \$? = $ac_status" >&5
+   echo "$as_me:11001: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -13751,7 +13755,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 13754 "configure"
+#line 13758 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13851,7 +13855,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 13854 "configure"
+#line 13858 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14366,13 +14370,13 @@ if test "${with_oracle_libraries+set}" = set; then
 fi
 
 
-  oracle_user_oci_ver=
+  oracle_user_otl_ver=
 
 # Check whether --with-oci-version was given.
 if test "${with_oci_version+set}" = set; then
   withval=$with_oci_version;
     have_oracle=yes
-    oracle_user_oci_ver=$withval
+    oracle_user_otl_ver=$withval
 
 fi
 
@@ -14398,16 +14402,26 @@ fi
   ora_lib=-lclntsh
 
   if test $have_oracle = no; then
-        { echo "$as_me:$LINENO: result: no" >&5
+
+cat >>confdefs.h <<\_ACEOF
+#define TO_NO_ORACLE 1
+_ACEOF
+
+    { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
   elif test "x$oracle_user_instant" != "x"; then
+
+cat >>confdefs.h <<\_ACEOF
+#define TO_INSTANT_CLIENT 1
+_ACEOF
+
 
     if test "x$oracle_user_lib" = "x" && test "x$oracle_user_inc" = "x"; then
 
       for dir in `ls /usr/lib/oracle/`; do
         echo "trying $dir" >&5
         if expr $dir \> 10 >/dev/null; then
-          oracle_user_oci_ver=10G
+          oracle_user_otl_ver=10G
         fi
         ora_ldflags="-L/usr/lib/oracle/$dir/client/lib"
 
@@ -14418,9 +14432,11 @@ echo "$as_me: error: $incdir doesn't exist. Please install the sdk package or us
    { (exit 1); exit 1; }; }
         fi
         ora_cflags="-I$incdir"
-
         break
       done
+    else
+      ora_ldflags="-L$oracle_user_lib"
+      ora_cflags="-I$oracle_user_inc"
     fi
   elif test "x$ORACLE_HOME" != "x"; then
     { echo "$as_me:$LINENO: result: $ORACLE_HOME" >&5
@@ -14433,9 +14449,7 @@ echo "${ECHO_T}$ORACLE_HOME" >&6; }
       $ORACLE_HOME/rdbms/public
       $ORACLE_HOME/network/public
       $ORACLE_HOME/sdk/
-      $ORACLE_HOME/sdk/include/
-      $ORACLE_HOME/include/
-      /usr/include/oracle"
+      $ORACLE_HOME/include/"
 
     for dir in $ora_check_inc; do
       if test -d $dir; then
@@ -14447,8 +14461,7 @@ echo "${ECHO_T}$ORACLE_HOME" >&6; }
       $oracle_user_lib
       $ORACLE_HOME/lib
       $ORACLE_HOME/lib32
-      $ORACLE_HOME/lib64
-      /usr/lib/oracle"
+      $ORACLE_HOME/lib64"
 
     for dir in $ora_check_lib; do
       if test -d $dir; then
@@ -14467,120 +14480,19 @@ echo "$as_me: WARNING: no" >&2;}
   fi
 
   if test "x$ORACLE_HOME" != "x"; then
-            ora_home_oops=`echo $ORACLE_HOME | awk '/\/$/ {print "oops"}'`
+            ora_home_oops=`echo $ORACLE_HOME | $AWK '/\/$/ {print "oops"}'`
     if test "$ora_home_oops" = "oops"; then
       { echo "$as_me:$LINENO: WARNING: Your ORACLE_HOME environment variable ends with a
 slash (i.e. /). Oracle 10g Instant Client is known to have a problem
-with this." >&5
+with this. If you get the message \"otl_initialize failed!\" at the
+console when running TOra, this is probably why." >&5
 echo "$as_me: WARNING: Your ORACLE_HOME environment variable ends with a
 slash (i.e. /). Oracle 10g Instant Client is known to have a problem
-with this." >&2;}
-    fi
-  fi
-
-  if test $have_oracle = yes; then
-    { echo "$as_me:$LINENO: checking oci works" >&5
-echo $ECHO_N "checking oci works... $ECHO_C" >&6; }
-    CFLAGS="$CFLAGS $ora_cflags"
-    LDFLAGS="$LDFLAGS $ora_ldflags"
-    LIBS="$ora_lib"
-
-    # i pulled this from one of the examples in the demo dir.
-    if test "$cross_compiling" = yes; then
-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
-See \`config.log' for more details." >&5
-echo "$as_me: error: cannot run test program while cross compiling
-See \`config.log' for more details." >&2;}
-   { (exit 1); exit 1; }; }
-else
-  cat >conftest.$ac_ext <<_ACEOF
-
-      #include <oci.h>
-      Lda_Def lda;
-      ub4     hda [HDA_SIZE/(sizeof(ub4))];
-
-      int main(int c, char **v) {
-        return 0;
-      }
-
-_ACEOF
-rm -f conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
-  { (case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_try") 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  found_oracle=yes
-else
-  echo "$as_me: program exited with status $ac_status" >&5
-echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-( exit $ac_status )
-found_oracle=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
-fi
-
-
-
-    if test $found_oracle = no; then
-      { { echo "$as_me:$LINENO: error: Couldn't compile and run a simpile OCI app.
-      Try setting ORACLE_HOME or check config.log.
-      Otherwise, make sure ORACLE_HOME/lib is in /etc/ld.so.conf or LD_LIBRARY_PATH" >&5
-echo "$as_me: error: Couldn't compile and run a simpile OCI app.
-      Try setting ORACLE_HOME or check config.log.
-      Otherwise, make sure ORACLE_HOME/lib is in /etc/ld.so.conf or LD_LIBRARY_PATH" >&2;}
-   { (exit 1); exit 1; }; }
+with this. If you get the message \"otl_initialize failed!\" at the
+console when running TOra, this is probably why." >&2;}
     fi
 
-    sqlplus=
-    if test -x "$ORACLE_HOME/bin/sqlplus"; then
-      sqlplus="$ORACLE_HOME/bin/sqlplus"
-    fi
-    if test "x${sqlplus}" = "x"; then
-      if test -x "$ORACLE_HOME/bin/sqlplusO"; then
-        sqlplus="$ORACLE_HOME/bin/sqlplusO"
-      fi
-    fi
-
-    if test "x$oracle_user_oci_ver" != "x"; then
-      oci_ver=$oracle_user_oci_ver
-    elif test "x${sqlplus}" = "x"; then
-      { { echo "$as_me:$LINENO: error: Couldn't find sqlplus. Set the Oracle version manually." >&5
-echo "$as_me: error: Couldn't find sqlplus. Set the Oracle version manually." >&2;}
-   { (exit 1); exit 1; }; }
-    else
-      # get oracle oci version. know a better way?
-      sqlplus_ver=`$sqlplus -? | awk '/Release/ {print $3}'`
-      echo "sqlplus_ver: $sqlplus_ver" >&5
-
-      if expr $sqlplus_ver \> 10 >/dev/null; then
-                oci_ver=10G
-      elif expr $sqlplus_ver \> 9 >/dev/null; then
-        oci_ver=9I
-      elif expr $sqlplus_ver \< 8.1 >/dev/null; then
-        oci_ver=8
-      else
-        oci_ver=8I
-      fi
-    fi
-
-    ora_cflags="$ora_cflags -DOCI_VERSION${oci_ver}"
+    ora_cflags="$ora_cflags"
 
     # don't change flags for all targets, just export ORA variables.
     CFLAGS=$cflags_ora_save
@@ -14601,6 +14513,15 @@ echo "$as_me: error: Couldn't find sqlplus. Set the Oracle version manually." >&
     { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
   fi
+
+   if test "x$enable_oracle" = "xyes"; then
+  GSQL_ENGINE_ORACLE_TRUE=
+  GSQL_ENGINE_ORACLE_FALSE='#'
+else
+  GSQL_ENGINE_ORACLE_TRUE='#'
+  GSQL_ENGINE_ORACLE_FALSE=
+fi
+
 
 
   { echo "$as_me:$LINENO: checking for mysql" >&5
@@ -14806,6 +14727,14 @@ echo "${ECHO_T}no" >&6; }
     MYSQL_LIBS=$my_libs
 
   fi
+
+   if test "x$have_mysql" = "xyes"; then
+  GSQL_ENGINE_MYSQL_TRUE=
+  GSQL_ENGINE_MYSQL_FALSE='#'
+else
+  GSQL_ENGINE_MYSQL_TRUE='#'
+  GSQL_ENGINE_MYSQL_FALSE=
+fi
 
 
 
@@ -15302,6 +15231,20 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${GSQL_ENGINE_ORACLE_TRUE}" && test -z "${GSQL_ENGINE_ORACLE_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GSQL_ENGINE_ORACLE\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"GSQL_ENGINE_ORACLE\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${GSQL_ENGINE_MYSQL_TRUE}" && test -z "${GSQL_ENGINE_MYSQL_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GSQL_ENGINE_MYSQL\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"GSQL_ENGINE_MYSQL\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -16306,9 +16249,13 @@ PACKAGE_LIBS!$PACKAGE_LIBS$ac_delim
 ORACLE_LIBS!$ORACLE_LIBS$ac_delim
 ORACLE_CFLAGS!$ORACLE_CFLAGS$ac_delim
 ORACLE_LDFLAGS!$ORACLE_LDFLAGS$ac_delim
+GSQL_ENGINE_ORACLE_TRUE!$GSQL_ENGINE_ORACLE_TRUE$ac_delim
+GSQL_ENGINE_ORACLE_FALSE!$GSQL_ENGINE_ORACLE_FALSE$ac_delim
 MYSQL_CONFIG!$MYSQL_CONFIG$ac_delim
 MYSQL_CFLAGS!$MYSQL_CFLAGS$ac_delim
 MYSQL_LIBS!$MYSQL_LIBS$ac_delim
+GSQL_ENGINE_MYSQL_TRUE!$GSQL_ENGINE_MYSQL_TRUE$ac_delim
+GSQL_ENGINE_MYSQL_FALSE!$GSQL_ENGINE_MYSQL_FALSE$ac_delim
 GCONFTOOL!$GCONFTOOL$ac_delim
 GCONF_SCHEMA_CONFIG_SOURCE!$GCONF_SCHEMA_CONFIG_SOURCE$ac_delim
 GCONF_SCHEMA_FILE_DIR!$GCONF_SCHEMA_FILE_DIR$ac_delim
@@ -16336,7 +16283,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 59; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 63; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
