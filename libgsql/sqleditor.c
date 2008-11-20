@@ -464,6 +464,16 @@ gsql_editor_merge_f_actions (gchar *ui_addons, GSQLEditorFActionCB f_action)
 
 }
 
+GtkTreeView*
+gsql_editor_get_result_treeview (GSQLEditor *editor)
+{
+	GSQL_TRACE_FUNC;
+	
+	g_return_val_if_fail (GSQL_IS_EDITOR (editor), NULL);
+	
+	return editor->private->result_treeview;
+}
+
 /* 
  *  Static section:
  *

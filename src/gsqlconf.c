@@ -98,8 +98,11 @@ gsql_conf_dialog()
 	gxml = glade_xml_new (GSQL_GLADE_DIALOGS, "gsql_prefs_dialog", NULL);
 
 	g_return_if_fail(gxml);
+	
 	glade_xml_signal_autoconnect(gxml);
 	dialog = (GtkDialog *) glade_xml_get_widget (gxml, "gsql_prefs_dialog");
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
 	
 	conf_notebook = glade_xml_get_widget (gxml, "gsql_conf_notebool");
 	show_navarea_check = glade_xml_get_widget (gxml, "show_navarea_check");

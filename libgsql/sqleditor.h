@@ -79,6 +79,9 @@ gsql_editor_run_sql (GSQLEditor *editor);
 void
 gsql_editor_merge_actions (gchar *ui_addons, GtkActionGroup *action_addons);
 
+GtkTreeView*
+gsql_editor_get_result_treeview (GSQLEditor *editor);
+
 
 G_END_DECLS
 

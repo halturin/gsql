@@ -11,13 +11,13 @@
     For more information on <application>GSQL</application>, please visit the project 
     website at <ulink type="http" url="http://gsql.org/">http://gsql.org</ulink>. 
     Bug reports should be made using the Bug Tracker at the project development site 
-    <ulink type="http" url="http://www.sourceforge.net/projects/gsql">
-    http://www.sourceforge.net/projects/gsql</ulink>
+    <ulink type="http" url="http://code.google.com/p/gsql/issues/list">
+    http://code.google.com/p/gsql/issues/list</ulink>
    </para>
    
    <para>
     This manual was written by Taras Halturin. Please send all comments and suggestions regarding 
-    this manual to GSQL Devel list <email>gsql-devel@list.sourceforge.net</email>. Comments may also be submitted via the 
-    project trackers at SourceForge.
+    this manual to GSQL Devel list <ulink type="http" url="http://groups.google.com/group/gsql-dev">
+    http://groups.google.com/group/gsql-dev</ulink>.
    </para> 
 </chapter>

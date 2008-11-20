@@ -112,6 +112,8 @@ engine_load (GSQLEngine *engine)
 		if (!env_all)
 			return TRUE;
 		
+		GSQL_DEBUG ("Set custom environment");
+		
 		env_list = g_strsplit (env_all, ",", 100);
 	
 		for (i = 0; env_list[i]; i ++)
@@ -120,6 +122,9 @@ engine_load (GSQLEngine *engine)
 			env_value = env_list[i];
 		
 			tmp = g_strdup_printf ("%s=%s", env_name, env_value);
+			
+			GSQL_DEBUG ("ENV: %s", tmp);
+			
 			putenv (tmp);
 			g_free (tmp);
 		}

@@ -36,7 +36,7 @@
 -->  
 
   <copyright>
-   <year>2006-2007</year>
+   <year>2006-2008</year>
    <holder>Taras Halturin</holder>
   </copyright>
 
@@ -71,7 +71,7 @@
 -->
   <!-- this is the version of manual, not application --> 
   <releaseinfo>
-   This is version 0.1.0 of the GSQL Manual
+   This is version 0.2.0 of the GSQL Manual
   </releaseinfo>
  </bookinfo>
  <!-- Document Body --> 

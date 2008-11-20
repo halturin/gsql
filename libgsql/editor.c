@@ -55,15 +55,15 @@ static gchar editor_ui[] =
 "	   		<menuitem name=\"Copy\" action=\"ActionEditCopy\" />	"
 "	   		<menuitem name=\"Paste\" action=\"ActionEditPaste\" />	"
 "	   		<menuitem name=\"Delete\" action=\"ActionEditDelete\" />	"
-"	   		<separator name=\"SeparatorB\" />	"
+/*"	   		<separator name=\"SeparatorB\" />	"
 "	   		<menuitem name=\"Indent\" action=\"ActionEditIndent\" />	"
 "	   		<menuitem name=\"Unindent\" action=\"ActionEditUnindent\" />	"
 "	   		<menuitem name=\"Comment\" action=\"ActionEditComment\" />	"
 "	   		<menuitem name=\"Uncomment\" action=\"ActionEditUncomment\" />	"
 "	   		<menuitem name=\"UpperCase\" action=\"ActionEditUpperCase\" />	"
 "	   		<menuitem name=\"LowerCase\" action=\"ActionEditLowerCase\" />	"
-//"	   		<menuitem name=\"KeyUpperCase\" action=\"ActionEditKeyUpper\" />	"
-//"	   		<menuitem name=\"KeyLowerCase\" action=\"ActionEditKeyLower\" />	"
+"	   		<menuitem name=\"KeyUpperCase\" action=\"ActionEditKeyUpper\" />	"
+"	   		<menuitem name=\"KeyLowerCase\" action=\"ActionEditKeyLower\" />	" */
 "    </menu>	"
 "  </menubar>	"
 "</ui>	";
@@ -88,14 +88,14 @@ static GtkActionEntry editor_acts[] =
 	{ "ActionEditCopy", GTK_STOCK_COPY, N_("Copy"), "<control>C", N_("Copy"), G_CALLBACK(on_editor_copy_activate) },
 	{ "ActionEditCut", GTK_STOCK_CUT, N_("Cut"), "<control>X", N_("Cut"), G_CALLBACK(on_editor_cut_activate) },
 	{ "ActionEditPaste", GTK_STOCK_PASTE, N_("Paste"), "<control>V", N_("Paste"), G_CALLBACK(on_editor_paste_activate) },
-	{ "ActionEditDelete", GTK_STOCK_CLEAR, N_("Clear"), NULL, N_("Clear"), G_CALLBACK(on_editor_delete_activate) },
+	{ "ActionEditDelete", GTK_STOCK_CLEAR, N_("Clear"), NULL, N_("Clear"), G_CALLBACK(on_editor_delete_activate) }
 
-	{ "ActionEditIndent", GTK_STOCK_INDENT, N_("Indent"), "<control>I", N_("Indent"), G_CALLBACK(on_editor_indent_activate) },
+/*	{ "ActionEditIndent", GTK_STOCK_INDENT, N_("Indent"), "<control>I", N_("Indent"), G_CALLBACK(on_editor_indent_activate) },
 	{ "ActionEditUnindent", GTK_STOCK_UNINDENT, N_("Unindent"), "<control>U", N_("Unindent"), G_CALLBACK(on_editor_unindent_activate) },
 	{ "ActionEditComment", NULL, N_("Comment"), NULL, N_("Comment"), G_CALLBACK(on_editor_comment_activate) },
 	{ "ActionEditUncomment", NULL, N_("Uncomment"), NULL, N_("Uncomment"), G_CALLBACK(on_editor_uncomment_activate) },
 	{ "ActionEditUpperCase", NULL, N_("Upper Case"), NULL, N_("Upper Case"), G_CALLBACK(on_editor_upper_case_activate) },
-	{ "ActionEditLowerCase", NULL, N_("Lower Case"), NULL, N_("Lower Case"), G_CALLBACK(on_editor_lower_case_activate) }	
+	{ "ActionEditLowerCase", NULL, N_("Lower Case"), NULL, N_("Lower Case"), G_CALLBACK(on_editor_lower_case_activate) }	*/
 };
 
 

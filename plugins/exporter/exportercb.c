@@ -37,10 +37,10 @@ struct _export_types
 
 static struct _export_types export_types[] = 
 {
-	{0, "CSV"},
-	{1, "HTML"},
+	{0, "CSV"}
+/*	{1, "HTML"},
 	{2, "XML"},
-	{3, "Plain text"}
+	{3, "Plain text"} */
 };
 
 static void
@@ -70,6 +70,8 @@ on_choosebutton_activate (GtkButton *button, gpointer user_data)
 	if (uri)
 		g_free (uri); 
 
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
+	
 	uri = g_strdup(gtk_entry_get_text (GTK_ENTRY (target)));
 	
 	if (uri)
@@ -83,7 +85,7 @@ on_choosebutton_activate (GtkButton *button, gpointer user_data)
 		
 		g_free (file);
 		file = NULL;
-	};
+	}
 
 	ret = gtk_dialog_run (GTK_DIALOG (chooser));
 	if (ret == GTK_RESPONSE_ACCEPT)
@@ -99,12 +101,13 @@ on_choosebutton_activate (GtkButton *button, gpointer user_data)
 		{
 			gtk_entry_set_text (GTK_ENTRY (target), file);
 			g_free (file);
-		};
-	};
+		}
+	}
+	
 	gtk_widget_destroy (chooser);
 	
-	return;
-};
+
+}
 
 static GtkWidget*
 get_export_types_combo ()
@@ -134,7 +137,7 @@ get_export_types_combo ()
 							1, export_types[i].name,
 							-1);
 		i++;
-	};
+	}
 	
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 	
@@ -142,7 +145,7 @@ get_export_types_combo ()
 	return combo;
 	
 	
-};
+}
 
 void
 on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
@@ -159,6 +162,7 @@ on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
 	GtkRadioButton *rbutton;
 	GtkWidget *target;
 	GtkWidget *headers;
+	GtkWidget *progressbar, *config_vbox, *save_button;
 	GSList *rgroup;
 	GSQLContent *content = NULL;
 	GSQLSession *session = NULL;
@@ -170,28 +174,37 @@ on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
 	static gint exptype = 0;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	
 	gint ret;
-
 	
-	GSQL_DEBUG ("Create export result dialog");
 	gxml = glade_xml_new (GSQLP_EXPORTER_GLADE_DIALOG, "export_dialog", NULL);
 	g_return_if_fail(gxml);
 	
 	dialog = (GtkDialog *) glade_xml_get_widget (gxml, "export_dialog");
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
+	
 	alig = (GtkAlignment *) glade_xml_get_widget (gxml, "alignment_enc");
 	alig_exptype = (GtkAlignment *) glade_xml_get_widget (gxml, "alignment_exptype");
+	
 	combo = (GtkWidget *) gsql_enconding_list ();
 	combo_exptype = (GtkWidget *) get_export_types_combo ();
+	
 	target = (GtkWidget *) glade_xml_get_widget (gxml, "target");
+	
 	choosebutton = (GtkWidget *) glade_xml_get_widget (gxml, "choosebutton");
+	
 	headers = (GtkWidget *) glade_xml_get_widget (gxml, "headers");
+	progressbar = (GtkWidget *) glade_xml_get_widget (gxml, "progressbar");
+	config_vbox = (GtkWidget *) glade_xml_get_widget (gxml, "config_vbox");
+	save_button = (GtkWidget *) glade_xml_get_widget (gxml, "save_button");
+	
 	g_signal_connect ((gpointer) choosebutton, "clicked",
 						G_CALLBACK (on_choosebutton_activate),
 						(gpointer) target);
 	
 	if (filename)
 		gtk_entry_set_text (GTK_ENTRY (target), filename);
+	
 	if (exptype)
 		gtk_combo_box_set_active (GTK_COMBO_BOX (combo_exptype), exptype);
 
@@ -199,68 +212,84 @@ on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
 	gtk_container_add (GTK_CONTAINER (alig), combo);
 	gtk_container_add (GTK_CONTAINER (alig_exptype), combo_exptype);
 	
-	ret = gtk_dialog_run (dialog);
-	GSQL_DEBUG ("Export result dialog: [ret=%d]", ret);
-	
-	if (ret == 1) // Save action selected
+	// 2 - cancel, 3 - export complete (via gtk_dialog_response)
+	while ((ret != 2) && (ret !=3))
 	{
-		GSQL_DEBUG ("Start exporting...");
-		rbutton = (GtkRadioButton *) glade_xml_get_widget (gxml, "radiobutton1");
-		rgroup = gtk_radio_button_get_group (rbutton);
-		if (filename)
-			g_free (filename);
-		filename = g_strdup (gtk_entry_get_text (GTK_ENTRY (target)));
+		ret = gtk_dialog_run (dialog);
+		GSQL_DEBUG ("Export result dialog: [ret=%d]", ret);
+	
+		if (ret == 1) // Save action selected
+		{
+			GSQL_DEBUG ("Start exporting...");
+			rbutton = (GtkRadioButton *) glade_xml_get_widget (gxml, "radiobutton1");
+			rgroup = gtk_radio_button_get_group (rbutton);
+		
+			if (filename)
+				g_free (filename);
+		
+			filename = g_strdup (gtk_entry_get_text (GTK_ENTRY (target)));
 
-		GSQL_DEBUG ("GSList length: %d", g_slist_length (rgroup));
-		if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo_exptype), &iter))
-		{
-			model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo_exptype));
-			gtk_tree_model_get (model, &iter,
-						0, &exptype, -1);
-		};
+			GSQL_DEBUG ("GSList length: %d", g_slist_length (rgroup));
 		
+			if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo_exptype), &iter))
+			{
+				model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo_exptype));
+				gtk_tree_model_get (model, &iter,
+							0, &exptype, -1);
+			}
 		
-		session = gsql_session_get_active ();
-		workspace = gsql_session_get_workspace (session);
-		content = gsql_workspace_get_current_content (workspace);
+			session = gsql_session_get_active ();
+			workspace = gsql_session_get_workspace (session);
+			content = gsql_workspace_get_current_content (workspace);
 		
-		g_return_if_fail (GSQL_IS_CONTENT (content));
+			gtk_widget_show (progressbar);
+			gtk_widget_hide (config_vbox);
+			gtk_widget_hide (save_button);
 		
-		if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter))
-		{
-			model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo));
-			gtk_tree_model_get (model, &iter,
-						1, &encoding, -1);
-			GSQL_DEBUG ("Exporter: encoding selected. [%s]", encoding);
-		};
+			g_object_set_data (G_OBJECT (content), "dialog", dialog);
+			g_object_set_data (G_OBJECT (content), "progress", progressbar);
 		
-		include_headers = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (headers));
+			g_return_if_fail (GSQL_IS_CONTENT (content));
+		
+			if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter))
+			{
+				model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo));
+				gtk_tree_model_get (model, &iter,
+							1, &encoding, -1);
+				GSQL_DEBUG ("Exporter: encoding selected. [%s]", encoding);
+			}
+		
+			include_headers = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (headers));
 
-		GSQL_DEBUG ("Exporter: [filename=%s]", filename);
-		switch (exptype)
-		{
-			case 0: // CSV
-				GSQL_DEBUG ("Export type: CSV");
-				exporter_export_to_csv (content, filename, 
-										encoding, include_headers);
-				break;
-			case 1: // HTML
-				GSQL_DEBUG ("Export type: HTML");
-				exporter_export_to_html (content, filename, 
-										 encoding, include_headers);
-				break;
-			case 2: // XML
-				GSQL_DEBUG ("Export type: XML");
-				exporter_export_to_xml (content, filename, 
-										 encoding, include_headers);
-				break;
-			case 3: // Plain text
-				GSQL_DEBUG ("Export type: Plain text");
-				exporter_export_to_plain_text (content, filename, 
-										 encoding, include_headers);
-				break;
-		};
-	};
+			GSQL_DEBUG ("Exporter: [filename=%s]", filename);
+			switch (exptype)
+			{
+				case 0: // CSV
+					GSQL_DEBUG ("Export type: CSV");
+					exporter_export_to_csv (content, filename, 
+											encoding, include_headers);
+					break;
+				case 1: // HTML
+					GSQL_DEBUG ("Export type: HTML");
+					exporter_export_to_html (content, filename, 
+											 encoding, include_headers);
+					break;
+				case 2: // XML
+					GSQL_DEBUG ("Export type: XML");
+					exporter_export_to_xml (content, filename, 
+											 encoding, include_headers);
+					break;
+				case 3: // Plain text
+					GSQL_DEBUG ("Export type: Plain text");
+					exporter_export_to_plain_text (content, filename, 
+											 encoding, include_headers);
+					break;
+			}
+		}
+	
+	}
+	
+	
 
 	if (encoding)
 		g_free (encoding);
@@ -268,5 +297,4 @@ on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
 	gtk_widget_destroy ((GtkWidget *) dialog);
 	g_object_unref(G_OBJECT(gxml));
 	
-	return;
 }
