@@ -372,9 +372,9 @@ nav_tree_tables_popup (GSQLNavigation *navigation,
 						 GtkTreeIter *iter, guint event)
 {
 	GSQL_TRACE_FUNC;
-	static GtkActionGroup *actions = NULL;
+	GtkActionGroup *actions = NULL;
 	
-	if (!actions)
+	if (!gsql_navigation_get_action (navigation, "OracleActionTableBrowse"))
 	{
 		actions = gtk_action_group_new ("OraclePopupTableActions");
 		gtk_action_group_add_actions (actions, table_acts, 

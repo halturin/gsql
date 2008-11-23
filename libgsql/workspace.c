@@ -635,7 +635,7 @@ gsql_message_add(GSQLWorkspace *workspace, gint type, gchar * msg)
 			break;
 			
 	}
-
+	
 	// will do... to make the choose for 12/24 time format
 	// strftime(ctime, 16, "%r", localtime(&ttime);
 	strftime(ctime, 16, "%T", localtime(&ttime));
@@ -1024,6 +1024,8 @@ on_save_to_file_messages_activate (GtkMenuItem * menuitem,
 						NULL);
 	if (uri != NULL)
 		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (dialog), uri);
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
 	
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
 	{	   

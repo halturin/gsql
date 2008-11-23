@@ -120,7 +120,11 @@ GtkListStore *
 gsql_navigation_get_details (GSQLNavigation *navigation, gchar *key);
 
 guint
-gsql_navigation_menu_merge (GSQLNavigation *navigation, gchar *ui, GtkActionGroup *actions);
+gsql_navigation_menu_merge (GSQLNavigation *navigation, gchar *ui, 
+							GtkActionGroup *actions);
+
+GtkAction *
+gsql_navigation_get_action (GSQLNavigation *navigation, gchar *action);
 
 void
 gsql_navigation_menu_popup (GSQLNavigation *navigation, GtkActionGroup *action);

@@ -1708,7 +1708,7 @@ on_editor_cb_save (GSQLContent *content, gboolean save_as)
 		
 		gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (chooser), 
 														TRUE);
-
+		gtk_window_set_transient_for (GTK_WINDOW (chooser), GTK_WINDOW (gsql_window));
 		ret = gtk_dialog_run (GTK_DIALOG (chooser));
 
 		g_free (file); file = NULL;
@@ -1852,7 +1852,9 @@ on_editor_cb_close (GSQLContent *content, gboolean force)
 		
 	g_return_if_fail (gxml);
 		
-	dialog = glade_xml_get_widget (gxml, "gsql_unsaved_file_dialog");	
+	dialog = glade_xml_get_widget (gxml, "gsql_unsaved_file_dialog");
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
 	
 	ret = gtk_dialog_run (GTK_DIALOG (dialog));
 	
@@ -1916,7 +1918,8 @@ on_editor_cb_revert (GSQLContent *content)
 		g_return_if_fail (gxml);
 		
 		dialog = glade_xml_get_widget (gxml, "gsql_isnotafile_clear_dialog");	
-	
+		gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
+		
 		ret = gtk_dialog_run (GTK_DIALOG (dialog));
 	
 		gtk_widget_destroy ((GtkWidget *) dialog);

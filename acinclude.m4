@@ -175,8 +175,9 @@ AC_DEFUN([CHECK_ORACLE],
       $ORACLE_HOME/plsql/public
       $ORACLE_HOME/rdbms/public
       $ORACLE_HOME/network/public
-      $ORACLE_HOME/sdk/
-      $ORACLE_HOME/include/"
+      $ORACLE_HOME/sdk/include
+      $ORACLE_HOME/sdk
+      $ORACLE_HOME/include"
 
     for dir in $ora_check_inc; do
       if test -d $dir; then

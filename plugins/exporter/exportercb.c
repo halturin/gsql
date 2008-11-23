@@ -86,6 +86,8 @@ on_choosebutton_activate (GtkButton *button, gpointer user_data)
 		g_free (file);
 		file = NULL;
 	}
+	
+	gtk_window_set_transient_for (GTK_WINDOW (chooser), GTK_WINDOW (gsql_window));
 
 	ret = gtk_dialog_run (GTK_DIALOG (chooser));
 	if (ret == GTK_RESPONSE_ACCEPT)
@@ -211,6 +213,8 @@ on_open_export_dialog_activate (GtkButton *button, gpointer user_data)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (headers), include_headers);
 	gtk_container_add (GTK_CONTAINER (alig), combo);
 	gtk_container_add (GTK_CONTAINER (alig_exptype), combo_exptype);
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
 	
 	// 2 - cancel, 3 - export complete (via gtk_dialog_response)
 	while ((ret != 2) && (ret !=3))

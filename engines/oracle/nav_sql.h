@@ -549,7 +549,7 @@ order by a.object_name";
 /************ Database links *************/
 
 static const gchar sql_oracle_dblinks[] =
-"select owner,db_link object_name, created, username, \
+"select db_link object_name, owner, created, username, \
 host, owner dblink_type,created last_ddl_time \
 from all_db_links \
 where owner like UPPER(:owner) \

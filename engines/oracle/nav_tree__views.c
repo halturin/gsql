@@ -108,22 +108,22 @@ static GSQLNavigationItem views[] = {
 
 static GtkActionEntry view_actions[] = 
 {
-/*	{ "OracleActionPopupNavViewCreate", GTK_STOCK_NEW, 
+/*	{ "OracleActionViewCreate", GTK_STOCK_NEW, 
 		N_("Create..."), NULL, 
 		N_("Create a new view  [ Ins ]"), 
 		G_CALLBACK(on_popup_view_create) },
 	
-	{ "OracleActionPopupNavViewDrop", GTK_STOCK_DELETE, 
+	{ "OracleActionViewDrop", GTK_STOCK_DELETE, 
 		N_("Drop..."), NULL, 
 		N_("Drop this view  [ Del ]"), 
 		G_CALLBACK(on_popup_view_drop) },
 	
-	{ "OracleActionPopupNavViewAlter", NULL, 
+	{ "OracleActionViewAlter", NULL, 
 		N_("Alter..."), NULL, 
 		N_("Alter table"), 
 		G_CALLBACK(on_popup_view_alter) },
 */	
-	{ "OracleActionPopupNavViewBrowse", NULL, 
+	{ "OracleActionViewBrowse", NULL, 
 		N_("Browse data"), NULL, 
 		N_("Open SQL editor to browse the data  [ F3 ]"), 
 		G_CALLBACK(on_popup_view_browse) },
@@ -134,10 +134,10 @@ static gchar view_ui[] =
 " <ui>																									"
 "  <popup name=\"NavObjects\" action=\"ActionNavObjects\">												"
 " 		<placeholder name=\"PHolderNavObjectDo\" >													"
-//"  				<menuitem name=\"OracleNavViewCreate\" action=\"OracleActionPopupNavViewCreate\" />		"
-//"  				<menuitem name=\"OracleNavViewDrop\" action=\"OracleActionPopupNavViewDrop\" />			"
-//"  				<menuitem name=\"OracleNavViewAlter\" action=\"OracleActionPopupNavViewAlter\" />		"
-"  				<menuitem name=\"OracleNavViewBrowse\" action=\"OracleActionPopupNavViewBrowse\" />		"
+//"  				<menuitem name=\"OracleViewCreate\" action=\"OracleActionViewCreate\" />		"
+//"  				<menuitem name=\"OracleViewDrop\" action=\"OracleActionViewDrop\" />			"
+//"  				<menuitem name=\"OracleViewAlter\" action=\"OracleActionViewAlter\" />		"
+"  				<menuitem name=\"OracleViewBrowse\" action=\"OracleActionViewBrowse\" />		"
 "  		</placeholder>																				"
 "  </popup>																								"
 "</ui> ";
@@ -322,9 +322,9 @@ nav_tree_views_popup (GSQLNavigation *navigation,
 						 GtkTreeIter *iter, guint event)
 {
 	GSQL_TRACE_FUNC;
-	static GtkActionGroup *actions = NULL;
+	GtkActionGroup *actions = NULL;
 	
-	if (!actions)
+	if (!gsql_navigation_get_action (navigation, "OracleActionViewBrowse"))
 	{
 		actions = gtk_action_group_new ("OraclePopupViewActions");
 		gtk_action_group_add_actions (actions, view_actions, 

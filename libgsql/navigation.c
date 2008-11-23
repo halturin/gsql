@@ -408,12 +408,23 @@ gsql_navigation_menu_merge (GSQLNavigation *navigation, gchar *ui, GtkActionGrou
 	{
 		gtk_ui_manager_ensure_update (navigation->private->ui);
 		return ret;
-	} else
-	{
+		
+	} else	{
+		
 		gtk_ui_manager_remove_action_group (navigation->private->ui, actions);
 	}
 	
 	return ret;
+}
+
+GtkAction *
+gsql_navigation_get_action (GSQLNavigation *navigation, gchar *action)
+{
+	GSQL_TRACE_FUNC;
+	
+	g_return_val_if_fail (GSQL_IS_NAVIGATION (navigation), NULL);
+	
+	return gtk_ui_manager_get_action (navigation->private->ui, action);
 }
 
 void
@@ -422,6 +433,8 @@ gsql_navigation_menu_popup (GSQLNavigation *navigation, GtkActionGroup *action)
 	GSQL_TRACE_FUNC;
 	
 	static GtkActionGroup *last_action = NULL;
+	
+	GSQL_DEBUG ("Action[0x%x] LastAction[0x%x]", action, last_action);
 	
 	if ((last_action != action) && (last_action != NULL))
 		gtk_action_group_set_visible (last_action, FALSE);

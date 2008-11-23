@@ -276,9 +276,9 @@ nav_tree_views_popup (GSQLNavigation *navigation,
 						 GtkTreeIter *iter, guint event)
 {
 	GSQL_TRACE_FUNC;
-	static GtkActionGroup *actions = NULL;
+	GtkActionGroup *actions = NULL;
 	
-	if (!actions)
+	if (!gsql_navigation_get_action (navigation, "MySQLActionViewBrowse"))
 	{
 		actions = gtk_action_group_new ("MySQLPopupViewActions");
 		gtk_action_group_add_actions (actions, view_actions, 

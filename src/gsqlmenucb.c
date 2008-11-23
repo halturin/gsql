@@ -99,6 +99,8 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER(chooser), 
 											 folder);
 
+	gtk_window_set_transient_for (GTK_WINDOW (chooser), GTK_WINDOW (gsql_window));
+	
 	ret = gtk_dialog_run (GTK_DIALOG (chooser));
 	if (ret == GTK_RESPONSE_OK)
 	{
@@ -198,6 +200,7 @@ on_file_close_all_activate (GtkMenuItem *mi, gpointer data)
 	
 	if (dialog)
 	{
+		gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
 		ret = gtk_dialog_run(dialog);
 		
 		switch (ret)

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Sep 27 11:41:20 2008 -->
+<!--Generated with glade3 3.4.5 on Sun Nov 23 15:00:52 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="periodical_dialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Periodocal run</property>
+    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="destroy_with_parent">True</property>
@@ -22,42 +23,101 @@
             <property name="column_spacing">4</property>
             <property name="row_spacing">4</property>
             <child>
-              <widget class="GtkRadioButton" id="period_predef">
+              <widget class="GtkSpinButton" id="cycles_limit">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Predefined</property>
-                <property name="response_id">0</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkRadioButton" id="period_custom">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Custom period</property>
-                <property name="response_id">0</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">period_predef</property>
-              </widget>
-              <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkComboBox" id="period_predef_value">
-                <property name="visible">True</property>
-                <property name="items" translatable="yes">1 Min
-2 Min
-3 Min
-5 Min
-10 Min</property>
+                <property name="adjustment">1 1 100000 1 10 10</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="cycles_chbox">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Cycles limit</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="suspend_hbox">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <child>
+                  <widget class="GtkSpinButton" id="suspend_hour">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip" translatable="yes">How many hours wait before start</property>
+                    <property name="max_length">2</property>
+                    <property name="adjustment">0 0 23 1 10 10</property>
+                    <property name="numeric">True</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label2">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">h</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">2</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkSpinButton" id="suspend_min">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip" translatable="yes">How many minutes wait before start</property>
+                    <property name="max_length">2</property>
+                    <property name="adjustment">0 0 59 1 10 10</property>
+                    <property name="numeric">True</property>
+                  </widget>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label3">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">m</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">2</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkCheckButton" id="suspend_start">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Suspended start time</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
+              </widget>
+              <packing>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -136,102 +196,43 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="suspend_start">
+              <widget class="GtkComboBox" id="period_predef_value">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Suspended start time</property>
-                <property name="response_id">0</property>
-                <property name="draw_indicator">True</property>
-              </widget>
-              <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="suspend_hbox">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <widget class="GtkSpinButton" id="suspend_hour">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">How many hours wait before start</property>
-                    <property name="max_length">2</property>
-                    <property name="adjustment">0 0 23 1 10 10</property>
-                    <property name="numeric">True</property>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label2">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">h</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="padding">2</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkSpinButton" id="suspend_min">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">How many minutes wait before start</property>
-                    <property name="max_length">2</property>
-                    <property name="adjustment">0 0 59 1 10 10</property>
-                    <property name="numeric">True</property>
-                  </widget>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label3">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">m</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="padding">2</property>
-                    <property name="position">3</property>
-                  </packing>
-                </child>
+                <property name="items" translatable="yes">1 Min
+2 Min
+3 Min
+5 Min
+10 Min</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="cycles_chbox">
+              <widget class="GtkRadioButton" id="period_custom">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Cycles limit</property>
+                <property name="label" translatable="yes">Custom period</property>
                 <property name="response_id">0</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">period_predef</property>
+              </widget>
+              <packing>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkRadioButton" id="period_predef">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Predefined</property>
+                <property name="response_id">0</property>
+                <property name="active">True</property>
                 <property name="draw_indicator">True</property>
               </widget>
-              <packing>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkSpinButton" id="cycles_limit">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <property name="can_focus">True</property>
-                <property name="adjustment">1 1 100000 1 10 10</property>
-                <property name="numeric">True</property>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
-              </packing>
             </child>
           </widget>
           <packing>

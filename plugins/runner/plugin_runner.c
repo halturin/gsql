@@ -320,7 +320,8 @@ on_runner (GtkToggleAction *action,  gpointer user_data)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cycles_chbox),
 								  eopt->cycles_limit);
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (cycles_limit), eopt->cycles);
-
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
 	ret = gtk_dialog_run (dialog);
 	
 	switch (ret)

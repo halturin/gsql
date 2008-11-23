@@ -181,7 +181,7 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 	gint args_stop = 1;
 	gpointer l_value_num;
 	gfloat  *l_value_float;
-	
+
 	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
 	
 	va_start (args, btype);
@@ -189,13 +189,9 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 	do
 	{
 			value_type = va_arg(args, GType);
+
 			switch (value_type)
 			{
-
-				case -1: //last arg
-					GSQL_DEBUG ("bind -1. last argument");
-					args_stop = 0;
-					break;
 				
 				case G_TYPE_STRING:
 				case G_TYPE_POINTER:
@@ -208,6 +204,9 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 				case G_TYPE_INT:
 					GSQL_DEBUG ("bind: INT|UINT");
 					l_args = g_list_append (l_args, (gpointer) value_type);
+					/* x86_64: 
+						cursor.c:206: warning: cast to pointer from integer of different size
+					 */
 					l_args = g_list_append (l_args, (gpointer) va_arg(args, gint));
 					break;
 					
@@ -237,6 +236,13 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 					break;
 					
 				default:
+					if (value_type == -1)
+					{
+						GSQL_DEBUG ("bind -1. last argument");
+						args_stop = 0;
+						
+						break;
+					}
 					GSQL_DEBUG ("Cursor bind. Unhandled type. %d ", value_type);
 					args_stop = -1;
 			}

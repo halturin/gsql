@@ -134,7 +134,7 @@ engine_load (GSQLEngine *engine)
 	}
 
     return TRUE;
-};
+}
 
 gboolean
 engine_unload (GSQLEngine * engine)
@@ -149,7 +149,7 @@ engine_unload (GSQLEngine * engine)
 	//FIXME
 	GSQL_DEBUG ("Not implemented");
 	return FALSE;
-};
+}
 
 
 
@@ -260,15 +260,14 @@ engine_logon_widget_create ()
 	HOOKUP_OBJECT (table, connect_as, "mode");        
 
 	return table;	
-};
+}
 
 void
 engine_logon_widget_free (GtkWidget * logon_widget)
 {
 	GSQL_TRACE_FUNC;
 
-	return;
-};
+}
 
 
 

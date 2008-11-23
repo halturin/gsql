@@ -98,6 +98,8 @@ plugin_vte_conf_dialog ()
 	gsql_engines_foreach (conf_engines_list_create,
 							engines_list);
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gsql_window));
+	
 	gtk_dialog_run (dialog);
 	gtk_widget_destroy ((GtkWidget *) dialog);
 	g_object_unref(G_OBJECT(gxml));

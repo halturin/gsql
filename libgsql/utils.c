@@ -312,7 +312,7 @@ gsql_utils_header_new (GtkWidget * icon, gchar *text, gchar *tooltip,
 		gtk_widget_modify_style (button, rcstyle);
 		gtk_rc_style_unref (rcstyle);
 		
-		gtk_widget_set_size_request (button, w, h);
+		gtk_widget_set_size_request (button, w+2, h+2);
 		
 		image = gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU);
 		gtk_container_add(GTK_CONTAINER (button), image);
