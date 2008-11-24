@@ -190,9 +190,14 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 	{
 			value_type = va_arg(args, GType);
 
-			switch (value_type)
+			switch ((gchar) value_type)
 			{
-				
+				case -1:
+					GSQL_DEBUG ("bind -1. last argument");
+					args_stop = 0;
+						
+					break;
+					
 				case G_TYPE_STRING:
 				case G_TYPE_POINTER:
 					GSQL_DEBUG ("bind: TYPE_POINTER|TYPE_STRING");
@@ -236,13 +241,7 @@ gsql_cursor_open_with_bind (GSQLCursor *cursor, gboolean background, GSQLCursorB
 					break;
 					
 				default:
-					if (value_type == -1)
-					{
-						GSQL_DEBUG ("bind -1. last argument");
-						args_stop = 0;
-						
-						break;
-					}
+					
 					GSQL_DEBUG ("Cursor bind. Unhandled type. %d ", value_type);
 					args_stop = -1;
 			}

@@ -106,6 +106,7 @@ main (int argc, char *argv[])
 	gsql_plugins_lookup ();
 	
 	gtk_widget_show (gsql_window);
+	
 	if (!gsql_engines_count())
 	{
 		dialog = gtk_message_dialog_new (GTK_WINDOW (gsql_window),
@@ -117,10 +118,11 @@ main (int argc, char *argv[])
 						  G_CALLBACK (gtk_widget_destroy),
 						  dialog);
 		gtk_widget_show (dialog);
-	};
+	}
+	
 	gtk_main ();
 
 	gdk_threads_leave ();
 
 	return 0;
-};
+}
