@@ -280,6 +280,9 @@ EXTRA_DIST = \
 	$(runner_glade_DATA) \
 	$(runner_pixmaps_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
+
 all: all-am
 
 .SUFFIXES:

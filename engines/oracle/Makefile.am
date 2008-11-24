@@ -104,9 +104,9 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__java.h
 
 libgsqlengine_oracle_la_LIBADD = \
-	$(PACKAGE_LIBS) \
 	$(ORACLE_LIBS) \
-	$(top_builddir)/libgsql/libgsql.la
+	$(top_builddir)/libgsql/libgsql.la \
+	$(PACKAGE_LIBS)
 
 libgsqlengine_oracle_la_LDFLAGS = \
 	$(ORACLE_LDFLAGS) 
@@ -119,5 +119,7 @@ EXTRA_DIST = \
 	$(engine_glade_DATA) \
 	$(engine_ui_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
 
 ## File created by the gnome-build tools

@@ -343,6 +343,9 @@ EXTRA_DIST = \
 	$(engine_glade_DATA) \
 	$(engine_ui_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
+
 all: all-recursive
 
 .SUFFIXES:

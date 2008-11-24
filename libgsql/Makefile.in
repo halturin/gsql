@@ -276,6 +276,9 @@ libgsql_la_SOURCES = \
 libgsql_la_LIBADD = \
 	$(PACKAGE_LIBS)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
+
 all: all-am
 
 .SUFFIXES:

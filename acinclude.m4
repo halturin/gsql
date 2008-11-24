@@ -107,13 +107,13 @@ AC_DEFUN([CHECK_ORACLE],
     oracle_user_lib=$withval
   ], )
 
-  oracle_user_otl_ver=
+  oracle_user_oci_ver=
   AC_ARG_WITH(oci-version,
-  [[  --with-oci-version=[8, 8I, 9I, 10G, 10G_R2]
+  [[  --with-oci-version=[8, 8I, 9I, 10G]
                           this is the version of the client, not the database.]],
   [
     have_oracle=yes
-    oracle_user_otl_ver=$withval
+    oracle_user_oci_ver=$withval
   ], )
 
   oracle_user_instant=
@@ -137,11 +137,8 @@ AC_DEFUN([CHECK_ORACLE],
 
   if test $have_oracle = no; then
     dnl yeah, this is backwards.
-    AC_DEFINE(TO_NO_ORACLE, 1, [Define if you do _not_ have Oracle.])
     AC_MSG_RESULT(no)
   elif test "x$oracle_user_instant" != "x"; then
-    dnl user says we're running on the instant client libraries.
-    AC_DEFINE(TO_INSTANT_CLIENT, 1, [Define if compiled against Oracle Instant Client])
 
     if test "x$oracle_user_lib" = "x" && test "x$oracle_user_inc" = "x"; then
       dnl try to find oracle includes for instant client
@@ -150,7 +147,7 @@ AC_DEFUN([CHECK_ORACLE],
       for dir in `ls /usr/lib/oracle/`; do
         echo "trying $dir" >&5
         if expr $dir \> 10 >/dev/null; then
-          oracle_user_otl_ver=10G
+          oracle_user_oci_ver=10G
         fi
         ora_ldflags="-L/usr/lib/oracle/$dir/client/lib"
 
@@ -159,11 +156,9 @@ AC_DEFUN([CHECK_ORACLE],
           AC_MSG_ERROR([$incdir doesn't exist. Please install the sdk package or use --oracle-includes.])
         fi
         ora_cflags="-I$incdir"
+	
         break
       done
-    else
-      ora_ldflags="-L$oracle_user_lib"
-      ora_cflags="-I$oracle_user_inc"
     fi
   elif test "x$ORACLE_HOME" != "x"; then
     AC_MSG_RESULT($ORACLE_HOME)
@@ -175,15 +170,10 @@ AC_DEFUN([CHECK_ORACLE],
       $ORACLE_HOME/plsql/public
       $ORACLE_HOME/rdbms/public
       $ORACLE_HOME/network/public
-<<<<<<< .mine
-      $ORACLE_HOME/sdk/include/
       $ORACLE_HOME/sdk/
-      $ORACLE_HOME/include/"
-=======
-      $ORACLE_HOME/sdk/include
-      $ORACLE_HOME/sdk
-      $ORACLE_HOME/include"
->>>>>>> .r32
+      $ORACLE_HOME/sdk/include/
+      $ORACLE_HOME/include/
+      /usr/include/oracle"
 
     for dir in $ora_check_inc; do
       if test -d $dir; then
@@ -195,7 +185,8 @@ AC_DEFUN([CHECK_ORACLE],
       $oracle_user_lib
       $ORACLE_HOME/lib
       $ORACLE_HOME/lib32
-      $ORACLE_HOME/lib64"
+      $ORACLE_HOME/lib64
+      /usr/lib/oracle"
 
     for dir in $ora_check_lib; do
       if test -d $dir; then
@@ -216,15 +207,70 @@ AC_DEFUN([CHECK_ORACLE],
   if test "x$ORACLE_HOME" != "x"; then
     dnl check real quick that ORACLE_HOME doesn't end with a slash
     dnl for some stupid reason, the 10g instant client bombs.
-    ora_home_oops=`echo $ORACLE_HOME | $AWK '/\/@S|@/ {print "oops"}'`
+    ora_home_oops=`echo $ORACLE_HOME | awk '/\/@S|@/ {print "oops"}'`
     if test "$ora_home_oops" = "oops"; then
       AC_MSG_WARN([Your ORACLE_HOME environment variable ends with a
 slash (i.e. /). Oracle 10g Instant Client is known to have a problem
-with this. If you get the message "otl_initialize failed!" at the
-console when running TOra, this is probably why.])
+with this.])
     fi
+  fi
 
-    ora_cflags="$ora_cflags"
+  if test $have_oracle = yes; then
+    AC_MSG_CHECKING([oci works])
+    CFLAGS="$CFLAGS $ora_cflags"
+    LDFLAGS="$LDFLAGS $ora_ldflags"
+    LIBS="$ora_lib"
+  
+    # i pulled this from one of the examples in the demo dir.
+    AC_RUN_IFELSE([[
+      #include <oci.h>
+      Lda_Def lda;
+      ub4     hda [HDA_SIZE/(sizeof(ub4))];
+  
+      int main(int c, char **v) {
+        return 0;
+      }
+    ]], [found_oracle=yes],
+    [found_oracle=no], )
+  
+    if test $found_oracle = no; then
+      AC_MSG_ERROR([Couldn't compile and run a simpile OCI app.
+      Try setting ORACLE_HOME or check config.log.
+      Otherwise, make sure ORACLE_HOME/lib is in /etc/ld.so.conf or LD_LIBRARY_PATH])
+    fi
+  
+    sqlplus=
+    if test -x "$ORACLE_HOME/bin/sqlplus"; then
+      sqlplus="$ORACLE_HOME/bin/sqlplus"
+    fi
+    if test "x${sqlplus}" = "x"; then
+      if test -x "$ORACLE_HOME/bin/sqlplusO"; then
+        sqlplus="$ORACLE_HOME/bin/sqlplusO"
+      fi
+    fi
+  
+    if test "x$oracle_user_oci_ver" != "x"; then
+      oci_ver=$oracle_user_oci_ver
+    elif test "x${sqlplus}" = "x"; then
+      AC_MSG_ERROR([Couldn't find sqlplus. Set the Oracle version manually.])
+    else
+      # get oracle oci version. know a better way?
+      sqlplus_ver=`$sqlplus -? | awk '/Release/ {print @S|@3}'`
+      echo "sqlplus_ver: $sqlplus_ver" >&5
+  
+      if expr $sqlplus_ver \> 10 >/dev/null; then
+        dnl our version of oci doesn't have 10g defined yet
+        oci_ver=10G
+      elif expr $sqlplus_ver \> 9 >/dev/null; then
+        oci_ver=9I
+      elif expr $sqlplus_ver \< 8.1 >/dev/null; then
+        oci_ver=8
+      else
+        oci_ver=8I
+      fi
+    fi
+  
+    ora_cflags="$ora_cflags -DOCI_VERSION${oci_ver}"
   
     # don't change flags for all targets, just export ORA variables.
     CFLAGS=$cflags_ora_save

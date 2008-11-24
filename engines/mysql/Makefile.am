@@ -77,6 +77,8 @@ EXTRA_DIST = \
 	$(engine_glade_DATA) \
 	$(engine_ui_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
 
 ## File created by the gnome-build tools
 

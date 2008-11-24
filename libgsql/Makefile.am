@@ -43,6 +43,9 @@ libgsql_la_SOURCES = \
 libgsql_la_LIBADD = \
 	$(PACKAGE_LIBS)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
+
 ## File created by the gnome-build tools
 
 

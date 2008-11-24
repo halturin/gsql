@@ -53,8 +53,9 @@ am_gsql_OBJECTS = main.$(OBJEXT) gsqlcb.$(OBJEXT) gsql.$(OBJEXT) \
 	gsqlmenucb.$(OBJEXT) gsqlfiles.$(OBJEXT) gsqlhelp.$(OBJEXT)
 gsql_OBJECTS = $(am_gsql_OBJECTS)
 am__DEPENDENCIES_1 =
-gsql_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(top_builddir)/libgsql/libgsql.la
+gsql_DEPENDENCIES = $(top_builddir)/libgsql/libgsql.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -276,12 +277,19 @@ gsql_SOURCES = \
 	gsqlhelp.h               
 
 gsql_LDADD = \
-	$(PACKAGE_LIBS)           \
-	$(top_builddir)/libgsql/libgsql.la 
+	$(top_builddir)/libgsql/libgsql.la \
+	$(PACKAGE_LIBS) \
+	$(GNOME_LIBS) \
+	$(GNOMEUI_LIBS)
 
 EXTRA_DIST = \
 	$(gsql_glade_DATA) \
 	$(gsql_ui_DATA)
+
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)\
+	$(GNOME_CFLAGS)\
+	$(GNOMEUI_CFLAGS)
 
 all: all-am
 

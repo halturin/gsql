@@ -888,6 +888,12 @@ OTOOL64
 PKG_CONFIG
 PACKAGE_CFLAGS
 PACKAGE_LIBS
+WITH_GNOME_TRUE
+WITH_GNOME_FALSE
+GNOME_CFLAGS
+GNOME_LIBS
+GNOMEUI_CFLAGS
+GNOMEUI_LIBS
 ORACLE_LIBS
 ORACLE_CFLAGS
 ORACLE_LDFLAGS
@@ -935,7 +941,11 @@ CPPFLAGS
 CPP
 PKG_CONFIG
 PACKAGE_CFLAGS
-PACKAGE_LIBS'
+PACKAGE_LIBS
+GNOME_CFLAGS
+GNOME_LIBS
+GNOMEUI_CFLAGS
+GNOMEUI_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1533,12 +1543,13 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+  --without-gnome         disable the GNOME support
   --with-oracle=DIR       enable support for Oracle (default ORACLE_HOME)
   --with-oracle-includes=DIR
                           set oracle include dir (default ORACLE_HOME/subdirs)
   --with-oracle-libraries=DIR
                           set oracle lib dir (default ORACLE_HOME/lib)
-  --with-oci-version=[8, 8I, 9I, 10G, 10G_R2]
+  --with-oci-version=[8, 8I, 9I, 10G]
                           this is the version of the client, not the database.
   --with-instant-client
                           define if compiling against Oracle Instant Client.
@@ -1564,6 +1575,13 @@ Some influential environment variables:
               C compiler flags for PACKAGE, overriding pkg-config
   PACKAGE_LIBS
               linker flags for PACKAGE, overriding pkg-config
+  GNOME_CFLAGS
+              C compiler flags for GNOME, overriding pkg-config
+  GNOME_LIBS  linker flags for GNOME, overriding pkg-config
+  GNOMEUI_CFLAGS
+              C compiler flags for GNOMEUI, overriding pkg-config
+  GNOMEUI_LIBS
+              linker flags for GNOMEUI, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -8021,13 +8039,13 @@ if test "${lt_cv_nm_interface+set}" = set; then
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:8024: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:8042: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:8027: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:8045: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:8030: output\"" >&5)
+  (eval echo "\"\$as_me:8048: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -9137,7 +9155,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 9140 "configure"' > conftest.$ac_ext
+  echo '#line 9158 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -10510,11 +10528,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10513: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10531: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10517: \$? = $ac_status" >&5
+   echo "$as_me:10535: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -10834,11 +10852,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10837: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10855: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10841: \$? = $ac_status" >&5
+   echo "$as_me:10859: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -10939,11 +10957,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10942: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10960: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10946: \$? = $ac_status" >&5
+   echo "$as_me:10964: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10994,11 +11012,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10997: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:11015: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:11001: \$? = $ac_status" >&5
+   echo "$as_me:11019: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -13755,7 +13773,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 13758 "configure"
+#line 13776 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13855,7 +13873,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 13858 "configure"
+#line 13876 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14217,12 +14235,12 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_PACKAGE_CFLAGS="$PACKAGE_CFLAGS"
     else
         if test -n "$PKG_CONFIG" && \
-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0\"") >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0") 2>&5
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte") 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-  pkg_cv_PACKAGE_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0" 2>/dev/null`
+  pkg_cv_PACKAGE_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -14235,12 +14253,12 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_PACKAGE_LIBS="$PACKAGE_LIBS"
     else
         if test -n "$PKG_CONFIG" && \
-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0\"") >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0") 2>&5
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte") 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-  pkg_cv_PACKAGE_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0" 2>/dev/null`
+  pkg_cv_PACKAGE_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -14259,14 +14277,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        PACKAGE_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0"`
+	        PACKAGE_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte"`
         else
-	        PACKAGE_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0"`
+	        PACKAGE_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$PACKAGE_PKG_ERRORS" >&5
 
-	{ { echo "$as_me:$LINENO: error: Package requirements (gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0) were not met:
+	{ { echo "$as_me:$LINENO: error: Package requirements (gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte) were not met:
 
 $PACKAGE_PKG_ERRORS
 
@@ -14277,7 +14295,7 @@ Alternatively, you may set the environment variables PACKAGE_CFLAGS
 and PACKAGE_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 " >&5
-echo "$as_me: error: Package requirements (gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0) were not met:
+echo "$as_me: error: Package requirements (gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte) were not met:
 
 $PACKAGE_PKG_ERRORS
 
@@ -14318,6 +14336,261 @@ else
 echo "${ECHO_T}yes" >&6; }
 	:
 fi
+
+
+# Check whether --with-gnome was given.
+if test "${with_gnome+set}" = set; then
+  withval=$with_gnome; case "${withval}" in
+	yes) WITH_GNOME=yes ;;
+	no) WITH_GNOME=no ;;
+	*) { { echo "$as_me:$LINENO: error: bad value ${withval} for --with-gnome" >&5
+echo "$as_me: error: bad value ${withval} for --with-gnome" >&2;}
+   { (exit 1); exit 1; }; } ;;
+    esac
+else
+  WITH_GNOME=yes
+fi
+
+ if test x$WITH_GNOME = "xyes"; then
+  WITH_GNOME_TRUE=
+  WITH_GNOME_FALSE='#'
+else
+  WITH_GNOME_TRUE='#'
+  WITH_GNOME_FALSE=
+fi
+
+if test x$WITH_GNOME = "xyes"; then
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for GNOME" >&5
+echo $ECHO_N "checking for GNOME... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GNOME_CFLAGS"; then
+        pkg_cv_GNOME_CFLAGS="$GNOME_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libgnome-2.0 \"") >&5
+  ($PKG_CONFIG --exists --print-errors "libgnome-2.0 ") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GNOME_CFLAGS=`$PKG_CONFIG --cflags "libgnome-2.0 " 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GNOME_LIBS"; then
+        pkg_cv_GNOME_LIBS="$GNOME_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libgnome-2.0 \"") >&5
+  ($PKG_CONFIG --exists --print-errors "libgnome-2.0 ") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GNOME_LIBS=`$PKG_CONFIG --libs "libgnome-2.0 " 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GNOME_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libgnome-2.0 "`
+        else
+	        GNOME_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libgnome-2.0 "`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GNOME_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (libgnome-2.0 ) were not met:
+
+$GNOME_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GNOME_CFLAGS
+and GNOME_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (libgnome-2.0 ) were not met:
+
+$GNOME_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GNOME_CFLAGS
+and GNOME_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GNOME_CFLAGS
+and GNOME_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GNOME_CFLAGS
+and GNOME_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	GNOME_CFLAGS=$pkg_cv_GNOME_CFLAGS
+	GNOME_LIBS=$pkg_cv_GNOME_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for GNOMEUI" >&5
+echo $ECHO_N "checking for GNOMEUI... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GNOMEUI_CFLAGS"; then
+        pkg_cv_GNOMEUI_CFLAGS="$GNOMEUI_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libgnomeui-2.0 \"") >&5
+  ($PKG_CONFIG --exists --print-errors "libgnomeui-2.0 ") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GNOMEUI_CFLAGS=`$PKG_CONFIG --cflags "libgnomeui-2.0 " 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GNOMEUI_LIBS"; then
+        pkg_cv_GNOMEUI_LIBS="$GNOMEUI_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libgnomeui-2.0 \"") >&5
+  ($PKG_CONFIG --exists --print-errors "libgnomeui-2.0 ") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GNOMEUI_LIBS=`$PKG_CONFIG --libs "libgnomeui-2.0 " 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GNOMEUI_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libgnomeui-2.0 "`
+        else
+	        GNOMEUI_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libgnomeui-2.0 "`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GNOMEUI_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (libgnomeui-2.0 ) were not met:
+
+$GNOMEUI_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GNOMEUI_CFLAGS
+and GNOMEUI_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (libgnomeui-2.0 ) were not met:
+
+$GNOMEUI_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GNOMEUI_CFLAGS
+and GNOMEUI_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GNOMEUI_CFLAGS
+and GNOMEUI_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GNOMEUI_CFLAGS
+and GNOMEUI_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	GNOMEUI_CFLAGS=$pkg_cv_GNOMEUI_CFLAGS
+	GNOMEUI_LIBS=$pkg_cv_GNOMEUI_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+
+cat >>confdefs.h <<\_ACEOF
+#define WITH_GNOME 1
+_ACEOF
+
+fi
+
+
+
 
 
 
@@ -14370,13 +14643,13 @@ if test "${with_oracle_libraries+set}" = set; then
 fi
 
 
-  oracle_user_otl_ver=
+  oracle_user_oci_ver=
 
 # Check whether --with-oci-version was given.
 if test "${with_oci_version+set}" = set; then
   withval=$with_oci_version;
     have_oracle=yes
-    oracle_user_otl_ver=$withval
+    oracle_user_oci_ver=$withval
 
 fi
 
@@ -14402,26 +14675,16 @@ fi
   ora_lib=-lclntsh
 
   if test $have_oracle = no; then
-
-cat >>confdefs.h <<\_ACEOF
-#define TO_NO_ORACLE 1
-_ACEOF
-
-    { echo "$as_me:$LINENO: result: no" >&5
+        { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
   elif test "x$oracle_user_instant" != "x"; then
-
-cat >>confdefs.h <<\_ACEOF
-#define TO_INSTANT_CLIENT 1
-_ACEOF
-
 
     if test "x$oracle_user_lib" = "x" && test "x$oracle_user_inc" = "x"; then
 
       for dir in `ls /usr/lib/oracle/`; do
         echo "trying $dir" >&5
         if expr $dir \> 10 >/dev/null; then
-          oracle_user_otl_ver=10G
+          oracle_user_oci_ver=10G
         fi
         ora_ldflags="-L/usr/lib/oracle/$dir/client/lib"
 
@@ -14432,11 +14695,9 @@ echo "$as_me: error: $incdir doesn't exist. Please install the sdk package or us
    { (exit 1); exit 1; }; }
         fi
         ora_cflags="-I$incdir"
+
         break
       done
-    else
-      ora_ldflags="-L$oracle_user_lib"
-      ora_cflags="-I$oracle_user_inc"
     fi
   elif test "x$ORACLE_HOME" != "x"; then
     { echo "$as_me:$LINENO: result: $ORACLE_HOME" >&5
@@ -14448,9 +14709,10 @@ echo "${ECHO_T}$ORACLE_HOME" >&6; }
       $ORACLE_HOME/plsql/public
       $ORACLE_HOME/rdbms/public
       $ORACLE_HOME/network/public
-      $ORACLE_HOME/sdk/include
-      $ORACLE_HOME/sdk
-      $ORACLE_HOME/include"
+      $ORACLE_HOME/sdk/
+      $ORACLE_HOME/sdk/include/
+      $ORACLE_HOME/include/
+      /usr/include/oracle"
 
     for dir in $ora_check_inc; do
       if test -d $dir; then
@@ -14462,7 +14724,8 @@ echo "${ECHO_T}$ORACLE_HOME" >&6; }
       $oracle_user_lib
       $ORACLE_HOME/lib
       $ORACLE_HOME/lib32
-      $ORACLE_HOME/lib64"
+      $ORACLE_HOME/lib64
+      /usr/lib/oracle"
 
     for dir in $ora_check_lib; do
       if test -d $dir; then
@@ -14481,19 +14744,120 @@ echo "$as_me: WARNING: no" >&2;}
   fi
 
   if test "x$ORACLE_HOME" != "x"; then
-            ora_home_oops=`echo $ORACLE_HOME | $AWK '/\/$/ {print "oops"}'`
+            ora_home_oops=`echo $ORACLE_HOME | awk '/\/$/ {print "oops"}'`
     if test "$ora_home_oops" = "oops"; then
       { echo "$as_me:$LINENO: WARNING: Your ORACLE_HOME environment variable ends with a
 slash (i.e. /). Oracle 10g Instant Client is known to have a problem
-with this. If you get the message \"otl_initialize failed!\" at the
-console when running TOra, this is probably why." >&5
+with this." >&5
 echo "$as_me: WARNING: Your ORACLE_HOME environment variable ends with a
 slash (i.e. /). Oracle 10g Instant Client is known to have a problem
-with this. If you get the message \"otl_initialize failed!\" at the
-console when running TOra, this is probably why." >&2;}
+with this." >&2;}
+    fi
+  fi
+
+  if test $have_oracle = yes; then
+    { echo "$as_me:$LINENO: checking oci works" >&5
+echo $ECHO_N "checking oci works... $ECHO_C" >&6; }
+    CFLAGS="$CFLAGS $ora_cflags"
+    LDFLAGS="$LDFLAGS $ora_ldflags"
+    LIBS="$ora_lib"
+
+    # i pulled this from one of the examples in the demo dir.
+    if test "$cross_compiling" = yes; then
+  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+See \`config.log' for more details." >&5
+echo "$as_me: error: cannot run test program while cross compiling
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+  cat >conftest.$ac_ext <<_ACEOF
+
+      #include <oci.h>
+      Lda_Def lda;
+      ub4     hda [HDA_SIZE/(sizeof(ub4))];
+
+      int main(int c, char **v) {
+        return 0;
+      }
+
+_ACEOF
+rm -f conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
+  { (case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  found_oracle=yes
+else
+  echo "$as_me: program exited with status $ac_status" >&5
+echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+( exit $ac_status )
+found_oracle=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+fi
+
+
+
+    if test $found_oracle = no; then
+      { { echo "$as_me:$LINENO: error: Couldn't compile and run a simpile OCI app.
+      Try setting ORACLE_HOME or check config.log.
+      Otherwise, make sure ORACLE_HOME/lib is in /etc/ld.so.conf or LD_LIBRARY_PATH" >&5
+echo "$as_me: error: Couldn't compile and run a simpile OCI app.
+      Try setting ORACLE_HOME or check config.log.
+      Otherwise, make sure ORACLE_HOME/lib is in /etc/ld.so.conf or LD_LIBRARY_PATH" >&2;}
+   { (exit 1); exit 1; }; }
     fi
 
-    ora_cflags="$ora_cflags"
+    sqlplus=
+    if test -x "$ORACLE_HOME/bin/sqlplus"; then
+      sqlplus="$ORACLE_HOME/bin/sqlplus"
+    fi
+    if test "x${sqlplus}" = "x"; then
+      if test -x "$ORACLE_HOME/bin/sqlplusO"; then
+        sqlplus="$ORACLE_HOME/bin/sqlplusO"
+      fi
+    fi
+
+    if test "x$oracle_user_oci_ver" != "x"; then
+      oci_ver=$oracle_user_oci_ver
+    elif test "x${sqlplus}" = "x"; then
+      { { echo "$as_me:$LINENO: error: Couldn't find sqlplus. Set the Oracle version manually." >&5
+echo "$as_me: error: Couldn't find sqlplus. Set the Oracle version manually." >&2;}
+   { (exit 1); exit 1; }; }
+    else
+      # get oracle oci version. know a better way?
+      sqlplus_ver=`$sqlplus -? | awk '/Release/ {print $3}'`
+      echo "sqlplus_ver: $sqlplus_ver" >&5
+
+      if expr $sqlplus_ver \> 10 >/dev/null; then
+                oci_ver=10G
+      elif expr $sqlplus_ver \> 9 >/dev/null; then
+        oci_ver=9I
+      elif expr $sqlplus_ver \< 8.1 >/dev/null; then
+        oci_ver=8
+      else
+        oci_ver=8I
+      fi
+    fi
+
+    ora_cflags="$ora_cflags -DOCI_VERSION${oci_ver}"
 
     # don't change flags for all targets, just export ORA variables.
     CFLAGS=$cflags_ora_save
@@ -15232,6 +15596,13 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${WITH_GNOME_TRUE}" && test -z "${WITH_GNOME_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"WITH_GNOME\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"WITH_GNOME\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -16247,6 +16618,12 @@ OTOOL64!$OTOOL64$ac_delim
 PKG_CONFIG!$PKG_CONFIG$ac_delim
 PACKAGE_CFLAGS!$PACKAGE_CFLAGS$ac_delim
 PACKAGE_LIBS!$PACKAGE_LIBS$ac_delim
+WITH_GNOME_TRUE!$WITH_GNOME_TRUE$ac_delim
+WITH_GNOME_FALSE!$WITH_GNOME_FALSE$ac_delim
+GNOME_CFLAGS!$GNOME_CFLAGS$ac_delim
+GNOME_LIBS!$GNOME_LIBS$ac_delim
+GNOMEUI_CFLAGS!$GNOMEUI_CFLAGS$ac_delim
+GNOMEUI_LIBS!$GNOMEUI_LIBS$ac_delim
 ORACLE_LIBS!$ORACLE_LIBS$ac_delim
 ORACLE_CFLAGS!$ORACLE_CFLAGS$ac_delim
 ORACLE_LDFLAGS!$ORACLE_LDFLAGS$ac_delim
@@ -16284,7 +16661,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 63; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 69; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

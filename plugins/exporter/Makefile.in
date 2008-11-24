@@ -290,6 +290,9 @@ EXTRA_DIST = \
 	$(exporter_glade_DATA) \
 	$(exporter_pixmaps_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
+
 all: all-am
 
 .SUFFIXES:

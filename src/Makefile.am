@@ -45,12 +45,19 @@ gsql_SOURCES = \
 	gsqlhelp.h               
 
 
-gsql_LDADD =                      \
-	$(PACKAGE_LIBS)           \
-	$(top_builddir)/libgsql/libgsql.la 
+gsql_LDADD = \
+	$(top_builddir)/libgsql/libgsql.la \
+	$(PACKAGE_LIBS) \
+	$(GNOME_LIBS) \
+	$(GNOMEUI_LIBS)
 
 
 EXTRA_DIST = \
 	$(gsql_glade_DATA) \
 	$(gsql_ui_DATA)
+
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)\
+	$(GNOME_CFLAGS)\
+	$(GNOMEUI_CFLAGS)
 

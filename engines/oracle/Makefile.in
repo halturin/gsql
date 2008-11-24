@@ -55,7 +55,7 @@ libgsqlLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(libgsql_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgsqlengine_oracle_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/libgsql/libgsql.la
+	$(top_builddir)/libgsql/libgsql.la $(am__DEPENDENCIES_1)
 am_libgsqlengine_oracle_la_OBJECTS = engine_oracle.lo \
 	engine_session.lo engine_menu.lo engine_menucb.lo \
 	engine_conf.lo engine_confcb.lo engine_stock.lo oracle.lo \
@@ -368,9 +368,9 @@ libgsqlengine_oracle_la_SOURCES = \
 	nav_tree__java.h
 
 libgsqlengine_oracle_la_LIBADD = \
-	$(PACKAGE_LIBS) \
 	$(ORACLE_LIBS) \
-	$(top_builddir)/libgsql/libgsql.la
+	$(top_builddir)/libgsql/libgsql.la \
+	$(PACKAGE_LIBS)
 
 libgsqlengine_oracle_la_LDFLAGS = \
 	$(ORACLE_LDFLAGS) 
@@ -382,6 +382,9 @@ INCLUDES = \
 EXTRA_DIST = \
 	$(engine_glade_DATA) \
 	$(engine_ui_DATA)
+
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
 
 all: all-recursive
 

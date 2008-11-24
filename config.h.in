@@ -121,12 +121,6 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
-/* Define if compiled against Oracle Instant Client */
-#undef TO_INSTANT_CLIENT
-
-/* Define if you do _not_ have Oracle. */
-#undef TO_NO_ORACLE
-
 /* Version number of package */
 #undef VERSION
 

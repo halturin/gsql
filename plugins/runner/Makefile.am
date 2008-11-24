@@ -38,6 +38,8 @@ EXTRA_DIST = \
 	$(runner_glade_DATA) \
 	$(runner_pixmaps_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
 
 ## File created by the gnome-build tools
 

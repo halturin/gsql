@@ -42,6 +42,8 @@ EXTRA_DIST = \
 	$(exporter_glade_DATA) \
 	$(exporter_pixmaps_DATA)
 
+AM_CPPFLAGS = \
+	$(PACKAGE_CFLAGS)
 
 ## File created by the gnome-build tools
 
