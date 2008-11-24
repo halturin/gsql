@@ -24,7 +24,25 @@ AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
 
-PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0 libgnomeui-2.0 libgnome-2.0])
+PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 gconf-2.0 libglade-2.0 vte gmodule-2.0 libnotify gtksourceview-2.0])
+
+AC_ARG_WITH(gnome,
+    AC_HELP_STRING([--without-gnome],[disable the GNOME support]),
+    [case "${withval}" in
+	yes) WITH_GNOME=yes ;;
+	no) WITH_GNOME=no ;;
+	*) AC_MSG_ERROR(bad value ${withval} for --with-gnome) ;;
+    esac],
+    [WITH_GNOME=yes]) dnl Default value
+    
+    AM_CONDITIONAL(WITH_GNOME, test x$WITH_GNOME = "xyes")
+    if test x$WITH_GNOME = "xyes"; then
+	PKG_CHECK_MODULES(GNOME, libgnome-2.0 )
+	PKG_CHECK_MODULES(GNOMEUI, libgnomeui-2.0 )
+	AC_DEFINE([WITH_GNOME],[1],[Define if GNOME support is enabled])
+    fi
+    
+
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 

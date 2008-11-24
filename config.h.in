@@ -129,3 +129,6 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Define if GNOME support is enabled */
+#undef WITH_GNOME

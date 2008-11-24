@@ -32,7 +32,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef WITH_GNOME
 #include <libgnomeui/libgnomeui.h>
+#endif
+
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
@@ -174,8 +177,11 @@ gsql_window_clean_exit()
 		gsql_conf_value_set_int (GSQL_CONF_UI_SIZE_Y, h);
 		
 	}
-	
+
+#ifdef WITH_GNOME	
 	gnome_accelerators_sync ();
+#endif
+
 	gtk_main_quit ();
 	
 }

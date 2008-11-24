@@ -22,13 +22,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <libgnome/libgnome.h>
 #include <config.h>
+
+#ifdef WITH_GNOME
+#include <libgnome/libgnome.h>
+#endif
+
 #include <libgsql/engines.h>
 #include <libgsql/workspace.h>
 #include <libgsql/session.h>
 #include <libgsql/content.h>
 #include <libgsql/utils.h>
+#include <stdlib.h>
+
 #include "gsqlconf.h"
 #include "gsqlmenucb.h"
 #include "gsql.h"
@@ -489,7 +495,7 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 							  GTK_WIDGET (session), TRUE);
 
 }
-
+#ifdef WITH_GNOME
 void
 on_help_manual_activate (GtkMenuItem *mi, gpointer data)
 {
@@ -537,6 +543,8 @@ on_mailgroup_activate (GtkMenuItem *mi, gpointer data)
 	gnome_url_show (PROJECT_GROUP_URL, &error);
 }
 
+
+
 void
 on_about_activate_url (GtkAboutDialog *about,
 						const gchar *link,
@@ -547,6 +555,8 @@ on_about_activate_url (GtkAboutDialog *about,
 	GError *error = NULL;
 	gnome_url_show (PROJECT_URL, &error);
 }
+
+#endif
 
 void
 on_about_activate (GtkMenuItem *mi, gpointer data)
@@ -595,8 +605,9 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 	}
 
 	logo = create_pixbuf ("logo.png");
+#ifdef WITH_GNOME	
 	gtk_about_dialog_set_url_hook (on_about_activate_url, NULL, NULL);
-	
+#endif
 	about = g_object_new (GTK_TYPE_ABOUT_DIALOG,
 			      "name", PROJECT_NAME,
 			      "version", VERSION,

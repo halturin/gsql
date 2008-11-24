@@ -28,8 +28,11 @@
 
 #include <gtk/gtk.h>
 #include <glib.h>
+
+#ifdef WITH_GNOME
 #include <libgnome/libgnome.h>
 #include <libgnomeui/libgnomeui.h>
+#endif
 
 #include <libgsql/common.h>
 #include <libgsql/conf.h>
@@ -51,7 +54,9 @@ static GOptionEntry opts[] =
 int
 main (int argc, char *argv[])
 {
+#ifdef WITH_GNOME
 	GnomeProgram *program;
+#endif
 	GError *error = NULL;
 	GOptionContext *context = g_option_context_new(_(" - Integrated Database Development Tool"));
 	GtkWidget *dialog;
@@ -67,13 +72,17 @@ main (int argc, char *argv[])
 	g_option_context_set_ignore_unknown_options(context, TRUE);
 	g_option_context_parse(context, &argc, &argv, &error);
 	g_option_context_free(context);
-	
+
+
+#ifdef WITH_GNOME	
 	program = gnome_program_init (PACKAGE, VERSION, LIBGNOMEUI_MODULE,
 				argc, argv, 
 				GNOME_PARAM_HUMAN_READABLE_NAME,
 				N_("GSQL. Integrated Database Development Tool"),
 				GNOME_PARAM_APP_DATADIR,
 				PACKAGE_DATA_DIR, NULL);
+#endif
+
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");

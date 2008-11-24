@@ -28,6 +28,8 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
+#include <config.h>
+
 G_BEGIN_DECLS
 
 
@@ -82,6 +84,7 @@ on_preferences_activate (GtkMenuItem *mi, gpointer data);
 void
 on_new_session_activate (GtkMenuItem *mi, gpointer data);
 
+#ifdef WITH_GNOME
 void
 on_help_manual_activate (GtkMenuItem *mi, gpointer data);
 
@@ -96,6 +99,7 @@ on_bug_report_activate (GtkMenuItem *mi, gpointer data);
 
 void
 on_mailgroup_activate (GtkMenuItem *mi, gpointer data);
+#endif
 
 void
 on_about_activate (GtkMenuItem *mi, gpointer data);

@@ -28,14 +28,13 @@
 #include <gtksourceview/gtksourcebuffer.h>
 #include <libgsql/common.h>
 #include <libgsql/stock.h>
-#include <libgnome/libgnome.h>
 #include <libgsql/session.h>
 #include <libgsql/workspace.h>
 #include <libgsql/sqleditor.h>
 #include <libgsql/editor.h>
 #include <libgsql/content.h>
-
 #include <libgsql/menu.h>
+
 #include "gsqlmenucb.h"
 
 #define GSQL_GLADE_DIALOGS PACKAGE_GLADE_DIR"/gsql_dialogs.glade"
