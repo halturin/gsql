@@ -1,0 +1,45 @@
+<gconfschemafile>
+  <schemalist>
+
+   <schema>
+      <key>/schemas/apps/gsql/engines/oracle/use_system_environment</key>
+      <applyto>/apps/gsql/engines/oracle/use_system_environment</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/engines/oracle/environment</key>
+      <applyto>/apps/gsql/engines/oracle/environment</applyto>
+      <owner>gsql</owner>      
+      <type>string</type>
+      <default>TMP,/tmp</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/engines/oracle/enable_trace</key>
+      <applyto>/apps/gsql/engines/oracle/enable_trace</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    
+  </schemalist>
+</gconfschemafile>

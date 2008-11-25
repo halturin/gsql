@@ -46,6 +46,35 @@ libgsql_la_LIBADD = \
 AM_CPPFLAGS = \
 	$(PACKAGE_CFLAGS)
 
+libgsqlincludedir=$(includedir)/libgsql
+
+libgsqlinclude_HEADERS = \
+	common.h \
+	conf.h \
+	content.h \
+	cursor.h \
+	cvariable.h \
+	editor.h \
+	engines.h \
+	menu.h \
+	navigation.h \
+	notify.h \
+	plugins.h \
+	session.h \
+	sqleditor.h \
+	stock.h \
+	type_datetime.h \
+	utils.h \
+	workspace.h 
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libgsql.pc
+
+EXTRA_DIST = \
+	$(libgsqlinclude_HEADERS) \
+	libgsql.pc.in
+
+
 ## File created by the gnome-build tools
 
 

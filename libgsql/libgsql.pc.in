@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+includedir=@includedir@/libgsql
+idldir=@datadir@/idl/libgsql
+
+Name: libgsql
+Description: Libraries for developing GSQL plugins end engines.
+Version: @VERSION@
+Libs: -L${libdir} -lgsql
+Cflags: -I${includedir}

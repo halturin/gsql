@@ -1,3 +1,4 @@
+debian/tmp/etc/gconf/schemas/gsql-engine-oracle.schemas
 debian/tmp/usr/lib/gsql/engines/libgsqlengine_oracle*.so*
 debian/tmp/usr/share/pixmaps/gsql/oracle/*
 #debian/tmp/usr/share/gsql/glade/oracle/*

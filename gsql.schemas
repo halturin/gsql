@@ -2,8 +2,8 @@
   <schemalist>
 
     <schema>
-      <key>/schemas/apps/gsql/workspace/show_dbnavigator</key>
-      <applyto>/apps/gsql/workspace/show_dbnavigator</applyto>
+      <key>/schemas/apps/gsql/workspace/show_navarea</key>
+      <applyto>/apps/gsql/workspace/show_navarea</applyto>
       <owner>gsql</owner>
       <type>bool</type>
       <default>true</default>
@@ -16,8 +16,8 @@
 
 
     <schema>
-      <key>/schemas/apps/gsql/workspace/show_messages</key>
-      <applyto>/apps/gsql/workspace/show_messages</applyto>
+      <key>/schemas/apps/gsql/workspace/show_messarea</key>
+      <applyto>/apps/gsql/workspace/show_messarea</applyto>
       <owner>gsql</owner>
       <type>bool</type>
       <default>true</default>
@@ -27,6 +27,20 @@
         </long>
       </locale>
     </schema>
+
+	<schema>
+      <key>/schemas/apps/gsql/workspace/widescreen</key>
+      <applyto>/apps/gsql/workspace/widescreen/</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Widescreen layout</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
 
     <schema>
       <key>/schemas/apps/gsql/ui/resotre_size_and_position</key>
@@ -42,8 +56,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/gsql/ui/window_size_x</key>
-      <applyto>/apps/gsql/ui/window_size_x</applyto>
+      <key>/schemas/apps/gsql/ui/size_x</key>
+      <applyto>/apps/gsql/ui/size_x</applyto>
       <owner>gsql</owner>
       <type>int</type>
       <default>800</default>
@@ -55,8 +69,8 @@
     </schema>
     
     <schema>
-      <key>/schemas/apps/gsql/ui/window_size_y</key>
-      <applyto>/apps/gsql/ui/window_size_y</applyto>
+      <key>/schemas/apps/gsql/ui/size_y</key>
+      <applyto>/apps/gsql/ui/size_y</applyto>
       <owner>gsql</owner>
       <type>int</type>
       <default>600</default>
@@ -68,8 +82,8 @@
     </schema>
     
     <schema>
-      <key>/schemas/apps/gsql/ui/window_pos_x</key>
-      <applyto>/apps/gsql/ui/window_pos_x</applyto>
+      <key>/schemas/apps/gsql/ui/pos_x</key>
+      <applyto>/apps/gsql/ui/pos_x</applyto>
       <owner>gsql</owner>
       <type>int</type>      
       <locale name="C">
@@ -80,23 +94,10 @@
     </schema>
     
     <schema>
-      <key>/schemas/apps/gsql/ui/window_pos_y</key>
-      <applyto>/apps/gsql/ui/window_pos_y</applyto>
+      <key>/schemas/apps/gsql/ui/pos_y</key>
+      <applyto>/apps/gsql/ui/pos_y</applyto>
       <owner>gsql</owner>
       <type>int</type>      
-      <locale name="C">
-        <short></short>
-        <long>
-        </long>
-      </locale>
-    </schema>
-    
-    <schema>
-      <key>/schemas/apps/gsql/ui/window_maximized</key>
-      <applyto>/apps/gsql/ui/window_maximized</applyto>
-      <owner>gsql</owner>
-      <type>bool</type>
-      <default>false</default>
       <locale name="C">
         <short></short>
         <long>
@@ -104,6 +105,47 @@
       </locale>
     </schema>
 
+
+	<schema>
+      <key>/schemas/apps/gsql/sql_fetch_step</key>
+      <applyto>/apps/gsql/sql_fetch_step</applyto>
+      <owner>gsql</owner>
+      <type>int</type>
+	  <default>250</default>    
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+	<schema>
+      <key>/schemas/apps/gsql/sql_fetch_max</key>
+      <applyto>/apps/gsql/sql_fetch_max</applyto>
+      <owner>gsql</owner>
+      <type>int</type>
+	  <default>10000</default>    
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+	<schema>
+      <key>/schemas/apps/gsql/datetime_format</key>
+      <applyto>/apps/gsql/datetime_format</applyto>
+      <owner>gsql</owner>
+      <type>string</type>
+	  <default>%0D/%0M/%Y %0h:%0m:%0s</default>    
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+
+    
     <schema>
       <key>/schemas/apps/gsql/editor/font_name</key>
       <applyto>/apps/gsql/editor/font_name</applyto>
@@ -148,7 +190,7 @@
       <applyto>/apps/gsql/editor/tab_width</applyto>
       <owner>gsql</owner>
       <type>int</type>
-      <default>8</default>
+      <default>4</default>
       <locale name="C">
         <short></short>
         <long>
@@ -174,7 +216,7 @@
       <applyto>/apps/gsql/editor/highlight_line</applyto>
       <owner>gsql</owner>
       <type>bool</type>
-      <default>false</default>
+      <default>true</default>
       <locale name="C">
         <short></short>
         <long>
@@ -207,45 +249,22 @@
         </long>
       </locale>
     </schema>
-    
-    <schema>
-      <key>/schemas/apps/gsql/engines/oracle/use_system_environment</key>
-      <applyto>/apps/gsql/engines/oracle/use_system_environment</applyto>
+
+
+	<schema>
+      <key>/schemas/apps/gsql/editor/color_scheme</key>
+      <applyto>/apps/gsql/editor/color_scheme</applyto>
       <owner>gsql</owner>
-      <type>bool</type>
-      <default>true</default>
+      <type>string</type>
+      <default>classic</default>
       <locale name="C">
-        <short></short>
+        <short>Color scheme</short>
         <long>
         </long>
       </locale>
     </schema>
-    
-    <schema>
-      <key>/schemas/apps/gsql/engines/oracle/environment</key>
-      <applyto>/apps/gsql/engines/oracle/environment</applyto>
-      <owner>gsql</owner>      
-      <type>list</type>
-      <list_type>string</list_type>      
-      <locale name="C">
-        <short></short>
-        <long>
-        </long>
-      </locale>
-    </schema>
-    
-    <schema>
-      <key>/schemas/apps/gsql/engines/oracle/enable_trace</key>
-      <applyto>/apps/gsql/engines/oracle/enable_trace</applyto>
-      <owner>gsql</owner>
-      <type>bool</type>
-      <default>false</default>
-      <locale name="C">
-        <short></short>
-        <long>
-        </long>
-      </locale>
-    </schema>
+
+
     
     
   </schemalist>

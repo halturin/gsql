@@ -27,7 +27,7 @@ AM_PROG_LIBTOOL
 PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0 vte])
 
 AC_ARG_WITH(gnome,
-    AC_HELP_STRING([--without-gnome],[disable the GNOME support]),
+    AC_HELP_STRING([--with-gnome],[disable the GNOME support]),
     [case "${withval}" in
 	yes) WITH_GNOME=yes ;;
 	no) WITH_GNOME=no ;;
@@ -187,6 +187,7 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 libgsql/Makefile
+libgsql/libgsql.pc
 src/Makefile
 engines/Makefile
 engines/oracle/Makefile

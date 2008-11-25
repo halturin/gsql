@@ -23,7 +23,7 @@ srcdir = .
 top_srcdir = ..
 
 
-prefix = /home/fantom/temp/gsql
+prefix = /usr/local
 exec_prefix = ${prefix}
 datarootdir = ${prefix}/share
 datadir = ${datarootdir}

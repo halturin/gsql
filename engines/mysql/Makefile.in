@@ -50,7 +50,8 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libgsqldir)" \
-	"$(DESTDIR)$(engine_gladedir)" "$(DESTDIR)$(engine_uidir)"
+	"$(DESTDIR)$(engine_gladedir)" "$(DESTDIR)$(engine_uidir)" \
+	"$(DESTDIR)$(schemadir)"
 libgsqlLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(libgsql_LTLIBRARIES)
 am__DEPENDENCIES_1 =
@@ -108,7 +109,8 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	ps-recursive uninstall-recursive
 engine_gladeDATA_INSTALL = $(INSTALL_DATA)
 engine_uiDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(engine_glade_DATA) $(engine_ui_DATA)
+schemaDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(engine_glade_DATA) $(engine_ui_DATA) $(schema_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
@@ -276,6 +278,8 @@ engine_gladedir = $(PACKAGE_GLADE_DIR)/mysql
 engine_uidir = $(PACKAGE_UI_DIR)/mysql
 engine_glade_DATA = 
 engine_ui_DATA = engine_mysql.ui
+schemadir = @GCONF_SCHEMA_FILE_DIR@
+schema_DATA = gsql-engine-mysql.schemas
 libgsqldir = $(PACKAGE_ENGINES_DIR)
 libgsql_LTLIBRARIES = \
 	libgsqlengine_mysql.la 
@@ -340,8 +344,7 @@ INCLUDES = \
 	$(PACKAGE_CFLAGS)
 
 EXTRA_DIST = \
-	$(engine_glade_DATA) \
-	$(engine_ui_DATA)
+	$(schema_DATA)
 
 AM_CPPFLAGS = \
 	$(PACKAGE_CFLAGS)
@@ -660,6 +663,23 @@ uninstall-engine_uiDATA:
 	  echo " rm -f '$(DESTDIR)$(engine_uidir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(engine_uidir)/$$f"; \
 	done
+install-schemaDATA: $(schema_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(schemadir)" || $(MKDIR_P) "$(DESTDIR)$(schemadir)"
+	@list='$(schema_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(schemaDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(schemadir)/$$f'"; \
+	  $(schemaDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(schemadir)/$$f"; \
+	done
+
+uninstall-schemaDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(schema_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(schemadir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(schemadir)/$$f"; \
+	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -839,7 +859,7 @@ check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(libgsqldir)" "$(DESTDIR)$(engine_gladedir)" "$(DESTDIR)$(engine_uidir)"; do \
+	for dir in "$(DESTDIR)$(libgsqldir)" "$(DESTDIR)$(engine_gladedir)" "$(DESTDIR)$(engine_uidir)" "$(DESTDIR)$(schemadir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -887,8 +907,9 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-engine_gladeDATA install-engine_uiDATA \
-	install-libgsqlLTLIBRARIES
+install-data-am: install-data-local install-engine_gladeDATA \
+	install-engine_uiDATA install-libgsqlLTLIBRARIES \
+	install-schemaDATA
 
 install-dvi: install-dvi-recursive
 
@@ -925,7 +946,7 @@ ps: ps-recursive
 ps-am:
 
 uninstall-am: uninstall-engine_gladeDATA uninstall-engine_uiDATA \
-	uninstall-libgsqlLTLIBRARIES
+	uninstall-libgsqlLTLIBRARIES uninstall-schemaDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
 	install-strip
@@ -936,18 +957,22 @@ uninstall-am: uninstall-engine_gladeDATA uninstall-engine_uiDATA \
 	distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am \
+	install-data-am install-data-local install-dvi install-dvi-am \
 	install-engine_gladeDATA install-engine_uiDATA install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libgsqlLTLIBRARIES install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am uninstall-engine_gladeDATA \
-	uninstall-engine_uiDATA uninstall-libgsqlLTLIBRARIES
+	install-schemaDATA install-strip installcheck installcheck-am \
+	installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am \
+	uninstall-engine_gladeDATA uninstall-engine_uiDATA \
+	uninstall-libgsqlLTLIBRARIES uninstall-schemaDATA
 
+
+install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_srcdir)/engines/mysql/$(schema_DATA)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

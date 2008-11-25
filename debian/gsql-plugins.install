@@ -1,3 +1,4 @@
+debian/tmp/etc/gconf/schemas/gsql-plugins.schemas
 debian/tmp/usr/lib/gsql/plugins/libgsqlplugin*.so*
 debian/tmp/usr/share/pixmaps/gsql/plugins/*
 debian/tmp/usr/share/gsql/glade/plugins/*

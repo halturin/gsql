@@ -1543,7 +1543,7 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
-  --without-gnome         disable the GNOME support
+  --with-gnome            disable the GNOME support
   --with-oracle=DIR       enable support for Oracle (default ORACLE_HOME)
   --with-oracle-includes=DIR
                           set oracle include dir (default ORACLE_HOME/subdirs)
@@ -15466,7 +15466,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in libgsql/Makefile src/Makefile engines/Makefile engines/oracle/Makefile engines/oracle/pixmaps/Makefile engines/postgresql/Makefile engines/postgresql/pixmaps/Makefile engines/mysql/Makefile engines/mysql/pixmaps/Makefile plugins/Makefile plugins/vte/Makefile plugins/exporter/Makefile plugins/runner/Makefile pixmaps/Makefile data/Makefile doc/Makefile doc/gsql.1 doc/reference/Makefile doc/reference/version.xml doc/manual/Makefile doc/manual/C/Makefile gsql.desktop"
+ac_config_files="$ac_config_files Makefile po/Makefile.in libgsql/Makefile libgsql/libgsql.pc src/Makefile engines/Makefile engines/oracle/Makefile engines/oracle/pixmaps/Makefile engines/postgresql/Makefile engines/postgresql/pixmaps/Makefile engines/mysql/Makefile engines/mysql/pixmaps/Makefile plugins/Makefile plugins/vte/Makefile plugins/exporter/Makefile plugins/runner/Makefile pixmaps/Makefile data/Makefile doc/Makefile doc/gsql.1 doc/reference/Makefile doc/reference/version.xml doc/manual/Makefile doc/manual/C/Makefile gsql.desktop"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16369,6 +16369,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "libgsql/Makefile") CONFIG_FILES="$CONFIG_FILES libgsql/Makefile" ;;
+    "libgsql/libgsql.pc") CONFIG_FILES="$CONFIG_FILES libgsql/libgsql.pc" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "engines/Makefile") CONFIG_FILES="$CONFIG_FILES engines/Makefile" ;;
     "engines/oracle/Makefile") CONFIG_FILES="$CONFIG_FILES engines/oracle/Makefile" ;;

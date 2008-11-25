@@ -14,6 +14,8 @@
 
 @SET_MAKE@
 
+
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -33,7 +35,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = libgsql
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(libgsqlinclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/libgsql.pc.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.in
@@ -41,14 +44,15 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = libgsql.pc
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" \
+	"$(DESTDIR)$(libgsqlincludedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
@@ -72,6 +76,10 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libgsql_la_SOURCES)
 DIST_SOURCES = $(libgsql_la_SOURCES)
+pkgconfigDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(pkgconfig_DATA)
+libgsqlincludeHEADERS_INSTALL = $(INSTALL_HEADER)
+HEADERS = $(libgsqlinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -279,6 +287,32 @@ libgsql_la_LIBADD = \
 AM_CPPFLAGS = \
 	$(PACKAGE_CFLAGS)
 
+libgsqlincludedir = $(includedir)/libgsql
+libgsqlinclude_HEADERS = \
+	common.h \
+	conf.h \
+	content.h \
+	cursor.h \
+	cvariable.h \
+	editor.h \
+	engines.h \
+	menu.h \
+	navigation.h \
+	notify.h \
+	plugins.h \
+	session.h \
+	sqleditor.h \
+	stock.h \
+	type_datetime.h \
+	utils.h \
+	workspace.h 
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libgsql.pc
+EXTRA_DIST = \
+	$(libgsqlinclude_HEADERS) \
+	libgsql.pc.in
+
 all: all-am
 
 .SUFFIXES:
@@ -312,6 +346,8 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+libgsql.pc: $(top_builddir)/config.status $(srcdir)/libgsql.pc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
@@ -392,6 +428,40 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-pkgconfigDATA: $(pkgconfig_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkgconfigdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)"
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(pkgconfigDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
+	  $(pkgconfigDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgconfigdir)/$$f"; \
+	done
+
+uninstall-pkgconfigDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(pkgconfigdir)/$$f"; \
+	done
+install-libgsqlincludeHEADERS: $(libgsqlinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(libgsqlincludedir)" || $(MKDIR_P) "$(DESTDIR)$(libgsqlincludedir)"
+	@list='$(libgsqlinclude_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(libgsqlincludeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(libgsqlincludedir)/$$f'"; \
+	  $(libgsqlincludeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(libgsqlincludedir)/$$f"; \
+	done
+
+uninstall-libgsqlincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(libgsqlinclude_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(libgsqlincludedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(libgsqlincludedir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -468,9 +538,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(libgsqlincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -518,7 +588,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-libgsqlincludeHEADERS install-pkgconfigDATA
 
 install-dvi: install-dvi-am
 
@@ -554,7 +624,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES uninstall-libgsqlincludeHEADERS \
+	uninstall-pkgconfigDATA
 
 .MAKE: install-am install-strip
 
@@ -565,12 +636,14 @@ uninstall-am: uninstall-libLTLIBRARIES
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-libLTLIBRARIES install-libgsqlincludeHEADERS \
+	install-man install-pdf install-pdf-am install-pkgconfigDATA \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLTLIBRARIES
+	tags uninstall uninstall-am uninstall-libLTLIBRARIES \
+	uninstall-libgsqlincludeHEADERS uninstall-pkgconfigDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -7,7 +7,8 @@ engine_uidir = $(PACKAGE_UI_DIR)/mysql
 engine_glade_DATA = 
 engine_ui_DATA = engine_mysql.ui
 
-
+schemadir   = @GCONF_SCHEMA_FILE_DIR@
+schema_DATA = gsql-engine-mysql.schemas
 
 libgsqldir = $(PACKAGE_ENGINES_DIR)
 
@@ -79,6 +80,13 @@ EXTRA_DIST = \
 
 AM_CPPFLAGS = \
 	$(PACKAGE_CFLAGS)
+
+install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_srcdir)/engines/mysql/$(schema_DATA)
+
+
+EXTRA_DIST = \
+	$(schema_DATA)
 
 ## File created by the gnome-build tools
 
