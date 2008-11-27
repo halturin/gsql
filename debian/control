@@ -28,7 +28,7 @@ Description: MySQL engine for GSQL
 
 Package: gsql-oracle
 Architecture: any
-Depends: gsql (= ${binary:Version}), oracle-instant-client
+Depends: gsql (= ${binary:Version})
 Description: Oracle engine for GSQL
  The GSQL can works with Oracle server, and this module
  is necessary for that.

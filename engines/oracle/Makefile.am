@@ -9,7 +9,7 @@ engine_ui_DATA = \
 	engine_oracle.ui
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
-schema_DATA = oracle.schemas
+schema_DATA = gsql-engine-oracle.schemas
 
 libgsqldir = $(PACKAGE_ENGINES_DIR)
 
