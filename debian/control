@@ -48,8 +48,7 @@ Section: devel
 Depends: gsql (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
-Conflicts: gsql (< 0.2.0)
-Replaces: gsql (< 0.2.0)
+Depends: gsql (= ${binary:Version})
 Description: An integrated database development tool for GNOME - development files
  Short desc. FIXME
  This package provides the development files for GSQL.

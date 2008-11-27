@@ -68,7 +68,6 @@ engine_load (GSQLEngine *engine)
 	gchar *env_all, *env_name, *env_value;
 	gchar **env_list;
 	gint i;
-	gchar *tmp;
 
 	engine->info.author = ENGINE_AUTHOR;
 	engine->info.id = ENGINE_ID;
@@ -105,6 +104,9 @@ engine_load (GSQLEngine *engine)
 	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/oracle");
 	engine_stock_init();
 	
+	// set default NLS
+	putenv ("NLS_LANG=AMERICAN_AMERICA.UTF8");
+	
 	if (!gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_USE_SYS_ENV))
 	{
 		env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
@@ -120,13 +122,10 @@ engine_load (GSQLEngine *engine)
 		{
 			env_name = env_list[i++];
 			env_value = env_list[i];
-		
-			tmp = g_strdup_printf ("%s=%s", env_name, env_value);
 			
-			GSQL_DEBUG ("ENV: %s", tmp);
+			GSQL_DEBUG ("ENV: %s=%s", env_name, env_value);
 			
-			putenv (tmp);
-			g_free (tmp);
+			setenv (env_name, env_value, 1);
 		}
 	
 		g_strfreev (env_list);
@@ -145,9 +144,10 @@ engine_unload (GSQLEngine * engine)
 	{
 		g_critical ("Engine unload failed. Still in use.");
 		return FALSE;
-	};
-	//FIXME
-	GSQL_DEBUG ("Not implemented");
+	}
+	
+	GSQL_FIXME;
+	
 	return FALSE;
 }
 

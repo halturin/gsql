@@ -30,7 +30,7 @@
 
 	<schema>
       <key>/schemas/apps/gsql/workspace/widescreen</key>
-      <applyto>/apps/gsql/workspace/widescreen/</applyto>
+      <applyto>/apps/gsql/workspace/widescreen</applyto>
       <owner>gsql</owner>
       <type>bool</type>
       <default>true</default>
