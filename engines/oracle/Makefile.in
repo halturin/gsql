@@ -384,6 +384,8 @@ INCLUDES = \
 	$(ORACLE_CFLAGS) 
 
 EXTRA_DIST = \
+	$(engine_glade_DATA) \
+	$(engine_ui_DATA) \
 	$(schema_DATA)
 
 AM_CPPFLAGS = \

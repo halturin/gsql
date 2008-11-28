@@ -192,8 +192,6 @@ src/Makefile
 engines/Makefile
 engines/oracle/Makefile
 engines/oracle/pixmaps/Makefile
-engines/postgresql/Makefile
-engines/postgresql/pixmaps/Makefile
 engines/mysql/Makefile
 engines/mysql/pixmaps/Makefile
 plugins/Makefile

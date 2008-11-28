@@ -76,7 +76,8 @@ INCLUDES = \
 
 EXTRA_DIST = \
 	$(engine_glade_DATA) \
-	$(engine_ui_DATA)
+	$(engine_ui_DATA) \
+	$(schema_DATA)
 
 AM_CPPFLAGS = \
 	$(PACKAGE_CFLAGS)
@@ -84,9 +85,6 @@ AM_CPPFLAGS = \
 install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_srcdir)/engines/mysql/$(schema_DATA)
 
-
-EXTRA_DIST = \
-	$(schema_DATA)
 
 ## File created by the gnome-build tools
 

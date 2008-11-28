@@ -15466,7 +15466,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in libgsql/Makefile libgsql/libgsql.pc src/Makefile engines/Makefile engines/oracle/Makefile engines/oracle/pixmaps/Makefile engines/postgresql/Makefile engines/postgresql/pixmaps/Makefile engines/mysql/Makefile engines/mysql/pixmaps/Makefile plugins/Makefile plugins/vte/Makefile plugins/exporter/Makefile plugins/runner/Makefile pixmaps/Makefile data/Makefile doc/Makefile doc/gsql.1 doc/reference/Makefile doc/reference/version.xml doc/manual/Makefile doc/manual/C/Makefile gsql.desktop"
+ac_config_files="$ac_config_files Makefile po/Makefile.in libgsql/Makefile libgsql/libgsql.pc src/Makefile engines/Makefile engines/oracle/Makefile engines/oracle/pixmaps/Makefile engines/mysql/Makefile engines/mysql/pixmaps/Makefile plugins/Makefile plugins/vte/Makefile plugins/exporter/Makefile plugins/runner/Makefile pixmaps/Makefile data/Makefile doc/Makefile doc/gsql.1 doc/reference/Makefile doc/reference/version.xml doc/manual/Makefile doc/manual/C/Makefile gsql.desktop"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16374,8 +16374,6 @@ do
     "engines/Makefile") CONFIG_FILES="$CONFIG_FILES engines/Makefile" ;;
     "engines/oracle/Makefile") CONFIG_FILES="$CONFIG_FILES engines/oracle/Makefile" ;;
     "engines/oracle/pixmaps/Makefile") CONFIG_FILES="$CONFIG_FILES engines/oracle/pixmaps/Makefile" ;;
-    "engines/postgresql/Makefile") CONFIG_FILES="$CONFIG_FILES engines/postgresql/Makefile" ;;
-    "engines/postgresql/pixmaps/Makefile") CONFIG_FILES="$CONFIG_FILES engines/postgresql/pixmaps/Makefile" ;;
     "engines/mysql/Makefile") CONFIG_FILES="$CONFIG_FILES engines/mysql/Makefile" ;;
     "engines/mysql/pixmaps/Makefile") CONFIG_FILES="$CONFIG_FILES engines/mysql/pixmaps/Makefile" ;;
     "plugins/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/Makefile" ;;
