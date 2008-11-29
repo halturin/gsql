@@ -74,9 +74,9 @@ static GSQLNavigationItem procedures[] = {
 
 
 static void on_code_editor_cb_revert (GSQLContent *content, gpointer user_data);
-static void on_code_editor_cb_save (GSQLContent *content, gpointer user_data);
+static void on_code_editor_cb_save (GSQLContent *content, gboolean user_data);
 static void on_code_editor_cb_close (GSQLContent *content, 
-									 gpointer user_data);
+									 gboolean force);
 static void on_buffer_changed (GtkWidget *widget, gpointer user_data);
 
 
@@ -414,6 +414,10 @@ nav_tree_code_editor (GSQLNavigation *navigation,
 	content = gsql_content_new (session, stock);
 	gsql_content_set_child (content, GTK_WIDGET (scroll));
 	
+	g_object_set_data (G_OBJECT (content), "buffer", buffer);
+	
+	
+	
 	workspace = gsql_session_get_workspace (session);
 	gsql_workspace_add_content (workspace, content);
 	gsql_content_set_name_full (content, realname, realname);
@@ -441,19 +445,65 @@ on_code_editor_cb_revert (GSQLContent *content, gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 	
+	GSQLWorkspace *workspace;
+	
+	workspace = gsql_session_get_workspace (content->session);
+	
+	GSQL_FIXME;
+	gsql_message_add (workspace, GSQL_MESSAGE_WARNING,
+					  N_("Not supported"));
 	
 }
 
 static void
-on_code_editor_cb_save (GSQLContent *content, gpointer user_data)
+on_code_editor_cb_save (GSQLContent *content, gboolean user_data)
 {
 	GSQL_TRACE_FUNC;
 	
+	GtkTextIter start, end;
+	GtkTextBuffer *buffer;
+	gchar *text, *sql;
+	GSQLCursor *cursor;
+	GSQLCursorState state;
+	GSQLWorkspace *workspace;
 	
+	buffer = GTK_TEXT_BUFFER (g_object_get_data (G_OBJECT (content), "buffer"));
+	
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_get_end_iter (buffer, &end);
+	
+	text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+	sql = g_strdup_printf ("create or replace %s", text);
+	
+	g_free (text);
+	
+	cursor = gsql_cursor_new (content->session, sql);
+	state = gsql_cursor_open (cursor, FALSE);
+	workspace = gsql_session_get_workspace (content->session);
+	
+	if (state != GSQL_CURSOR_STATE_OPEN)
+	{
+		gsql_message_add (workspace, GSQL_MESSAGE_ERROR,
+						  N_("Failed to save the database object"));
+		
+		
+	} else {
+		
+		gsql_message_add (workspace, GSQL_MESSAGE_NOTICE,
+						  N_("The database object has been saved"));
+	}
+	
+	
+	gsql_cursor_close (cursor);
+	
+	g_free (sql);
+	
+	gsql_content_set_changed (content, FALSE);
+	gtk_text_buffer_set_modified (buffer, FALSE);
 }
 
 static void
-on_code_editor_cb_close (GSQLContent *content, gpointer user_data)
+on_code_editor_cb_close (GSQLContent *content, gboolean force)
 {
 	GSQL_TRACE_FUNC;
 	
@@ -462,12 +512,60 @@ on_code_editor_cb_close (GSQLContent *content, gpointer user_data)
 	
 	changed = gsql_content_get_changed (content);
 	
-	if (changed)
+	if ((changed) && (!force))
 	{
-		GSQL_DEBUG ("Ask for save changes");
+		GtkWidget *dialog;
+		gint ret = 0;
 		
-		if (0)
-			return;
+		GtkWidget *label, *icon, *box;
+		
+		dialog = gtk_dialog_new_with_buttons (N_("Unsaved database object"),
+											  GTK_WINDOW (gsql_window),
+											  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+											  GTK_STOCK_DISCARD, 1,
+											  GTK_STOCK_CANCEL, 2,
+											  GTK_STOCK_SAVE, 3,
+											  NULL);
+		
+		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+		// 
+		
+		// 
+		box = gtk_hbox_new (FALSE, 4);
+		label = gtk_label_new (N_("The database object you are about to close has been changed. Apply changes?"));
+		
+		gtk_misc_set_padding (GTK_MISC (label), 2, 0);
+		gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+		
+		icon = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION,
+										 GTK_ICON_SIZE_DIALOG);
+
+		gtk_box_pack_start (GTK_BOX (box), icon, FALSE, FALSE,0);	
+		gtk_misc_set_alignment (GTK_MISC (icon), 0.5, 0.5);
+		
+		gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE,0);
+		gtk_widget_show_all (box);
+		
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), box, TRUE, TRUE, 2);
+		
+		ret = gtk_dialog_run (GTK_DIALOG (dialog));
+
+		switch (ret)
+		{
+			case 1:
+				break;
+				
+			case 3:
+				on_code_editor_cb_save (content, FALSE);
+				break;
+				
+			default:
+				gtk_widget_destroy (dialog);
+				return;
+		}
+		
+		gtk_widget_destroy (dialog);
+		
 	}
 	
 	gtk_widget_destroy (GTK_WIDGET (content));
