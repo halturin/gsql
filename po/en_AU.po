@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GSQL 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-28 16:50+0300\n"
+"POT-Creation-Date: 2008-11-29 20:25+0300\n"
 "PO-Revision-Date: 2006-07-24 16:15+0500\n"
 "Last-Translator: Halturin Taras <halturin@gmail.com>\n"
 "Language-Team: ru <en@li.org>\n"
@@ -349,6 +349,27 @@ msgstr ""
 #: engines/oracle/nav_tree__packages.c:44
 #: engines/oracle/nav_tree__procedures.c:46
 msgid "Arguments"
+msgstr ""
+
+#: engines/oracle/nav_tree__procedures.c:454
+msgid "Not supported"
+msgstr ""
+
+#: engines/oracle/nav_tree__procedures.c:487
+msgid "Failed to save the database object"
+msgstr ""
+
+#: engines/oracle/nav_tree__procedures.c:493
+msgid "The database object has been saved"
+msgstr ""
+
+#: engines/oracle/nav_tree__procedures.c:522
+msgid "Unsaved database object"
+msgstr ""
+
+#: engines/oracle/nav_tree__procedures.c:535
+msgid ""
+"The database object you are about to close has been changed. Apply changes?"
 msgstr ""
 
 #: engines/oracle/nav_tree__redo_logs.c:42

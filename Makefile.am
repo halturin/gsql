@@ -15,8 +15,6 @@ gsqldoc_DATA = \
 	NEWS\
 	TODO
 
-EXTRA_DIST = $(gsqldoc_DATA)
-
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
 gnomemenu_DATA = gsql.desktop
 
@@ -35,4 +33,7 @@ dist-hook:
 
 install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+
+EXTRA_DIST = $(gsqldoc_DATA) \
+	$(schema_DATA)
 

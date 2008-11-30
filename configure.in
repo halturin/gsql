@@ -97,8 +97,8 @@ dnl Set PACKAGE DIRs in config.h.
 packagepixmapsdir=share/pixmaps/${PACKAGE}
 packagehelpdir=share/gnome/help/${PACKAGE}
 packagemenudir=share/gnome/apps
-packagepluginsdir=lib/${PACKAGE}/plugins
-packageenginesdir=lib/${PACKAGE}/engines
+packagepluginsdir=${libdir}/${PACKAGE}/plugins
+packageenginesdir=${libdir}/${PACKAGE}/engines
 packagegladedir=share/${PACKAGE}/glade
 packageuidir=share/${PACKAGE}/ui
 packagetemplatedir=share/${PACKAGE}/template

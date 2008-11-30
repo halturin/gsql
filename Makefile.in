@@ -253,11 +253,13 @@ gsqldoc_DATA = \
 	NEWS\
 	TODO
 
-EXTRA_DIST = $(gsqldoc_DATA)
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
 gnomemenu_DATA = gsql.desktop
 schemadir = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = gsql.schemas
+EXTRA_DIST = $(gsqldoc_DATA) \
+	$(schema_DATA)
+
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
