@@ -910,10 +910,10 @@ GCONF_SCHEMA_FILE_DIR
 GCONF_SCHEMAS_INSTALL_TRUE
 GCONF_SCHEMAS_INSTALL_FALSE
 PACKAGE_PLUGINS_DIR
+PACKAGE_ENGINES_DIR
 PACKAGE_GLADE_DIR
 PACKAGE_UI_DIR
 PACKAGE_TEMPLATE_DIR
-PACKAGE_ENGINES_DIR
 PACKAGE_DOC_DIR
 NO_PREFIX_PACKAGE_PIXMAPS_DIR
 PACKAGE_PIXMAPS_DIR
@@ -15250,20 +15250,18 @@ packagedocdir=doc/${PACKAGE}
 packagepixmapsdir=share/pixmaps/${PACKAGE}
 packagehelpdir=share/gnome/help/${PACKAGE}
 packagemenudir=share/gnome/apps
-packagepluginsdir=${libdir}/${PACKAGE}/plugins
-packageenginesdir=${libdir}/${PACKAGE}/engines
+packagepluginsdir='$(libdir)/gsql/plugins'
+packageenginesdir='$(libdir)/gsql/engines'
 packagegladedir=share/${PACKAGE}/glade
 packageuidir=share/${PACKAGE}/ui
 packagetemplatedir=share/${PACKAGE}/template
 
 
 
-PACKAGE_PLUGINS_DIR="${packageprefix}/${packagepluginsdir}"
+PACKAGE_PLUGINS_DIR="${packagepluginsdir}"
 
 
-cat >>confdefs.h <<_ACEOF
-#define PACKAGE_PLUGINS_DIR "${packageprefix}/${packagepluginsdir}"
-_ACEOF
+PACKAGE_ENGINES_DIR="${packageenginesdir}"
 
 
 PACKAGE_GLADE_DIR="${packageprefix}/${packagegladedir}"
@@ -15290,13 +15288,6 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-
-PACKAGE_ENGINES_DIR="${packageprefix}/${packageenginesdir}"
-
-
-cat >>confdefs.h <<_ACEOF
-#define PACKAGE_ENGINES_DIR "${packageprefix}/${packageenginesdir}"
-_ACEOF
 
 
 
@@ -16639,10 +16630,10 @@ GCONF_SCHEMA_FILE_DIR!$GCONF_SCHEMA_FILE_DIR$ac_delim
 GCONF_SCHEMAS_INSTALL_TRUE!$GCONF_SCHEMAS_INSTALL_TRUE$ac_delim
 GCONF_SCHEMAS_INSTALL_FALSE!$GCONF_SCHEMAS_INSTALL_FALSE$ac_delim
 PACKAGE_PLUGINS_DIR!$PACKAGE_PLUGINS_DIR$ac_delim
+PACKAGE_ENGINES_DIR!$PACKAGE_ENGINES_DIR$ac_delim
 PACKAGE_GLADE_DIR!$PACKAGE_GLADE_DIR$ac_delim
 PACKAGE_UI_DIR!$PACKAGE_UI_DIR$ac_delim
 PACKAGE_TEMPLATE_DIR!$PACKAGE_TEMPLATE_DIR$ac_delim
-PACKAGE_ENGINES_DIR!$PACKAGE_ENGINES_DIR$ac_delim
 PACKAGE_DOC_DIR!$PACKAGE_DOC_DIR$ac_delim
 NO_PREFIX_PACKAGE_PIXMAPS_DIR!$NO_PREFIX_PACKAGE_PIXMAPS_DIR$ac_delim
 PACKAGE_PIXMAPS_DIR!$PACKAGE_PIXMAPS_DIR$ac_delim

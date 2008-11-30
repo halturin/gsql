@@ -67,9 +67,6 @@
 /* Doc dir */
 #undef PACKAGE_DOC_DIR
 
-/* Engines dir */
-#undef PACKAGE_ENGINES_DIR
-
 /* Glade dir */
 #undef PACKAGE_GLADE_DIR
 
@@ -87,9 +84,6 @@
 
 /* Pixmaps dir */
 #undef PACKAGE_PIXMAPS_DIR
-
-/* Plugins dir */
-#undef PACKAGE_PLUGINS_DIR
 
 /* Define to the full name and version of this package. */
 #undef PACKAGE_STRING

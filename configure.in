@@ -97,8 +97,8 @@ dnl Set PACKAGE DIRs in config.h.
 packagepixmapsdir=share/pixmaps/${PACKAGE}
 packagehelpdir=share/gnome/help/${PACKAGE}
 packagemenudir=share/gnome/apps
-packagepluginsdir=${libdir}/${PACKAGE}/plugins
-packageenginesdir=${libdir}/${PACKAGE}/engines
+packagepluginsdir='$(libdir)/gsql/plugins'
+packageenginesdir='$(libdir)/gsql/engines'
 packagegladedir=share/${PACKAGE}/glade
 packageuidir=share/${PACKAGE}/ui
 packagetemplatedir=share/${PACKAGE}/template
@@ -106,9 +106,14 @@ packagetemplatedir=share/${PACKAGE}/template
 
 
 dnl Subst PACKAGE_PLUGINS_DIR.
-PACKAGE_PLUGINS_DIR="${packageprefix}/${packagepluginsdir}"
+PACKAGE_PLUGINS_DIR="${packagepluginsdir}"
 AC_SUBST(PACKAGE_PLUGINS_DIR)
-AC_DEFINE_UNQUOTED(PACKAGE_PLUGINS_DIR, "${packageprefix}/${packagepluginsdir}", [Plugins dir])
+dnl AC_DEFINE_UNQUOTED(PACKAGE_PLUGINS_DIR, "${packageprefix}/${packagepluginsdir}", [Plugins dir])
+
+dnl Subst PACKAGE_ENGINES_DIR.
+PACKAGE_ENGINES_DIR="${packageenginesdir}"
+AC_SUBST(PACKAGE_ENGINES_DIR)
+dnl AC_DEFINE_UNQUOTED(PACKAGE_ENGINES_DIR, "${packageprefix}/${packageenginesdir}", [Engines dir])
 
 dnl Subst PACKAGE_GLADE_DIR.
 PACKAGE_GLADE_DIR="${packageprefix}/${packagegladedir}"
@@ -126,10 +131,6 @@ AC_SUBST(PACKAGE_TEMPLATE_DIR)
 AC_DEFINE_UNQUOTED(PACKAGE_TEMPLATE_DIR, "${packageprefix}/${packagetemplatedir}", [Glade dir])
 
 
-dnl Subst PACKAGE_ENGINES_DIR.
-PACKAGE_ENGINES_DIR="${packageprefix}/${packageenginesdir}"
-AC_SUBST(PACKAGE_ENGINES_DIR)
-AC_DEFINE_UNQUOTED(PACKAGE_ENGINES_DIR, "${packageprefix}/${packageenginesdir}", [Engines dir])
 
 
 

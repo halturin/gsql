@@ -1,10 +1,11 @@
-
 [Desktop Entry]
 Name=@PACKAGE_NAME@
 Comment=Integrated Database Development Environment for GNOME
 Exec=gsql
-Icon=@PACKAGE_PIXMAPS_DIR@/gsql.png
+Icon=gsql
 Terminal=false
-MultipleArgs=false
+X-MultipleArgs=false
 Type=Application
-Categories=GNOME;Application;Database;Development;
+Categories=GNOME;GTK;Database;Development;
+MimeType=application/x-gsql;
+X-GNOME-DocPath=gsql/gsql.xml

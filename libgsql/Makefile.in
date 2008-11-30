@@ -240,7 +240,9 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = \
-        $(PACKAGE_CFLAGS)
+	$(PACKAGE_CFLAGS) \
+	-DPACKAGE_ENGINES_DIR=\"$(PACKAGE_ENGINES_DIR)\" \
+	-DPACKAGE_PLUGINS_DIR=\"$(PACKAGE_PLUGINS_DIR)\"
 
 lib_LTLIBRARIES = \
 	libgsql.la 
