@@ -21,7 +21,9 @@
 .\" USA.
 .TH GSQL 1
 .SH NAME
-GSQL v@VERSION@ \- an integrated database development environment for \fBGNOME\fR
+GSQL \- an integrated database development environment for \fBGNOME\fR
+.SH VERSION
+Current version is @VERSION@
 .SH SYNOPSIS
 .TP 5
 \fBgsql \fI[options]\fR
