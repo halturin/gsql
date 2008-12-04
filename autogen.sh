@@ -1,6 +1,7 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 
+NOCONFIGURE=1
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
