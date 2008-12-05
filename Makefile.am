@@ -7,13 +7,7 @@ SUBDIRS = po libgsql src pixmaps data doc engines plugins
 
 gsqldocdir = ${prefix}/doc/gsql
 gsqldoc_DATA = \
-	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
-	INSTALL\
-	NEWS\
-	TODO
+	AUTHORS
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
 gnomemenu_DATA = gsql.desktop
