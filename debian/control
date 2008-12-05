@@ -1,54 +1,73 @@
 Source: gsql
+Maintainer: Dmitry E. Oboukhov <unera@debian.org>
 Section: gnome
 Priority: optional
-Maintainer: Taras Halturin <halturin@gmail.com>
-Build-Depends: debhelper (>= 5), autotools-dev, libvte-dev, libgnomeui-dev, libgtk2.0-dev, libgtksourceview2.0-dev, libnotify-dev, libgconf2-dev, libgnomeui-dev, libgnome2-dev
-Standards-Version: 3.7.2
+Build-Depends: cdbs, debhelper,
+ libgtksourceview2.0-dev, libnotify-dev, libgtk2.0-dev,
+ libgnomeui-dev, libvte-dev, libmysqlclient-dev
+Standards-Version: 3.8.0
+Homepage: http://gsql.org
+
+Package: libgsql0
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Integrated database development tool for GNOME
+ This package contains library for gsql.
+
+Package: libgsql-dev
+Architecture: any
+Section: libdevel
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libgsql0 (=${binary:Version})
+Description: Integrated database development tool for GNOME
+ This package contains the development headers for the library found
+ in libgsql0.
 
 Package: gsql
 Architecture: any
-Section: devel
-Conflicts: gsql (<= 0.2.0)
-Replaces: gsql (<= 0.2.0)
-Depends: libgtk2.0-0 (>= 2.14.1), libgtksourceview2.0-0 (>= 2.3), libgnomeui-0 (>= 2.22.0), libgconf2-4 (>= 2.13.5), libnotify1 (>= 0.4.4), libgnome2-0 (>= 2.17.3), libgnomeui-0 (>= 2.22.0)
-Description: An integrated database development tool for GNOME
- Short desc. FIXME
-
-Package: gsql-doc
-Architecture: all
-Description: An integrated database development tool for GNOME - Documentation
- Short desc. FIXME
-
-Package: gsql-mysql
-Architecture: any
-Depends: gsql (= ${binary:Version}), libmysqlclient15off
-Description: MySQL engine for GSQL
- The GSQL can works with MySQL server, and this module
- is necessary for that.
-
-Package: gsql-oracle
-Architecture: any
-Depends: gsql (= ${binary:Version})
-Description: Oracle engine for GSQL
- The GSQL can works with Oracle server, and this module
- is necessary for that.
-
+Recommends: gsql-plugins (>=${source:Version})
+Depends: menu (>=2.1.19), ${shlibs:Depends}, ${misc:Depends}, gconf2,
+ gsql-mysql-engine (>=${source:Version})|
+ gsql-oracle-engine (>=${source:Version}),
+ libgsql0 (=${binary:Version})
+Description: Integrated database development tool for GNOME
+ The mission of GSQL opensource project is to supply database developers with
+ an universal tool platform tailored against market leading DBMS by providing:
+ .
+  * native DBMS access (not via ODBC layer)
+  * databased objects organised into a tree
+  * intuitive and easy database objects handling
+  * syntax highlighting
+  * query plan builder
+  * query constructor
+  * query result export (in XML, CSV, HTML)
+  * debugger (depending on RDBMS)
+  * query planner control (depending on RDBMS)
+  * database administration functions
+  * database system monitoring
+  * GNOME integration (via GConf and gnome-keyring)
+  * plugin: data migration wizard for various RDBMS
+ .
+ Architecturely GSQL is designed so that the database interfaces are arranged
+ into modules linked to the platform by engine API. It allows to implement new
+ engines independently. GSQL provides developers with a rich API. To extend the
+ functions of GSQL engines, we suggest loadable plugins API.
+ .
+ One of the main ideas is tight integration with the Desktop Environment
+ (GNOME).
+ .
+ We kindly ask you to post your ideas and wishes in the project forum.
 
 Package: gsql-plugins
 Architecture: any
-Depends: gsql (= ${binary:Version}), libvte9
+Depends: gsql (>=${source:Version}), ${shlibs:Depends}, ${misc:Depends}, gconf2,
 Description: Plugins for GSQL
- Short desc. FIXME
- Terminal, Exporter, Runner.
+ This package contains the plugins set for gsql.
 
-
-Package: gsql-dev
+Package: gsql-mysql-engine
 Architecture: any
-Section: devel
-Depends: gsql (= ${binary:Version}),
-         ${misc:Depends},
-         ${shlibs:Depends}
-Description: An integrated database development tool for GNOME - development files
- Short desc. FIXME
- This package provides the development files for GSQL.
+Depends: ${shlibs:Depends}, ${misc:Depends}, gconf2,
+Description: MySQL engine for GSQL
+ The GSQL can works with MySQL server, and this module
+ is necessary for that.
 

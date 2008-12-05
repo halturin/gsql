@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/libgsql.so.*
+debian/tmp/usr/lib/libgsql.la

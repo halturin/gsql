@@ -1,0 +1,54 @@
+Source: gsql
+Section: gnome
+Priority: optional
+Maintainer: Taras Halturin <halturin@gmail.com>
+Build-Depends: debhelper (>= 5), autotools-dev, libvte-dev, libgnomeui-dev, libgtk2.0-dev, libgtksourceview2.0-dev, libnotify-dev, libgconf2-dev, libgnomeui-dev, libgnome2-dev
+Standards-Version: 3.7.2
+
+Package: gsql
+Architecture: any
+Section: devel
+Conflicts: gsql (<= 0.2.0)
+Replaces: gsql (<= 0.2.0)
+Depends: libgtk2.0-0 (>= 2.14.1), libgtksourceview2.0-0 (>= 2.3), libgnomeui-0 (>= 2.22.0), libgconf2-4 (>= 2.13.5), libnotify1 (>= 0.4.4), libgnome2-0 (>= 2.17.3), libgnomeui-0 (>= 2.22.0)
+Description: An integrated database development tool for GNOME
+ Short desc. FIXME
+
+Package: gsql-doc
+Architecture: all
+Description: An integrated database development tool for GNOME - Documentation
+ Short desc. FIXME
+
+Package: gsql-mysql
+Architecture: any
+Depends: gsql (= ${binary:Version}), libmysqlclient15off
+Description: MySQL engine for GSQL
+ The GSQL can works with MySQL server, and this module
+ is necessary for that.
+
+Package: gsql-oracle
+Architecture: any
+Depends: gsql (= ${binary:Version})
+Description: Oracle engine for GSQL
+ The GSQL can works with Oracle server, and this module
+ is necessary for that.
+
+
+Package: gsql-plugins
+Architecture: any
+Depends: gsql (= ${binary:Version}), libvte9
+Description: Plugins for GSQL
+ Short desc. FIXME
+ Terminal, Exporter, Runner.
+
+
+Package: gsql-dev
+Architecture: any
+Section: devel
+Depends: gsql (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: An integrated database development tool for GNOME - development files
+ Short desc. FIXME
+ This package provides the development files for GSQL.
+

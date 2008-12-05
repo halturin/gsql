@@ -1,0 +1,2 @@
+gsql-mysql-engine: postinst-has-useless-call-to-ldconfig
+gsql-mysql-engine: postrm-has-useless-call-to-ldconfig

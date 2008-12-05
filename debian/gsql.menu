@@ -1,0 +1,3 @@
+?package(gsql):needs="x11" section="Applications/Data Management"\
+  title="GSQL" \
+    command="gsql"

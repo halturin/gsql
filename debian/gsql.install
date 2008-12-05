@@ -1,12 +1,11 @@
-debian/tmp/etc/gconf/schemas/gsql.schemas
+debian/tmp/usr/share/gconf/schemas/gsql.schemas
+#debian/tmp/usr/doc/gsql /usr/share/doc/gsql
+#debian/tmp/usr/share/gnome/*
+debian/tmp/usr/share/gnome/apps/Applications/gsql.desktop /usr/share/applications
 debian/tmp/usr/bin/*
-debian/tmp/usr/doc/gsql/*
-debian/tmp/usr/lib/libgsql.so*
-debian/tmp/usr/share/gnome/*
 debian/tmp/usr/share/gsql/glade/gsql_*
 debian/tmp/usr/share/gsql/ui/gsql*
 debian/tmp/usr/share/locale/*
 debian/tmp/usr/share/pixmaps/gsql/*.png
-debian/tmp/usr/share/omf/*
+#debian/tmp/usr/share/omf/*
 debian/tmp/usr/share/man
-

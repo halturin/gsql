@@ -1,6 +1,11 @@
-gsql (0.2-0) intrepid; urgency=low
+gsql (0.2.0+svn-1) unstable; urgency=low
 
-  * Initial release
+  * SVN snapshot.
 
- -- Taras Halturin <halturin@gmail.com>  Wed, 06 Aug 2008 01:39:17 +0400
+ -- Dmitry E. Oboukhov <unera@debian.org>  Thu, 04 Dec 2008 14:40:21 +0300
 
+gsql (0.2.0-1) unstable; urgency=low
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- Dmitry E. Oboukhov <unera@debian.org>  Thu, 04 Dec 2008 10:45:58 +0300
