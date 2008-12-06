@@ -342,7 +342,7 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 			name = N_("Incorrect data");
 		}
 		
-		tmp = g_utf8_strdown (var->value, var->value_length);
+		tmp = g_strdup (var->value);
 		
 		if (tmp_int == 0)
 		{
@@ -364,9 +364,7 @@ nav_tree_tables_browse (gchar *name, gchar *owner)
 		
 	}
 	
-	sql = g_strconcat (sql,"\nfrom ", g_utf8_strdown (owner, strlen (owner)),
-					   		".", g_utf8_strdown (name, strlen (name)),
-										 " a\n", NULL);
+	sql = g_strconcat (sql,"\nfrom ", owner, ".", name, " a\n", NULL);
 	GSQL_DEBUG ("SQL formed: %s", sql);
 	
 	content = gsql_content_new (session, GTK_STOCK_FILE);

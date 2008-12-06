@@ -241,6 +241,7 @@ create_dialog_logon (void)
 	GtkWidget *label;
 	GtkWidget *notebook;
 	GtkListStore *model;
+	GtkWidget *button;
 	
 	GtkCellRenderer *cell;
         
@@ -264,11 +265,15 @@ create_dialog_logon (void)
 	dialog_logon = gtk_dialog_new_with_buttons (_("Database logon"),
 												GTK_WINDOW (gsql_window),
 												GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-												GTK_STOCK_CANCEL,
-												GTK_RESPONSE_CANCEL,
-												GTK_STOCK_OK,
-												GTK_RESPONSE_OK,
-												NULL); 
+												NULL);
+	
+	button = gtk_dialog_add_button(GTK_DIALOG(dialog_logon), 
+								   GTK_STOCK_CANCEL, 
+								   GTK_RESPONSE_CANCEL);
+	
+	button = gtk_dialog_add_button(GTK_DIALOG(dialog_logon), 
+								   GTK_STOCK_OK, 
+								   GTK_RESPONSE_OK);	
 	
 	gtk_window_set_resizable (GTK_WINDOW (dialog_logon), FALSE);
         
@@ -324,7 +329,13 @@ create_dialog_logon (void)
 
 	gsql_engines_foreach (gsql_dialog_logon_make_widget, dialog_vbox);
 	
-	gtk_combo_box_set_active (GTK_COMBO_BOX (engine_name), 0);        
+	gtk_combo_box_set_active (GTK_COMBO_BOX (engine_name), 0);
+	
+	
+	// I don't know why, but it doesn't work. :(
+	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (button);
+	//
 
 	return dialog_logon;
 }

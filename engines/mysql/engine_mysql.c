@@ -183,7 +183,7 @@ engine_logon_widget_new ()
 	gtk_entry_set_max_length (GTK_ENTRY (password), 32);
 	gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
 	gtk_entry_set_invisible_char (GTK_ENTRY (password), 9679);
-        
+    
 	label = gtk_label_new (_("Password"));
 	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
