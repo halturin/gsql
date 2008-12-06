@@ -1,7 +1,7 @@
 debian/tmp/usr/share/gconf/schemas/gsql.schemas
 #debian/tmp/usr/doc/gsql /usr/share/doc/gsql
 #debian/tmp/usr/share/gnome/*
-debian/tmp/usr/share/gnome/apps/Applications/gsql.desktop /usr/share/applications
+debian/tmp/usr/share/applications/gsql.desktop /usr/share/applications
 debian/tmp/usr/bin/*
 debian/tmp/usr/share/gsql/glade/gsql_*
 debian/tmp/usr/share/gsql/ui/gsql*

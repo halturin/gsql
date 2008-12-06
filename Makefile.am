@@ -9,7 +9,7 @@ gsqldocdir = ${prefix}/doc/gsql
 gsqldoc_DATA = \
 	AUTHORS
 
-gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
+gnomemenudir = $(datadir)/applications/
 gnomemenu_DATA = gsql.desktop
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
