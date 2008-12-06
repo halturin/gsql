@@ -39,6 +39,8 @@ AC_DEFUN([CHECK_MYSQL],
 		AC_MSG_RESULT(no)
 		have_mysql=no
 	fi
+  else
+    have_mysql=no
   fi
 
   dnl ############################################################
@@ -60,6 +62,8 @@ AC_DEFUN([CHECK_MYSQL],
 		have_mysql=no
 	fi
 	CFLAGS="$old_CFLAGS"
+  else
+    have_mysql=no
   fi
   
   if test $have_mysql = yes; then
@@ -68,6 +72,11 @@ AC_DEFUN([CHECK_MYSQL],
   fi
 
   AM_CONDITIONAL([GSQL_ENGINE_MYSQL],[test "x$have_mysql" = "xyes"])
+  
+  if test -z "${GSQL_ENGINE_MYSQL_TRUE}"; then
+    HAVE_DB=yes
+  fi
+  
 ])
 
 
@@ -289,6 +298,10 @@ with this.])
   fi
   
   AM_CONDITIONAL([GSQL_ENGINE_ORACLE],[test "x$enable_oracle" = "xyes"])
+  
+  if test -z "${GSQL_ENGINE_ORACLE_TRUE}"; then
+    HAVE_DB=yes
+  fi
 ])
 
 

@@ -58,9 +58,14 @@ AC_SUBST(ORACLE_CFLAGS)
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_SUBST(ORACLE_LDFLAGS)
 
+
 dnl Checks for library functions.
 CHECK_ORACLE
 CHECK_MYSQL
+
+if test "x$HAVE_DB" = "x"; then
+    AC_MSG_ERROR(Have no database support installed)
+fi
 
 AM_GCONF_SOURCE_2
 
