@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GSQL 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-29 20:25+0300\n"
+"POT-Creation-Date: 2008-12-07 16:17+0300\n"
 "PO-Revision-Date: 2006-07-24 16:15+0500\n"
 "Last-Translator: Halturin Taras <halturin@gmail.com>\n"
 "Language-Team: ru <en@li.org>\n"
@@ -976,7 +976,7 @@ msgstr ""
 msgid "Copy text"
 msgstr ""
 
-#: libgsql/workspace.c:1099 src/gsql.c:375
+#: libgsql/workspace.c:1099 src/gsql.c:386
 msgid "Select all"
 msgstr ""
 
@@ -1142,19 +1142,19 @@ msgstr ""
 msgid "The command line was not set properly"
 msgstr ""
 
-#: src/gsql.c:253 src/main.c:116
+#: src/gsql.c:254 src/main.c:116
 msgid "Engines not found at "
 msgstr ""
 
-#: src/gsql.c:264
+#: src/gsql.c:265
 msgid "Database logon"
 msgstr ""
 
-#: src/gsql.c:282
+#: src/gsql.c:287
 msgid "Choose the engine:"
 msgstr ""
 
-#: src/gsql.c:349
+#: src/gsql.c:360
 msgid "Close session(s)"
 msgstr ""
 
