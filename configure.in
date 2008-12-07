@@ -19,7 +19,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Package name for gettext])
 
 dnl Languages which your application supports
-ALL_LINGUAS="de en_AU en_CA en_GB ru"
+ALL_LINGUAS="de ru"
 AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
@@ -209,6 +209,5 @@ data/Makefile
 doc/Makefile
 doc/gsql.1
 gsql.desktop
-
 ])
 
