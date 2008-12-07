@@ -26,10 +26,12 @@ libgsqlplugin_vte_la_SOURCES = \
 	plugin_vte.c
 
 libgsqlplugin_vte_la_CFLAGS = \
-	-I$(top_builddir)/libgsql/
+	-I$(top_builddir)/libgsql/ \
+	$(PLUGIN_VTE_CFLAGS)
 
 libgsqlplugin_vte_la_LIBADD = \
 	$(PACKAGE_LIBS)      \
+	$(PLUGIN_VTE_LIBS) \
 	$(top_builddir)/libgsql/libgsql.la 
 
 
