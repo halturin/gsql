@@ -465,17 +465,18 @@ oracle_cursor_fetch(GSQLCursor * cursor, gint rows)
 	gint fetched;
 	GSQLEOracleCursor *cursor_spec;
 	
-
 	g_return_if_fail (GSQL_IS_CURSOR (cursor));
-	
+
 	cursor_spec = cursor->spec;
 	oracle_variable_clear (cursor);
+	
 	ret = OCIStmtFetch2 (cursor_spec->statement,
 						 cursor_spec->errhp,
 						 1,
 						 OCI_FETCH_NEXT,
 						 (sb4) 0,
 						 OCI_DEFAULT);
+	
 	if (oracle_check_error (cursor, ret))
 		return 0;
 

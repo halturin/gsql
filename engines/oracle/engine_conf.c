@@ -226,6 +226,37 @@ engine_conf_widget_create ()
 	gtk_frame_set_label_widget (GTK_FRAME (oracle_options_frame), oracle_options_label);
 	gtk_label_set_use_markup (GTK_LABEL (oracle_options_label), TRUE);
 	*/
+	
+	gconf_bool_value = gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_USE_SYS_ENV);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (use_system_env_check), gconf_bool_value);
+    
+	env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
+	
+	if (env_all)
+	{	
+		env_list = g_strsplit (env_all, ",", 100);
+	
+		for (i = 0; env_list[i]; i ++)
+		{
+			env_name = env_list[i++];
+			env_value = env_list[i];
+
+			gtk_list_store_append (liststore, &iter);
+			gtk_list_store_set (liststore, &iter,
+								0, env_name,
+								1, env_value,
+								-1);
+		
+		}
+		
+		g_strfreev (env_list);
+	}
+	
+	/*
+	gconf_bool_value = gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_ENABLE_TRACE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (oracle_enable_trace_check), gconf_bool_value);
+	*/
+	
 	g_signal_connect ((gpointer) use_system_env_check, "toggled",
 						G_CALLBACK (on_conf_use_system_env_check_toggled),
 						NULL);
@@ -241,35 +272,7 @@ engine_conf_widget_create ()
 	g_signal_connect ((gpointer) oracle_enable_trace_check, "toggled",
 						G_CALLBACK (on_conf_oracle_enable_trace_check_toggled),
 						NULL);
-	*/
-	gconf_bool_value = gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_USE_SYS_ENV);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (use_system_env_check), gconf_bool_value);
-    
-	env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
-	
-	if (!env_all)
-		return oracle_page_vbox;
-	
-	env_list = g_strsplit (env_all, ",", 100);
-	
-	for (i = 0; env_list[i]; i ++)
-	{
-		env_name = env_list[i++];
-		env_value = env_list[i];
-
-		gtk_list_store_append (liststore, &iter);
-		gtk_list_store_set (liststore, &iter,
-							0, env_name,
-							1, env_value,
-							-1);
-		
-	}
-	
-	g_strfreev (env_list);
-	/*
-	gconf_bool_value = gsql_conf_value_get_boolean (GSQLE_CONF_ORACLE_ENABLE_TRACE);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (oracle_enable_trace_check), gconf_bool_value);
-	*/
+	*/	 
 	
 	return oracle_page_vbox;
 }

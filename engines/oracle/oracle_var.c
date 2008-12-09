@@ -93,29 +93,24 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 	{
 		case SQLT_VCS:
 		case SQLT_CHR:
-		{
 			GSQL_DEBUG ("Variable = SQLT_VCS");
 			spec_var->variable_len = TRUE;
 			variable->value_length = 4000;
 			variable->value_type = G_TYPE_STRING;
 			variable->value = spec_var->data = g_malloc0 (variable->value_length + 1);
 			break;
-		};
                 
 		case SQLT_AFC:
-		{
 			GSQL_DEBUG ("Variable = SQLT_AFC");
 			spec_var->variable_len = FALSE;
 			variable->value_length = 2000;
 			variable->value_type = G_TYPE_STRING;
 			variable->value = spec_var->data = g_malloc0 (variable->value_length + 1);
 			break;
-		};
 		
 		case SQLT_NUM:
 		case SQLT_VNU:
 		case SQLT_INT:
-		{
 			GSQL_DEBUG ("Variable = SQLT_NUM [%d]", spec_var->data_type);
 			spec_var->data_type = SQLT_VNU;
 			scale = precision = 0;
@@ -152,11 +147,16 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 			variable->value_length = sizeof(OCINumber);
 			
 			break;
-		}
+		
+		case SQLT_DATE:
+        case SQLT_TIMESTAMP:
+        case SQLT_TIMESTAMP_TZ:
+        case SQLT_TIMESTAMP_LTZ:
+			GSQL_FIXME;
+			/* this types needs own handler */
 			
 		case SQLT_DAT:
 		case SQLT_ODT:
-		{
 			GSQL_DEBUG ("Variable = SQLT_DAT");
 			spec_var->data_type = SQLT_ODT;
 			
@@ -169,10 +169,8 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 			variable->value_length = sizeof(OCIDate);
 			
 			break;
-		}
-			
+		
 		case SQLT_RDD:
-		{
 			GSQL_DEBUG ("Variable = SQLT_RDD");
 			spec_var->variable_len = FALSE;
 			spec_var->data_type = SQLT_CHR;
@@ -181,17 +179,14 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 			variable->value = spec_var->data = g_malloc0 (variable->value_length + 1);
 			
 			break;
-		}
 		
 		default:
-		{
 			GSQL_DEBUG ("Variable = DEFAULT (type=[%d])", spec_var->data_type);
 			spec_var->variable_len = FALSE;
 			variable->value_type = GSQL_TYPE_UNSUPPORTED;
 			variable->value_length = 4000;
 			variable->value = spec_var->data = g_malloc0 (variable->value_length + 1);
-		}
-	};
+	}
 
 	if (spec_var->variable_len)
 	{
@@ -235,7 +230,7 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 							spec_var->actual_len, spec_var->ret_code, OCI_DEFAULT);
 	
 	return TRUE;
-};
+}
 
 static void
 oracle_raw_to_value (GSQLVariable *variable)
@@ -358,9 +353,9 @@ oracle_raw_to_value (GSQLVariable *variable)
 		default:
 			GSQL_DEBUG ("Unknown data type: %d", spec_var->data_type);
 			return;                    
-	};
+	}
 
-};
+}
 
 void 
 oracle_variable_free(GSQLEOracleVariable *var)
@@ -370,10 +365,12 @@ oracle_variable_free(GSQLEOracleVariable *var)
 	g_return_if_fail (var != NULL);
 	
 	// need check type here for LOB objects;
-	if (var->data)			free(var->data);
-	if (var->indicator)		free(var->indicator);
-	if (var->actual_len)	free(var->actual_len);
-	if (var->ret_code)		free (var->ret_code);
-	free (var);
+	
+	if (var->data)			g_free(var->data);
+	if (var->indicator)		g_free(var->indicator);
+	if (var->actual_len)	g_free(var->actual_len);
+	if (var->ret_code)		g_free (var->ret_code);
+	
+	g_free (var);
 
 }
