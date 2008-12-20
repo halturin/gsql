@@ -291,6 +291,17 @@ on_exit_activate (GtkMenuItem * mi, gpointer data)
 
 
 void
+on_fullscreen_activate (GtkToggleAction *ta, gpointer data)
+{
+	GSQL_TRACE_FUNC;
+
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (ta)))
+		gtk_window_fullscreen (GTK_WINDOW (gsql_window));
+	else
+		gtk_window_unfullscreen (GTK_WINDOW (gsql_window));
+}
+
+void
 on_navarea_activate (GtkToggleAction *ta, gpointer data)
 {
 	GSQL_TRACE_FUNC;

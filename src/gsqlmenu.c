@@ -56,6 +56,7 @@ static GtkActionEntry gsqlmenu_actions[] =
 
 static GtkToggleActionEntry gsqlmenu_toggle_actions[] =
 {
+	{ "ActionFullScreen", NULL, N_("Full Screen"), NULL, N_("Full Screen"), G_CALLBACK(on_fullscreen_activate), FALSE },
 	{ "ActionShowNavarea", NULL, N_("Navigator"), "F12", N_("Navigator"), G_CALLBACK(on_navarea_activate), TRUE },
 	{ "ActionShowMessarea", NULL, N_("Messages"), "F11", N_("Messages"), G_CALLBACK(on_messarea_activate), TRUE }
 };

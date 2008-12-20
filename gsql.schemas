@@ -43,13 +43,39 @@
 
 
     <schema>
-      <key>/schemas/apps/gsql/ui/resotre_size_and_position</key>
-      <applyto>/apps/gsql/ui/resotre_size_and_position</applyto>
+      <key>/schemas/apps/gsql/ui/restore_size_and_position</key>
+      <applyto>/apps/gsql/ui/restore_size_and_position</applyto>
       <owner>gsql</owner>
       <type>bool</type>
       <default>false</default>
       <locale name="C">
         <short>Restore position and size</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_maximized</key>
+      <applyto>/apps/gsql/ui/window_maximized</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Restore window maxinized state</short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/gsql/ui/window_fullscreen</key>
+      <applyto>/apps/gsql/ui/window_fullscreen</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Restore window fullscreen state</short>
         <long>
         </long>
       </locale>

@@ -56,6 +56,9 @@ void
 on_exit_activate (GtkMenuItem *mi, gpointer data);
 
 void
+on_fullscreen_activate (GtkToggleAction *ta, gpointer data);
+
+void
 on_navarea_activate (GtkToggleAction *ta, gpointer data);
 
 void

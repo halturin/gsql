@@ -22,6 +22,7 @@
 	   <placeholder name="PHolderSearch"/>
     </menu>
     <menu name="MenuView" action="ActionMenuView">
+      <menuitem name="MenuFullScreen" action="ActionFullScreen"/>
       <menuitem name="MenuShowNavarea" action="ActionShowNavarea"/>
       <menuitem name="MenuShowMessarea" action="ActionShowMessarea"/>
       <separator/>
