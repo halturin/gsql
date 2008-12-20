@@ -109,7 +109,7 @@ gsql_files_open_file (GSQLSession *session, gchar *file, gchar *encoding)
 			gsql_message_add (workspace, GSQL_MESSAGE_ERROR, msg);
 			gtk_widget_destroy (source);
 			return;
-		};
+		}
 		
 		
 		gtk_source_buffer_begin_not_undoable_action (sbuffer);
@@ -159,8 +159,9 @@ gsql_files_open_file (GSQLSession *session, gchar *file, gchar *encoding)
 					g_io_channel_unref (ioc);
 					
 					return;
-			};
-		};
+			}
+		}
+		
 		g_io_channel_unref (ioc);
 		gtk_source_buffer_end_not_undoable_action (sbuffer);
 	}

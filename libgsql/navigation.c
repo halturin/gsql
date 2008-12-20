@@ -859,7 +859,7 @@ static gboolean
 on_navigation_button_press (GtkWidget *tv, GdkEventButton *event,
 										gpointer data)
 {
-	GSQL_TRACE_FUNC;
+//	GSQL_TRACE_FUNC;
 	
 	if (event->type != GDK_BUTTON_PRESS)
 	  return;

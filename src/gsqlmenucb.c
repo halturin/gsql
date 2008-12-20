@@ -563,35 +563,15 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 
 	static GtkWidget *about = NULL;
 	GdkPixbuf *logo;
-	FILE *fauth;
-	size_t len = 0;
-#define GSQL_HELP_MAX_CREDITS_LINES 512
-	gchar *authors[GSQL_HELP_MAX_CREDITS_LINES];
-	gchar *buffer;
-	gint n = 0;
-
-	fauth = fopen(PACKAGE_DOC_DIR "/AUTHORS", "r");
-	g_return_if_fail (fauth != NULL);
+	GError *err = NULL;
+	GIOChannel *ioc = NULL;
+	GIOStatus status;
+	gsize bytes_read;
+	//size_t len = 0;
 	
-	while ((getline(&buffer, &len, fauth) != -1) && 
-		   (n < GSQL_HELP_MAX_CREDITS_LINES-1) )
-	{
-		authors[n++] = g_strdup(buffer);
-		authors[n-1] = g_strdelimit(authors[n-1],"\n",'\0');
-	}
-	
-	authors[n] = NULL;
-	
-	if (buffer)
-		free (buffer);
-
-	fclose (fauth);
-	
-	const gchar *copyright =
-		"Copyright \xc2\xa9 2006-2008 Taras Halturin\n";
-	const gchar *comments =
-		N_("GSQL is an integrated database development tool. This application developing for the GNOME Desktop");
-
+#define CREDITS_BUFFER 8196
+	gchar buffer[CREDITS_BUFFER];
+	gchar **credits;
 
 	if (about)
 	{
@@ -601,6 +581,54 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 		
 		return;
 	}
+	
+	ioc = g_io_channel_new_file (PACKAGE_DOC_DIR "/AUTHORS", "r", &err);
+
+	g_return_if_fail (ioc != NULL);
+	
+	status = g_io_channel_read_chars (ioc, buffer,
+									  CREDITS_BUFFER, &bytes_read,
+									  &err);
+	switch (status)
+	{
+		case G_IO_STATUS_EOF:
+			GSQL_DEBUG ("Opening file: G_IO_STATUS_EOF");
+
+			break;
+			
+		case G_IO_STATUS_NORMAL:
+			GSQL_DEBUG ("Opening file: G_IO_STATUS_NORMAL");
+			
+			if (bytes_read == 0)
+				GSQL_DEBUG ("AUTHORS file has zero length");
+			
+			break;
+			
+		case G_IO_STATUS_AGAIN:
+			GSQL_DEBUG ("Opening file: G_IO_STATUS_AGAIN");
+			g_io_channel_unref (ioc);
+			
+			return;
+			
+		case G_IO_STATUS_ERROR:
+		default:
+			GSQL_DEBUG ("Opening file: G_IO_STATUS_ERROR");
+			g_io_channel_unref (ioc);
+			
+			return;
+	}
+	
+	g_io_channel_unref (ioc);
+	
+	credits = g_strsplit (buffer, "\n", 1024);
+	
+	const gchar *copyright =
+		"Copyright \xc2\xa9 2006-2008 Taras Halturin\n";
+	const gchar *comments =
+		N_("GSQL is an integrated database development tool. This application developing for the GNOME Desktop");
+
+
+	
 
 	logo = create_pixbuf ("logo.png");
 #ifdef WITH_GNOME	
@@ -612,7 +640,7 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 			      "copyright", copyright,
 			      "comments", comments,
 			      "website", PROJECT_URL,
-			      "authors", authors,
+			      "authors", credits,
 			      "logo", logo, NULL);
 
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (about), TRUE);
@@ -629,8 +657,7 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 	if (logo)
 		g_object_unref (logo);
 	
-	while (n > -1)
-		g_free(authors[n--]);
-
+	g_strfreev(credits);
+	
 }
 

@@ -57,6 +57,9 @@ engine_prefs_widget_create ();
 void
 engine_prefs_widget_free (GtkWidget * prefs_widget);
 
+static GtkListStore *
+engine_oracle_get_tns_aliases ();
+
 gboolean
 engine_load (GSQLEngine *engine)
 {
@@ -160,6 +163,7 @@ engine_logon_widget_create ()
 
 	GtkWidget *table;
 	GtkWidget *database_name;
+	GtkWidget *database_name_entry;
 	GtkWidget *username;
 	GtkWidget *password;
 	GtkWidget *label;
@@ -167,16 +171,22 @@ engine_logon_widget_create ()
 	GtkWidget *expander;
 	GtkWidget *oracle_option_hbox;
 	GtkWidget *connect_as;
+	GtkListStore *aliases;
 
 	table = gtk_table_new (5, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_widget_show (table);        
+	gtk_widget_show (table);
+	
+	aliases = engine_oracle_get_tns_aliases();
         
-	database_name = gtk_combo_box_entry_new_text ();
+	database_name = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (aliases), 0);
+//		gtk_combo_box_entry_new_text ();
 	gtk_widget_show (database_name);
 	gtk_table_attach (GTK_TABLE (table), database_name, 1, 2, 1, 2,
 						(GtkAttachOptions) (GTK_FILL),
 						(GtkAttachOptions) (GTK_FILL), 0, 0);
+	database_name_entry = gtk_bin_get_child(GTK_BIN(database_name));
+	gtk_entry_set_activates_default(GTK_ENTRY (database_name_entry), TRUE);
         
 	label = gtk_label_new (_("Database name"));
 	gtk_widget_show (label);
@@ -194,6 +204,7 @@ engine_logon_widget_create ()
 						(GtkAttachOptions) (0), 0, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (username), 32);
 	gtk_entry_set_invisible_char (GTK_ENTRY (username), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (username), TRUE);
         
 	label = gtk_label_new (_("Username"));
 	gtk_widget_show (label);
@@ -211,6 +222,7 @@ engine_logon_widget_create ()
 	gtk_entry_set_max_length (GTK_ENTRY (password), 32);
 	gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
 	gtk_entry_set_invisible_char (GTK_ENTRY (password), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (password), TRUE);
         
 	label = gtk_label_new (_("Password"));
 	gtk_widget_show (label);
@@ -267,6 +279,147 @@ engine_logon_widget_free (GtkWidget * logon_widget)
 
 }
 
+static GtkListStore *
+engine_oracle_get_tns_aliases ()
+{
+	GSQL_TRACE_FUNC;
+	
+	gchar *tnsdir = NULL;
+	gchar *file;
+	GIOChannel *ioc;
+	GError *err = NULL;
+	
+	gchar buffer[8192];
+	gchar alias[512];
+	gint brakets = 0;
+	gboolean reading = TRUE;
+	GtkListStore *store;
+	gchar *p, *c;
+	
+	store = gtk_list_store_new (1, G_TYPE_STRING, -1);
+	
+	tnsdir = getenv("TNS_ADMIN");
+	
+	if (!tnsdir)
+	{
+		tnsdir = getenv("ORACLE_HOME");
+		
+		if (!tnsdir)
+			return store;
+		
+		GSQL_DEBUG ("Use ORALCE_HOME for tns aliases scanning");
+		
+		file = g_strdup_printf("%s/network/admin/tnsnames.ora", tnsdir);
+		
+		
+	} else {
+		
+		file = g_strdup_printf("%s/tnsnames.ora", tnsdir);
+		//free (tnsdir);
+	}
+
+	ioc = g_io_channel_new_file (file, "r", &err);
+	if (!ioc)
+	{
+		GSQL_DEBUG ("failed to open file [%s]: %s", file, err->message);
+		return store;
+	}
+	GSQL_DEBUG ("TNS file: %s", file);
+
+	while (reading)
+	{
+		gsize bytes_read;
+		GIOStatus status;
+		guint i = 0;
+		guint j, n;
+		GtkTreeIter iter;
+		
+		memset (buffer, 0, 8192);
+
+		status = g_io_channel_read_chars (ioc, buffer,
+										  8192, &bytes_read,
+										  &err);
+
+		switch (status)
+		{
+			case G_IO_STATUS_EOF:
+				GSQL_DEBUG ("TNS. Opening file: G_IO_STATUS_EOF");
+				reading = FALSE;
+				break;
+				
+			case G_IO_STATUS_NORMAL:
+				GSQL_DEBUG ("TNS. Opening file: G_IO_STATUS_NORMAL");
+				
+				if (bytes_read == 0)
+					continue;
+				
+				c = buffer;
+				while (i++ < bytes_read)
+				{
+					if (*c == '#') // comment
+						while ((*c++ != '\n') && (i++ < bytes_read));
+						
+					while((g_ascii_isspace(*c)) && (i++ < bytes_read)) c++;
+					
+					j = 0;
+					memset (alias, 0, 256);
+					
+					while ((g_ascii_isalnum(*c) || (*c == '.') || (*c == '_')) && 
+						   (i++ < bytes_read) &&  (j < 256))
+					{
+						alias[j++] = *c++;							
+					}
+					
+					if (!j)
+						break;
+					
+					GSQL_DEBUG ("Alias found: [%s]", alias);
+					gtk_list_store_append (store, &iter);
+					gtk_list_store_set (store, &iter,
+										0, alias, -1);
+					
+					// looking for the first braket
+					while (*c != '(' && i < bytes_read )
+					{
+						c++; i++;
+					}
+					
+					n = 1; c++;
+					// looking for closing braket for the first one
+					while ( *c && n && i < bytes_read)
+					{
+						//GSQL_DEBUG ("I=[%d]", i);
+						i++;
+						if (*c == '(') n++;
+						if (*c == ')') n--;
+						c++;
+					}
+
+					c++;
+				}
+				
+				break;
+				
+			case G_IO_STATUS_AGAIN:
+				GSQL_DEBUG ("TNS. Opening file: G_IO_STATUS_AGAIN");
+				continue;
+				
+			case G_IO_STATUS_ERROR:
+			default:
+				GSQL_DEBUG ("TNS.Opening file: G_IO_STATUS_ERROR");
+				
+				g_io_channel_unref (ioc);
+				
+				return store;
+		}
+	}
+	
+	g_io_channel_unref (ioc);
+	
+	g_free (file);
+	
+	return store;
+}
 
 
 
