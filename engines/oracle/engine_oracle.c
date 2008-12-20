@@ -172,21 +172,30 @@ engine_logon_widget_create ()
 	GtkWidget *oracle_option_hbox;
 	GtkWidget *connect_as;
 	GtkListStore *aliases;
+	GtkEntryCompletion *compl;
 
 	table = gtk_table_new (5, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
 	gtk_widget_show (table);
 	
-	aliases = engine_oracle_get_tns_aliases();
+	aliases = engine_oracle_get_tns_aliases ();
+	
+	compl = gtk_entry_completion_new ();
+	gtk_entry_completion_set_model (compl, GTK_TREE_MODEL (aliases));
+	gtk_entry_completion_set_text_column (compl, 0);
+	
+	gtk_entry_completion_set_popup_completion (compl, FALSE);
+	gtk_entry_completion_set_inline_completion (compl, TRUE);
         
 	database_name = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (aliases), 0);
-//		gtk_combo_box_entry_new_text ();
+
 	gtk_widget_show (database_name);
 	gtk_table_attach (GTK_TABLE (table), database_name, 1, 2, 1, 2,
 						(GtkAttachOptions) (GTK_FILL),
 						(GtkAttachOptions) (GTK_FILL), 0, 0);
 	database_name_entry = gtk_bin_get_child(GTK_BIN(database_name));
 	gtk_entry_set_activates_default(GTK_ENTRY (database_name_entry), TRUE);
+	gtk_entry_set_completion (GTK_ENTRY (database_name_entry), compl);
         
 	label = gtk_label_new (_("Database name"));
 	gtk_widget_show (label);
