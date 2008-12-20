@@ -1,12 +1,9 @@
-/***************************************************************************
- *            engine_conf.c
+/* 
+ * GSQL - database development tool for GNOME
  *
- *  Thu Sep  6 23:42:52 2007
- *  Copyright  2007  Taras Halturin
- *  <halturin@gmail.com>
- ****************************************************************************/
-
-/*
+ * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ *
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -21,6 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
 
 #include <libgsql/conf.h>
 #include <libgsql/common.h>
@@ -232,7 +230,7 @@ engine_conf_widget_create ()
     
 	env_all = gsql_conf_value_get_string (GSQLE_CONF_ORACLE_ENV);
 	
-	if (env_all)
+	if (env_all != NULL)
 	{	
 		env_list = g_strsplit (env_all, ",", 100);
 	

@@ -3,9 +3,9 @@
 ## If you don't want it to overwrite it,
 ## 	Please disable it in the Anjuta project configuration
 
-SUBDIRS = po libgsql src pixmaps data doc engines plugins
+SUBDIRS = po libgsql src pixmaps doc engines plugins
 
-gsqldocdir = ${datadir}/doc/gsql
+gsqldocdir = @PACKAGE_DOC_DIR@
 gsqldoc_DATA = \
 	AUTHORS 
 

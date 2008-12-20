@@ -1,4 +1,4 @@
-.\" Copyright (c) 2007, Taras Halturin <halturin@gmail.com>
+.\" Copyright (c) 2006-2008, Taras Halturin <halturin@gmail.com>
 .\"
 .\" This is free documentation; you can redistribute it and/or
 .\" modify it under the terms of the GNU General Public License as
@@ -37,8 +37,13 @@ such as Oracle, MySQL, PostgreSQL and others
 The following options are provided by \fBGSQL\fR using the standard GNU
 command line syntax:
 .TP
-.B \-d, \-\-debug
+.B \-\-enable\-debug
 Print debugging messages to stdout.
+
+.TP
+.B \-\-enable\-trace
+Print tracing messages to stdout.
+
 
 .TP
 .B \-h, \-\-help

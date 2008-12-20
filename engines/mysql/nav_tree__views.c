@@ -1,12 +1,9 @@
-/***************************************************************************
- *            nav_tree__views.c
+/* 
+ * GSQL - database development tool for GNOME
  *
- *  Sun Oct 14 20:59:11 2007
- *  Copyright  2007  Taras Halturin
- *  <halturin@gmail.com>
- ****************************************************************************/
-
-/*
+ * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ *
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or

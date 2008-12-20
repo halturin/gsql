@@ -1,26 +1,24 @@
-/***************************************************************************
- *            gsql.c
+/* 
+ * GSQL - database development tool for GNOME
  *
- *  Tue Jul 25 08:42:58 2006
- *  Copyright  2006  Halturin Taras
- *  halturin@gmail.com
- ****************************************************************************/
-
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -274,7 +272,8 @@ create_dialog_logon (void)
 	button = gtk_dialog_add_button(GTK_DIALOG(dialog_logon), 
 								   GTK_STOCK_OK, 
 								   GTK_RESPONSE_OK);	
-	
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog_logon), GTK_RESPONSE_OK);
 	gtk_window_set_resizable (GTK_WINDOW (dialog_logon), FALSE);
         
 	dialog_vbox = GTK_DIALOG (dialog_logon)->vbox;
@@ -330,12 +329,6 @@ create_dialog_logon (void)
 	gsql_engines_foreach (gsql_dialog_logon_make_widget, dialog_vbox);
 	
 	gtk_combo_box_set_active (GTK_COMBO_BOX (engine_name), 0);
-	
-	
-	// I don't know why, but it doesn't work. :(
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-	gtk_widget_grab_default (button);
-	//
 
 	return dialog_logon;
 }

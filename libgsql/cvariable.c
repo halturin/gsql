@@ -1,12 +1,9 @@
-/***************************************************************************
- *            cvariable.c
+/* 
+ * GSQL - database development tool for GNOME
  *
- *  Fri Aug 22 00:54:13 2008
- *  Copyright  2008  Taras Halturin
- *  <halturin@gmail.com>
- ****************************************************************************/
-
-/*
+ * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ *
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -21,6 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
 
 #include "cvariable.h"
 #include "common.h"

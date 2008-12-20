@@ -174,9 +174,9 @@ fi
 dnl Subst PACKAGE_DOC_DIR.
 dnl NO_PREFIX_PACKAGE_DOC_DIR="${packagedocdir}"
 dnl AC_SUBST(NO_PREFIX_PACKAGE_DOC_DIR)
-PACKAGE_DOC_DIR="${packageprefix}/${packagedocdir}"
+PACKAGE_DOC_DIR="${packageprefix}/${packagedatadir}/${packagedocdir}"
 AC_SUBST(PACKAGE_DOC_DIR)
-AC_DEFINE_UNQUOTED(PACKAGE_DOC_DIR, "${packageprefix}/${packagedocdir}", [Doc dir])
+AC_DEFINE_UNQUOTED(PACKAGE_DOC_DIR, "${packageprefix}/${packagedatadir}/${packagedocdir}", [Doc dir])
 
 
 dnl Subst PACKAGE_PIXMAPS_DIR.

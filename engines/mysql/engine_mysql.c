@@ -1,26 +1,24 @@
-/***************************************************************************
- *            engine_mysql.c
+/* 
+ * GSQL - database development tool for GNOME
  *
- *  Tue Nov  7 04:49:20 2006
- *  Copyright  2006  Halturin Taras
- *  halturin@gmail.com
- ****************************************************************************/
-
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
  
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -118,6 +116,7 @@ engine_logon_widget_new ()
 	GtkWidget *table;
 	GtkWidget *hostname;
 	GtkWidget *database_name;
+	GtkWidget *database_name_entry;
 	GtkWidget *username;
 	GtkWidget *password;
 	GtkWidget *label;
@@ -134,6 +133,7 @@ engine_logon_widget_new ()
 						(GtkAttachOptions) (0), 0, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (hostname), 128);
 	gtk_entry_set_invisible_char (GTK_ENTRY (hostname), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (hostname), TRUE);
         
 	label = gtk_label_new (_("Hostname"));
 	gtk_widget_show (label);
@@ -149,7 +149,9 @@ engine_logon_widget_new ()
 	gtk_table_attach (GTK_TABLE (table), database_name, 1, 2, 2, 3,
 						(GtkAttachOptions) (GTK_FILL),
 						(GtkAttachOptions) (GTK_FILL), 0, 0);
-        
+	database_name_entry = gtk_bin_get_child(GTK_BIN(database_name));
+	gtk_entry_set_activates_default(GTK_ENTRY (database_name_entry), TRUE);
+
 	label = gtk_label_new (_("Database name"));
 	gtk_widget_show (label);
 		
@@ -166,6 +168,7 @@ engine_logon_widget_new ()
 						(GtkAttachOptions) (0), 0, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (username), 32);
 	gtk_entry_set_invisible_char (GTK_ENTRY (username), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (username), TRUE);
         
 	label = gtk_label_new (_("Username"));
 	gtk_widget_show (label);
@@ -183,6 +186,7 @@ engine_logon_widget_new ()
 	gtk_entry_set_max_length (GTK_ENTRY (password), 32);
 	gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
 	gtk_entry_set_invisible_char (GTK_ENTRY (password), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (password), TRUE);
     
 	label = gtk_label_new (_("Password"));
 	gtk_widget_show (label);

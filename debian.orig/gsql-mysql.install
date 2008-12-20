@@ -1,6 +1,0 @@
-debian/tmp/etc/gconf/schemas/gsql-engine-mysql.schemas
-debian/tmp/usr/lib/gsql/engines/libgsqlengine_mysql*.so*
-debian/tmp/usr/share/pixmaps/gsql/mysql/*
-#debian/tmp/usr/share/gsql/glade/mysql/*
-debian/tmp/usr/share/gsql/ui/mysql/*
-#debian/tmp/usr/share/gsql/template/mysql/*

@@ -1,12 +1,9 @@
-/***************************************************************************
- *            navigation.c
+/* 
+ * GSQL - database development tool for GNOME
  *
- *  Tue Sep 18 00:01:46 2007
- *  Copyright  2007  Taras Halturin
- *  <halturin@gmail.com>
- ****************************************************************************/
-
-/*
+ * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ *
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -21,6 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
 
 #include "session.h"
 #include "navigation.h"
@@ -354,7 +352,7 @@ gsql_navigation_set_root (GSQLNavigation *navigation, gchar *stock, gchar *owner
 	g_signal_connect (G_OBJECT(navigation->private->navtree), "cursor-changed",
 					  	G_CALLBACK(on_navigation_cursor_changed),
 					    navigation);
-	g_signal_connect (G_OBJECT(navigation->private->navtree), "button-press-event",
+	g_signal_connect (G_OBJECT(navigation->private->navtree), "event-after",
 						G_CALLBACK (on_navigation_button_press),
 						navigation);
 	g_signal_connect (G_OBJECT(navigation->private->navtree), "key-press-event",
@@ -863,6 +861,9 @@ on_navigation_button_press (GtkWidget *tv, GdkEventButton *event,
 {
 	GSQL_TRACE_FUNC;
 	
+	if (event->type != GDK_BUTTON_PRESS)
+	  return;
+
 	GtkTreePath *path;
 	GtkTreeSelection *selection;
 	
