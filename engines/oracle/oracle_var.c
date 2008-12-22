@@ -182,6 +182,10 @@ oracle_variable_init(GSQLCursor *cursor, GSQLVariable *variable,
 			GSQL_DEBUG ("Variable = DEFAULT (type=[%d])", spec_var->data_type);
 			spec_var->variable_len = FALSE;
 			variable->value_type = GSQL_TYPE_UNSUPPORTED;
+			GSQL_FIXME;
+			// cast to vchar. fix it later.
+			spec_var->data_type = SQLT_VCS;
+			
 			variable->value_length = 4000;
 			variable->value = spec_var->data = g_malloc0 (variable->value_length + 1);
 	}

@@ -1,0 +1,18 @@
+The mission of GSQL opensource project is to supply database developers with an universal tool platform tailored against market leading DBMS by providing:
+
+    * native DBMS access (not via ODBC layer)
+    * databased objects organised into a tree
+    * intuitive and easy database objects handling
+    * syntax highlighting
+    * query plan builder
+    * query constructor
+    * query result export (in XML, CSV, HTML)
+    * debugger (depending on RDBMS)
+    * query planner control (depending on RDBMS)
+    * database administration functions
+    * database system monitoring
+    * GNOME integration (via gconf and gnome-keyring)
+    * plugin: data migration wizard for various RDBMS 
+
+Architecturely GSQL is designed so that the database interfaces are arranged into modules linked to the platform by engine API. It allows to implement new engines independently. GSQL provides developers with a rich API. To extend the functions of GSQL engines, we suggest loadable plugins API.
+
