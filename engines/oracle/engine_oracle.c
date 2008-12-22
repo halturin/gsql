@@ -24,7 +24,7 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 #include <stdlib.h>
-
+#include <strings.h>
 
 #define ENGINE_MAJOR_VER 0
 #define ENGINE_MINOR_VER 1
@@ -342,6 +342,8 @@ engine_oracle_get_tns_aliases ()
 		guint i = 0;
 		guint j, n;
 		GtkTreeIter iter;
+		const char sym[] = ".-_";
+
 		
 		memset (buffer, 0, 8192);
 
@@ -363,25 +365,33 @@ engine_oracle_get_tns_aliases ()
 					continue;
 				
 				c = buffer;
+				
+				
 				while (i++ < bytes_read)
 				{
-					if (*c == '#') // comment
-						while ((*c++ != '\n') && (i++ < bytes_read));
+				
+					while (!(g_ascii_isalnum(*c) || (index(sym, *c) ? TRUE:FALSE)) && 
+						   (i < bytes_read))
+					{
+						if (*c == '#') // comment
+							while ((*c != '\n') && (i < bytes_read))  { c++; i++; }
 						
-					while((g_ascii_isspace(*c)) && (i++ < bytes_read)) c++;
+						c++; i++;
+					}
 					
 					j = 0;
 					memset (alias, 0, 256);
 					
-					while ((g_ascii_isalnum(*c) || (*c == '.') || (*c == '_')) && 
-						   (i++ < bytes_read) &&  (j < 256))
+					while ((g_ascii_isalnum(*c) || (index(sym, *c) ? TRUE:FALSE)) && 
+						   (i < bytes_read) &&  (j < 256))
 					{
-						alias[j++] = *c++;							
+						alias[j++] = *c++;
+						i++;
 					}
-					
+
 					if (!j)
 						break;
-					
+
 					GSQL_DEBUG ("Alias found: [%s]", alias);
 					gtk_list_store_append (store, &iter);
 					gtk_list_store_set (store, &iter,
@@ -392,8 +402,8 @@ engine_oracle_get_tns_aliases ()
 					{
 						c++; i++;
 					}
-					
-					n = 1; c++;
+
+					n = 1; c++; i++;
 					// looking for closing braket for the first one
 					while ( *c && n && i < bytes_read)
 					{

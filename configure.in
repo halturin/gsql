@@ -225,7 +225,6 @@ plugins/vte/Makefile
 plugins/exporter/Makefile
 plugins/runner/Makefile
 pixmaps/Makefile
-data/Makefile
 doc/Makefile
 doc/gsql.1
 gsql.desktop

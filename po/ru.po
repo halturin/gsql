@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GSQL 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-12 22:49+0300\n"
+"POT-Creation-Date: 2008-12-22 20:44+0300\n"
 "PO-Revision-Date: 2006-07-24 16:15+0500\n"
 "Last-Translator: Halturin Taras <halturin@gmail.com>\n"
 "Language-Team: ru <ru@li.org>\n"
@@ -37,19 +37,19 @@ msgstr ""
 msgid "Character set was changed to '%s'"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:136
+#: engines/mysql/engine_mysql.c:138
 msgid "Hostname"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:151 engines/oracle/engine_oracle.c:181
+#: engines/mysql/engine_mysql.c:155 engines/oracle/engine_oracle.c:200
 msgid "Database name"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:168 engines/oracle/engine_oracle.c:198
+#: engines/mysql/engine_mysql.c:173 engines/oracle/engine_oracle.c:218
 msgid "Username"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:185 engines/oracle/engine_oracle.c:215
+#: engines/mysql/engine_mysql.c:191 engines/oracle/engine_oracle.c:236
 msgid "Password"
 msgstr ""
 
@@ -305,11 +305,11 @@ msgstr ""
 msgid "Find object"
 msgstr ""
 
-#: engines/oracle/engine_oracle.c:237
+#: engines/oracle/engine_oracle.c:258
 msgid "Connect as "
 msgstr ""
 
-#: engines/oracle/engine_oracle.c:251
+#: engines/oracle/engine_oracle.c:272
 msgid "Options"
 msgstr ""
 
@@ -976,7 +976,7 @@ msgstr ""
 msgid "Copy text"
 msgstr ""
 
-#: libgsql/workspace.c:1098 src/gsql.c:384
+#: libgsql/workspace.c:1098 src/gsql.c:400
 msgid "Select all"
 msgstr ""
 
@@ -1142,19 +1142,19 @@ msgstr ""
 msgid "The command line was not set properly"
 msgstr ""
 
-#: src/gsql.c:252 src/main.c:114
+#: src/gsql.c:273 src/main.c:114
 msgid "Engines not found at "
 msgstr ""
 
-#: src/gsql.c:263
+#: src/gsql.c:284
 msgid "Database logon"
 msgstr ""
 
-#: src/gsql.c:285
+#: src/gsql.c:307
 msgid "Choose the engine:"
 msgstr ""
 
-#: src/gsql.c:358
+#: src/gsql.c:374
 msgid "Close session(s)"
 msgstr ""
 
@@ -1417,10 +1417,14 @@ msgid "Open new session"
 msgstr ""
 
 #: src/gsqlmenu.c:59
-msgid "Navigator"
+msgid "Full Screen"
 msgstr ""
 
 #: src/gsqlmenu.c:60
+msgid "Navigator"
+msgstr ""
+
+#: src/gsqlmenu.c:61
 msgid "Messages"
 msgstr ""
 
@@ -1432,7 +1436,7 @@ msgstr ""
 msgid "Charset"
 msgstr ""
 
-#: src/gsqlmenucb.c:593
+#: src/gsqlmenucb.c:639
 msgid ""
 "GSQL is an integrated database development tool. This application developing "
 "for the GNOME Desktop"
