@@ -71,3 +71,10 @@ Description: MySQL engine for GSQL
  The GSQL can works with MySQL server, and this module
  is necessary for that.
 
+Package: gsql-oracle-engine
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, gconf2,
+Description: Oracle engine for GSQL
+ The GSQL can works with Oracle server, and this module
+ is necessary for that.
+

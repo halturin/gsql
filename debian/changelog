@@ -1,8 +1,8 @@
-gsql (0.2.0+svn-1) unstable; urgency=low
+gsql (0.2.1-1) stable; urgency=low
 
-  * SVN snapshot.
+  * Bugfix release.
 
- -- Dmitry E. Oboukhov <unera@debian.org>  Thu, 04 Dec 2008 14:40:21 +0300
+ -- Taras Halturin <halturin@gmail.com>  Tue, 23 Dec 2008 00:09:08 +0300
 
 gsql (0.2.0-1) unstable; urgency=low
 

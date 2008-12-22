@@ -12,6 +12,8 @@ DEB_CONFIGURE_EXTRA_FLAGS	:=	\
 	--docdir=/usr/share/doc/gsql \
 	-disable-scrollkeeper 
 
+DEB_DH_SHLIBDEPS_ARGS_gsql-oracle-engine += --dpkg-shlibdeps-params=--ignore-missing-info
+
 DEB_INSTALL_CHANGELOGS_ALL	:=
 DEB_INSTALL_DOCS_ALL		:=
 
