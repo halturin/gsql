@@ -1,11 +1,12 @@
 
-SUBDIRS = \
-	exporter \
-	runner
+SUBDIRS = 
+##\
+##	exporter \
+##	runner
 
-if HAVE_PLUGIN_VTE
-SUBDIRS += vte
-endif
+##if HAVE_PLUGIN_VTE
+##SUBDIRS += vte
+##endif
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = gsql-plugins.schemas

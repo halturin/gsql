@@ -1,0 +1,20 @@
+<gconfschemafile>
+  <schemalist>
+
+   <schema>
+      <key>/schemas/apps/gsql/engines/example/test_bool</key>
+      <applyto>/apps/gsql/engines/example/test_bool</applyto>
+      <owner>gsql</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short></short>
+        <long>
+        </long>
+      </locale>
+    </schema>
+    
+  </schemalist>
+</gconfschemafile>
+    
+ 

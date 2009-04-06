@@ -1,13 +1,13 @@
 
-SUBDIRS =
+SUBDIRS = example
 
-if GSQL_ENGINE_MYSQL
-SUBDIRS += mysql
-endif
+##if GSQL_ENGINE_MYSQL
+## SUBDIRS += mysql
+##endif
 
-if GSQL_ENGINE_ORACLE
-SUBDIRS += oracle
-endif
+##if GSQL_ENGINE_ORACLE
+## SUBDIRS += oracle
+##endif
 
 INCLUDES = 
 

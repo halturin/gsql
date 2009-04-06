@@ -216,6 +216,8 @@ libgsql/Makefile
 libgsql/libgsql.pc
 src/Makefile
 engines/Makefile
+engines/example/Makefile
+engines/example/pixmaps/Makefile
 engines/oracle/Makefile
 engines/oracle/pixmaps/Makefile
 engines/mysql/Makefile
