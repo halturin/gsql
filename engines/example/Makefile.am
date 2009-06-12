@@ -4,7 +4,9 @@ SUBDIRS = pixmaps
 engine_gladedir = $(PACKAGE_GLADE_DIR)/example
 engine_uidir = $(PACKAGE_UI_DIR)/example
 
-engine_glade_DATA = 
+engine_glade_DATA = \
+	widgets/logon.glade
+
 engine_ui_DATA = 
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@

@@ -78,8 +78,8 @@ engine_load (GSQLEngine *engine)
 	
 	
 	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/example");
-	engine_stock_init();
-	engine_menu_init (engine);
+	// engine_stock_init();
+	//engine_menu_init (engine);
 	
     return TRUE;
 }

@@ -3,9 +3,9 @@ dnl Created by Anjuta - will be overwritten
 dnl If you don't want it to overwrite it,
 dnl 	Please disable it in the Anjuta project configuration
 
-AC_INIT(gsql, 0.2.1, http://gsql.org)
+AC_INIT(gsql, 0.2.5, http://gsql.org)
 
-AM_INIT_AUTOMAKE(gsql, 0.2.1)
+AM_INIT_AUTOMAKE(gsql, 0.2.5)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
