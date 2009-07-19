@@ -59,7 +59,7 @@ engine_load (GSQLEngine *engine)
 	engine->info.major_version = ENGINE_MAJOR_VER;
 	engine->info.minor_version = ENGINE_MINOR_VER;
 
-	engine->file_logo = "example/logo.png";
+	engine->file_logo = "example/example.png";
 	engine->stock_logo = "example-logo";//GSQLE_EXAMPLE_STOCK_EXAMPLE;
 //	engine->session_open = engine_session_open;
 

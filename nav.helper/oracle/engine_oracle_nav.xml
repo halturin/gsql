@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <requires lib="gsql" version="0.2.5"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GSQLNavigation" id="oracle_nav">
+    <navitems>
+    	<navitem type="GSQLNavigationItem">
+			<property name="id">SESSION_PRIVILEGES_ID</property>
+			<property name="stock_name">GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES</property>
+			<property name="name" translatable="yes">"Session Privileges"</property>
+			<property name="sql" context="10g">
+				select privilege from session_privs where privilege like :name order by privilege
+			</property>
+
+		</navitem>
+		
+	</navitems>
+</interface>

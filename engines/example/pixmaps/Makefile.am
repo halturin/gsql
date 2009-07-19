@@ -7,7 +7,7 @@
 example_engine_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@/example
 
 example_engine_pixmaps_DATA = \
-	logo.png
+	example.png
 
 
 EXTRA_DIST = $(example_engine_pixmaps_DATA)

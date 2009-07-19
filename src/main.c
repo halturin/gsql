@@ -40,12 +40,23 @@
 #include "gsql.h"
 
 
+static gchar *sql_files = NULL;
+static GList *files = NULL;
+
 static GOptionEntry opts[] =
 {
-	{ "enable-trace", 0, 0, G_OPTION_ARG_NONE, &gsql_opt_trace_enable, 
-						N_("Enable tracing information (useful for bugs hunting)"), 0 },
-	{ "enable-debug", 0, 0, G_OPTION_ARG_NONE, &gsql_opt_debug_enable, 
-						N_("Enable debugging information (useful for bugs hunting)"), 0 },
+	{	"enable-trace", 0, 0, 
+		G_OPTION_ARG_NONE, &gsql_opt_trace_enable, 
+		N_("Enable tracing information (useful for bugs hunting)"), NULL },
+	
+	{ 	"enable-debug", 0, 0, 
+		G_OPTION_ARG_NONE, &gsql_opt_debug_enable, 
+		N_("Enable debugging information (useful for bugs hunting)"), NULL },
+	
+	{	G_OPTION_REMAINING, 0, 0, 
+		G_OPTION_ARG_FILENAME_ARRAY, &sql_files, 
+		NULL, NULL },
+	
 	{ NULL }
 };
 
