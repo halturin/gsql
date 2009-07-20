@@ -59,11 +59,32 @@ on_file_new_sql_activate (GtkMenuItem *mi, gpointer data)
 
 }
 
+
+#include <libgsql/navtree.h>
 void
 on_file_open_activate (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC;
 
+	GtkBuilder *build;
+	GError *err = NULL;
+	GSQLNavTree *nt;
+
+	nt = gsql_navtree_new();
+	
+	build = gtk_builder_new();
+
+	if (gtk_builder_add_from_file (build, 
+	                             "/home/fantom/devel/Projects/gsql/nav.helper/oracle/engine_oracle_nav.xml",
+	                             &err)	== 0)
+	{
+		GSQL_DEBUG ("ERROR: %s", err->message);
+
+
+	}
+
+	
+/*
 	GtkWidget *chooser;
 	gint ret;
 	gchar *file;
@@ -129,7 +150,7 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 	}
 	
 	gtk_widget_destroy (chooser); 
-
+*/
 }
 
 void

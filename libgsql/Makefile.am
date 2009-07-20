@@ -42,7 +42,9 @@ libgsql_la_SOURCES = \
 	type_datetime.c \
 	type_datetime.h \
 	keyring.c \
-	keyring.h
+	keyring.h \
+	navtree.c \
+	navtree.h
 
 libgsql_la_LIBADD = \
 	$(PACKAGE_LIBS)
