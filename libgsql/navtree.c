@@ -160,26 +160,12 @@ navtree_parse_data_start (GMarkupParseContext *context,
 {
 	SubParserData *data = (SubParserData*)user_data;
 
-	if (strcmp (element_name, "query") == 0)
-	{
-		int i;
+	int i;
 
-
+		g_debug ("element \"\"%s\"\" started", element_name);
 
 		for (i = 0; names[i]; i++)
-			if (strcmp (names[i], "version") == 0)
-			{
-				g_debug ("tag attr 'version' found");
-
-			} else if (strcmp (names[i], "type") == 0) {
-				
-				g_debug ("tag attr 'type' found");
-				
-
-			}
-
-	}
-
+			g_debug ("\tattr: %s", names[i]);
 
 }
 
@@ -191,6 +177,7 @@ navtree_parse_data_end (GMarkupParseContext *context,
 {
 	SubParserData *data = (SubParserData*)user_data;
 
+	g_debug ("element \"\"%s\"\" ended", element_name);
 }
 
 
@@ -229,10 +216,12 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 {
 	SubParserData *parser_data;
 
-	g_debug ("parse custom tag: %s", tagname);
+	
 	
 	if (strcmp (tagname, "navitem") == 0)
 	{
+		g_debug ("start parse custom tag NAVITEM");
+		
 		parser_data = g_slice_new0 (SubParserData);
 		parser_data->builder = builder;
 		parser_data->object = G_OBJECT(buildable);
@@ -242,7 +231,7 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 
 		return TRUE;
 
-	} else 
+	} else	
 		g_warning ("Unknown custom tag: %s", tagname);
 		
 
@@ -258,5 +247,5 @@ gsql_navtree_buildable_custom_tag_end	(GtkBuildable     *buildable,
 							gpointer		  user_data)
 {
 	
-	
+	g_debug ("end parse custom tag: %s", tagname);
 }
