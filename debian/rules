@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-# DEB_TAR_SRCDIR=gsql-0.2.0
+# DEB_TAR_SRCDIR=gsql-0.2.5
 # include /usr/share/cdbs/1/rules/tarball.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
@@ -13,6 +13,8 @@ DEB_CONFIGURE_EXTRA_FLAGS	:=	\
 	-disable-scrollkeeper 
 
 DEB_DH_SHLIBDEPS_ARGS_gsql-oracle-engine += --dpkg-shlibdeps-params=--ignore-missing-info
+
+DEB_DH_INSTALLMIME_ARGS += mime/gsql.xml
 
 DEB_INSTALL_CHANGELOGS_ALL	:=
 DEB_INSTALL_DOCS_ALL		:=
