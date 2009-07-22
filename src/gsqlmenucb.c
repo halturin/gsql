@@ -70,7 +70,10 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 	GError *err = NULL;
 	GSQLNavTree *nt;
 
-	nt = gsql_navtree_new();
+	//nt = gsql_navtree_new();
+
+	/*FIXME: i don't know how to register my own type without manual calling this func*/
+	gsql_navtree_get_type();
 	
 	build = gtk_builder_new();
 

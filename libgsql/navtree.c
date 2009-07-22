@@ -34,7 +34,26 @@ typedef struct {
 	GValue		*values;
 } SubParserData;
 
+enum {
+	PROP_0,
+	PROP_CHILD_ID,
+	PROP_STOCK_NAME,
+	PROP_NAME
+};
+
 static void gsql_navtree_class_init (GSQLNavTreeClass *klass);
+
+static void gsql_navtree_get_property (GObject	*object,
+                                       guint	 prop_id,
+                                       GValue	*value,
+                                       GParamSpec	*pspec);
+
+static void gsql_navtree_set_property (GObject	*object,
+                                       guint	 prop_id,
+                                       const GValue	*value,
+                                       GParamSpec	*pspec);
+
+
 static void gsql_navtree_init 		(GSQLNavTree *obj);
 static void gsql_navtree_finalize 	(GObject *obj);
 static void gsql_navtree_dispose 	(GObject *obj);
@@ -54,6 +73,10 @@ static void gsql_navtree_buildable_custom_tag_end	(GtkBuildable     *buildable,
 							const gchar      *tagname,
 							gpointer		  user_data);
 
+static void gsql_navtree_buildable_add_child	(GtkBuildable	*buildable,
+							GtkBuilder		*builder,
+							GObject			*child,
+							const gchar		*type);
 
 static GtkBuildableIface *buildable_parent_iface = NULL;
 
@@ -62,37 +85,6 @@ static GObjectClass *parent_class;
 G_DEFINE_TYPE_WITH_CODE (GSQLNavTree, gsql_navtree, G_TYPE_OBJECT,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
                                                 gsql_navtree_buildable_interface_init))
-
-
-
-/*GType
-gsql_navtree_get_type ()
-{
-	static GType obj_type = 0;
-	
-	if (!obj_type)
-	{
-		static const GTypeInfo obj_info = 
-		{
-			sizeof (GSQLNavTreeClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gsql_navtree_class_init,
-			(GClassFinalizeFunc) NULL,
-			NULL,
-			sizeof (GSQLNavTree),
-			0,
-			(GInstanceInitFunc) gsql_navtree_init,
-			NULL
-		};
-		obj_type = g_type_register_static (G_TYPE_OBJECT,
-										   "GSQLNavTree", &obj_info, 0);
-		
-	}
-	
-	return obj_type;	
-}*/
-
 
 
 GSQLNavTree *
@@ -137,9 +129,101 @@ gsql_navtree_class_init (GSQLNavTreeClass *klass)
 	
 	g_return_if_fail (klass != NULL);
 	obj_class = (GObjectClass *) klass;
-	
+
+	obj_class->get_property = gsql_navtree_get_property;
+	obj_class->set_property = gsql_navtree_set_property;
 	obj_class->finalize = gsql_navtree_finalize;
+
+	g_object_class_install_property (obj_class,
+	                                 PROP_CHILD_ID,
+	                                 g_param_spec_uint ("child-id",
+	                                                    "Child ID",
+	                                                    "Set child id for NavTree item",
+	                                                    1, 65535, 1,
+	                                                    G_PARAM_READWRITE));
+
+	g_object_class_install_property (obj_class,
+	                                 PROP_STOCK_NAME,
+	                                 g_param_spec_string ("stock-name",
+	                                                    "Stock name",
+	                                                    "Set iconset for NavTree item",
+	                                                    NULL,
+	                                                    G_PARAM_READWRITE));
+
+	g_object_class_install_property (obj_class,
+	                                 PROP_NAME,
+	                                 g_param_spec_string ("name",
+	                                                    "Name",
+	                                                    "Set name for NavTree item",
+	                                                    NULL,
+	                                                    G_PARAM_READWRITE));
 	
+}
+
+static void 
+gsql_navtree_get_property (GObject	*object,
+                                       guint	 prop_id,
+                                       GValue	*value,
+                                       GParamSpec	*pspec)
+{
+	GSQLNavTree *nt;
+
+	nt = GSQL_NAVTREE (object);
+	
+	g_debug ("navtree get property");
+
+	switch (prop_id)
+	{
+		case PROP_CHILD_ID:
+			g_debug ("get prop child-id");
+			break;
+
+		case PROP_STOCK_NAME:
+			g_debug ("get prop stock-name");
+			break;
+
+		case PROP_NAME:
+			g_debug ("get prop name");
+			break;
+
+		default:
+			g_debug ("unknown property type: %d", prop_id);
+
+	}
+
+}
+
+static void 
+gsql_navtree_set_property (GObject	*object,
+                                       guint	 prop_id,
+                                       const GValue	*value,
+                                       GParamSpec	*pspec)
+{
+	GSQLNavTree *nt;
+	
+	nt = GSQL_NAVTREE (object);
+	
+	g_debug ("navtree set property");
+
+	switch (prop_id)
+	{
+		case PROP_CHILD_ID:
+			g_debug ("set prop child-id");
+			break;
+
+		case PROP_STOCK_NAME:
+			g_debug ("set prop stock-name");
+			break;
+
+		case PROP_NAME:
+			g_debug ("set prop name");
+			break;
+
+		default:
+			g_debug ("unknown property type: %d", prop_id);
+
+	}
+
 }
 
 static void 
@@ -204,6 +288,7 @@ gsql_navtree_buildable_interface_init	(GtkBuildableIface *iface)
 {
 	iface->custom_tag_start = gsql_navtree_buildable_custom_tag_start;
 	iface->custom_tag_end = gsql_navtree_buildable_custom_tag_end;
+	iface->add_child = gsql_navtree_buildable_add_child;
 }
 
 static gboolean 
@@ -218,9 +303,9 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 
 	
 	
-	if (strcmp (tagname, "navitem") == 0)
-	{
-		g_debug ("start parse custom tag NAVITEM");
+//	if (strcmp (tagname, "navitem") == 0)
+//	{
+		g_debug ("start parse custom tag: %s", tagname);
 		
 		parser_data = g_slice_new0 (SubParserData);
 		parser_data->builder = builder;
@@ -231,8 +316,8 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 
 		return TRUE;
 
-	} else	
-		g_warning ("Unknown custom tag: %s", tagname);
+//	} else	
+//		g_warning ("Unknown custom tag: %s", tagname);
 		
 
 
@@ -248,4 +333,15 @@ gsql_navtree_buildable_custom_tag_end	(GtkBuildable     *buildable,
 {
 	
 	g_debug ("end parse custom tag: %s", tagname);
+}
+
+static void 
+gsql_navtree_buildable_add_child	(GtkBuildable	*buildable,
+							GtkBuilder		*builder,
+							GObject			*child,
+							const gchar		*type)
+{
+
+	g_debug ("add child (type: %s)", type);
+
 }

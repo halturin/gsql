@@ -2,86 +2,92 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GSQLNavTree" id="oracle_root_tree">
-    <navitem id="SESSION_PRIVILEGES_ID">
-    	<property name="child_id">SESSION_PRIVILEGE_ID</property>
-		<property name="stock_name">GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES</property>
-		<property name="name" translatable="yes">"Session Privileges"</property>
-		<query version="10" type="owner">
-				select version=10, type=owner, 
-				privilege from session_privs where privilege like :name order by privilege
-		</query>
-		<query version="9">
-				select version=9
-				privilege from session_privs where privilege like :name order by privilege
-		</query>
-		<query type="owner">
-				select type=owner
-				privilege from session_privs where privilege like :name order by privilege
-		</query>
-	</navitem>
-	
-	<navitem id="ENABLED_ROLES_ID">
-		<property name="child_id">ENABLED_ROLE_ID</property>
-		<property name="stock_name">GSQLE_ORACLE_STOCK_ENABLED_ROLES</property>
-		<property name="name" translatable="yes">"Enabled Roles"</property>
-		<query version="10">
-				select version=10, role from session_roles where role like :name order by role
-		</query>
-		<query version="9">
-				select version=9, role from session_roles where role like :name order by role
-		</query>
-		<child>
-				<navitem id="GRANTED_ROLES_ID">
+  <object class="GSQLNavTree" id="ROOT_ID">
+  	<child>
+		<object class="GSQLNavTree"  id="SESSION_PRIVILEGES_ID">
+			<property name="child_id">SESSION_PRIVILEGE_ID</property>
+			<property name="stock_name">GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES</property>
+			<property name="name" translatable="yes">"Session Privileges"</property>
+			<query version="10" type="owner">
+					select version=10, type=owner, 
+					privilege from session_privs where privilege like :name order by privilege
+			</query>
+			<query version="9">
+					select version=9
+					privilege from session_privs where privilege like :name order by privilege
+			</query>
+			<query type="owner">
+					select type=owner
+					privilege from session_privs where privilege like :name order by privilege
+			</query>
+		</object>
+	</child>
+	<child>
+		<object class="GSQLNavTree"  id="ENABLED_ROLES_ID">
+			<property name="child_id">ENABLED_ROLE_ID</property>
+			<property name="stock_name">GSQLE_ORACLE_STOCK_ENABLED_ROLES</property>
+			<property name="name" translatable="yes">"Enabled Roles"</property>
+			<query version="10">
+					select version=10, role from session_roles where role like :name order by role
+			</query>
+			<query version="9">
+					select version=9, role from session_roles where role like :name order by role
+			</query>
+			<child>
+				<object class="GSQLNavTree" id="GRANTED_ROLES_ID">
 					<property name="child_id">GRANTED_ROLE_ID</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_GRANTED_ROLES</property>
 					<property name="name" translatable="yes">"Granted Roles"</property>
 					<query version="10">
 						select version=10, role from session_roles where role like :name order by role
 					</query>
-				</navitem>
-		
-				<navitem id="SYSTEM_PRIVELEGES_ID">
+				</object>
+			</child>
+			<child>
+				<object class="GSQLNavTree" id="SYSTEM_PRIVELEGES_ID">
 					<property name="child_id">SYSTEM_PRIVELEGE_ID</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_SYSTEM_PRIVELEGES</property>
 					<property name="name" translatable="yes">"System Privileges"</property>
 					<query>
 						select SYSTEM PRIVILEGES role like :name order by role
 					</query>
-				</navitem>
-		
-				<navitem  id="OBJECT_PRIVELEGES_ID">
+				</object>
+			</child>
+			<child>
+				<object class="GSQLNavTree"  id="OBJECT_PRIVELEGES_ID">
 					<property name="child_id">OBJECT_PRIVELEGE_ID</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_OBJECT_PRIVELEGES</property>
 					<property name="name" translatable="yes">"Object Privileges"</property>
 					<query>
 						select OBJECT PRIVILEGES role like :name order by role
 					</query>
-				</navitem>
-		</child>
-		
-	</navitem>
+				</object>
+			</child>
 	
-	<navitem id="MY_SCHEMA_ID">
-		<property name="stock_name">GSQL_STOCK_MY_SCHEMA</property>
-		<property name="name" translatable="yes">"My Schema"</property>
+		</object>
+	</child>
+	<child>
+		<object class="GSQLNavTree" id="MY_SCHEMA_ID">
+			<property name="stock_name">GSQL_STOCK_MY_SCHEMA</property>
+			<property name="name" translatable="yes">"My Schema"</property>
 		
-		<child>
-				<navitem id="TABLES_ID">
-					<property name="stock_name">GSQL_STOCK_TABLES</property>
-					<property name="name" translatable="yes">"Tables"</property>
-					<property name="child_id">TABLE_ID</property>
+			<child>
+					<object class="GSQLNavTree" id="TABLES_ID">
+						<property name="stock_name">GSQL_STOCK_TABLES</property>
+						<property name="name" translatable="yes">"Tables"</property>
+						<property name="child_id">TABLE_ID</property>
 			
-					<query>
-						select TABLES from oracle
-					</query>
-					<query type="owner">
-						select only owner's TABLES from oracle
-					</query>
-				</navitem>
-		</child>
+						<query>
+							select TABLES from oracle
+						</query>
+						<query type="owner">
+							select only owner's TABLES from oracle
+						</query>
+					</object>
+			</child>
 
-	</navitem>
+		</object>
+	</child>
 	
   </object>
 </interface>
