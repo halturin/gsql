@@ -5,7 +5,7 @@
   <object class="GSQLNavTree" id="ROOT_ID">
   	<child>
 		<object class="GSQLNavTree"  id="SESSION_PRIVILEGES_ID">
-			<property name="child_id">SESSION_PRIVILEGE_ID</property>
+			<property name="child_id_name">SESSION_PRIVILEGE_ID</property>
 			<property name="stock_name">GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES</property>
 			<property name="name" translatable="yes">"Session Privileges"</property>
 			<query version="10" type="owner">
@@ -24,7 +24,7 @@
 	</child>
 	<child>
 		<object class="GSQLNavTree"  id="ENABLED_ROLES_ID">
-			<property name="child_id">ENABLED_ROLE_ID</property>
+			<property name="child_id_name">ENABLED_ROLE_ID</property>
 			<property name="stock_name">GSQLE_ORACLE_STOCK_ENABLED_ROLES</property>
 			<property name="name" translatable="yes">"Enabled Roles"</property>
 			<query version="10">
@@ -35,7 +35,7 @@
 			</query>
 			<child>
 				<object class="GSQLNavTree" id="GRANTED_ROLES_ID">
-					<property name="child_id">GRANTED_ROLE_ID</property>
+					<property name="child_id_name">GRANTED_ROLE_ID</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_GRANTED_ROLES</property>
 					<property name="name" translatable="yes">"Granted Roles"</property>
 					<query version="10">
@@ -45,7 +45,7 @@
 			</child>
 			<child>
 				<object class="GSQLNavTree" id="SYSTEM_PRIVELEGES_ID">
-					<property name="child_id">SYSTEM_PRIVELEGE_ID</property>
+					<property name="child_id_name">SYSTEM_PRIVELEGE_ID</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_SYSTEM_PRIVELEGES</property>
 					<property name="name" translatable="yes">"System Privileges"</property>
 					<query>
@@ -55,7 +55,7 @@
 			</child>
 			<child>
 				<object class="GSQLNavTree"  id="OBJECT_PRIVELEGES_ID">
-					<property name="child_id">OBJECT_PRIVELEGE_ID</property>
+					<property name="child_id_name">OBJECT_PRIVELEGE_ID</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_OBJECT_PRIVELEGES</property>
 					<property name="name" translatable="yes">"Object Privileges"</property>
 					<query>
@@ -75,7 +75,7 @@
 					<object class="GSQLNavTree" id="TABLES_ID">
 						<property name="stock_name">GSQL_STOCK_TABLES</property>
 						<property name="name" translatable="yes">"Tables"</property>
-						<property name="child_id">TABLE_ID</property>
+						<property name="child_id_name">TABLE_ID</property>
 			
 						<query>
 							select TABLES from oracle

@@ -42,13 +42,24 @@ typedef struct _GSQLNavTreePrivate GSQLNavTreePrivate;
 #define GSQL_IS_NAVTREE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQL_NAVTREE_TYPE))
 #define GSQL_NAVTREE_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), GSQL_NAVTREE_TYPE, GSQLNavTreeClass))
 
+
+#define GSQL_NAVTREE_REGISTER_ID(ItemID)  \
+	GQuark ItemID##_ID = g_quark_from_string (#ItemID"_ID"); \
+	g_debug ("Registration object ID: %s:%d", g_quark_to_string (ItemID##_ID), ItemID##_ID);
+	
+
+#define GSQL_NAVTREE_GET_ID_BY_NAME(ItemName) \
+	g_quark_try_string (ItemName);
+
+
 struct _GSQLNavTree
 {
 	GObject parent;
 
 	gint id;
-
-	GSQLNavTreePrivate *private;
+	guint child_id;
+	const gchar *stock_name;
+	const gchar *name;
 };
 
 struct _GSQLNavTreeClass
@@ -56,6 +67,11 @@ struct _GSQLNavTreeClass
 	GObjectClass parent;
 	
 	/* Signals */
+	void (*on_object_open) (GSQLNavTree *navtree);
+	void (*on_object_expand) (GSQLNavTree *navtree);
+	void (*on_object_event) (GSQLNavTree *navtree);
+	void (*on_object_popup) (GSQLNavTree *navtree);
+	
 };
 
 

@@ -60,6 +60,7 @@ on_file_new_sql_activate (GtkMenuItem *mi, gpointer data)
 }
 
 
+
 #include <libgsql/navtree.h>
 void
 on_file_open_activate (GtkMenuItem *mi, gpointer data)
@@ -74,6 +75,8 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 
 	/*FIXME: i don't know how to register my own type without manual calling this func*/
 	gsql_navtree_get_type();
+
+	GSQL_NAVTREE_REGISTER_ID (NAVVVVV);
 	
 	build = gtk_builder_new();
 
@@ -85,6 +88,14 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 
 
 	}
+
+	nt = gsql_navtree_new();
+
+	g_debug ("Test emit signal 'on-expand'");
+	g_signal_emit_by_name (G_OBJECT (nt), "on-expand");
+
+	g_debug ("Test emit signal 'on-popup'");
+	g_signal_emit_by_name (G_OBJECT (nt), "on-popup");
 
 	
 /*

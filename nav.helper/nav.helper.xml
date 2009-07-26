@@ -503,8 +503,9 @@
                         <child>
                           <object class="GtkLabel" id="label7">
                             <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Set callback name to handle this object type (for example open an editor of this object)</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Object handler</property>
+                            <property name="label" translatable="yes">on open</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -536,8 +537,9 @@
                         <child>
                           <object class="GtkLabel" id="label8">
                             <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Set callback name to handle shortcuts for this object type</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Event handler</property>
+                            <property name="label" translatable="yes">on event</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -563,10 +565,74 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkHBox" id="hbox7">
+                        <property name="visible">True</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkCheckButton" id="checkbutton1">
+                            <property name="label" translatable="yes">on expand</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">You may use your own expand handler instead of default action</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="entry_name3">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x2022;</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="padding">2</property>
+                        <property name="position">6</property>
+                      </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkHBox" id="hbox8">
+                        <property name="visible">True</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkCheckButton" id="checkbutton2">
+                            <property name="label" translatable="yes">on popup</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_markup">You can use custom callback to create and show your own menu</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="entry_name4">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x2022;</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="padding">2</property>
+                        <property name="position">7</property>
+                      </packing>
                     </child>
                     <child>
                       <placeholder/>
