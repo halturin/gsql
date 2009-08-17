@@ -62,6 +62,9 @@ struct _GSQLNavTree
 	// item id
 	gint id;
 
+	// able to use for DB version
+	const gchar *version;
+
 	// stock and name of the item
 	const gchar *stock_name;
 	const gchar *name;

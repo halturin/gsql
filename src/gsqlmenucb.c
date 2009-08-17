@@ -87,7 +87,7 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 
 	}
 
-	nt = gtk_builder_get_object (build, "NAVTREE_ROOT");
+	nt = gtk_builder_get_object (build, "ORACLE_ROOT");
 
 	if (nt)
 	{

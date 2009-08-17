@@ -91,5 +91,15 @@
 		</object>
 	</child>
 	
+	<child>
+		<object class="GSQLNavTree" id="ORACLE_MY_SCHEMA_V8">
+			<property name="id">ORACLE_MY_SCHEMA_V8</property>
+			<property name="stock_name">GSQL_STOCK_MY_SCHEMA</property>
+			<property name="name" translatable="yes">"My Schema"</property>
+			<property name="version">10</property>			
+
+		</object>
+	</child>
+	
   </object>
 </interface>

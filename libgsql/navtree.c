@@ -33,6 +33,7 @@ typedef struct {
 enum {
 	PROP_0,
 	PROP_ID,
+	PROP_VERSION,
 	PROP_CHILD_ID,
 	PROP_STOCK_NAME,
 	PROP_NAME
@@ -109,6 +110,7 @@ gsql_navtree_new ()
 		return NULL;
 	}
 
+	navtree->version = NULL;
 	navtree->stock_name = NULL;
 	navtree->name = NULL;
 	navtree->childs = NULL;
@@ -165,6 +167,13 @@ gsql_navtree_class_init (GSQLNavTreeClass *klass)
 	                                 g_param_spec_string ("id",
 	                                                    "Object ID",
 	                                                    "Set object id for NavTree item",
+	                                                    NULL,
+	                                                    G_PARAM_READWRITE));
+	g_object_class_install_property (obj_class,
+	                                 PROP_VERSION,
+	                                 g_param_spec_string ("version",
+	                                                    "Version",
+	                                                    "Able to use for DB version",
 	                                                    NULL,
 	                                                    G_PARAM_READWRITE));
 
@@ -248,6 +257,10 @@ gsql_navtree_get_property (GObject	*object,
 		case PROP_ID:
 			g_debug ("get prop id");
 			break;
+
+		case PROP_VERSION:
+			g_debug ("get prop version");
+			break;
 			
 		case PROP_CHILD_ID:
 			g_debug ("get prop child-id");
@@ -300,6 +313,16 @@ gsql_navtree_set_property (GObject	*object,
 				nt->id = id;
 			else
 				nt->child_id = id;
+			
+			break;
+
+		case PROP_VERSION:
+			g_debug ("set prop version");
+
+			if (nt->version)
+				g_free ((gchar *) nt->version);
+
+			nt->version = g_value_dup_string (value);
 			
 			break;
 
