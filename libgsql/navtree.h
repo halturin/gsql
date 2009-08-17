@@ -1,7 +1,7 @@
 /* 
  * GSQL - database development tool for GNOME
  *
- * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2006-2009  Taras Halturin  halturin@gmail.com
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -44,22 +44,35 @@ typedef struct _GSQLNavTreePrivate GSQLNavTreePrivate;
 
 
 #define GSQL_NAVTREE_REGISTER_ID(ItemID)  \
-	GQuark ItemID##_ID = g_quark_from_string (#ItemID"_ID"); \
-	g_debug ("Registration object ID: %s:%d", g_quark_to_string (ItemID##_ID), ItemID##_ID);
+	GQuark ItemID##_NAVTREE_ID = g_quark_from_string (#ItemID"_NAVTREE_ID"); \
+	g_debug ("Registration object ID: %s:%d", \
+				g_quark_to_string (ItemID##_NAVTREE_ID), \
+				ItemID##_NAVTREE_ID);
 	
 
 #define GSQL_NAVTREE_GET_ID_BY_NAME(ItemName) \
-	g_quark_try_string (ItemName);
+	g_quark_try_string (g_strdup_printf ("%s_NAVTREE_ID", ItemName));
 
 
 struct _GSQLNavTree
 {
 	GObject parent;
 
+	// item id
 	gint id;
-	guint child_id;
+
+	// stock and name of the item
 	const gchar *stock_name;
 	const gchar *name;
+
+	// if hasn't a child the tree will build from SQL
+	GList *queries;
+	// child id for query's items
+	guint child_id;
+		
+	// set of GSQLNavTree childs
+	GList *childs;	
+
 };
 
 struct _GSQLNavTreeClass

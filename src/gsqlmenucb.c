@@ -76,7 +76,13 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 	/*FIXME: i don't know how to register my own type without manual calling this func*/
 	gsql_navtree_get_type();
 
-	GSQL_NAVTREE_REGISTER_ID (NAVVVVV);
+	GSQL_NAVTREE_REGISTER_ID(SESSION_PRIVILEGE);
+	GSQL_NAVTREE_REGISTER_ID(ENABLED_ROLE);
+	GSQL_NAVTREE_REGISTER_ID(GRANTED_ROLE);
+	GSQL_NAVTREE_REGISTER_ID(SYSTEM_PRIVELEGE);
+	GSQL_NAVTREE_REGISTER_ID(OBJECT_PRIVELEGE);
+	GSQL_NAVTREE_REGISTER_ID(TABLE);
+	
 	
 	build = gtk_builder_new();
 

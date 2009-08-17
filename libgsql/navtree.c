@@ -1,7 +1,7 @@
 /* 
  * GSQL - database development tool for GNOME
  *
- * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2006-2009  Taras Halturin  halturin@gmail.com
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -78,7 +78,7 @@ static void gsql_navtree_buildable_custom_tag_end	(GtkBuildable     *buildable,
 							GtkBuilder       *builder,
 							GObject          *child,
 							const gchar      *tagname,
-							gpointer		  user_data);
+							gpointer		 *data);
 
 static void gsql_navtree_buildable_add_child	(GtkBuildable	*buildable,
 							GtkBuilder		*builder,
@@ -190,6 +190,7 @@ gsql_navtree_class_init (GSQLNavTreeClass *klass)
 	                                                    "Set name for NavTree item",
 	                                                    NULL,
 	                                                    G_PARAM_READWRITE));
+	
 	navtree_signals[SIG_ON_OBJ_OPEN] = 
 		g_signal_new ("on-open",
 		              G_TYPE_FROM_CLASS (obj_class),
@@ -296,6 +297,11 @@ gsql_navtree_set_property (GObject	*object,
 				nt->child_id = child_id;
 			}
 			
+			break;
+
+		case PROP_CHILD_ID:
+			g_debug ("set prop child-id. do nothing. this prop. can be set via child_id_name");
+
 			break;
 
 		case PROP_STOCK_NAME:
@@ -426,7 +432,7 @@ gsql_navtree_buildable_custom_tag_end	(GtkBuildable     *buildable,
 							GtkBuilder       *builder,
 							GObject          *child,
 							const gchar      *tagname,
-							gpointer		  user_data)
+							gpointer		 *data)
 {
 	
 	g_debug ("end parse custom tag: %s", tagname);
