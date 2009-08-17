@@ -32,8 +32,8 @@ typedef struct {
 
 enum {
 	PROP_0,
+	PROP_ID,
 	PROP_CHILD_ID,
-	PROP_CHILD_ID_NAME,
 	PROP_STOCK_NAME,
 	PROP_NAME
 };
@@ -111,6 +111,7 @@ gsql_navtree_new ()
 
 	navtree->stock_name = NULL;
 	navtree->name = NULL;
+	navtree->childs = NULL;
 
 	g_signal_connect (G_OBJECT (navtree),
 	                  "on-expand",
@@ -160,18 +161,18 @@ gsql_navtree_class_init (GSQLNavTreeClass *klass)
 	obj_class->finalize = gsql_navtree_finalize;
 
 	g_object_class_install_property (obj_class,
-	                                 PROP_CHILD_ID,
-	                                 g_param_spec_uint ("child-id",
-	                                                    "Child ID",
-	                                                    "Set child id for NavTree item",
-	                                                    1, 65535, 1,
-	                                                    G_PARAM_READABLE));
+	                                 PROP_ID,
+	                                 g_param_spec_string ("id",
+	                                                    "Object ID",
+	                                                    "Set object id for NavTree item",
+	                                                    NULL,
+	                                                    G_PARAM_READWRITE));
 
 	g_object_class_install_property (obj_class,
-	                                 PROP_CHILD_ID_NAME,
-	                                 g_param_spec_string ("child-id-name",
-	                                                    "The name of child ID",
-	                                                    "Set child id name for NavTree item",
+	                                 PROP_CHILD_ID,
+	                                 g_param_spec_string ("child-id",
+	                                                    "Child ID",
+	                                                    "Set child id for NavTree item",
 	                                                    NULL,
 	                                                    G_PARAM_READWRITE));
 
@@ -244,6 +245,10 @@ gsql_navtree_get_property (GObject	*object,
 
 	switch (prop_id)
 	{
+		case PROP_ID:
+			g_debug ("get prop id");
+			break;
+			
 		case PROP_CHILD_ID:
 			g_debug ("get prop child-id");
 			break;
@@ -272,36 +277,30 @@ gsql_navtree_set_property (GObject	*object,
 	GSQLNavTree *nt;
 	
 	nt = GSQL_NAVTREE (object);
-	guint child_id = 0;
+	guint id = 0;
 	const gchar *str = NULL;
 	g_debug ("navtree set property");
 
 	switch (prop_id)
 	{
-		case PROP_CHILD_ID_NAME:
-			g_debug ("set prop child-id-name");
+		case PROP_CHILD_ID:
+		case PROP_ID:
+			g_debug ("set prop id");
 
 			str = g_value_get_string (value);
-			child_id = GSQL_NAVTREE_GET_ID_BY_NAME (str);
+			id = GSQL_NAVTREE_GET_ID_BY_NAME (str);
 
-			if (child_id == 0)
+			if (id == 0)
 			{
-				g_warning ("It seems you have forgot to register this object type. "
-				           "Please use 'GSQL_NAVTREE_REGISTER_ID(%s)' to register it", 
-				           str);
-				
-				nt->child_id = -1;
-				
-			} else {
-				
-				nt->child_id = child_id;
+				id = GSQL_NAVTREE_REGISTER_ID (str);
+				g_debug ("Have found new object id. registering... [%s:%d]", str, id);
 			}
+
+			if (prop_id == PROP_ID)
+				nt->id = id;
+			else
+				nt->child_id = id;
 			
-			break;
-
-		case PROP_CHILD_ID:
-			g_debug ("set prop child-id. do nothing. this prop. can be set via child_id_name");
-
 			break;
 
 		case PROP_STOCK_NAME:
@@ -349,11 +348,19 @@ navtree_parse_data_start (GMarkupParseContext *context,
 
 	int i;
 
-		g_debug ("element \"\"%s\"\" started", element_name);
+	g_debug ("element \"\"%s\"\" started", element_name);
 
-		for (i = 0; names[i]; i++)
-			g_debug ("\tattr: %s", names[i]);
+	for (i = 0; names[i]; i++)
+	{
+		if (strcmp (names[i], "version") == 0)
+		{
 
+			g_debug ("value: %s", values[i]);
+
+		} else 			
+			g_warning ("Unsupported tag for GSQLNavTree: %s", names[i]);
+		
+	}
 }
 
 static void
@@ -365,6 +372,7 @@ navtree_parse_data_end (GMarkupParseContext *context,
 	SubParserData *data = (SubParserData*)user_data;
 
 	g_debug ("element \"\"%s\"\" ended", element_name);
+
 }
 
 
@@ -376,6 +384,12 @@ navtree_parse_data_text (GMarkupParseContext *context,
                          GError             **error)
 {
 	SubParserData *data = (SubParserData*)user_data;
+
+	g_debug ("DATA TEXT");
+
+	//data->object->queries = g_list_append
+
+	g_debug ("element value: %s", text);
 
 }
 
@@ -406,9 +420,8 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 
 	
 	
-//	if (strcmp (tagname, "navitem") == 0)
-//	{
-		g_debug ("start parse custom tag: %s", tagname);
+	if (strcmp (tagname, "query") == 0)
+	{
 		
 		parser_data = g_slice_new0 (SubParserData);
 		parser_data->builder = builder;
@@ -419,8 +432,8 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 
 		return TRUE;
 
-//	} else	
-//		g_warning ("Unknown custom tag: %s", tagname);
+	} else	
+		g_warning ("Unknown custom tag: %s", tagname);
 		
 
 
@@ -444,8 +457,16 @@ gsql_navtree_buildable_add_child	(GtkBuildable	*buildable,
 							GObject			*child,
 							const gchar		*type)
 {
+	g_debug ("add child");
+	GSQLNavTree *nt = GSQL_NAVTREE(buildable);
 
-	g_debug ("add child (type: %s)", type);
+	if (GSQL_IS_NAVTREE (child) && GSQL_IS_NAVTREE (buildable))
+	{
+		g_debug ("adding child...");
+		nt->childs = g_list_append (nt->childs, child);
+
+	} else
+		g_warning ("Buildable types mismatch");
 
 }
 

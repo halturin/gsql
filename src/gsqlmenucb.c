@@ -60,7 +60,6 @@ on_file_new_sql_activate (GtkMenuItem *mi, gpointer data)
 }
 
 
-
 #include <libgsql/navtree.h>
 void
 on_file_open_activate (GtkMenuItem *mi, gpointer data)
@@ -69,19 +68,12 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 
 	GtkBuilder *build;
 	GError *err = NULL;
-	GSQLNavTree *nt;
+	GSQLNavTree *nt = NULL;
 
 	//nt = gsql_navtree_new();
 
 	/*FIXME: i don't know how to register my own type without manual calling this func*/
 	gsql_navtree_get_type();
-
-	GSQL_NAVTREE_REGISTER_ID(SESSION_PRIVILEGE);
-	GSQL_NAVTREE_REGISTER_ID(ENABLED_ROLE);
-	GSQL_NAVTREE_REGISTER_ID(GRANTED_ROLE);
-	GSQL_NAVTREE_REGISTER_ID(SYSTEM_PRIVELEGE);
-	GSQL_NAVTREE_REGISTER_ID(OBJECT_PRIVELEGE);
-	GSQL_NAVTREE_REGISTER_ID(TABLE);
 	
 	
 	build = gtk_builder_new();
@@ -95,7 +87,14 @@ on_file_open_activate (GtkMenuItem *mi, gpointer data)
 
 	}
 
-	nt = gsql_navtree_new();
+	nt = gtk_builder_get_object (build, "NAVTREE_ROOT");
+
+	if (nt)
+	{
+
+		g_debug ("list len: %d", g_list_length (nt->childs));
+	}
+		
 
 	g_debug ("Test emit signal 'on-expand'");
 	g_signal_emit_by_name (G_OBJECT (nt), "on-expand");

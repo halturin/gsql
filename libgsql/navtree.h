@@ -44,14 +44,15 @@ typedef struct _GSQLNavTreePrivate GSQLNavTreePrivate;
 
 
 #define GSQL_NAVTREE_REGISTER_ID(ItemID)  \
-	GQuark ItemID##_NAVTREE_ID = g_quark_from_string (#ItemID"_NAVTREE_ID"); \
-	g_debug ("Registration object ID: %s:%d", \
-				g_quark_to_string (ItemID##_NAVTREE_ID), \
-				ItemID##_NAVTREE_ID);
+	g_quark_from_string ( ItemID )
 	
 
 #define GSQL_NAVTREE_GET_ID_BY_NAME(ItemName) \
-	g_quark_try_string (g_strdup_printf ("%s_NAVTREE_ID", ItemName));
+	g_quark_try_string (ItemName)
+
+
+#define GSQL_NAVTREE_GET_NAME_BY_ID(ItemID) \
+	g_quark_to_string (ItemID)
 
 
 struct _GSQLNavTree

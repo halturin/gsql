@@ -2,10 +2,13 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GSQLNavTree" id="ROOT">
+  <object class="GSQLNavTree" id="NAVTREE_ROOT">
+  	<property name="id">NAVTREE_ROOT</property>
+  	
   	<child>
-		<object class="GSQLNavTree"  id="SESSION_PRIVILEGES">
-			<property name="child_id_name">SESSION_PRIVILEGE</property>
+		<object class="GSQLNavTree"  id="NAVTREE_SESSION_PRIVILEGES">
+			<property name="id">NAVTREE_SESSION_PRIVILEGES</property>
+			<property name="child_id">NAVTREE_SESSION_PRIVILEGE</property>
 			<property name="stock_name">GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES</property>
 			<property name="name" translatable="yes">"Session Privileges"</property>
 			<query>
@@ -19,8 +22,9 @@
 		</object>
 	</child>
 	<child>
-		<object class="GSQLNavTree"  id="ENABLED_ROLES">
-			<property name="child_id_name">ENABLED_ROLE</property>
+		<object class="GSQLNavTree"  id="NAVTREE_ENABLED_ROLES">
+			<property name="id">NAVTREE_ENABLED_ROLES</property>
+			<property name="child_id">NAVTREE_ENABLED_ROLE</property>
 			<property name="stock_name">GSQLE_ORACLE_STOCK_ENABLED_ROLES</property>
 			<property name="name" translatable="yes">"Enabled Roles"</property>
 			<query>
@@ -30,8 +34,9 @@
 					select version=9, role from session_roles where role like :name order by role
 			</query>
 			<child>
-				<object class="GSQLNavTree" id="GRANTED_ROLES">
-					<property name="child_id_name">GRANTED_ROLE</property>
+				<object class="GSQLNavTree" id="NAVTREE_GRANTED_ROLES">
+					<property name="id">NAVTREE__GRANTED_ROLES</property>
+					<property name="child_id">NAVTREE_GRANTED_ROLE</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_GRANTED_ROLES</property>
 					<property name="name" translatable="yes">"Granted Roles"</property>
 					<query version="10">
@@ -40,8 +45,9 @@
 				</object>
 			</child>
 			<child>
-				<object class="GSQLNavTree" id="SYSTEM_PRIVELEGES">
-					<property name="child_id_name">SYSTEM_PRIVELEGE</property>
+				<object class="GSQLNavTree" id="NAVTREE_SYSTEM_PRIVELEGES">
+					<property name="id">NAVTREE_SYSTEM_PRIVELEGES</property>
+					<property name="child_id">NAVTREE_SYSTEM_PRIVELEGE</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_SYSTEM_PRIVELEGES</property>
 					<property name="name" translatable="yes">"System Privileges"</property>
 					<query>
@@ -50,8 +56,9 @@
 				</object>
 			</child>
 			<child>
-				<object class="GSQLNavTree"  id="OBJECT_PRIVELEGES">
-					<property name="child_id_name">OBJECT_PRIVELEGE</property>
+				<object class="GSQLNavTree"  id="NAVTREE_OBJECT_PRIVELEGES">
+					<property name="id">NAVTREE_OBJECT_PRIVELEGES</property>
+					<property name="child_id">NAVTREE_OBJECT_PRIVELEGE</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_OBJECT_PRIVELEGES</property>
 					<property name="name" translatable="yes">"Object Privileges"</property>
 					<query>
@@ -63,13 +70,15 @@
 		</object>
 	</child>
 	<child>
-		<object class="GSQLNavTree" id="MY_SCHEMA">
+		<object class="GSQLNavTree" id="NAVTREE_MY_SCHEMA">
+			<property name="id">NAVTREE_MY_SCHEMA</property>
 			<property name="stock_name">GSQL_STOCK_MY_SCHEMA</property>
 			<property name="name" translatable="yes">"My Schema"</property>
 		
 			<child>
-					<object class="GSQLNavTree" id="TABLES">
-						<property name="child_id_name">TABLE</property>
+					<object class="GSQLNavTree" id="NAVTREE_TABLES">
+						<property name="id">NAVTREE_TABLES</property>
+						<property name="child_id">NAVTREE_TABLE</property>
 						<property name="stock_name">GSQL_STOCK_TABLES</property>
 						<property name="name" translatable="yes">"Tables"</property>			
 						<query>
