@@ -2,13 +2,13 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GSQLNavTree" id="NAVTREE_ROOT">
-  	<property name="id">NAVTREE_ROOT</property>
+  <object class="GSQLNavTree" id="ORACLE_ROOT">
+  	<property name="id">ORACLE_ROOT</property>
   	
   	<child>
-		<object class="GSQLNavTree"  id="NAVTREE_SESSION_PRIVILEGES">
-			<property name="id">NAVTREE_SESSION_PRIVILEGES</property>
-			<property name="child_id">NAVTREE_SESSION_PRIVILEGE</property>
+		<object class="GSQLNavTree"  id="ORACLE_SESSION_PRIVILEGES">
+			<property name="id">ORACLE_SESSION_PRIVILEGES</property>
+			<property name="child_id">ORACLE_SESSION_PRIVILEGE</property>
 			<property name="stock_name">GSQLE_ORACLE_STOCK_SESSION_PRIVILEGES</property>
 			<property name="name" translatable="yes">"Session Privileges"</property>
 			<query>
@@ -22,9 +22,9 @@
 		</object>
 	</child>
 	<child>
-		<object class="GSQLNavTree"  id="NAVTREE_ENABLED_ROLES">
-			<property name="id">NAVTREE_ENABLED_ROLES</property>
-			<property name="child_id">NAVTREE_ENABLED_ROLE</property>
+		<object class="GSQLNavTree"  id="ORACLE_ENABLED_ROLES">
+			<property name="id">ORACLE_ENABLED_ROLES</property>
+			<property name="child_id">ORACLE_ENABLED_ROLE</property>
 			<property name="stock_name">GSQLE_ORACLE_STOCK_ENABLED_ROLES</property>
 			<property name="name" translatable="yes">"Enabled Roles"</property>
 			<query>
@@ -34,9 +34,9 @@
 					select version=9, role from session_roles where role like :name order by role
 			</query>
 			<child>
-				<object class="GSQLNavTree" id="NAVTREE_GRANTED_ROLES">
-					<property name="id">NAVTREE__GRANTED_ROLES</property>
-					<property name="child_id">NAVTREE_GRANTED_ROLE</property>
+				<object class="GSQLNavTree" id="ORACLE_GRANTED_ROLES">
+					<property name="id">ORACLE_GRANTED_ROLES</property>
+					<property name="child_id">ORACLE_GRANTED_ROLE</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_GRANTED_ROLES</property>
 					<property name="name" translatable="yes">"Granted Roles"</property>
 					<query version="10">
@@ -45,9 +45,9 @@
 				</object>
 			</child>
 			<child>
-				<object class="GSQLNavTree" id="NAVTREE_SYSTEM_PRIVELEGES">
-					<property name="id">NAVTREE_SYSTEM_PRIVELEGES</property>
-					<property name="child_id">NAVTREE_SYSTEM_PRIVELEGE</property>
+				<object class="GSQLNavTree" id="ORACLE_SYSTEM_PRIVELEGES">
+					<property name="id">ORACLE_SYSTEM_PRIVELEGES</property>
+					<property name="child_id">ORACLE_SYSTEM_PRIVELEGE</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_SYSTEM_PRIVELEGES</property>
 					<property name="name" translatable="yes">"System Privileges"</property>
 					<query>
@@ -56,9 +56,9 @@
 				</object>
 			</child>
 			<child>
-				<object class="GSQLNavTree"  id="NAVTREE_OBJECT_PRIVELEGES">
-					<property name="id">NAVTREE_OBJECT_PRIVELEGES</property>
-					<property name="child_id">NAVTREE_OBJECT_PRIVELEGE</property>
+				<object class="GSQLNavTree"  id="ORACLE_OBJECT_PRIVELEGES">
+					<property name="id">ORACLE_OBJECT_PRIVELEGES</property>
+					<property name="child_id">ORACLE_OBJECT_PRIVELEGE</property>
 					<property name="stock_name">GSQLE_ORACLE_STOCK_OBJECT_PRIVELEGES</property>
 					<property name="name" translatable="yes">"Object Privileges"</property>
 					<query>
@@ -70,15 +70,15 @@
 		</object>
 	</child>
 	<child>
-		<object class="GSQLNavTree" id="NAVTREE_MY_SCHEMA">
-			<property name="id">NAVTREE_MY_SCHEMA</property>
+		<object class="GSQLNavTree" id="ORACLE_MY_SCHEMA">
+			<property name="id">ORACLE_MY_SCHEMA</property>
 			<property name="stock_name">GSQL_STOCK_MY_SCHEMA</property>
 			<property name="name" translatable="yes">"My Schema"</property>
 		
 			<child>
-					<object class="GSQLNavTree" id="NAVTREE_TABLES">
-						<property name="id">NAVTREE_TABLES</property>
-						<property name="child_id">NAVTREE_TABLE</property>
+					<object class="GSQLNavTree" id="ORACLE_TABLES">
+						<property name="id">ORACLE_TABLES</property>
+						<property name="child_id">ORACLE_TABLE</property>
 						<property name="stock_name">GSQL_STOCK_TABLES</property>
 						<property name="name" translatable="yes">"Tables"</property>			
 						<query>
