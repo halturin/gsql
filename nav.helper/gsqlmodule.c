@@ -1,6 +1,9 @@
 #include <pygobject.h>
 #include <pygtk/pygtk.h>
 
+#define PYGSQL_MAJOR_VERSION 0
+#define PYGSQL_MINOR_VERSION 1
+#define PYGSQL_MICRO_VERSION 0
 
 void pygsql_register_classes (PyObject *d);
 void pygsql_add_constants (PyObject *module, const gchar *strip_prefix);

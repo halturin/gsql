@@ -70,7 +70,7 @@ struct _GSQLNavTree
 	const gchar *name;
 
 	// if hasn't a child the tree will build from SQL
-	GList *queries;
+	GHashTable *queries;
 	// child id for query's items
 	guint child_id;
 		

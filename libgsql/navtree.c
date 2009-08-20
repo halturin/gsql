@@ -28,6 +28,10 @@ typedef struct {
 	GtkBuilder	*builder;
 	GObject		*object;
 	GValue		*values;
+
+	const gchar *ver;
+	const gchar *sql;
+	
 } SubParserData;
 
 enum {
@@ -110,11 +114,6 @@ gsql_navtree_new ()
 		return NULL;
 	}
 
-	navtree->version = NULL;
-	navtree->stock_name = NULL;
-	navtree->name = NULL;
-	navtree->childs = NULL;
-
 	g_signal_connect (G_OBJECT (navtree),
 	                  "on-expand",
 	                  G_CALLBACK (on_navtree_obj_expand_default),
@@ -146,6 +145,7 @@ gsql_navtree_finalize (GObject *obj)
 {
 	GSQLNavTree *navtree = GSQL_NAVTREE (obj);
 
+	g_hash_table_unref (navtree->queries);
 
 	G_OBJECT_CLASS (gsql_navtree_parent_class)->finalize (obj);
 }
@@ -249,8 +249,6 @@ gsql_navtree_get_property (GObject	*object,
 	GSQLNavTree *nt;
 
 	nt = GSQL_NAVTREE (object);
-	
-	g_debug ("navtree get property");
 
 	switch (prop_id)
 	{
@@ -292,13 +290,11 @@ gsql_navtree_set_property (GObject	*object,
 	nt = GSQL_NAVTREE (object);
 	guint id = 0;
 	const gchar *str = NULL;
-	g_debug ("navtree set property");
 
 	switch (prop_id)
 	{
 		case PROP_CHILD_ID:
 		case PROP_ID:
-			g_debug ("set prop id");
 
 			str = g_value_get_string (value);
 			id = GSQL_NAVTREE_GET_ID_BY_NAME (str);
@@ -317,7 +313,6 @@ gsql_navtree_set_property (GObject	*object,
 			break;
 
 		case PROP_VERSION:
-			g_debug ("set prop version");
 
 			if (nt->version)
 				g_free ((gchar *) nt->version);
@@ -327,7 +322,6 @@ gsql_navtree_set_property (GObject	*object,
 			break;
 
 		case PROP_STOCK_NAME:
-			g_debug ("set prop stock-name");
 			
 			if (nt->stock_name)
 				g_free ((gchar *) nt->stock_name);
@@ -337,7 +331,6 @@ gsql_navtree_set_property (GObject	*object,
 			break;
 
 		case PROP_NAME:
-			g_debug ("set prop name");
 
 			if (nt->name)
 				g_free ((gchar *) nt->name);
@@ -353,10 +346,30 @@ gsql_navtree_set_property (GObject	*object,
 
 }
 
+static void
+on_query_hashtable_notify (gpointer p)
+{
+
+	if (p)
+		g_free (p);
+
+}
+
 static void 
 gsql_navtree_init (GSQLNavTree *obj)
 {
 	g_return_if_fail (obj != NULL);
+
+	obj->version = NULL;
+	obj->stock_name = NULL;
+	obj->name = NULL;
+	obj->childs = NULL;
+
+	obj->queries = g_hash_table_new_full (g_str_hash,
+	                                      g_str_equal,
+	                                      on_query_hashtable_notify,
+	                                      on_query_hashtable_notify);
+
 }
 
 static void
@@ -371,19 +384,27 @@ navtree_parse_data_start (GMarkupParseContext *context,
 
 	int i;
 
+	data->ver = NULL;
+	data->sql = NULL;
+
 	g_debug ("element \"\"%s\"\" started", element_name);
 
-	for (i = 0; names[i]; i++)
+	if (strcmp (element_name, "query") == 0)
 	{
-		if (strcmp (names[i], "version") == 0)
+		for (i = 0; names[i]; i++)
 		{
+			if (strcmp (names[i], "version") == 0)
+			{
 
-			g_debug ("value: %s", values[i]);
+				g_debug ("value: %s", values[i]);
+				data->ver = g_strndup (values[i], 15);
 
-		} else 			
-			g_warning ("Unsupported tag for GSQLNavTree: %s", names[i]);
+			} else 			
+				g_warning ("Unsupported tag for GSQLNavTree: %s", names[i]);
 		
-	}
+		}
+	} else
+		g_warning ("Unsupported element for GSQLNavTree: %s", names[i]);
 }
 
 static void
@@ -393,8 +414,32 @@ navtree_parse_data_end (GMarkupParseContext *context,
                         GError             **error)
 {
 	SubParserData *data = (SubParserData*)user_data;
+	GSQLNavTree *nt = GSQL_NAVTREE (data->object);
 
-	g_debug ("element \"\"%s\"\" ended", element_name);
+	if (strcmp (element_name, "query") == 0)
+
+	{
+		if (data->sql == NULL)
+		{
+			g_warning ("query tag cannot be empty");
+
+			if (data->ver)
+				g_free (data->ver);
+
+			return;
+		}
+
+		// for the default SQL set key="*"
+		
+		if (data->ver == NULL)
+			data->ver = g_strndup ("*", 2);
+		
+		g_hash_table_insert (nt->queries,
+	                     	 (gpointer) data->ver, 
+		                     (gpointer) data->sql);
+	}
+
+	g_debug ("element \"\"%s\"\" ended (queries: %d)", element_name, g_hash_table_size (nt->queries));
 
 }
 
@@ -410,7 +455,7 @@ navtree_parse_data_text (GMarkupParseContext *context,
 
 	g_debug ("DATA TEXT");
 
-	//data->object->queries = g_list_append
+	data->sql = g_strndup (text, text_len);
 
 	g_debug ("element value: %s", text);
 
@@ -440,8 +485,6 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 							gpointer         *data)
 {
 	SubParserData *parser_data;
-
-	
 	
 	if (strcmp (tagname, "query") == 0)
 	{
@@ -480,18 +523,17 @@ gsql_navtree_buildable_add_child	(GtkBuildable	*buildable,
 							GObject			*child,
 							const gchar		*type)
 {
-	g_debug ("add child");
 	GSQLNavTree *nt = GSQL_NAVTREE(buildable);
 
 	if (GSQL_IS_NAVTREE (child) && GSQL_IS_NAVTREE (buildable))
 	{
-		g_debug ("adding child...");
 		nt->childs = g_list_append (nt->childs, child);
 
 	} else
 		g_warning ("Buildable types mismatch");
 
 }
+
 
 
 static void 
