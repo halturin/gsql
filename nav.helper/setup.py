@@ -16,10 +16,17 @@ extention = Extension(
 				    '/usr/include/pixman-1',
 				    '/usr/include/freetype2',
 				    '/usr/include/directfb',
-				    '/usr/include/libpng12'],
-		    libraries= [],
-                    sources = ['gsqlmodule.c'],
-                    depends = ['navtree.c'])
+				    '/usr/include/libpng12',
+				    '../libgsql'],
+		    libraries= ['gtk-x11-2.0','gdk-x11-2.0',
+		    'atk-1.0','pangoft2-1.0',
+		    'gdk_pixbuf-2.0','m',
+		    'pangocairo-1.0',
+		    'gio-2.0','cairo',
+		    'pango-1.0','freetype',
+		    'fontconfig','gmodule-2.0',
+		    'gobject-2.0','glib-2.0'],
+                    sources = ['gsqlmodule.c', 'navtree.c'])
 
 setup (name = 'gsql',
        version = '0.1.0',
