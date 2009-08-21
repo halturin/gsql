@@ -102,13 +102,13 @@ initgsql (void)
     pyg_set_object_has_new_constructor (GSQL_NAVTREE_TYPE);
     
     PyModule_AddObject (m, "pygsql_version",
-	    PyBuildValue ("iii",
+	    Py_BuildValue ("iii",
 			PYGSQL_MAJOR_VERSION,
 			PYGSQL_MINOR_VERSION,
 			PYGSQL_MICRO_VERSION));
 			
-    if (PyErr_Occured ())
-	Py_FatalError ("can't initialise module gsql");
+//    if (PyErr_Occured ())
+//	Py_FatalError ("can't initialise module gsql");
 
 
 }
