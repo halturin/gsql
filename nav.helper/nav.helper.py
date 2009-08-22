@@ -45,36 +45,11 @@ try:
 except:
 	print >> sys.stderr, 'GktSourceView are required. Quiting...'
 
+import naveditor
 import navstock
 import utils
 
-class GSQLNavigationItem(gobject.GObject):
-	__gtype_name__ = 'GSQLNavigationItem'
-	
-	def __init__(self):
-		self.id = None
-		self.stock_name = None
-		self.name = None
-		self.query = None
-	
-
-
-class GSQLNavigation(gtk.Widget, gtk.Buildable):
-	__gtype_name__ = 'GSQLNavigation'
-
-	def __init__(self):
-		self.id = None		# type of navigation tree (oracle, mysql, etc.)
-	
-	def do_parser_started(self, builder):
-		print "do parser started"
-		
-	def do_parser_finished(self, builder):
-		print "do parser finished"
-	
-	def do_construct_child(self, builder):
-		print "do construct child"
-		
-
+import gsql
 
 class MainWindow:
     
@@ -87,7 +62,7 @@ class MainWindow:
     def __init__(self):
 	
 		self.build = gtk.Builder()
-		if (self.build.add_from_file('./nav.helper.xml') == 0):
+		if (self.build.add_from_file('./ui/nav.helper.xml') == 0):
 			print >> sys.stderr, 'Couldn\'t open XML-file  with main window'
 		self.window = self.build.get_object('main_window')
 	
@@ -100,58 +75,11 @@ class MainWindow:
 	
 		menu = self.build.get_object('menu_about_dialog')
 		menu.connect("activate", self.show_about)
-	
-		action = self.build.get_object('action_add')
-		action.connect('activate', self.action_add)
-	
-		action = self.build.get_object('action_add_sub')
-		action.connect('activate', self.action_add_sub)
-	
-		action = self.build.get_object('action_remove')
-		action.connect('activate', self.action_remove)
-	
-		store = self.build.get_object('nav_liststore')
-	
-		self.icon_factory = gtk.IconFactory()
-		self.icon_factory.add_default()
-	
-		navstock.icon_store_init(self, store)
-		iconstock_combo = self.build.get_object('iconstock_combo')
-		iconstock_combo.set_model(store)
-		iconstock_combo.set_row_separator_func(utils.is_row_separator)
-	
-		self.sql_buffer = gtksourceview.SourceBuffer()
-		self.sql_buffer.set_highlight(True)
-	
-		self.sql_editor = gtksourceview.SourceView(self.sql_buffer)
-		self.sql_editor.set_show_line_numbers(True)
-		self.sql_editor.set_highlight_current_line(True)
-		self.sql_editor.modify_font(pango.FontDescription("Monospace 9"))
-
-	
-		scroll = self.build.get_object('scroll_sqleditor')
-		scroll.add(self.sql_editor)
-		scroll.show_all()
-
-		lm = gtksourceview.SourceLanguagesManager()
-		self.sql_buffer.set_language(lm.get_language_from_mime_type('text/x-sql'))
 		
 		self.window.show()
 
     def main(self):
 		gtk.main()
-	
-    def action_add(self, action):
-		print 'action add', action
-	
-    def action_add_sub(self, action):
-		print 'action add sub'
-	
-    def action_remove(self, action):
-		print 'action remove'
-	
-	
-	
 
     def open_file(self, item):
 		dialog = gtk.FileChooserDialog("Open..",
@@ -174,11 +102,14 @@ class MainWindow:
 		response = dialog.run()
 		if response == gtk.RESPONSE_OK:
 			filename = dialog.get_filename()
-			print filename, 'selected'
-			ui = gtk.Builder()
-			if (ui.add_from_file(filename) == 0):
-				print >> sys.stderr, 'Couldn\'t open XML-file with UI'
 			
+			notebook = self.build.get_object('main_notebook')
+			
+			editor = NavEditor(self.build, filename)
+			
+			label = gtk.Label(os.path.basename(filename))
+			label.set_tooltip_text (filename)
+			notebook.append_page (editor, label)
 			
 		elif response == gtk.RESPONSE_CANCEL:
 			print 'Closed, no files selected'

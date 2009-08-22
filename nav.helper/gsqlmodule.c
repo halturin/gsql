@@ -14,28 +14,13 @@ static PyTypeObject *_PyGObject_Type;
 //    {NULL, NULL, 0, NULL}
 //},
 
-
-
- static int
+static PyObject *
 _wrap_gsql_navtree_new (PyGObject *self, PyObject *args, PyObject *kwargs)
 {
-    static char *kwlist = { NULL };
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-				    ":gsql.GSQLNavTree.__init__",
-				    kwlist))
-	return -1;
-	
-    pygobject_construct (self, 0, NULL);
+    PyErr_SetString (PyExc_TypeError,
+		     "cannot create instance of type GSQLNavTree");
     
-    if (!self->obj) 
-    {
-	PyErr_SetString (PyExc_RuntimeError,
-	"couldn't create gsql.NavTree object");
-	return -1;
-    }
-
-    return 0;
+    return NULL;
 }
 
 PyTypeObject G_GNUC_INTERNAL PyGSQLNavTree_Type = {
@@ -78,7 +63,7 @@ PyTypeObject G_GNUC_INTERNAL PyGSQLNavTree_Type = {
     offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
     (initproc)0,             /* tp_init */
     (allocfunc)0,           /* tp_alloc */
-    (newfunc)_wrap_gsql_navtree_new,               /* tp_new */
+    (newfunc)0,//_wrap_gsql_navtree_new,               /* tp_new */
     (freefunc)0,             /* tp_free */
     (inquiry)0              /* tp_is_gc */
 
@@ -88,7 +73,7 @@ PyTypeObject G_GNUC_INTERNAL PyGSQLNavTree_Type = {
 DL_EXPORT (void);
 initgsql (void)
 {
-    PyObject *m, *d;
+    PyObject *m, *d, *in;
     
     m = Py_InitModule ("gsql", NULL);//pygsql_methods);
     d = PyModule_GetDict (m);
@@ -96,7 +81,21 @@ initgsql (void)
     init_pygobject ();
     init_pygtk ();
     
-    pygobject_register_class (d, "GSQLNavTree", GSQL_NAVTREE_TYPE, &PyGSQLNavTree_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    if ((in = PyImport_ImportModule("gobject")) != NULL)
+    {
+	_PyGObject_Type = (PyTypeObject *)PyObject_GetAttrString(in, "GObject");
+	if (_PyGObject_Type == NULL)
+	{
+	    PyErr_SetString(PyExc_ImportError,
+			    "cannot import name GObject from gobject");
+	    return;	
+	}
+    
+    }
+    
+    pygobject_register_class (d, "GSQLNavTree", GSQL_NAVTREE_TYPE, 
+				&PyGSQLNavTree_Type, 
+				Py_BuildValue("(O)", &PyGObject_Type));
 //    pyg_set_object_has_new_constructor (GSQL_NAVTREE_TYPE);
     
     PyModule_AddObject (m, "version",
