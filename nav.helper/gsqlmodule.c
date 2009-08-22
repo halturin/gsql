@@ -10,8 +10,6 @@ static PyTypeObject *_PyGObject_Type;
 #define PyGObject_Type (*_PyGObject_Type)
 
 
-PyTypeObject G_GNUC_INTERNAL PyGSQLNavTree_Type;
-
 //static const PyMethodDef _PyGSQLNavTree_methods[] = 
 //    {NULL, NULL, 0, NULL}
 //},
@@ -24,7 +22,7 @@ _wrap_gsql_navtree_new (PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist = { NULL };
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-				    ":gsql.NavTree.__init__",
+				    ":gsql.GSQLNavTree.__init__",
 				    kwlist))
 	return -1;
 	
@@ -43,7 +41,7 @@ _wrap_gsql_navtree_new (PyGObject *self, PyObject *args, PyObject *kwargs)
 PyTypeObject G_GNUC_INTERNAL PyGSQLNavTree_Type = {
     PyObject_HEAD_INIT(NULL)
     0,			/* ob_size */
-    "gsql.NavTree",	// tp_name
+    "gsql.GSQLNavTree",	// tp_name
     sizeof(PyGObject),	//tp_basicsize
     0,			// item_size
     /*methods*/
@@ -98,17 +96,18 @@ initgsql (void)
     init_pygobject ();
     init_pygtk ();
     
-    pygobject_register_class (d, "GSQLNavTree", GSQL_NAVTREE_TYPE, &PyGSQLNavTree_Type, Py_BuildValue("(0)", &PyGObject_Type));
-    pyg_set_object_has_new_constructor (GSQL_NAVTREE_TYPE);
+    pygobject_register_class (d, "GSQLNavTree", GSQL_NAVTREE_TYPE, &PyGSQLNavTree_Type, Py_BuildValue("(O)", &PyGObject_Type));
+//    pyg_set_object_has_new_constructor (GSQL_NAVTREE_TYPE);
     
-    PyModule_AddObject (m, "pygsql_version",
+    PyModule_AddObject (m, "version",
 	    Py_BuildValue ("iii",
 			PYGSQL_MAJOR_VERSION,
 			PYGSQL_MINOR_VERSION,
 			PYGSQL_MICRO_VERSION));
-			
-//    if (PyErr_Occured ())
-//	Py_FatalError ("can't initialise module gsql");
+/*			
+    if (PyErr_Occured ())
+	Py_FatalError ("can't initialise module gsql");
+*/
 
 
 }
