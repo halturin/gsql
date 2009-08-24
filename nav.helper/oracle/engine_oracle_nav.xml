@@ -20,6 +20,7 @@
 					privilege from session_privs where privilege like :name order by privilege
 			</query>
 		</object>
+		
 	</child>
 	<child>
 		<object class="GSQLNavTree"  id="ORACLE_ENABLED_ROLES">

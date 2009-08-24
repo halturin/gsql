@@ -2,6 +2,26 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkTreeStore" id="nav_treestore">
+    <columns>
+      <!-- column-name GSQL_NAV_TREE_ID -->
+      <column type="guint"/>
+      <!-- column-name GSQL_NAV_TREE_OWNER -->
+      <column type="gchar"/>
+      <!-- column-name GSQL_NAV_TREE_STOCK_NAME -->
+      <column type="gchar"/>
+      <!-- column-name GSQL_NAV_TREE_NAME -->
+      <column type="gchar"/>
+      <!-- column-name GSQL_NAV_TREE_REALNAME -->
+      <column type="gchar"/>
+      <!-- column-name GSQL_NAV_TREE_INFO -->
+      <column type="gchar"/>
+      <!-- column-name GSQL_NAV_TREE_CHILD -->
+      <column type="gpointer"/>
+      <!-- column-name GSQL_NAV_TREE_DETAILS -->
+      <column type="gpointer"/>
+    </columns>
+  </object>
   <object class="GtkHPaned" id="navtree_editor">
     <property name="visible">True</property>
     <property name="can_focus">True</property>
@@ -13,7 +33,6 @@
           <object class="GtkTreeView" id="gsql_nav_treeview">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="model">nav_treestore</property>
             <property name="headers_clickable">False</property>
             <property name="expander_column">stock_column</property>
             <property name="rules_hint">True</property>
@@ -63,7 +82,6 @@
             </child>
             <child>
               <object class="GtkButton" id="button2">
-                <property name="label" translatable="yes">Add sub</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -119,13 +137,12 @@
           <object class="GtkFrame" id="frame1">
             <property name="visible">True</property>
             <property name="label_xalign">0</property>
+            <property name="label_yalign">0</property>
             <property name="shadow_type">none</property>
             <child>
               <object class="GtkAlignment" id="alignment1">
                 <property name="visible">True</property>
-                <property name="top_padding">4</property>
-                <property name="bottom_padding">4</property>
-                <property name="left_padding">12</property>
+                <property name="left_padding">2</property>
                 <child>
                   <object class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
@@ -139,6 +156,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="related_action">action_stock_choose</property>
                             <child>
                               <placeholder/>
                             </child>
@@ -197,9 +215,6 @@
                         <property name="position">0</property>
                       </packing>
                     </child>
-                    <child>
-                      <placeholder/>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -233,9 +248,7 @@
             <child>
               <object class="GtkAlignment" id="alignment2">
                 <property name="visible">True</property>
-                <property name="top_padding">4</property>
-                <property name="bottom_padding">4</property>
-                <property name="left_padding">12</property>
+                <property name="left_padding">2</property>
                 <child>
                   <object class="GtkVBox" id="vbox5">
                     <property name="visible">True</property>
@@ -248,7 +261,7 @@
                           <object class="GtkLabel" id="label6">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes"> &lt;b&gt; SQL command&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">SQL command</property>
                             <property name="use_markup">True</property>
                           </object>
                           <packing>
@@ -271,7 +284,6 @@
                         <child>
                           <object class="GtkComboBox" id="sqlversion_combo">
                             <property name="visible">True</property>
-                            <property name="model">sqlversion_liststore</property>
                             <property name="active">0</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext4"/>
@@ -353,9 +365,6 @@
                         <property name="position">2</property>
                       </packing>
                     </child>
-                    <child>
-                      <placeholder/>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -389,9 +398,7 @@
             <child>
               <object class="GtkAlignment" id="alignment3">
                 <property name="visible">True</property>
-                <property name="top_padding">4</property>
-                <property name="bottom_padding">4</property>
-                <property name="left_padding">12</property>
+                <property name="left_padding">2</property>
                 <child>
                   <object class="GtkVBox" id="vbox4">
                     <property name="visible">True</property>
@@ -565,4 +572,22 @@
       </packing>
     </child>
   </object>
+  <object class="GtkAction" id="action_remove">
+    <property name="label">Remove</property>
+    <property name="short_label">Remove</property>
+    <property name="stock_id">gtk-remove</property>
+    <property name="icon_name">list-remove</property>
+  </object>
+  <object class="GtkAction" id="action_add_sub">
+    <property name="label">Add sub</property>
+    <property name="short_label">Add sub</property>
+  </object>
+  <object class="GtkAction" id="action_add">
+    <property name="label">Add</property>
+    <property name="short_label">Add</property>
+    <property name="stock_id">gtk-add</property>
+    <property name="icon_name">list-add</property>
+  </object>
+  <object class="GtkActionGroup" id="actiongroup1"/>
+  <object class="GtkAction" id="action_stock_choose"/>
 </interface>

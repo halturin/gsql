@@ -40,10 +40,7 @@ except:
     print >> sys.stderr, 'This tool needs GTK support. Quiting...'
     sys.exit()
     
-try:
-	import gtksourceview
-except:
-	print >> sys.stderr, 'GktSourceView are required. Quiting...'
+
 
 import naveditor
 import navstock
@@ -68,7 +65,13 @@ class MainWindow:
 	
 		self.window.connect("delete_event", self.delete_event)
 		self.window.connect("destroy", self.destroy)
+		
+		store = self.build.get_object('nav_liststore')
 	
+		self.icon_factory = gtk.IconFactory()
+		self.icon_factory.add_default()
+	
+		navstock.icon_store_init(self, store)	
 	
 		menu = self.build.get_object('menu_open_file')
 		menu.connect("activate", self.open_file)
@@ -105,7 +108,7 @@ class MainWindow:
 			
 			notebook = self.build.get_object('main_notebook')
 			
-			editor = NavEditor(self.build, filename)
+			editor = naveditor.NavEditor(self.build, filename).widget
 			
 			label = gtk.Label(os.path.basename(filename))
 			label.set_tooltip_text (filename)

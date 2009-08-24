@@ -31,16 +31,25 @@ import gobject
 import pango
 import gtk
 
+try:
+	import gtksourceview
+except:
+	print >> sys.stderr, 'GktSourceView are required. Quiting...'
+
 import gsql
+import navstock
 
 class NavEditor:
     
-    def __init__(self, main_builder, filename):
-	
+	def __init__(self, main_builder, filename):
+		self.main = main_builder
+		self.navtree = gtk.Builder()
+		self.navtree.add_from_file(filename)
+    
 		self.build = gtk.Builder()
 		if (self.build.add_from_file('./ui/navtree_editor.xml') == 0):
 			print >> sys.stderr, 'Couldn\'t open XML-file  with main window'
-		self.window = self.build.get_object('navtree_editor')
+		self.widget = self.build.get_object('navtree_editor')
 	
 		action = self.build.get_object('action_add')
 		action.connect('activate', self.action_add)
@@ -50,16 +59,9 @@ class NavEditor:
 	
 		action = self.build.get_object('action_remove')
 		action.connect('activate', self.action_remove)
-	
-		store = self.build.get_object('nav_liststore')
-	
-		self.icon_factory = gtk.IconFactory()
-		self.icon_factory.add_default()
-	
-		navstock.icon_store_init(self, store)
-		iconstock_combo = self.build.get_object('iconstock_combo')
-		iconstock_combo.set_model(store)
-		iconstock_combo.set_row_separator_func(utils.is_row_separator)
+		
+		action = self.build.get_object('action_stock_choose')
+		action.connect('activate', self.action_stock_choose)
 	
 		self.sql_buffer = gtksourceview.SourceBuffer()
 		self.sql_buffer.set_highlight(True)
@@ -77,20 +79,30 @@ class NavEditor:
 		lm = gtksourceview.SourceLanguagesManager()
 		self.sql_buffer.set_language(lm.get_language_from_mime_type('text/x-sql'))
 		
-		self.window.show()
+		self.widget.show()
 
-    def main(self):
-		gtk.main()
-	
-    def action_add(self, action):
+	def action_add(self, action):
 		print 'action add', action
 	
-    def action_add_sub(self, action):
+	def action_add_sub(self, action):
 		print 'action add sub'
 	
-    def action_remove(self, action):
+	def action_remove(self, action):
 		print 'action remove'
-	
+
+	def action_stock_choose(self, action):
+		print 'action stock choose'
+
+		dialog = self.main.get_object('dialog_stock_choose')
+		dialog.set_default_response(gtk.RESPONSE_OK)
+		response = dialog.run()
+		
+		if response == gtk.RESPONSE_OK:
+			print 'stock selected'
+		else:
+			print 'choosing stock canceled'
+		
+		dialog.hide()
 	
 	
 
