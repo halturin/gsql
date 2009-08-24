@@ -69,8 +69,10 @@ struct _GSQLNavTree
 	const gchar *stock_name;
 	const gchar *name;
 
-	// if hasn't a child the tree will build from SQL
+	// if hasn't child id the tree will build from SQL.
+	// hash: ver <--> *QuerySet
 	GHashTable *queries;
+	
 	// child id for query's items
 	guint child_id;
 		
