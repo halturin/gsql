@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="gsql.navtree.object.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Lend"
+       style="overflow:visible;">
+      <path
+         id="path4251"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(1.1) rotate(180) translate(1,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path4233"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <filter
+       inkscape:collect="always"
+       id="filter3409">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="9.2396377"
+         id="feGaussianBlur3411" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="235.95277"
+     inkscape:cy="770.88025"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1107"
+     inkscape:window-height="928"
+     inkscape:window-x="202"
+     inkscape:window-y="50" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.92047197000000003;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3413"
+       width="517.58929"
+       height="380.04959"
+       x="48.705349"
+       y="38.337399"
+       ry="9.2388163"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="opacity:0.41743116;fill:#000000;fill-opacity:1;stroke:#342727;stroke-width:0.83595127;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter3409)"
+       id="rect3387"
+       width="482.67383"
+       height="336.13409"
+       x="67.663086"
+       y="60.295135"
+       ry="8.1712532"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#342727;stroke-width:0.83595127000000002;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2383"
+       width="482.67383"
+       height="336.13409"
+       x="64.657463"
+       y="58.89061"
+       ry="8.1712532"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g7097"
+       transform="matrix(0.9665631,0,0,0.9900031,267.79734,240.16294)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <text
+         id="text3155"
+         y="99.78833"
+         x="75.256363"
+         style="font-size:26.37789345px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-weight:normal;-inkscape-font-specification:Bitstream Vera Sans"
+           y="99.78833"
+           x="75.256363"
+           id="tspan3157"
+           sodipodi:role="line">GSQLNavTree</tspan></text>
+      <text
+         id="text3159"
+         y="115.4581"
+         x="75.256363"
+         style="font-size:12.86047459px;font-style:normal;font-weight:normal;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="115.4581"
+           x="75.256363"
+           id="tspan3161"
+           sodipodi:role="line">GObject. XML tag: &lt;object&gt;</tspan></text>
+    </g>
+    <rect
+       style="fill:#dbf8ff;fill-opacity:0.69019608;stroke:#342727;stroke-width:0.8429414;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3167"
+       width="188.03931"
+       height="62.473309"
+       x="88.632309"
+       y="73.269943"
+       ry="2.8874216"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.84062672px;font-style:normal;font-weight:normal;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="102.258"
+       y="109.23293"
+       id="text3177"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3179"
+         x="102.258"
+         y="109.23293">GHashTable.</tspan><tspan
+         sodipodi:role="line"
+         x="102.258"
+         y="122.78371"
+         id="tspan3688">[version &lt;--&gt; pointer]</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:22.23501778px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="102.258"
+       y="95.604683"
+       id="text3181"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3183"
+         x="102.258"
+         y="95.604683">queries</tspan></text>
+    <g
+       id="g3339"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         ry="5.08883"
+         y="151.98238"
+         x="139.24182"
+         height="110.10377"
+         width="137.41161"
+         id="rect3185"
+         style="fill:#dbffde;fill-opacity:0.69019608;stroke:#342727;stroke-width:0.87938482;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         transform="scale(0.9880907,1.0120528)"
+         id="text3187"
+         y="186.93439"
+         x="153.40349"
+         style="font-size:10.84062672px;font-style:normal;font-weight:normal;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="186.93439"
+           x="153.40349"
+           id="tspan3189"
+           sodipodi:role="line">structure</tspan><tspan
+           id="tspan2555"
+           y="200.48517"
+           x="153.40349"
+           sodipodi:role="line">XML tag &lt;query&gt;</tspan></text>
+      <text
+         transform="scale(0.9880907,1.0120528)"
+         id="text3191"
+         y="173.30615"
+         x="153.40349"
+         style="font-size:22.23501778px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="173.30615"
+           x="153.40349"
+           id="tspan3193"
+           sodipodi:role="line">QuerySet</tspan></text>
+      <text
+         transform="scale(0.9880907,1.0120528)"
+         id="text3201"
+         y="224.08998"
+         x="163.27045"
+         style="font-size:17.75436401px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="224.08998"
+           x="163.27045"
+           id="tspan3203"
+           sodipodi:role="line">SQL     <tspan
+   id="tspan3209"
+   style="font-size:10.11529636px;fill:#ff0000;fill-opacity:1">gchar*</tspan></tspan><tspan
+           id="tspan3205"
+           y="246.28294"
+           x="163.27045"
+           sodipodi:role="line">binds   <tspan
+   id="tspan3211"
+   style="font-size:10.11529636px;fill:#ff0000;fill-opacity:1">GList*</tspan></tspan></text>
+    </g>
+    <rect
+       style="fill:#f2ffdb;fill-opacity:0.69019608;stroke:#342727;stroke-width:0.8429414;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3482"
+       width="209.48875"
+       height="100.81641"
+       x="312.81464"
+       y="73.269943"
+       ry="4.6595826"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.84062672px;font-style:normal;font-weight:normal;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="328.92685"
+       y="109.0174"
+       id="text3484"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3486"
+         x="328.92685"
+         y="109.0174">structure. XML tag &lt;bind&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:22.23501778px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="328.92685"
+       y="95.389168"
+       id="text3488"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3490"
+         x="328.92685"
+         y="95.389168">QueryBindValue</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:17.75436401px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="340.8179"
+       y="131.35165"
+       id="text3492"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3494"
+         x="340.8179"
+         y="131.35165">name     <tspan
+   style="font-size:10.11529636px;fill:#ff0000;fill-opacity:1"
+   id="tspan3496">gchar*</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="340.8179"
+         y="153.5446"
+         id="tspan3498">value     <tspan
+   style="font-size:10.11529636px;fill:#ff0000;fill-opacity:1"
+   id="tspan3500">GValue*</tspan></tspan></text>
+    <rect
+       style="opacity:0.35;fill:#f2ffdb;fill-opacity:0.69019608;stroke:#342727;stroke-width:1.09582376;stroke-miterlimit:4;stroke-dasharray:1.09582382, 2.19164765;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3502"
+       width="209.48875"
+       height="100.81641"
+       x="312.81464"
+       y="182.71382"
+       ry="4.6595826"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.84062672px;font-style:normal;font-weight:normal;opacity:0.35;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="328.92685"
+       y="217.15788"
+       id="text3504"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3506"
+         x="328.92685"
+         y="217.15788">structure. XML tag &lt;bind&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:22.23501778px;font-style:normal;font-weight:normal;opacity:0.35;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="328.92685"
+       y="203.52965"
+       id="text3508"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3510"
+         x="328.92685"
+         y="203.52965">QueryBindValue</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:17.75436401px;font-style:normal;font-weight:normal;opacity:0.35;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="340.8179"
+       y="239.49211"
+       id="text3512"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3514"
+         x="340.8179"
+         y="239.49211">name     <tspan
+   style="font-size:10.11529636px;fill:#ff0000;fill-opacity:1"
+   id="tspan3516">gchar*</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="340.8179"
+         y="261.68509"
+         id="tspan3518">value     <tspan
+   style="font-size:10.11529636px;fill:#ff0000;fill-opacity:1"
+   id="tspan3520">GValue*</tspan></tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.84811246;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 102.09225,135.75034 L 102.09225,202.05937 L 138.68635,202.05937"
+       id="path4225"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.35;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8429414px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Lend);stroke-opacity:1"
+       d="M 101.99575,202.11852 L 101.99575,310.4319 L 138.28651,310.4319"
+       id="path5528"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8429414px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Lend);stroke-opacity:1"
+       d="M 276.67162,201.29588 L 294.15829,201.29588 L 294.15829,122.30422 L 311.79835,122.30422"
+       id="path6051"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.35;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8429414px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Lend);stroke-opacity:1"
+       d="M 294.05417,201.18925 L 294.05417,234.50568 L 311.79835,234.50568"
+       id="path6574"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#dbffde;fill-opacity:0.69019607999999999;stroke:#342727;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:1, 2;stroke-opacity:1;stroke-dashoffset:0;opacity:0.35"
+       id="rect3354"
+       width="137.41161"
+       height="110.10377"
+       x="139.2942"
+       y="269.3103"
+       ry="5.08883"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.84062671999999949px;font-style:normal;font-weight:normal;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans;opacity:0.35"
+       x="153.4565"
+       y="302.86502"
+       id="text3356"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3358"
+         x="153.4565"
+         y="302.86502">structure</tspan><tspan
+         sodipodi:role="line"
+         x="153.4565"
+         y="316.4158"
+         id="tspan3360">XML tag &lt;query&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:22.23501777999999973px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans;opacity:0.35"
+       x="153.4565"
+       y="289.23679"
+       id="text3362"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3364"
+         x="153.4565"
+         y="289.23679">QuerySet</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:17.75436400999999975px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans;opacity:0.35"
+       x="163.32346"
+       y="340.0206"
+       id="text3366"
+       transform="scale(0.9880907,1.0120528)"
+       inkscape:export-filename="/home/fantom/.gvfs/sftp for fantom on ghost.corbina.net/home/fantom/devel/Projects/gsql/doc/reference/gsql.navtree.object.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3368"
+         x="163.32346"
+         y="340.0206">SQL     <tspan
+   style="font-size:10.11529636000000032px;fill:#ff0000;fill-opacity:1"
+   id="tspan3370">gchar*</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="163.32346"
+         y="362.21356"
+         id="tspan3372">binds   <tspan
+   style="font-size:10.11529636000000032px;fill:#ff0000;fill-opacity:1"
+   id="tspan3374">GList*</tspan></tspan></text>
+  </g>
+</svg>

@@ -22,6 +22,7 @@
 
 #include <navtree.h>
 #include <gtk/gtkbuildable.h>
+#include <libgsql/common.h>
 
 
 enum {
@@ -33,6 +34,7 @@ enum {
 	PROP_NAME
 };
 
+
 enum {
 	SIG_ON_OBJ_OPEN,
 	SIG_ON_OBJ_EXPAND,
@@ -41,17 +43,22 @@ enum {
 	SIG_LAST
 };
 
+
 typedef struct {
 	const gchar *sql;
+	const gchar *version;
 
 	// list of QueryBindValue
 	GList *binds;
 } QuerySet;
 
+
 typedef struct {
 	const gchar *name;
-	GValue	value;
+	GValue	*value;
+	GType	vtype;
 } QueryBindValue;
+
 
 typedef struct {
 	GtkBuilder	*builder;
@@ -66,6 +73,7 @@ typedef struct {
 	gboolean is_query;
 	
 } SubParserData;
+
 
 static guint navtree_signals[SIG_LAST] = { 0 };
 
@@ -301,6 +309,8 @@ gsql_navtree_set_property (GObject	*object,
                                        const GValue	*value,
                                        GParamSpec	*pspec)
 {
+	GSQL_TRACE_FUNC;
+	
 	GSQLNavTree *nt;
 	
 	nt = GSQL_NAVTREE (object);
@@ -396,10 +406,14 @@ navtree_parse_data_start (GMarkupParseContext *context,
                     gpointer             user_data,
                     GError             **error)
 {
+	GSQL_TRACE_FUNC;
+	
 	SubParserData *data = (SubParserData*)user_data;
 
 	int i;
 	QuerySet *qs;
+	gboolean has_version = FALSE;
+	gboolean has_type = FALSE;
 	QueryBindValue *qbv;
 
 	data->attr = NULL;
@@ -409,22 +423,27 @@ navtree_parse_data_start (GMarkupParseContext *context,
 
 	if (strcmp (element_name, "query") == 0)
 	{
+		data->is_query = TRUE;
+		data->qs = g_malloc0 (sizeof(QuerySet));
+		
 		for (i = 0; names[i]; i++)
 		{
 			if (strcmp (names[i], "version") == 0)
 			{
 
 				g_debug ("value: %s", values[i]);
-				data->attr = g_strndup (values[i], 15);
+				data->qs->version = g_strndup (values[i], 15);
+				has_version = TRUE;
 
 			} else 			
 				g_warning ("Unsupported tag for GSQLNavTree.query: %s", names[i]);
-
-			data->is_query = TRUE;
-			data->qs = g_malloc0 (sizeof(QuerySet));
-			
-		
 		}
+
+		if (!has_version)
+			data->qs->version = g_strndup ("*", 2);
+
+		
+		
 	} else if (strcmp (element_name, "bind") == 0) {
 
 		if (!data->is_query)
@@ -437,35 +456,47 @@ navtree_parse_data_start (GMarkupParseContext *context,
 		for (i = 0; names[i]; i++)
 		{
 			qbv = g_malloc0 (sizeof(QueryBindValue));
+
+			qbv->value = g_malloc0 (sizeof(GValue));
+			data->qs->binds = g_list_append (data->qs->binds, qbv);
+
+			g_debug ("bind name[%d]: %s", i, values[i]);
 			
 			if (strcmp (names[i], "name") == 0)
-			{
-				g_debug ("bind name: %s", values[i]);
+			{		
 				qbv->name = g_strndup (values[i], 32);
 
 			} else if (strcmp (names[i], "type") == 0) {
 
-				qbv->value = g_malloc0 (sizeof(GValue));
-
+				
+				has_type = TRUE;
+				
 				if (strcmp (values[i], "gint") == 0)
 				{
-					//= (gint) atol (values[i]);
-					qbv->value = g_value_init (qbv->value, G_TYPE_LONG);					
+					g_debug ("==start parse. bind. type gint");
+					qbv->value = g_value_init (qbv->value, G_TYPE_LONG);
+					qbv->vtype = G_TYPE_LONG;
 
 				} else if (strcmp (values[i], "gint64") == 0) {
-					//= (gint64) atoll (values[i]);
+
+					g_debug ("==start parse. bind. type gint64");
 					qbv->value = g_value_init (qbv->value, G_TYPE_INT64);
+					qbv->vtype = G_TYPE_INT64;
 
 				} else if (strcmp (values[i], "gdouble") == 0) {
-					//= (gdouble) atof (values[i]);
+
+					g_debug ("==start parse. bind. type gdouble");
 					qbv->value = g_value_init (qbv->value, G_TYPE_DOUBLE);
+					qbv->vtype = G_TYPE_DOUBLE;
 
 				} else {
-					// gchar *
+					
+					g_debug ("==start parse. bind. type string");
 					qbv->value = g_value_init (qbv->value, G_TYPE_STRING);
+					qbv->vtype = G_TYPE_STRING;
 				}
 
-				data->qs->binds = g_list_append (data->qs->binds, qbv);
+				
 
 			} else {
 				
@@ -473,9 +504,20 @@ navtree_parse_data_start (GMarkupParseContext *context,
 				g_free (qbv);
 			}
 
+			/* if type is not declared as an attribute of the bind tag 
+			   we set default type to string */
+			if (!has_type)
+			{
+				qbv->value = g_value_init (qbv->value, G_TYPE_STRING);
+				qbv->vtype = G_TYPE_STRING;
+			}
+
 		}
-	}
+		
+	} else {
+		
 		g_warning ("Unsupported element for GSQLNavTree: %s", names[i]);
+	}
 }
 
 static void
@@ -484,41 +526,72 @@ navtree_parse_data_end (GMarkupParseContext *context,
                         gpointer             user_data,
                         GError             **error)
 {
+	GSQL_TRACE_FUNC;
+	
 	SubParserData *data = (SubParserData*)user_data;
 	GSQLNavTree *nt = GSQL_NAVTREE (data->object);
+	QueryBindValue *qbv;
 
 	if (strcmp (element_name, "query") == 0)
 
 	{
-		if (data->value == NULL)
+		if (data->qs == NULL)
 		{
 			g_warning ("query tag cannot be empty");
 
 			return;
 		}
 
-		// for the default SQL set key="*"
-		
-		if (data->attr == NULL)
-			data->attr = g_strndup ("*", 2);
 
-		
-		//g_hash_table_insert (nt->queries,
-	      //               	 (gpointer) data->attr, 
-		     //                (gpointer) data->value);		
+
+		g_hash_table_insert (nt->queries,
+		                     (gpointer) data->qs->version, 
+		                     (gpointer) data->qs);	
 
 		data->is_query = FALSE;
 		data->qs = NULL;
 		
 	} else if (strcmp (element_name, "bind") == 0) {
-
-		if ((data->value == NULL) || (data->attr == NULL))
+		
+		if ((!data->is_query) || (!data->qs))
 		{
-			g_warning ("bind name and value cannot be empty");
+
+			g_warning ("'bind' should be inside 'query' tag.");
 
 			return;
 		}
 
+		qbv = (QueryBindValue *) data->qs->binds->data;
+		
+		switch (qbv->vtype) {
+
+			case G_TYPE_LONG:
+				g_debug ("==end parse. bind. type long");
+				g_value_set_long (qbv->value,(glong) atol (data->value));
+
+				break;
+
+			case G_TYPE_INT64:
+				g_debug ("==end parse. bind. type int64");
+				g_value_set_int64 (qbv->value, (gint64) atoll (data->value));
+
+				break;
+				
+			case G_TYPE_DOUBLE:
+				g_debug ("==end parse. bind. type double");
+				g_value_set_double (qbv->value, (gdouble) atof (data->value));
+
+				break;
+			
+			default: /* G_TYPE_STRING */
+				g_debug ("==end parse. bind. type string");
+				g_value_set_string (qbv->value, (const gchar *) data->value);
+
+				break;
+		}
+
+		g_free (data->value);
+		data->value = NULL;
 		
 	} else {
 
@@ -539,14 +612,17 @@ navtree_parse_data_text (GMarkupParseContext *context,
                          gpointer             user_data,
                          GError             **error)
 {
+	GSQL_TRACE_FUNC;
+	
 	SubParserData *data = (SubParserData*)user_data;
 	QueryBindValue *qbv;
 	
 	g_debug ("DATA TEXT");
 
-	if (data->is_query)
+	if ((data->is_query) && (data->qs))
 	{
 
+		data->qs->sql = g_strndup (text, text_len);
 
 	} else {
 
@@ -579,6 +655,8 @@ gsql_navtree_buildable_custom_tag_start	(GtkBuildable     *buildable,
 							GMarkupParser    *parser,
 							gpointer         *data)
 {
+	GSQL_TRACE_FUNC;
+	
 	SubParserData *parser_data;
 	
 	if (strcmp (tagname, "query") == 0)
@@ -608,6 +686,7 @@ gsql_navtree_buildable_custom_tag_end	(GtkBuildable     *buildable,
 							const gchar      *tagname,
 							gpointer		 *data)
 {
+	GSQL_TRACE_FUNC;
 	
 	g_debug ("end parse custom tag: %s", tagname);
 }
@@ -618,6 +697,8 @@ gsql_navtree_buildable_add_child	(GtkBuildable	*buildable,
 							GObject			*child,
 							const gchar		*type)
 {
+	GSQL_TRACE_FUNC;
+	
 	GSQLNavTree *nt = GSQL_NAVTREE(buildable);
 
 	if (GSQL_IS_NAVTREE (child) && GSQL_IS_NAVTREE (buildable))

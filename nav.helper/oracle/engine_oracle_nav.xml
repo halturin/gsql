@@ -77,21 +77,25 @@
 			<property name="name" translatable="yes">"My Schema"</property>
 		
 			<child>
+			
 					<object class="GSQLNavTree" id="ORACLE_TABLES">
 						<property name="id">ORACLE_TABLES</property>
 						<property name="child_id">ORACLE_TABLE</property>
 						<property name="stock_name">GSQL_STOCK_TABLES</property>
 						<property name="name" translatable="yes">"Tables"</property>			
 						<query>
-							<bind name=":name2" type="gg">[itemname]</bind>
-							select TABLES from oracle
-							<bind name=":name" type="g">[itemname]</bind>
+							select * from table
+							where a = :parent
+							and b = :name
+							and c > :flt
+							and d like :str
+							<bind name=":name">[itemname]</bind>
 							<bind name=":parent">[parentitemname]</bind>
-							<bind name=":somekindof">16</bind>
-							<bind name=":yetanother">Hello world</bind>
+							<bind name=":dbl" type="gdouble">16.8</bind>
+							<bind name=":str">Hello world%</bind>
 						</query>
-						
 					</object>
+					
 			</child>
 
 		</object>
