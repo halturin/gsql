@@ -9,6 +9,10 @@ if GSQL_ENGINE_ORACLE
 SUBDIRS += oracle
 endif
 
+if GSQL_ENGINE_PGSQL
+SUBDIRS += postgresql
+endif
+
 INCLUDES = 
 
 ## File created by the gnome-build tools

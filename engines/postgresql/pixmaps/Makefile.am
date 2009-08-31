@@ -7,7 +7,8 @@
 pgsql_engine_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@/pgsql
 
 pgsql_engine_pixmaps_DATA = \
-	pgsql.png
+	pgsql.png \
+	process.list.png
 
 
 EXTRA_DIST = $(pgsql_engine_pixmaps_DATA)

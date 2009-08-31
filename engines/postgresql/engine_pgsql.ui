@@ -1,0 +1,10 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+    <placeholder name="PHolderEngines">
+      <menu name="MenuPGSQL" action="PGSQLActionMenu">
+    	<menu name="MenuPGSQLCharsetList" action="ActionMenuPGSQLCharsetList" />
+      </menu>
+    </placeholder>
+  </menubar>
+</ui>

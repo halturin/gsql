@@ -304,6 +304,79 @@ with this.])
   fi
 ])
 
+AC_DEFUN([CHECK_PGSQL],
+[
+  AC_MSG_CHECKING([for pgsql])
+
+  have_pgsql=yes
+
+  AC_ARG_WITH(pgsql-lib,
+    [  --with-pgsql-lib=DIR      directory where the PGSQL libraries may be found ],
+    [ pgsql_lib_dir="$withval" ]
+    )
+
+  AC_ARG_WITH(pgsql-include,
+    [  --with-pgsql-include=DIR  directory where the PGSQL includes may be found ],
+    [ pgsql_include_dir="$withval" ]
+    )
+
+  AC_CHECK_PROG(PG_CONFIG, pg_config, yes, no)
+
+  dnl try to link to libpq
+  if test "x$PG_CONFIG" = "xyes"; then
+	pgsql_libs="$(pg_config --libdir) -lpq"
+	old_LIBS="$LIBS"
+	LIBS="$pgsql_libs $LIBS"
+	AC_MSG_CHECKING([for PQconnectdb in -lpq (using pg_config)])
+	AC_TRY_LINK_FUNC(PQconnectdb, have_libpq=yes)
+	LIBS="$old_LIBS"
+	if test "x$have_libpq" = "xyes"; then
+		AC_MSG_RESULT(yes)
+		pg_libs="$pgsql_libs"
+	else
+		AC_MSG_RESULT(no)
+		have_pgsql=no
+	fi
+  else
+    have_pgsql=no
+  fi
+
+  dnl ############################################################
+  dnl # Check for header files
+  dnl ############################################################
+
+  if test "x$PG_CONFIG" = "xyes"; then
+	pgsql_cflags="$(pg_config --includedir)"
+	old_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS $pgsql_cflags"
+	AC_MSG_CHECKING([for libpq-fe.h (using pg_config)])
+	AC_TRY_COMPILE([#include <libpq-fe.h>], [int a = 1;],
+		       have_pgsql_h=yes)
+	if test "x$have_pgsql_h" = "xyes"; then
+	    AC_MSG_RESULT(yes)
+	    pg_cflags="$SMART_CFLAGS $pgsql_cflags"
+	else
+	    AC_MSG_RESULT(no)
+		have_pgsql=no
+	fi
+	CFLAGS="$old_CFLAGS"
+  else
+    have_pgsql=no
+  fi
+  
+  if test $have_pgsql = yes; then
+    AC_SUBST(PGSQL_CFLAGS, $pg_cflags)
+    AC_SUBST(PGSQL_LIBS, $pg_libs)
+  fi
+
+  AM_CONDITIONAL([GSQL_ENGINE_PGSQL],[test "x$have_pgsql" = "xyes"])
+  
+  if test -z "${GSQL_ENGINE_PGSQL_TRUE}"; then
+    HAVE_DB=yes
+  fi
+  
+])
+
 
 AC_DEFUN([AM_GCONF_SOURCE_2],
 [

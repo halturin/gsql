@@ -39,10 +39,21 @@
 #include <libgsql/common.h>
 #include <libgsql/workspace.h>
 
+#include "engine_menu.h"
+#include "engine_conf.h"
+#include "engine_session.h"
+
+#include "pgsql_cursor.h"
+
+GtkWidget *
+engine_logon_widget_new ();
+void
+engine_logon_widget_free (GtkWidget * logon_widget);
+
 gboolean
 engine_load (GSQLEngine *engine)
 {
-	GSQL_TRACE_FUNC
+        GSQL_TRACE_FUNC;
 
 	engine->info.author = ENGINE_AUTHOR;
 	engine->info.id = ENGINE_ID;
@@ -53,24 +64,27 @@ engine_load (GSQLEngine *engine)
 	engine->info.major_version = ENGINE_MAJOR_VER;
 	engine->info.minor_version = ENGINE_MINOR_VER;
 
-	engine->file_logo = "pgsql/pgsql.png";
+	engine->file_logo = "postgresql/pgsql.png";
+	//engine->stock_logo = GSQLE_PGSQL_STOCK_PGSQL;
+	engine->session_open = engine_session_open;
 	
-//	engine_menu_init (engine);
-	
-//	engine->engine_session_open = engine_session_open;
-//	engine->engine_session_close = engine_session_close;
-//	engine->engine_session_reopen = engine_session_reopen;
-	/* menu show/hide */
-//	engine->engine_menu_set_visible = engine_menu_set_visible;
 	/* logon widget */
-//	engine->engine_logon_widget_create = NULL;
-//	engine->engine_logon_widget_free = NULL;
+	engine->logon_widget_new = engine_logon_widget_new;
+	engine->logon_widget_free = engine_logon_widget_free;
+
 	/* prefs widget */
-//	engine->engine_conf_widget_create = engine_conf_widget_create;
-//	engine->engine_conf_widget_free = engine_conf_widget_free;
+	/* engine->engine_conf_widget_create = engine_conf_widget_create; */
+	/* engine->engine_conf_widget_free = engine_conf_widget_free; */
+
+	/* cursor */
+	engine->cursor_open_with_bind = pgsql_cursor_open_bind;
+	engine->cursor_open = pgsql_cursor_open;
+	engine->cursor_fetch = pgsql_cursor_fetch;
 	
-	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/pgsql");
-//	engine_stock_init();
+
+	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/postgresql");
+	engine_stock_init();
+	engine_menu_init (engine);
 		
     return TRUE;
 };
@@ -78,7 +92,7 @@ engine_load (GSQLEngine *engine)
 gboolean
 engine_unload (GSQLEngine * engine)
 {
-	GSQL_TRACE_FUNC
+        GSQL_TRACE_FUNC;
 
 	if (engine->in_use)
 	{
@@ -93,12 +107,110 @@ engine_unload (GSQLEngine * engine)
 void
 engine_workspace_init (GSQLWorkspace *workspace)
 {
-	GSQL_TRACE_FUNC
+        GSQL_TRACE_FUNC;
 
 	return;
 };
 
 
+GtkWidget *
+engine_logon_widget_new ()
+{
+	GSQL_TRACE_FUNC;
 
+	GtkWidget *table;
+	GtkWidget *hostname;
+	GtkWidget *database_name;
+	GtkWidget *database_name_entry;
+	GtkWidget *username;
+	GtkWidget *password;
+	GtkWidget *label;
 
+	table = gtk_table_new (6, 2, FALSE);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+	gtk_widget_show (table);
+	
+	hostname = gtk_entry_new ();
+	gtk_widget_show (hostname);
+	gtk_table_attach (GTK_TABLE (table), hostname, 1, 2, 1, 2,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_entry_set_max_length (GTK_ENTRY (hostname), 128);
+	gtk_entry_set_invisible_char (GTK_ENTRY (hostname), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (hostname), TRUE);
+        
+	label = gtk_label_new (_("Host"));
+	gtk_widget_show (label);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+	
+	database_name = gtk_combo_box_entry_new_text ();
+	gtk_widget_show (database_name);
+	gtk_table_attach (GTK_TABLE (table), database_name, 1, 2, 2, 3,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL), 0, 0);
+	database_name_entry = gtk_bin_get_child(GTK_BIN(database_name));
+	gtk_entry_set_activates_default(GTK_ENTRY (database_name_entry), TRUE);
 
+	label = gtk_label_new (_("Database"));
+	gtk_widget_show (label);
+		
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
+						(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+						(GtkAttachOptions) (0), 0, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+       
+	username = gtk_entry_new ();
+	gtk_widget_show (username);
+	gtk_table_attach (GTK_TABLE (table), username, 1, 2, 3, 4,
+						(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+						(GtkAttachOptions) (0), 0, 0);
+	gtk_entry_set_max_length (GTK_ENTRY (username), 32);
+	gtk_entry_set_invisible_char (GTK_ENTRY (username), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (username), TRUE);
+        
+	label = gtk_label_new (_("User"));
+	gtk_widget_show (label);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+        
+	password = gtk_entry_new ();
+	gtk_widget_show (password);
+	gtk_table_attach (GTK_TABLE (table), password, 1, 2, 4, 5,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_entry_set_max_length (GTK_ENTRY (password), 32);
+	gtk_entry_set_visibility (GTK_ENTRY (password), FALSE);
+	gtk_entry_set_invisible_char (GTK_ENTRY (password), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (password), TRUE);
+    
+	label = gtk_label_new (_("Password"));
+	gtk_widget_show (label);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+        
+	HOOKUP_OBJECT (table, hostname, "hostname");
+	HOOKUP_OBJECT (table, database_name, "database");
+	HOOKUP_OBJECT (table, username, "username");  
+	HOOKUP_OBJECT (table, password, "password");  
+
+	return table;	
+}
+
+void
+engine_logon_widget_free (GtkWidget * logon_widget)
+{
+	GSQL_TRACE_FUNC;
+
+	return;
+}
