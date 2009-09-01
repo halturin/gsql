@@ -69,9 +69,10 @@ pgsql_session_close (GSQLSession *session, gchar *buffer)
   GSQLEPGSQLSession *spec_session;
   spec_session = (GSQLEPGSQLSession *) session->spec;
 
+  gsql_session_close (session);
+
   PQfinish (spec_session->pgconn);
 
-  g_free (spec_session->pgconn);
   g_free (spec_session);
 	
   return TRUE;
