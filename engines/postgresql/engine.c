@@ -31,7 +31,7 @@
 #define ENGINE_ID    "engine_pgsql"
 #define ENGINE_NAME  "PostgreSQL"
 #define ENGINE_DESC  "GSQL module for PostgreSQL support"
-#define ENGINE_AUTHOR "Taras Halturin"
+#define ENGINE_AUTHOR "Estêvão Samuel Procópio"
 #define ENGINE_HOMEPAGE "http://gsql.org"
 
 #include <config.h>
