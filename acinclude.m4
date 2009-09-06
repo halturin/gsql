@@ -324,7 +324,7 @@ AC_DEFUN([CHECK_PGSQL],
 
   dnl try to link to libpq
   if test "x$PG_CONFIG" = "xyes"; then
-	pgsql_libs="$(pg_config --libdir) -lpq"
+	pgsql_libs="-L$(pg_config --libdir) -lpq"
 	old_LIBS="$LIBS"
 	LIBS="$pgsql_libs $LIBS"
 	AC_MSG_CHECKING([for PQconnectdb in -lpq (using pg_config)])
@@ -346,7 +346,7 @@ AC_DEFUN([CHECK_PGSQL],
   dnl ############################################################
 
   if test "x$PG_CONFIG" = "xyes"; then
-	pgsql_cflags="$(pg_config --includedir)"
+	pgsql_cflags="-I$(pg_config --includedir)"
 	old_CFLAGS="$CFLAGS"
 	CFLAGS="$CFLAGS $pgsql_cflags"
 	AC_MSG_CHECKING([for libpq-fe.h (using pg_config)])
