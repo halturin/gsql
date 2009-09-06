@@ -32,13 +32,16 @@ libgsqlengine_pgsql_la_SOURCES = \
 	nav_tree_users.c \
 	nav_tree_schemas.c
 
+libgsqlengine_pgsql_la_CFLAGS = \
+	$(PGSQL_CFLAGS)
+
 libgsqlengine_pgsql_la_LIBADD = \
 	$(PACKAGE_LIBS) \
-	-lpq
+	$(PGSQL_LIBS) \
+	$(top_builddir)/libgsql/libgsql.la
 
 INCLUDES = \
-	$(PACKAGE_CFLAGS) \
-	-I`pg_config --includedir`
+	$(PACKAGE_CFLAGS)
 
 ## File created by the gnome-build tools
 
