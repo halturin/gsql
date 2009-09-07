@@ -25,17 +25,6 @@
 
 #include <glib.h>
 #include <libgsql/cursor.h>
-#include <libpq-fe.h>
-
-typedef struct _GSQLEPGSQLCursor GSQLEPGSQLCursor;
-
-struct _GSQLEPGSQLCursor
-{
-  //PGSQL_STMT  *statement;
-  //PGSQL_BIND  *binds;
-  PGresult   *result;
-  int count;
-};
 
 G_BEGIN_DECLS
 

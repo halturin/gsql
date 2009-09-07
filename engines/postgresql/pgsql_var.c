@@ -29,29 +29,7 @@
 #include "pgsql_var.h"
 
 
-//static void pgsql_time_to_datetime (GSQLVariable *variable);
 static void on_variable_free (GSQLVariable *var, gpointer user_data);
-
-/* static void */
-/* pgsql_variable_clear_foreach (gpointer item, gpointer user_data) */
-/* { */
-/*   GSQLVariable *var = item; */
-/*   GSQLEPGSQLVariable *var_spec; */
-	
-/*   var_spec = (GSQLEPGSQLVariable *) var->spec; */
-
-/*   if (var_spec->bind->buffer) */
-/*     memset (var_spec->bind->buffer, 0, var_spec->bind->buffer_length); */
-/* } */
-	
-
-/* void */
-/* pgsql_variable_clear (GSQLCursor *cursor) */
-/* { */
-/*   g_return_if_fail (GSQL_IS_CURSOR (cursor)); */
-	
-/*   g_list_foreach (cursor->var_list, pgsql_variable_clear_foreach, NULL); */
-/* } */
 
 gboolean
 pgsql_variable_init (GSQLVariable *variable, PGSQL_FIELD *field /*, PGSQL_BIND *bind*/)

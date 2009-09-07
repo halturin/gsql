@@ -23,13 +23,10 @@
 #ifndef PGSQL_VAR_H
 #define PGSQL_VAR_H
 
-#include <libpq-fe.h>
-#include <c.h>
+#include <postgres.h>
 #include <catalog/pg_type.h>
 
 #include <libgsql/cvariable.h>
-
-#include "pgsql_cursor.h"
 
 typedef struct _GSQLEPGSQLVariable  GSQLEPGSQLVariable;
 

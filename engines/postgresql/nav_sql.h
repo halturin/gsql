@@ -165,7 +165,8 @@ where table_schema = $1";
 
 static const gchar sql_pgsql_routines[] =
 "select routine_name, * from information_schema.routines where routine_type = $1 \
- and ROUTINE_SCHEMA = $2";
+ and ROUTINE_SCHEMA = $2 \
+order by routine_name";
 
 
 #endif /* _NAV_SQL_H */

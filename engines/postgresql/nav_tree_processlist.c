@@ -32,6 +32,36 @@
 #include "engine_stock.h"
 #include "nav_sql.h"
 
+static void
+nav_tree_processlist_popup (GSQLNavigation *navigation,
+			    GtkTreeView *tv,
+			    GtkTreeIter *iter, guint event);
+
+static void on_popup_table_create (GtkMenuItem * menuitem, 
+				   gpointer user_data);
+
+
+static void
+on_popup_process_kill (GtkMenuItem * menuitem, 
+		       gpointer user_data);
+
+static gchar process_ui[] = 
+" <ui> "
+"  <popup name=\"NavObjects\" action=\"ActionNavObjects\"> "
+"  		<placeholder name=\"PHolderNavObjectDo\"> "
+"  				<menuitem name=\"PGSQLProcessKill\" action=\"PGSQLActionProcessKill\" />	"
+"	    </placeholder> "
+"  </popup> "
+"</ui>";
+
+static GtkActionEntry process_acts[] = 
+{
+	{ "PGSQLActionProcessKill", GTK_STOCK_DELETE, 
+	  N_("Kill"), NULL, 
+	  N_("Kill process"), 
+	  G_CALLBACK(on_popup_process_kill) },
+};
+
 
 void
 nav_tree_refresh_processlist (GSQLNavigation *navigation,
@@ -119,7 +149,7 @@ nav_tree_refresh_processlist (GSQLNavigation *navigation,
 			  GSQL_NAV_TREE_REALNAME, 	name,
 			  GSQL_NAV_TREE_ITEM_INFO, 	NULL,
 			  GSQL_NAV_TREE_SQL,			NULL,
-			  GSQL_NAV_TREE_OBJECT_POPUP, NULL,
+			  GSQL_NAV_TREE_OBJECT_POPUP, nav_tree_processlist_popup,
 			  GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
 			  GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
 			  GSQL_NAV_TREE_EVENT_HANDLER, NULL,
@@ -146,135 +176,32 @@ nav_tree_refresh_processlist (GSQLNavigation *navigation,
   
   gsql_cursor_close (cursor);
 
-  /*
-  GSQL_TRACE_FUNC;
+}
 
-  GtkTreeModel *model;
-  GtkListStore *details;
-  GSQLNavigation *nav = NULL;
-  gchar			*sql = NULL;
-  gchar			*realname = NULL;
-  gint 		id;
-  gint		i,n;
-  GtkTreeIter child;
-  GtkTreeIter child_fake;
-  GtkTreeIter	child_last;
-  GSQLCursor *cursor;
-  GSQLVariable *var, *var1, *var2, *var3, *var4;
-  GSQLCursorState state;
-  GSQLSession *session;
-  gchar *name, *display_name, *owner;
-  gchar key[256];
-
+static void
+nav_tree_processlist_popup (GSQLNavigation *navigation,
+			    GtkTreeView *tv,
+			    GtkTreeIter *iter, guint event)
+{
+	GSQL_TRACE_FUNC;
+	GtkActionGroup *actions = NULL;
 	
-  model = gtk_tree_view_get_model(tv);
-  n = gtk_tree_model_iter_n_children(model, iter);
-	
-  for (; n>1; n--)
-    {
-      gtk_tree_model_iter_children(model, &child, iter);
-      gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
-    }
-	
-  gtk_tree_model_iter_children(model, &child_last, iter);
-	
-  gtk_tree_model_get (model, iter,  
-		      GSQL_NAV_TREE_REALNAME, 
-		      &realname, -1);
-	
-  gtk_tree_model_get (model, iter,  
-		      GSQL_NAV_TREE_SQL, 
-		      &sql, -1);
-	
-  gtk_tree_model_get (model, iter,  
-		      GSQL_NAV_TREE_OWNER, 
-		      &owner, -1);
-	
-  session = gsql_session_get_active ();
-	
-  cursor = gsql_cursor_new (session, sql);
-  state = gsql_cursor_open (cursor, FALSE);
-	
-  var = g_list_nth_data(cursor->var_list, 0); // process id. should by gint64
-  var1 = g_list_nth_data(cursor->var_list, 1); // user
-  var2 = g_list_nth_data(cursor->var_list, 2); // hostname
-  var3 = g_list_nth_data(cursor->var_list, 3); // db
-  var4 = g_list_nth_data(cursor->var_list, 4); // status
-	
-  if (state != GSQL_CURSOR_STATE_OPEN)
-    {
-      gsql_cursor_close (cursor);
-      return;		
-    }
-	
-  i = 0;
-	
-  while (gsql_cursor_fetch (cursor, 1) > 0)
-    {
-      i++;
-		
-      if (var->value_type != G_TYPE_STRING)
+	if (!gsql_navigation_get_action (navigation, "PGSQLActionProcessKill"))
 	{
-	  GSQL_DEBUG ("The name of object should be a gint64. Is the bug");
-	  name = g_strdup (N_("Incorrect data"));
-	  display_name = g_strdup (N_("Incorrect data"));
-	} else {
-	//name = g_strdup_printf ("%llu", *((gint64 *) var->value));
-	name = var->value;
-	display_name = g_strdup_printf ("%llu %s@%s[%s] %s",
-					*((gint64 *) var->value),
-					(gchar *) var1->value,
-					(gchar *) var3->value,
-					(gchar *) var2->value,
-					(gchar *) var4->value);
-	display_name = name;
-	make a key for a hash of details
-	memset (key, 0, 256);
-	g_snprintf (key, 255, "%x%s%d%s",
-		    session, name, PROCESS_LIST_ID, name);
-			
-	details = gsql_navigation_get_details (navigation, key);
-	pgsql_navigation_fill_details (cursor, details);
-      }
-		
-      gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
-      gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-			  GSQL_NAV_TREE_ID,			PROCESS_LIST_ID,
-			  GSQL_NAV_TREE_OWNER,		name,
-			  GSQL_NAV_TREE_IMAGE,		GSQLE_PGSQL_STOCK_PROCESS_LIST,
-			  GSQL_NAV_TREE_NAME,			display_name,
-			  GSQL_NAV_TREE_REALNAME, 	name,
-			  GSQL_NAV_TREE_ITEM_INFO, 	NULL,
-			  GSQL_NAV_TREE_SQL,			NULL,
-			  GSQL_NAV_TREE_OBJECT_POPUP, NULL,
-			  GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
-			  GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
-			  GSQL_NAV_TREE_EVENT_HANDLER, NULL,
-			  GSQL_NAV_TREE_STRUCT, NULL,
-			  GSQL_NAV_TREE_DETAILS, NULL,
-			  GSQL_NAV_TREE_NUM_ITEMS, 0,
-			  -1);
-		
-      g_free (name);
-      g_free (display_name);
-		
-    }
+		actions = gtk_action_group_new ("PGSQLPopupProcessActions");
+		gtk_action_group_add_actions (actions, process_acts, 
+					      G_N_ELEMENTS (process_acts), NULL);
+		gsql_navigation_menu_merge (navigation, process_ui, actions);
+	}
+
+	gsql_navigation_menu_popup (navigation, actions);
 	
-  GSQL_DEBUG ("Items fetched: [%d]", i);
-	
-  if (i > 0)
-    {
-      name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
-			     realname, i);
-      gtk_tree_store_set (GTK_TREE_STORE(model), iter,
-			  GSQL_NAV_TREE_NAME, 
-			  name,
-			  -1);
-      g_free (name);
-    }
-	
-  gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
-	
-  gsql_cursor_close (cursor);
-  */
+}
+
+static void
+on_popup_process_kill (GtkMenuItem * menuitem, 
+		       gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+	//pg_cancel_backend (procpid)
 }

@@ -12,8 +12,6 @@ engine_ui_DATA = engine_pgsql.ui
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = 
 
-libgsqldir = $(PACKAGE_ENGINES_DIR)
-
 libgsql_LTLIBRARIES = \
 	libgsqlengine_pgsql.la 
 

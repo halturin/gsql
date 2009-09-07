@@ -29,6 +29,15 @@
 
 #include <pthread.h>
 
+typedef struct _GSQLEPGSQLCursor GSQLEPGSQLCursor;
+
+struct _GSQLEPGSQLCursor
+{
+  PGresult   *result;
+  int count;
+};
+
+
 static void pgsql_cursor_statement_detect (GSQLCursor *cursor);
 
 static void
@@ -255,8 +264,16 @@ pgsql_cursor_open (GSQLCursor *cursor) {
 	
   n_fields =  PQnfields (e_cursor->result);
 	
-  if (n_fields == 0)
+  if (n_fields == 0 && PQresultStatus(e_cursor->result) == PGRES_COMMAND_OK)
     return GSQL_CURSOR_STATE_OPEN;
+
+  if (n_fields == 0 && PQresultStatus != PGRES_COMMAND_OK) {
+    g_sprintf ( error_str, "Error occured: %s", PQerrorMessage (e_session->pgconn) );
+    GSQL_DEBUG (error_str);
+    gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
+    
+    return GSQL_CURSOR_STATE_ERROR;
+  }
 	
   for (n = 0; n < n_fields; n++) {
     // where to free this?!?
@@ -321,8 +338,9 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
 	
   e_cursor = cursor->spec;
   e_cursor->count = 0;
+  cursor->stmt_affected_rows = 0;
 	
-  affect = PQcmdTuples(e_cursor->result);
+  //affect = PQcmdTuples(e_cursor->result);
 	
   stmt_char = PQcmdStatus (e_cursor->result);
   GSQL_DEBUG("STMT [%s]", stmt_char);
@@ -339,21 +357,23 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
       if (g_str_has_prefix (stmt_char, "INSERT")) {
 	GSQL_DEBUG ("'insert' statement");
 	cursor->stmt_type = GSQL_CURSOR_STMT_INSERT;
-	cursor->stmt_affected_rows = affect;
+	cursor->stmt_affected_rows = PQcmdTuples(e_cursor->result);
 	break;
       }
 			
       if (g_str_has_prefix (stmt_char, "update")) {
 	GSQL_DEBUG ("'update' statement");
 	cursor->stmt_type = GSQL_CURSOR_STMT_UPDATE;
-	cursor->stmt_affected_rows = affect;
+	cursor->stmt_affected_rows = PQcmdTuples(e_cursor->result);
+	//cursor->stmt_affected_rows = affect;
 	break;
       }
       
       if (g_str_has_prefix (stmt_char, "DELETE")) {
 	GSQL_DEBUG ("'delete' statement");
 	cursor->stmt_type = GSQL_CURSOR_STMT_DELETE;
-	cursor->stmt_affected_rows = affect;
+	cursor->stmt_affected_rows = PQcmdTuples(e_cursor->result);
+	//cursor->stmt_affected_rows = affect;
 	break;
       }
 				
@@ -379,5 +399,4 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
       GSQL_DEBUG ("default 'exec' statement");
       cursor->stmt_type = GSQL_CURSOR_STMT_EXEC;
   }
-	
 }
