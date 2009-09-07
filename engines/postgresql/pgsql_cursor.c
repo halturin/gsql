@@ -333,14 +333,14 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
   GSQL_TRACE_FUNC;
 	
   gchar *stmt_char;
-  gint affect = 0;
+  gchar *affect = NULL;
   GSQLEPGSQLCursor  *e_cursor = NULL;
 	
   e_cursor = cursor->spec;
   e_cursor->count = 0;
   cursor->stmt_affected_rows = 0;
 	
-  //affect = PQcmdTuples(e_cursor->result);
+  affect = PQcmdTuples(e_cursor->result);
 	
   stmt_char = PQcmdStatus (e_cursor->result);
   GSQL_DEBUG("STMT [%s]", stmt_char);
@@ -357,15 +357,14 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
       if (g_str_has_prefix (stmt_char, "INSERT")) {
 	GSQL_DEBUG ("'insert' statement");
 	cursor->stmt_type = GSQL_CURSOR_STMT_INSERT;
-	cursor->stmt_affected_rows = PQcmdTuples(e_cursor->result);
+	cursor->stmt_affected_rows = strtoull (affect, NULL, 10);
 	break;
       }
 			
-      if (g_str_has_prefix (stmt_char, "update")) {
+      if (g_str_has_prefix (stmt_char, "UPDATE")) {
 	GSQL_DEBUG ("'update' statement");
 	cursor->stmt_type = GSQL_CURSOR_STMT_UPDATE;
-	cursor->stmt_affected_rows = PQcmdTuples(e_cursor->result);
-	//cursor->stmt_affected_rows = affect;
+	cursor->stmt_affected_rows = strtoull (affect, NULL, 10);
 	break;
       }
       
@@ -373,7 +372,7 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
 	GSQL_DEBUG ("'delete' statement");
 	cursor->stmt_type = GSQL_CURSOR_STMT_DELETE;
 	cursor->stmt_affected_rows = PQcmdTuples(e_cursor->result);
-	//cursor->stmt_affected_rows = affect;
+	cursor->stmt_affected_rows = strtoull (affect, NULL, 10);
 	break;
       }
 				
