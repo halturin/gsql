@@ -71,6 +71,10 @@ static GtkWidgetClass *parent_class;
 
 // callbacks
 
+static gboolean on_notebool_release_button (GtkWidget (widget),
+                                            GdkEventButton *event,
+                                            gpointer user_data);
+
 static gboolean gsql_messages_popup_menu_cb(GtkWidget *tv, void *user_data);
 
 static gboolean gsql_messages_button_press_cb (GtkWidget *tv, 
@@ -176,6 +180,9 @@ gsql_workspace_new (GSQLSession *session)
 	contents_root = workspace->private->contents;
 	
 	gtk_notebook_popup_enable (GTK_NOTEBOOK (contents_root));
+
+	g_signal_connect_after (GTK_WIDGET (contents_root),  "button-release-event",
+	                        G_CALLBACK (on_notebool_release_button), NULL);
 	
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK (contents_root), TRUE);
 	
@@ -941,6 +948,16 @@ gsql_message_save_selection_foreach (GtkTreeModel *model,
 	g_free (time_message);
 	g_free (body_message);
 
+}
+
+static gboolean on_notebool_release_button (GtkWidget (widget),
+                                            GdkEventButton *event,
+                                            gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	
+	return FALSE;
 }
 
 

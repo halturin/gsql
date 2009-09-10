@@ -64,6 +64,35 @@ fi
 
 AM_CONDITIONAL(HAVE_PLUGIN_VTE, [test x$vte_enabled = xyes])
 
+
+AC_ARG_ENABLE(plugin-tunnel,
+  [  --disable-plugin-tunnel        Disable SSH-tunneling plugin in GSQL.],
+  [ if test "$enableval" = "no"; then
+       user_disabled_tunnel=1
+    fi ],
+  [ user_disabled_tunnel=0 ] ) 
+
+AC_MSG_CHECKING(if tunnel plugin is disabled)
+if test "$user_disabled_tunnel" = 1; then
+	AC_MSG_RESULT(yes)
+	tunnel_enabled="no"
+else
+	AC_MSG_RESULT(no)
+
+dnl checking libssh headers and libs.
+	AC_CHECK_HEADERS(libssh/libssh.h,,[AC_MSG_ERROR([ssh library: headers not found])])
+	AC_CHECK_LIB(ssh,ssh_connect,[PLUGIN_TUNNEL_LIBS="-lssh"],[AC_MSG_ERROR([libssh not found])])
+
+	
+	tunnel_enabled="yes"
+	AC_SUBST(PLUGIN_TUNNEL_CFLAGS)
+	AC_SUBST(PLUGIN_TUNNEL_LIBS)
+fi
+
+AM_CONDITIONAL(HAVE_PLUGIN_TUNNEL, [test x$tunnel_enabled = xyes])
+
+
+
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
@@ -227,6 +256,7 @@ plugins/Makefile
 plugins/vte/Makefile
 plugins/exporter/Makefile
 plugins/runner/Makefile
+plugins/tunnel/Makefile
 pixmaps/Makefile
 doc/Makefile
 doc/gsql.1

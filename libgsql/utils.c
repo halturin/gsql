@@ -255,6 +255,7 @@ static GSQLEncoding encodings [] = {
 		"WINDOWS-1258", N_("Vietnamese") }
 };
 
+
 GtkWidget*
 gsql_utils_header_new (GtkWidget * icon, gchar *text, gchar *tooltip,
 						 gboolean close_button, gint direction)

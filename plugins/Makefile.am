@@ -7,6 +7,10 @@ if HAVE_PLUGIN_VTE
 SUBDIRS += vte
 endif
 
+if HAVE_PLUGIN_TUNNEL
+SUBDIRS += tunnel
+endif
+
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = gsql-plugins.schemas
 
