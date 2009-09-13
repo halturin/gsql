@@ -134,9 +134,9 @@ nav_tree_refresh_processlist (GSQLNavigation *navigation,
     {
       i++;		
       name = (gchar *) var->value;
-
+      GSQL_DEBUG("PID [%s]", name);
       g_snprintf (key, 256, "%s%d%s%x",
-		  name, TABLE_ID, name, session);
+		  name, PROCESS_ID, name, session);
       details = gsql_navigation_get_details (navigation, key);
       pgsql_navigation_fill_details (cursor, details);
       
@@ -203,5 +203,50 @@ on_popup_process_kill (GtkMenuItem * menuitem,
 		       gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
+	GSQLSession *session = NULL;
+	GSQLWorkspace *workspace = NULL;
+	GSQLNavigation *navigation = NULL;
+	GSQLCursor *cursor = NULL;
+	GtkTreeIter *iter = NULL;
+	GtkTreeModel *model = NULL;
+	gchar *procpid = NULL, msg[256];
+
+	session = gsql_session_get_active();
+	g_return_if_fail(GSQL_IS_SESSION(session));
+
+	workspace = gsql_session_get_workspace(session);
+	g_return_if_fail(GSQL_IS_WORKSPACE(workspace));
+
+	navigation = gsql_workspace_get_navigation (workspace);
+	g_return_if_fail(GSQL_IS_NAVIGATION(navigation));
+
+	iter = gsql_navigation_get_active_iter (navigation);
+
+	if (! iter) {
+		GSQL_DEBUG ("No selection");
+		return;
+	}
+
+	model = gsql_navigation_get_model(navigation);
+	gtk_tree_model_get (model, iter,
+			    GSQL_NAV_TREE_NAME,
+			    &procpid, -1);
+
+	GSQL_DEBUG ("Killing process [%s]", procpid);
+
+	cursor = gsql_cursor_new(session, (gchar *)"select pg_cancel_backend (?)");
+	if (gsql_cursor_open_with_bind(cursor,
+				   FALSE,
+				   GSQL_CURSOR_BIND_BY_POS,
+				   G_TYPE_STRING, procpid,
+				   -1) != GSQL_CURSOR_STATE_OPEN) {
+		GSQL_DEBUG("Error killing process...");
+		gsql_cursor_close (cursor);
+		return;
+	}
+
+	g_sprintf(msg, _("Killing %s..."), procpid);
+	gsql_message_add(workspace, GSQL_MESSAGE_NOTICE, msg);
+
 	//pg_cancel_backend (procpid)
 }

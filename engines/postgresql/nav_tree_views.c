@@ -25,6 +25,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include <libgsql/common.h>
+#include <libgsql/sqleditor.h>
 #include <libgsql/stock.h>
 #include <libgsql/session.h>
 #include <libgsql/navigation.h>
@@ -88,16 +89,21 @@ static GtkActionEntry view_actions[] =
       N_("Browse data"), NULL, 
       N_("Open SQL editor to browse the data  [ F3 ]"), 
       G_CALLBACK(on_popup_view_browse) },
+    { "PGSQLActionViewAlter", NULL, 
+      N_("Edit"), NULL, 
+      N_("Open SQL editor to change the view "), 
+      G_CALLBACK(on_popup_view_alter) },
 
   };
 
 static gchar view_ui[] = 
-  " <ui>																									"
-  "  <popup name=\"NavObjects\" action=\"ActionNavObjects\">												"
-  " 		<placeholder name=\"PHolderNavObjectDo\" >													"
+  " <ui>							"
+  "  <popup name=\"NavObjects\" action=\"ActionNavObjects\">	"
+  " 		<placeholder name=\"PHolderNavObjectDo\" >	"
   "  				<menuitem name=\"PGSQLViewBrowse\" action=\"PGSQLActionViewBrowse\" />		"
-  "  		</placeholder>																				"
-  "  </popup>																								"
+  "  				<menuitem name=\"PGSQLViewAlter\" action=\"PGSQLActionViewAlter\" />		"
+  "  		</placeholder>					"
+  "  </popup>							"
   "</ui> ";
 
 void
@@ -294,10 +300,6 @@ nav_tree_views_editor (GSQLNavigation *navigation,
   GSQL_TRACE_FUNC;
 }
 
-
-
-
-
 static void
 on_popup_view_create (GtkMenuItem * menuitem, 
 		      gpointer user_data)
@@ -316,7 +318,69 @@ static void
 on_popup_view_alter (GtkMenuItem * menuitem, 
 		     gpointer user_data)
 {
-  GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;
+	GSQLSession *session = NULL;
+	GSQLWorkspace *workspace = NULL;
+	GSQLNavigation *navigation = NULL;
+	GSQLCursor *cursor = NULL;
+	GSQLContent *content = NULL;
+	GSQLEditor *editor = NULL;
+	GtkTreeIter *iter = NULL, det_iter;
+	GtkTreeModel *model = NULL;
+	GtkTreeModel *details = NULL;
+	GtkWidget *source = NULL;
+	gchar *view_code = NULL, *name, *owner;
+	gboolean valid = FALSE;
+
+	session = gsql_session_get_active();
+	g_return_if_fail(GSQL_IS_SESSION(session));
+
+	workspace = gsql_session_get_workspace(session);
+	g_return_if_fail(GSQL_IS_WORKSPACE(workspace));
+
+	navigation = gsql_workspace_get_navigation (workspace);
+	g_return_if_fail(GSQL_IS_NAVIGATION(navigation));
+
+	iter = gsql_navigation_get_active_iter (navigation);
+
+	if (! iter) {
+		GSQL_DEBUG ("No selection");
+		return;
+	}
+
+	model = gsql_navigation_get_model(navigation);
+	gtk_tree_model_get (model, iter,
+			    GSQL_NAV_TREE_NAME, &name, 
+			    GSQL_NAV_TREE_OWNER, &owner, 
+			    GSQL_NAV_TREE_DETAILS, &details, 
+			    -1);
+
+	valid = gtk_tree_model_get_iter_first (details, &det_iter);
+	while (valid) {
+		gchar *det_name, *value;
+		gtk_tree_model_get (details, &det_iter,
+				    GSQL_NAV_DETAILS_NAME, &det_name,
+				    GSQL_NAV_DETAILS_VALUE, &value,
+				    -1);
+		//GSQL_DEBUG ("Reading [%s] from details", det_name);
+		if ( ! g_strcmp0 (det_name, "view_definition") ) {
+			view_code = g_strdup_printf("create or replace view %s.%s as\n%s", owner, name, value);
+			//GSQL_DEBUG("[%s] = [%s]", det_name, view_code);
+			break;
+		}
+		valid = gtk_tree_model_iter_next (details, &det_iter);
+	}
+
+	content = gsql_content_new(session, GTK_STOCK_FILE);
+	gsql_content_set_name_full(content, name, name);
+
+	source = gsql_source_editor_new(view_code);
+	editor = gsql_editor_new(session, source);
+	gsql_content_set_child(content, GTK_WIDGET(editor));
+	
+	gsql_workspace_add_content(workspace, content);
+
+	g_free (view_code);
 }
 
 static void
