@@ -9,7 +9,7 @@ tunnel_uidir = $(PACKAGE_UI_DIR)/plugins
 tunnel_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@/plugins
 
 tunnel_ui_DATA = 
-tunnel_glade_DATA = 
+tunnel_glade_DATA = tunnel_config.xml
 
 tunnel_pixmaps_DATA = \
 	tunnel.png
@@ -19,7 +19,9 @@ libgsql_LTLIBRARIES = \
 
 libgsqlplugin_tunnel_la_SOURCES = \
 	plugin_tunnel.c          \
-	plugin_tunnel.h
+	plugin_tunnel.h          \
+	tunnel_conf.c          \
+	tunnel_conf.h
 
 libgsqlplugin_tunnel_la_CFLAGS = \
 	-I$(top_builddir)/libgsql/ \

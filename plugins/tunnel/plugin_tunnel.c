@@ -28,6 +28,7 @@
 
 #include <libgsql/common.h>
 #include "plugin_tunnel.h"
+#include "tunnel_conf.h"
 
 
 
@@ -37,6 +38,35 @@
 #define PLUGIN_DESC  "SSH tunneling"
 #define PLUGIN_AUTHOR "Taras Halturin"
 #define PLUGIN_HOMEPAGE "http://gsql.org"
+
+/* list of ssh sessions */
+static GList *ssh_sessions = NULL;
+
+typedef struct _SSHSession		SSHSession;
+
+struct _SSHSession {
+
+	/* connect to */
+	const gchar *hostname;
+	const gchar *password;
+	guint		port;
+
+	SSH_SESSION *ssh;
+
+	/* listen on */
+	const gchar		*localname;
+	guint			localport;
+
+	/* forwaded from */
+	const gchar		*fwdhost;
+	guint			fwdport;
+
+	/* list of CHANNELs */
+	GList		*channels;
+
+	gboolean	connected;
+	GError		*err;
+};
 
 static GSQLStockIcon stock_icons[] = 
 {
@@ -64,9 +94,9 @@ plugin_load (GSQLPlugin * plugin)
 	
 	gsql_factory_add (stock_icons, G_N_ELEMENTS(stock_icons));
 
-	plugin->plugin_conf_dialog = NULL;
+	plugin->plugin_conf_dialog = plugin_tunnel_conf_dialog;
 
-	do_open_channel ("fantom","pswd", "localhost", 22, 22022);
+	
 
 	return TRUE;
 }
@@ -83,12 +113,11 @@ static gboolean
 do_open_channel (gchar *username, gchar *password, gchar *remote,
                  guint remote_port, guint local_port)
 {
-
 	SSH_SESSION *ssh = ssh_new();
 	SSH_OPTIONS *opts = ssh_options_new();
 	CHANNEL *ch = NULL;
 
-	ssh_options_set_port (opts, remote_port);
+	ssh_options_set_port (opts, 22);
 	ssh_options_set_host (opts, remote);
 	
 	ssh_set_options (ssh, opts);
@@ -101,31 +130,34 @@ do_open_channel (gchar *username, gchar *password, gchar *remote,
 
 	ssh_is_server_known(ssh);
 
-	if (ssh_userauth_autopubkey(ssh) == SSH_AUTH_ERROR)
+	if (ssh_userauth_autopubkey(ssh) != SSH_AUTH_SUCCESS)
 	{
 		g_warning ("Authenticating with pubkey: %s\n",ssh_get_error(ssh));
 		
-	} else if (ssh_userauth_password (ssh, username, password) != SSH_AUTH_SUCCESS)	{
-		
+		if (ssh_userauth_password (ssh, username, password) != SSH_AUTH_SUCCESS)
+		{
 			g_warning ("Authentication with password failed: %s\n",ssh_get_error (ssh));
 			return FALSE;
 		}
+	}
 
 	ch = channel_new (ssh);
 
-	if (channel_open_forward (ch, remote, remote_port, "localhst", local_port) != SSH_OK)
+	if (channel_open_forward (ch, "localhost", remote_port, "127.0.0.1", local_port) != SSH_OK)
 	{
 		g_warning ("Error when opening forward:%s\n", ssh_get_error (ssh));
 		return FALSE;
 	}
 
-	g_debug ("Chanels is forwarded");
+	// g_debug ("bytes: %d", channel_write(ch,"   ",3));
+	
+
+	g_debug ("Chanel is forwarded");
 
 	return TRUE;
 	//channel_close(channel);
 	//channel_free(channel);
 	//ssh_disconnect(ssh);
-
 }
 
 // http://dev.libssh.org/wiki/Tutorial
