@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="46.604736"
+   height="47.714195"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="vcs.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3171">
+      <stop
+         style="stop-color:#bbdeef;stop-opacity:1;"
+         offset="0"
+         id="stop3173" />
+      <stop
+         style="stop-color:#ececec;stop-opacity:0;"
+         offset="1"
+         id="stop3175" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3171"
+       id="linearGradient3177"
+       x1="68.785713"
+       y1="390.43362"
+       x2="100.85715"
+       y2="430.71933"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3171"
+       id="linearGradient3248"
+       gradientUnits="userSpaceOnUse"
+       x1="68.785713"
+       y1="390.43362"
+       x2="100.85715"
+       y2="430.71933" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3171"
+       id="linearGradient3269"
+       gradientUnits="userSpaceOnUse"
+       x1="68.785713"
+       y1="390.43362"
+       x2="100.85715"
+       y2="430.71933"
+       gradientTransform="matrix(1.1914894,0,0,1.1914894,-13.171738,-82.478205)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2"
+     inkscape:cx="69.703805"
+     inkscape:cy="41.963244"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="838"
+     inkscape:window-height="741"
+     inkscape:window-x="495"
+     inkscape:window-y="256" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-68.928612,-382.86221)">
+    <rect
+       style="opacity:0.95169079;fill:url(#linearGradient3269);fill-opacity:1;stroke:#575757;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.69019608"
+       id="rect2383"
+       width="37.426968"
+       height="47.214195"
+       x="69.178612"
+       y="383.11221"
+       ry="0.029736483"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.14461708px;font-style:normal;font-weight:normal;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="88.100815"
+       y="426.70688"
+       id="text3155"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3157"
+         x="88.100815"
+         y="426.70688"
+         style="font-weight:bold">VCS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.40143657px;font-style:normal;font-weight:normal;opacity:0.71014494;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="79.685654"
+       y="350.33206"
+       id="text3183"
+       transform="scale(0.9002236,1.1108351)"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3185"
+         x="79.685654"
+         y="350.33206">* This program is free </tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="354.58386"
+         id="tspan3193">* software; you can </tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="358.83566"
+         id="tspan3195">* redistribute it and/o</tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="363.08746"
+         id="tspan3197">* r modify</tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="367.33923"
+         id="tspan3187"> * it under the terms </tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="371.59103"
+         id="tspan3199">* of the GNU General </tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="375.84283"
+         id="tspan3201" /><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="380.09464"
+         id="tspan3203">Public License as pub</tspan><tspan
+         sodipodi:role="line"
+         x="79.685654"
+         y="384.34644"
+         id="tspan3191" /></text>
+    <rect
+       style="fill:#4cf84c;fill-opacity:0.69109946;stroke:#086008;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.69019608"
+       id="rect3159"
+       width="31.803782"
+       height="9.1867599"
+       x="83.479568"
+       y="387.27484"
+       ry="0.035665419"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.78517914px;font-style:normal;font-weight:normal;fill:#054105;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="85.549126"
+       y="395.23907"
+       id="text3207"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3209"
+         x="85.549126"
+         y="395.23907"
+         style="font-weight:bold">+++</tspan></text>
+    <rect
+       style="opacity:0.93719806;fill:#f89f4c;fill-opacity:0.69109946;stroke:#532800;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.69019608"
+       id="rect3161"
+       width="31.914896"
+       height="12.340425"
+       x="83.317619"
+       y="400.98209"
+       ry="0.047908779"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="font-size:9.0518465px;font-style:normal;font-weight:normal;fill:#411605;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       d="M 86.693663,403.75121 L 86.693663,404.9427 L 93.433025,404.9427 L 93.433025,403.75121 L 90.677706,403.75121 L 89.411749,403.75121 L 86.693663,403.75121 z M 95.704302,403.75121 L 95.704302,404.9427 L 102.4809,404.9427 L 102.4809,403.75121 L 99.725579,403.75121 L 98.459621,403.75121 L 95.704302,403.75121 z M 104.75217,403.75121 L 104.75217,404.9427 L 111.49153,404.9427 L 111.49153,403.75121 L 108.77345,403.75121 L 107.50749,403.75121 L 104.75217,403.75121 z"
+       id="text3211"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="font-size:9.0518465px;font-style:normal;font-weight:normal;fill:#411605;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       d="M 86.706591,409.37003 L 86.706591,410.56152 L 93.445953,410.56152 L 93.445953,409.37003 L 90.690634,409.37003 L 89.424676,409.37003 L 86.706591,409.37003 z M 95.71723,409.37003 L 95.71723,410.56152 L 102.49383,410.56152 L 102.49383,409.37003 L 99.738506,409.37003 L 98.472549,409.37003 L 95.71723,409.37003 z M 104.7651,409.37003 L 104.7651,410.56152 L 111.50446,410.56152 L 111.50446,409.37003 L 108.78638,409.37003 L 107.52042,409.37003 L 104.7651,409.37003 z"
+       id="path3223"
+       inkscape:export-filename="/home/fantom/devel/Projects/gsql/plugins/vcs/vcs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>
