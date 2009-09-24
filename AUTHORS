@@ -1,8 +1,13 @@
 Founder and Lead Developer:
 	Taras Halturin <halturin@gmail.com> (Russia)
 
-Website:
-	Nikolay Leschev (google help) (Russia)
+Developers:
+	Estêvão Samuel Procópio <tevaum@gmail.com> (Brazil): PostgreSQL engine.
 
-Other:
-	Svyatoslav Lotkov (Logo concept) (Russia)
+Special thanks to:
+	Nikolay Leschev (Russia): http://oraclub.ru Russian Oracle community
+	Svyatoslav Lotkov (Russia): Logo concept
+	Konstantin Rotkevich (Russia): Logo painting
+	Pavel Shevchuk (Latvia): RPM build. Fedora Project
+	Dmitry E. Oboukhov (Russia): DEB build. Debian Project
+
