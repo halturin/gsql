@@ -27,6 +27,7 @@ libgsqlengine_pgsql_la_SOURCES = \
 	pgsql_cursor.c \
 	pgsql_var.c \
 	nav_objects.c \
+	nav_tree_languages.c \
 	nav_tree_databases.c \
 	nav_tree_processlist.c \
 	nav_tree_procedures.c \
@@ -34,6 +35,7 @@ libgsqlengine_pgsql_la_SOURCES = \
 	nav_tree_variables.c \
 	nav_tree_constraints.c \
 	nav_tree_views.c \
+	nav_tree_types.c \
 	nav_tree_triggers.c \
 	nav_tree_indexes.c \
 	nav_tree_columns.c \

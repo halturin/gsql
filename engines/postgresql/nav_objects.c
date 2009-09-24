@@ -16,7 +16,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301, USA
  */
 
 
@@ -26,7 +26,52 @@
 #include <libgsql/navigation.h>
 #include <libgsql/type_datetime.h>
 #include <libgsql/cvariable.h>
+
+#include "nav_objects.h"
 #include "pgsql_var.h"
+
+gchar *
+pgsql_navigation_get_database (GSQLNavigation *nav, GtkTreeView *treeview,
+			       GtkTreeIter *iter) 
+{
+	GSQL_TRACE_FUNC;
+	GtkTreeModel *model;
+	GtkTreePath *path = NULL;
+	GtkTreeIter dbiter;
+	gchar *dbname = NULL;
+	gint id;
+
+	g_return_if_fail (GSQL_IS_NAVIGATION(nav));
+	model = gtk_tree_view_get_model(treeview);
+	path = gtk_tree_model_get_path (model, iter);
+
+	GSQL_DEBUG("Path Depth [%d]", gtk_tree_path_get_depth(path));
+	
+	for ( ; gtk_tree_path_get_depth(path) > 3 ; gtk_tree_path_up(path) );
+
+	GSQL_DEBUG("Path Depth [%d]", gtk_tree_path_get_depth(path));
+
+	gtk_tree_model_get_iter (model, &dbiter, path);
+	gtk_tree_model_get (model, &dbiter,  
+			    GSQL_NAV_TREE_ID, 
+			    &id, -1);
+	GSQL_DEBUG("ID: [%d] - SCHEMAS_ID: [%d]", id, SCHEMAS_ID);
+	if ( id == SCHEMAS_ID || id == LANGUAGES_ID ) {
+		// In case of being in the Current Database node
+		GSQLSession *session = gsql_session_get_active();
+		g_return_if_fail (GSQL_IS_SESSION(session));
+		return pgsql_session_get_database(session);
+	}
+	g_return_if_fail (id == DATABASE_ID);
+
+	gtk_tree_model_get (model, &dbiter,  
+			    GSQL_NAV_TREE_REALNAME, 
+			    &dbname, -1);
+	GSQL_DEBUG("DBName: [%s]", dbname);
+	g_return_if_fail (dbname != NULL);
+
+	return dbname;
+}
 
 
 void

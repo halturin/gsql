@@ -16,18 +16,17 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301, USA
  */
 
-#include <libpq-fe.h>
 #include <glib.h>
-
-//#include <libgsql/conf.h>
-//#include <libgsql/session.h>
-//#include <libgsql/common.h>
+#include <libpq-fe.h>
 
 #include "engine_conf.h"
 #include "engine_session.h"
+
+void
+pgsql_session_hash_table_destroy (gpointer key, gpointer value, gpointer data);
 
 gboolean
 pgsql_session_open (GSQLEPGSQLSession *spec_session, 
@@ -37,120 +36,167 @@ pgsql_session_open (GSQLEPGSQLSession *spec_session,
 		    gchar *hostname,
 		    guint port)
 {
-  GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;
 	
-  gchar *conninfo = g_strdup_printf ("host = '%s' port='%d' dbname = '%s' user = '%s' password = '%s' connect_timeout = '10'",
-  				     hostname, port, database, username, password);
+	gchar *conninfo = g_strdup_printf ("host = '%s' port='%d' "\
+					   "dbname = '%s' " \
+					   "user = '%s' password = '%s' " \
+					   "connect_timeout = '10'",
+					   hostname, port, database, username,
+					   password);
   
 
-  spec_session->pgconn = 
-    PQconnectdb ( conninfo );
+	spec_session->pgconn = PQconnectdb ( conninfo );
   
-  if (! spec_session->pgconn || PQstatus(spec_session->pgconn) != CONNECTION_OK) {
-    GSQL_DEBUG ("Connect failed");
-    g_free ( conninfo );
-    return FALSE;
-  }
+	if (! spec_session->pgconn || 
+	    PQstatus(spec_session->pgconn) != CONNECTION_OK) 
+	  {
+	  	GSQL_DEBUG ("Connect failed");
+		g_free ( conninfo );
+		return FALSE;
+	  }
 
-  GSQL_DEBUG ("Current Connection: [%p]", spec_session->pgconn);
-	
-  spec_session->server_version = (gchar *) PQparameterStatus (spec_session->pgconn, "server_version");
-  spec_session->use = TRUE;
-  g_free ( conninfo );
+	spec_session->hash_conns = g_hash_table_new (g_str_hash, g_str_equal);
+	g_hash_table_insert(spec_session->hash_conns, g_strdup(database),
+			    spec_session->pgconn);
 
-  return TRUE;
+	spec_session->server_version = 
+	  (gchar *) PQparameterStatus (spec_session->pgconn, "server_version");
+	spec_session->use = TRUE;
+	g_free ( conninfo );
+
+	return TRUE;
 }
 
 gboolean
 pgsql_session_close (GSQLSession *session, gchar *buffer)
 {
-  GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;
   
-  GSQLEPGSQLSession *spec_session;
-  spec_session = (GSQLEPGSQLSession *) session->spec;
+	GSQLEPGSQLSession *spec_session;
+	spec_session = (GSQLEPGSQLSession *) session->spec;
 
-  gsql_session_close (session);
+	g_hash_table_foreach(spec_session->hash_conns,
+			     pgsql_session_hash_table_destroy, NULL);
 
-  PQfinish (spec_session->pgconn);
+	gsql_session_close (session);
 
-  g_free (spec_session);
+	g_free (spec_session);
 	
-  return TRUE;
+	return TRUE;
 }
+
+void
+pgsql_session_hash_table_destroy (gpointer key, gpointer value, gpointer data)
+{
+	GSQL_TRACE_FUNC;
+	PGconn *conn = (PGconn *)value;
+
+	g_free(key);
+	PQfinish (conn);
+}
+
+gchar *
+pgsql_session_get_database(GSQLSession *session) {
+	GSQL_TRACE_FUNC;
+	GValue gdb = {0, };
+	char *database = NULL;
+	
+	g_return_if_fail(GSQL_IS_SESSION(session));
+
+	// Retrieving database from session
+	g_value_init (&gdb, G_TYPE_STRING);
+	g_object_get_property (G_OBJECT (session), "session-database", &gdb);
+	database = g_value_get_string(&gdb);
+
+	GSQL_DEBUG ("Database: Session database: [%s]", database);
+	return database;
+}
+
+void
+pgsql_session_switch_database(GSQLSession *session, gchar *database) {
+	GSQL_TRACE_FUNC;
+	GSQLEPGSQLSession *spec_session;
+	GValue gpass={0, }, ghost={0, };
+	PGconn *conn, *newconn;
+	gchar *username = NULL, *password = NULL, *hostname = NULL,
+	  *currentdb = NULL, *port = "5432";
+
+	g_return_if_fail(GSQL_IS_SESSION(session));
+	spec_session = session->spec;
+	conn = spec_session->pgconn;
+
+	// Retrieving current database from connection. Session holds the
+	// initial database, not the current one.
+	currentdb = PQdb(conn);
+
+	if ( ! g_strcmp0(currentdb, database) ) {
+		GSQL_DEBUG("Database: Already connected to requested db.");
+		return;
+	}
+
+	// Retrieving hostname from session
+	g_value_init (&ghost, G_TYPE_STRING);
+	g_object_get_property (G_OBJECT (session), "session-hostname", &ghost);
+	hostname = g_value_get_string(&ghost);
+
+	// Retrieving password from session
+	g_value_init (&gpass, G_TYPE_STRING);
+	g_object_get_property (G_OBJECT (session), "session-password", &gpass);
+	password = g_value_get_string(&gpass);
+
+	// Retrieving username from connection (retrieving it from session
+	// returns NULL)
+	username = PQuser(conn);
+
+	if ( ! ( newconn = 
+		g_hash_table_lookup(spec_session->hash_conns, database) ) ) 
+	  {
+		newconn = PQsetdbLogin(hostname, port, NULL, NULL, database,
+				       username, password);
+
+		if ( newconn &&
+		     PQstatus(newconn) == CONNECTION_OK) {
+			GSQL_DEBUG("Database: Successfully switched to [%s]",
+				   database);
+			g_hash_table_insert (spec_session->hash_conns,
+					     database, newconn);
+		} else {
+			GSQL_DEBUG("Database: Switching to [%s] fail. "\
+				   "Keep with [%s].", database, currentdb);
+			newconn = conn;
+		}
+	  } else 
+	  {
+	  	GSQL_DEBUG("Database: using previously opened connection.");
+	  }
+	spec_session->pgconn = newconn;
+}
+
+
 
 void
 pgsql_session_commit (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
-	
-	/* GSQLWorkspace *workspace; */
-	/* GSQLEMySQLSession *spec_session; */
-	/* gchar error_str[2048]; */
-	
-	/* g_return_if_fail (GSQL_IS_SESSION (session)); */
-	
-	/* spec_session = session->spec; */
-	
-	/* workspace = gsql_session_get_workspace (session); */
-	
-	/* if (!mysql_commit (spec_session->mysql)) */
-	/* { */
-	/* 	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction commited")); */
-		
-	/* 	return; */
-	/* } */
-	
-	/* memset (error_str, 0, 2048); */
-	
-	/* g_sprintf (error_str, "Error occured: [%d]%s",  */
-	/* 		   mysql_errno (spec_session->mysql),  */
-	/* 		   mysql_error (spec_session->mysql)); */
-	
-	/* gsql_message_add (workspace, GSQL_MESSAGE_WARNING, error_str); */
+	GSQL_FIXME;
 }
 
 void
 pgsql_session_rollback (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
-	
-	/* GSQLWorkspace *workspace; */
-	/* GSQLEMySQLSession *spec_session; */
-	/* gchar error_str[2048]; */
-	
-	/* g_return_if_fail (GSQL_IS_SESSION (session)); */
-	
-	/* spec_session = session->spec; */
-	
-	/* workspace = gsql_session_get_workspace (session); */
-	
-	/* if (!mysql_rollback (spec_session->mysql)) */
-	/* { */
-	/* 	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, N_("Transaction rolled back")); */
-		
-	/* 	return; */
-	/* } */
-	
-	/* memset (error_str, 0, 2048); */
-	
-	/* g_sprintf (error_str, "Error occured: [%d]%s",  */
-	/* 		   mysql_errno (spec_session->mysql),  */
-	/* 		   mysql_error (spec_session->mysql)); */
-	
-	/* gsql_message_add (workspace, GSQL_MESSAGE_WARNING, */
-	/* 							  error_str); */
+	GSQL_FIXME;
 }
 
 gchar *
 pgsql_session_get_error (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
-	/* g_return_if_fail (GSQL_SESSION (session) != NULL); */
+	g_return_if_fail (GSQL_SESSION (session) != NULL);
 	
-	/* GSQLEMySQLSession *sess = session->spec; */
+	GSQLEPGSQLSession *sess = session->spec;
+	g_return_if_fail (sess != NULL);
 	
-	/* g_return_if_fail (sess != NULL); */
-	
-	/* return (gchar *) mysql_error(sess->mysql); */
-	
+	return (gchar *) PQerrorMessage (sess->pgconn);
 }

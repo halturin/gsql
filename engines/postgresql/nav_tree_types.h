@@ -20,79 +20,19 @@
  */
 
  
-#ifndef _NAV_OBJECTS_H
-#define _NAV_OBJECTS_H
+#ifndef _NAV_TREE__TYPES_H
+#define _NAV_TREE__TYPES_H
 
 #include <glib.h>
-
-enum {
-  PG_SCHEMA_ID  = NAV_TREE_ROOT_ID + 1,
-
-  DATABASES_ID,
-  DATABASE_ID,
-
-  SCHEMAS_ID,
-  LANGUAGES_ID,
-	
-  USERS_ID,
-  USER_ID,
-
-  TABLES_ID,
-  TABLE_ID,
-
-  COLUMNS_ID,
-  COLUMN_ID,
-
-  CONSTRAINTS_ID,
-  CONSTRAINT_ID,
-	
-  VIEWS_ID,
-  VIEW_ID,
-
-  TYPES_ID,
-  TYPE_ID,
-	
-  INDEXES_ID,
-  INDEX_ID,
-	
-  TRIGGERS_ID,
-  TRIGGER_ID,
-	
-  PROCEDURES_ID,
-  PROCEDURE_ID,
-  
-  FUNCTIONS_ID,
-  FUNCTION_ID,
-  
-  PACKAGES_ID,
-  PACKAGE_ID,
-  
-  SEQUENCES_ID,
-  SEQUENCE_ID,
-  
-  PRIVILEGES_ID,
-  PRIVILEGE_ID,
-  
-  PROCESSES_ID,
-  PROCESS_ID,
-
-  PROCESS_LIST_ID,
-  
-  VARIABLES_ID,
-
-  GLOBAL_VARIABLES_ID,
-  GLOBAL_VARIABLE_ID,
-  
-  SESSION_VARIABLES_ID,
-  SESSION_VARIABLE_ID,
-  
-  UNKNOWN_OBJECT_ID
-};
+#include <libgsql/navigation.h>
 
 G_BEGIN_DECLS
 
-void pgsql_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store);
+void
+nav_tree_refresh_types (GSQLNavigation *navigation,
+			GtkTreeView *tv,
+			GtkTreeIter *iter);
 
 G_END_DECLS
 
-#endif /* _NAV_OBJECTS_H */
+#endif /* _NAV_TREE__TYPES_H */

@@ -40,10 +40,10 @@
 #include "nav_tree_triggers.h"
 #include "nav_tree_indexes.h"
 #include "nav_tree_views.h"
+#include "nav_tree_types.h"
 #include "nav_tree_procedures.h"
 #include "nav_tree_privileges.h"
 #include "nav_tree_schemas.h"
-//#include "nav_tree_variables.h"
 #include "nav_tree_processlist.h"
 
 /* 	
@@ -51,162 +51,157 @@
 	and as child of each users schemas 
 */
 static GSQLNavigationItem users_objects[] = {
-  {	TABLES_ID,				// id
-	GSQL_STOCK_TABLES,			// stock
-	N_("Tables"),				// name
-	sql_pgsql_tables,			// sql
-	NULL,					// object_popup
-	NULL,					// object_handler
-	nav_tree_refresh_tables,	        // expand_handler
-	NULL,					// event_handler
-	NULL, 0 },				// child, childs
-  {	CONSTRAINTS_ID,
-	GSQL_STOCK_CONSTRAINT, 
-	N_("Constraints"), 
-	sql_pgsql_constraints, 
-	NULL,						     // object_popup
-	NULL,						     // object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_constraints,// expand_handler
-	NULL,						     // event_handler
-	NULL, 0 },					     // child, childs
-  {	VIEWS_ID, 
-	GSQL_STOCK_VIEWS, 
-	N_("Views"), 
-	sql_pgsql_views, 
-	NULL,						// object_popup
-	NULL,						// object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_views,	// expand_handler
-	NULL,						// event_handler
-	NULL, 0 },					// child, childs
-  {	INDEXES_ID,
-	GSQL_STOCK_INDEXES, 
-	N_("Indexes"), 
-	sql_pgsql_indexes, 
-	NULL,						 // object_popup
-	NULL,						 // object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_indexes,// expand_handler
-	NULL,						 // event_handler
-	NULL, 0 },					 // child, childs
-  {	TRIGGERS_ID,
-	GSQL_STOCK_TRIGGERS, 
-	N_("Triggers"), 
-	sql_pgsql_triggers, 
-	NULL,						  // object_popup
-	NULL,						  // object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_triggers,// expand_handler
-	NULL,						  // event_handler
-	NULL, 0 },					  // child, childs
-  /*
-  {	PROCEDURES_ID, 
-	GSQL_STOCK_PROCEDURES, 
-	N_("Procedures"), 
-	sql_pgsql_routines, 
-	NULL,						    // object_popup
-	NULL,						    // object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_procedures,// expand_handler
-	NULL,						    // event_handler
-	NULL, 0 },					    // child, childs
-  */
-  {	FUNCTIONS_ID, 
-	GSQL_STOCK_FUNCTIONS, 
-	N_("Functions"), 
-	sql_pgsql_routines, 
-	NULL,						    // object_popup
-	NULL,						    // object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_procedures,// expand_handler
-	NULL,						    // event_handler
-	NULL, 0 },					    // child, childs
-  {
-    PRIVILEGES_ID,
-    GSQL_STOCK_PRIVILEGES,
-    N_("Privileges"),
-    sql_pgsql_privileges,
-    NULL,						// object_popup
-    NULL,						// object_handler
-    (GSQLNavigationHandler) nav_tree_refresh_privileges,// expand_handler
-    NULL,						// event_handler
-    NULL, 0 }					        // child, childs
+	{	TABLES_ID,				// id
+		GSQL_STOCK_TABLES,			// stock
+		N_("Tables"),				// name
+		sql_pgsql_tables,			// sql
+		NULL,					// object_popup
+		NULL,					// object_handler
+		nav_tree_refresh_tables,	        // expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	{	CONSTRAINTS_ID,
+		GSQL_STOCK_CONSTRAINT, 
+		N_("Constraints"), 
+		sql_pgsql_constraints, 
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler) 
+		nav_tree_refresh_constraints,		// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	{	VIEWS_ID, 
+		GSQL_STOCK_VIEWS, 
+		N_("Views"), 
+		sql_pgsql_views, 
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_views,			// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	/* {	TYPES_ID,  */
+	/* 	GSQL_STOCK_VIEWS,  */
+	/* 	N_("Types"),  */
+	/* 	sql_pgsql_types,  */
+	/* 	NULL,					// object_popup */
+	/* 	NULL,					// object_handler */
+	/* 	(GSQLNavigationHandler) */
+	/* 	nav_tree_refresh_types,			// expand_handler */
+	/* 	NULL,					// event_handler */
+	/* 	NULL, 0 },				// child, childs */
+	{	INDEXES_ID,
+		GSQL_STOCK_INDEXES, 
+		N_("Indexes"), 
+		sql_pgsql_indexes, 
+		NULL,					 // object_popup
+		NULL,					 // object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_indexes,		// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	{	TRIGGERS_ID,
+		GSQL_STOCK_TRIGGERS, 
+		N_("Triggers"), 
+		sql_pgsql_triggers, 
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_triggers,		// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	/*
+	  {	PROCEDURES_ID, 
+	  GSQL_STOCK_PROCEDURES, 
+	  N_("Procedures"), 
+	  sql_pgsql_routines, 
+	  NULL,						    // object_popup
+	  NULL,						    // object_handler
+	  (GSQLNavigationHandler) nav_tree_refresh_procedures,// expand_handler
+	  NULL,						    // event_handler
+	  NULL, 0 },					    // child, childs
+	*/
+	{	FUNCTIONS_ID, 
+		GSQL_STOCK_FUNCTIONS, 
+		N_("Functions"), 
+		sql_pgsql_routines, 
+		NULL,					// object_popup
+		NULL,					// object_handler
+	(GSQLNavigationHandler)
+		nav_tree_refresh_procedures,		// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	{
+	  PRIVILEGES_ID,
+	  GSQL_STOCK_PRIVILEGES,
+	  N_("Privileges"),
+	  sql_pgsql_privileges,
+	  NULL,						// object_popup
+	  NULL,						// object_handler
+	  (GSQLNavigationHandler)
+	  nav_tree_refresh_privileges,			// expand_handler
+	  NULL,						// event_handler
+	  NULL, 0 }					// child, childs
 };
-
-/*
-static GSQLNavigationItem variables[] = {
-	{	SESSION_VARIABLES_ID,					// id
-		GSQLE_PGSQL_STOCK_SESSION_VARIABLES,			// stock
-		N_("Session Variables"),				// name
-		sql_pgsql_session_variables,			// sql
-		NULL,						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_variables ,// expand_handler
-		NULL,						// event_handler
-		NULL, 0 },					// child, childs
-	{	GLOBAL_VARIABLES_ID,
-		GSQLE_PGSQL_STOCK_SESSION_VARIABLES, 
-		N_("Global Variables"), 
-		sql_pgsql_global_variables, 
-		NULL,						// object_popup
-		NULL,						// object_handler
-		(GSQLNavigationHandler) nav_tree_refresh_variables ,					// expand_handler
-		NULL,						// event_handler
-		NULL, 0 }
-};
-*/
 
 /* 	
 	The root_objects struct used as root tree
 */
 static GSQLNavigationItem root_objects[] = {
-// root. my schema
-  {	PG_SCHEMA_ID,
-	GSQL_STOCK_MY_SCHEMA,
-	N_("Current Database"), 
-	NULL,						// sql
-	NULL,						// object_popup
-	NULL,						// object_handler
-	NULL,						// expand_handler
-	NULL,						// event_handler
-	databases, G_N_ELEMENTS (databases) },
-	//users_objects, G_N_ELEMENTS (users_objects) },
-  // root. all schemas	
-  /* {	DATABASES_ID, */
-  /* 	GSQL_STOCK_ALL_SCHEMAS, */
-  /* 	N_("All Databases"),  */
-  /* 	sql_pgsql_all_databases,  */
-  /* 	NULL,						// object_popup */
-  /* 	NULL,						// object_handler */
-  /* 	(GSQLNavigationHandler) nav_tree_refresh_databases,// expand_handler */
-  /* 	NULL,						// event_handler */
-  /* 	NULL, 0 },					// child, childs */
-  // root. all users
-  {	USERS_ID,
-	GSQL_STOCK_USERS,
-	N_("Users"), 
-	sql_pgsql_users, 
-	NULL,						// object_popup
-	NULL,						// object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_users,	// expand_handler
-	NULL,						// event_handler
-	NULL, 0 },					// child, childs
+	// root. my schema
+	{	PG_SCHEMA_ID,
+		GSQL_STOCK_MY_SCHEMA,
+		N_("Current Database"),
+		NULL,					// sql
+		NULL,					// object_popup
+		NULL,					// object_handler
+		NULL,					// expand_handler
+		NULL,					// event_handler
+		databases, G_N_ELEMENTS (databases) },
+	// root. all schemas	
+	{	DATABASES_ID,
+		GSQL_STOCK_ALL_SCHEMAS,
+		N_("All Databases"),
+		sql_pgsql_all_databases,
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_databases,		// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	// root. all users
+	{	USERS_ID,
+		GSQL_STOCK_USERS,
+		N_("Users"), 
+		sql_pgsql_users, 
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_users,			// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
   
-  // process list
-  {   PROCESS_LIST_ID,
-      GSQLE_PGSQL_STOCK_PROCESS_LIST,
-      N_("Process List"),
-      sql_pgsql_processes,
-      NULL,						// object_popup
-      NULL,						// object_handler
-      (GSQLNavigationHandler) nav_tree_refresh_processlist,// expand_handler
-      NULL,						// event_handler
-      NULL, 0 },					// child, childs
-  /* // variables */
-  /* {   VARIABLES_ID, */
-  /*     GSQLE_PGSQL_STOCK_SESSION_VARIABLES, */
-  /*     N_("Variables"), */
-  /*     NULL, */
-  /*     NULL,						// object_popup */
-  /*     NULL,						// object_handler */
-  /*     NULL,						// expand_handler */
-  /*     NULL,						// event_handler */
-  /*     variables, G_N_ELEMENTS (variables) }		// child, childs */
+	// process list
+	{   PROCESS_LIST_ID,
+	    GSQLE_PGSQL_STOCK_PROCESS_LIST,
+	    N_("Process List"),
+	    sql_pgsql_processes,
+	    NULL,					// object_popup
+	    NULL,					// object_handler
+	    (GSQLNavigationHandler)
+	    nav_tree_refresh_processlist,		// expand_handler
+	    NULL,					// event_handler
+	    NULL, 0 },					// child, childs
+	/* // variables */
+	/* {   VARIABLES_ID, */
+	/*     GSQLE_PGSQL_STOCK_SESSION_VARIABLES, */
+	/*     N_("Variables"), */
+	/*     NULL, */
+	/*     NULL,					// object_popup */
+	/*     NULL,					// object_handler */
+	/*     NULL,					// expand_handler */
+	/*     NULL,					// event_handler */
+	/*     variables, G_N_ELEMENTS (variables) }	// child, childs */
 };
 
 void
@@ -214,134 +209,133 @@ nav_tree_refresh_schemas (GSQLNavigation *navigation,
 			  GtkTreeView *tv,
 			  GtkTreeIter *iter)
 {
-  GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;
 
-  GtkTreeModel *model;
-  GtkListStore *detail;
-  GSQLNavigation *nav = NULL;
-  gchar			*sql = NULL;
-  gchar			*realname = NULL;
-  gint 		id;
-  gint		i,n;
-  GtkTreeIter child, parent;
-  GtkTreeIter child_fake;
-  GtkTreeIter	child_last;
-  GSQLCursor *cursor;
-  GSQLCursorState state;
-  GSQLVariable *var;
-  GSQLSession *session;
-  gchar *name, *parent_realname;
+	GtkTreeModel *model;
+	GtkListStore *detail;
+	GSQLNavigation *nav = NULL;
+	GSQLSession *session;
+	GSQLCursor *cursor;
+	GSQLCursorState state;
+	GSQLVariable *var;
+	gchar	*sql = NULL, *realname = NULL, *name = NULL,
+		*parent_realname = NULL;
+	gint 	id, i, n;
+	GtkTreeIter child, parent, child_fake, child_last;
   
 	
-  model = gtk_tree_view_get_model(tv);
-  n = gtk_tree_model_iter_n_children(model, iter);
+	model = gtk_tree_view_get_model(tv);
+	n = gtk_tree_model_iter_n_children(model, iter);
   
-  for (; n>1; n--)
-    {
-      gtk_tree_model_iter_children (model, &child, iter);
-      gtk_tree_store_remove (GTK_TREE_STORE(model), &child);
-    }
+	for (; n>1; n--) {
+		gtk_tree_model_iter_children (model, &child, iter);
+		gtk_tree_store_remove (GTK_TREE_STORE(model), &child);
+	}
   
-  gtk_tree_model_iter_children(model, &child_last, iter);
+	gtk_tree_model_iter_children(model, &child_last, iter);
   
-  gtk_tree_model_get (model, iter,  
-		      GSQL_NAV_TREE_SQL, 
-		      &sql, -1);
+	gtk_tree_model_get (model, iter,  
+			    GSQL_NAV_TREE_SQL, 
+			    &sql, -1);
   
-  gtk_tree_model_get (model, iter,  
-		      GSQL_NAV_TREE_REALNAME, 
-		      &realname, -1);
-  
-  session = gsql_session_get_active ();
-  
-  gtk_tree_model_iter_parent (model, &parent, iter);	
-  gtk_tree_model_get (model, &parent,  
-		      GSQL_NAV_TREE_REALNAME, 
-		      &parent_realname, -1);
+	gtk_tree_model_get (model, iter,  
+			    GSQL_NAV_TREE_REALNAME, 
+			    &realname, -1);
 
-  GSQL_DEBUG ("sql:[%s]     realname:[%s]    parent_realname:[%s]", sql, realname, parent_realname);
+	gtk_tree_model_iter_parent (model, &parent, iter);	
+	gtk_tree_model_get (model, &parent,  
+			    GSQL_NAV_TREE_REALNAME,
+			    &parent_realname, -1);
   
-  cursor = gsql_cursor_new (session, sql);
-  //state = gsql_cursor_open (cursor, FALSE);
-  state = gsql_cursor_open_with_bind(cursor,
-				     FALSE,
-				     GSQL_CURSOR_BIND_BY_POS,
-				     G_TYPE_STRING, parent_realname,
-				     -1);
+	session = gsql_session_get_active ();
   
-  var = g_list_nth_data(cursor->var_list,0);
+	g_return_if_fail (GSQL_IS_SESSION(session));
+	GSQL_DEBUG("Database: switching to [%s]", parent_realname);
+	pgsql_session_switch_database(session, parent_realname);
+
+	//GSQL_DEBUG ("sql:[%s]\trealname:[%s]\tparent_realname:[%s]", sql,
+	//	    realname, parent_realname);
   
-  if (state != GSQL_CURSOR_STATE_OPEN)
-    {
-      gsql_cursor_close (cursor);
-      return;		
-    }
+	cursor = gsql_cursor_new (session, sql);
+	state = gsql_cursor_open_with_bind(cursor,
+					   FALSE,
+					   GSQL_CURSOR_BIND_BY_POS,
+					   G_TYPE_STRING, parent_realname,
+					   -1);
   
-  i = 0;
+	var = g_list_nth_data(cursor->var_list,0);
   
-  while (gsql_cursor_fetch (cursor, 1) > 0)	
-    {
-      i++;		
-      name = (gchar *) var->value;
+	if (state != GSQL_CURSOR_STATE_OPEN) {
+		gsql_cursor_close (cursor);
+		return;		
+	}
+  
+	i = 0;
+  
+	while (gsql_cursor_fetch (cursor, 1) > 0) {
+		i++;		
+		name = (gchar *) var->value;
       
-      gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
-      gtk_tree_store_set (GTK_TREE_STORE(model), &child,
-			  GSQL_NAV_TREE_ID,			SCHEMAS_ID,
-			  GSQL_NAV_TREE_OWNER,		name,
-			  GSQL_NAV_TREE_IMAGE,		GSQL_STOCK_ALL_SCHEMAS,
-			  GSQL_NAV_TREE_NAME,			name,
-			  GSQL_NAV_TREE_REALNAME, 	name,
-			  GSQL_NAV_TREE_ITEM_INFO, 	NULL,
-			  GSQL_NAV_TREE_SQL,			NULL,
-			  GSQL_NAV_TREE_OBJECT_POPUP, NULL,
-			  GSQL_NAV_TREE_OBJECT_HANDLER, NULL,
-			  GSQL_NAV_TREE_EXPAND_HANDLER, NULL,
-			  GSQL_NAV_TREE_EVENT_HANDLER, NULL,
-			  GSQL_NAV_TREE_STRUCT, users_objects,
-			  GSQL_NAV_TREE_DETAILS, NULL,
-			  GSQL_NAV_TREE_NUM_ITEMS, G_N_ELEMENTS(users_objects),
-			  -1);
+		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
+		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
+				    GSQL_NAV_TREE_ID,		SCHEMAS_ID,
+				    GSQL_NAV_TREE_OWNER,	name,
+				    GSQL_NAV_TREE_IMAGE,GSQL_STOCK_ALL_SCHEMAS,
+				    GSQL_NAV_TREE_NAME,		name,
+				    GSQL_NAV_TREE_REALNAME,	name,
+				    GSQL_NAV_TREE_ITEM_INFO,	NULL,
+				    GSQL_NAV_TREE_SQL,		NULL,
+				    GSQL_NAV_TREE_OBJECT_POPUP,	NULL,
+				    GSQL_NAV_TREE_OBJECT_HANDLER,NULL,
+				    GSQL_NAV_TREE_EXPAND_HANDLER,NULL,
+				    GSQL_NAV_TREE_EVENT_HANDLER,NULL,
+				    GSQL_NAV_TREE_STRUCT,	users_objects,
+				    GSQL_NAV_TREE_DETAILS,	NULL,
+				    GSQL_NAV_TREE_NUM_ITEMS,
+				    G_N_ELEMENTS(users_objects),
+				    -1);
       
-      gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, &child);
-      gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
-			  GSQL_NAV_TREE_ID,				-1,
-			  GSQL_NAV_TREE_IMAGE,			NULL,
-			  GSQL_NAV_TREE_NAME,				N_("Processing..."),
-			  GSQL_NAV_TREE_REALNAME,			NULL,
-			  GSQL_NAV_TREE_ITEM_INFO,		NULL,
-			  GSQL_NAV_TREE_SQL,				NULL,
-			  GSQL_NAV_TREE_OBJECT_POPUP,		NULL,
-			  GSQL_NAV_TREE_OBJECT_HANDLER,	NULL,
-			  GSQL_NAV_TREE_EXPAND_HANDLER,	NULL,
-			  GSQL_NAV_TREE_EVENT_HANDLER,	NULL,
-			  GSQL_NAV_TREE_STRUCT,			NULL,
-			  GSQL_NAV_TREE_NUM_ITEMS, 		NULL,
-			  -1);
-    }
+		gtk_tree_store_append (GTK_TREE_STORE (model), &child_fake, 
+				       &child);
+		gtk_tree_store_set (GTK_TREE_STORE (model), &child_fake,
+				    GSQL_NAV_TREE_ID,		-1,
+				    GSQL_NAV_TREE_IMAGE,	NULL,
+				    GSQL_NAV_TREE_NAME,	N_("Processing..."),
+				    GSQL_NAV_TREE_REALNAME,	NULL,
+				    GSQL_NAV_TREE_ITEM_INFO,	NULL,
+				    GSQL_NAV_TREE_SQL,		NULL,
+				    GSQL_NAV_TREE_OBJECT_POPUP,	NULL,
+				    GSQL_NAV_TREE_OBJECT_HANDLER,NULL,
+				    GSQL_NAV_TREE_EXPAND_HANDLER,NULL,
+				    GSQL_NAV_TREE_EVENT_HANDLER,NULL,
+				    GSQL_NAV_TREE_STRUCT,	NULL,
+				    GSQL_NAV_TREE_NUM_ITEMS, 	NULL,
+				    -1);
+	}
   
-  GSQL_DEBUG ("Items fetched: [%d]", i);
+	GSQL_DEBUG ("Items fetched: [%d]", i);
   
-  if (i > 0)
-    {
-      name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
-			     realname, i);
-      gtk_tree_store_set (GTK_TREE_STORE(model), iter,
-			  GSQL_NAV_TREE_NAME, 
-			  name,
-			  -1);
-      g_free (name);
-    }
+	if (i > 0) {
+		name = g_strdup_printf("%s<span weight='bold'> [%d]</span>", 
+				       realname, i);
+		gtk_tree_store_set (GTK_TREE_STORE(model), iter,
+				    GSQL_NAV_TREE_NAME, 
+				    name,
+				    -1);
+		g_free (name);
+	}
   
-  gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
+	gtk_tree_store_remove(GTK_TREE_STORE(model), &child_last);
   
-  gsql_cursor_close (cursor);
+	gsql_cursor_close (cursor);
 }
 
 void
 nav_tree_set_root (GSQLNavigation *navigation,  gchar *username)
 {
-  GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;
 
-  gsql_navigation_set_root (navigation, GSQLE_PGSQL_STOCK_PGSQL, username,
-  			    root_objects, G_N_ELEMENTS (root_objects));
+	gsql_navigation_set_root (navigation, GSQLE_PGSQL_STOCK_PGSQL,
+				  username, root_objects,
+				  G_N_ELEMENTS (root_objects));
 }

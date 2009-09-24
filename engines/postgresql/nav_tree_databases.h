@@ -27,19 +27,31 @@
 #include <libgsql/session.h>
 
 #include "nav_tree_schemas.h"
+#include "nav_tree_languages.h"
 
 G_BEGIN_DECLS
 
 static GSQLNavigationItem databases[] = {
-  {	SCHEMAS_ID,
-	GSQL_STOCK_ALL_SCHEMAS,
-	N_("Schemas"), 
-	sql_pgsql_all_schemas, 
-	NULL,						// object_popup
-	NULL,						// object_handler
-	(GSQLNavigationHandler) nav_tree_refresh_schemas,// expand_handler
-	NULL,						// event_handler
-	NULL, 0 },					// child, childs
+	{	SCHEMAS_ID,
+		GSQL_STOCK_ALL_SCHEMAS,
+		N_("Schemas"), 
+		sql_pgsql_all_schemas, 
+		NULL,				// object_popup
+		NULL,				// object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_schemas,	// expand_handler
+		NULL,				// event_handler
+		NULL, 0 },			// child, childs
+	{	LANGUAGES_ID,
+		GSQL_STOCK_TABLES,
+		N_("Languages"), 
+		sql_pgsql_languages, 
+		NULL,				// object_popup
+		NULL,				// object_handler
+		(GSQLNavigationHandler) 
+		nav_tree_refresh_languages,	// expand_handler
+		NULL,				// event_handler
+		NULL, 0 },			// child, childs
 };
 
 void

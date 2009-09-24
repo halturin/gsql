@@ -28,17 +28,15 @@
 #include "engine_stock.h"
 
 static GSQLStockIcon stock_icons[] = {
-  { GSQLE_PGSQL_STOCK_PGSQL,		 "pgsql.png" },
-  { GSQLE_PGSQL_STOCK_PROCESS_LIST,	 "process.list.png" },
-  { GSQLE_PGSQL_STOCK_SESSION_VARIABLES, "session.variables.png" },
-  { GSQLE_PGSQL_STOCK_GLOBAL_VARIABLES,	 "global.variables.png" }
+	{ GSQLE_PGSQL_STOCK_PGSQL,		 "pgsql.png" },
+	{ GSQLE_PGSQL_STOCK_PROCESS_LIST,	 "process.list.png" },
 };
 
 void
 engine_stock_init ()
 {
-  GSQL_TRACE_FUNC;
+	GSQL_TRACE_FUNC;
 
-  gsql_factory_add (stock_icons, G_N_ELEMENTS(stock_icons));
-  return;
+	gsql_factory_add (stock_icons, G_N_ELEMENTS(stock_icons));
+	return;
 }

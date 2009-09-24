@@ -34,7 +34,8 @@ struct _GSQLEPGSQLSession
   int 	   charset;
   PGconn   *pgconn;
   gboolean use;
-  gchar	   *server_version;    
+  gchar	   *server_version;
+  GHashTable *hash_conns;
 };
 
 G_BEGIN_DECLS

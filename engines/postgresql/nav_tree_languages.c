@@ -33,9 +33,9 @@
 #include "nav_sql.h"
 
 void
-nav_tree_refresh_columns (GSQLNavigation *navigation,
-			  GtkTreeView *tv,
-			  GtkTreeIter *iter, guint event)
+nav_tree_refresh_languages (GSQLNavigation *navigation,
+			    GtkTreeView *tv,
+			    GtkTreeIter *iter, guint event)
 {
 	GSQL_TRACE_FUNC;
 
@@ -52,10 +52,9 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 	GSQLWorkspace *workspace;
 	GSQLCursorState state;
 	GtkListStore *details;
-	gchar *name = NULL, *nameUP = NULL, *currentdb = NULL, key[256],
-		*parent_realname = NULL, *parent_name = NULL, *sql = NULL, 
-	  	*realname = NULL, *owner = NULL;
-	gint		id, i,n;
+	gchar *name = NULL, *nameUP = NULL, key[256], *owner,
+	  *currentdb = NULL, *realname = NULL;
+	gint id, i,n;
   
 	
 	model = gtk_tree_view_get_model(tv);
@@ -67,7 +66,7 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 	}
 	
 	gtk_tree_model_iter_children(model, &child_last, iter);
-  
+
 	gtk_tree_model_get (model, iter,  
 			    GSQL_NAV_TREE_REALNAME, 
 			    &realname, -1);
@@ -75,61 +74,20 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 	gtk_tree_model_get (model, iter,  
 			    GSQL_NAV_TREE_OWNER, 
 			    &owner, -1);
-	session = gsql_session_get_active ();
-  
-	gtk_tree_model_iter_parent (model, &parent, iter);
-  
-	gtk_tree_model_get (model, &parent,  
-			    GSQL_NAV_TREE_ID, 
-			    &id, -1);
-  
-	gtk_tree_model_get (model, &parent,  
-			    GSQL_NAV_TREE_REALNAME, 
-			    &parent_realname, -1);
-  
-	gtk_tree_model_get (model, &parent,  
-			    GSQL_NAV_TREE_NAME, 
-			    &parent_name, -1);
 
+	session = gsql_session_get_active ();
+   
 	currentdb = pgsql_navigation_get_database (navigation, tv, iter);
 	GSQL_DEBUG("Database: switching to [%s]", currentdb);
 	pgsql_session_switch_database(session, currentdb);
 
-  
-	switch (id) {
-		case TABLE_ID:
-		case VIEW_ID:
-			cursor = gsql_cursor_new (session, (gchar *) 
-						  sql_pgsql_table_columns);
-			state = gsql_cursor_open_with_bind (cursor,
-							    FALSE,
-							    GSQL_CURSOR_BIND_BY_POS,
-							    G_TYPE_STRING, 
-							    owner,
-							    G_TYPE_STRING, 
-							    parent_realname,
-							    -1);
+	cursor = gsql_cursor_new (session, (gchar *) 
+				  sql_pgsql_languages);
+	state = gsql_cursor_open_with_bind (cursor, FALSE,
+					    GSQL_CURSOR_BIND_BY_POS, 
+					    G_TYPE_STRING, owner, 
+					    -1);
     
-			break;
-    
-		case INDEX_ID:
-			cursor = gsql_cursor_new (session, (gchar *) 
-						  sql_pgsql_index_columns);
-			state = gsql_cursor_open_with_bind (cursor,
-							    FALSE,
-							    GSQL_CURSOR_BIND_BY_POS,
-							    G_TYPE_STRING,
-							    owner,
-							    G_TYPE_STRING, 
-							    parent_name,
-							    -1);
-    
-			break;
-    
-		default:
-			GSQL_DEBUG ("Unhandled column type");
-			return;
-	}
   
 	if (state != GSQL_CURSOR_STATE_OPEN) {
 		gsql_cursor_close (cursor);
@@ -192,7 +150,7 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 				       realname, n);
 		gtk_tree_store_set (GTK_TREE_STORE(model), iter,
 				    GSQL_NAV_TREE_NAME, 
-				    name,
+				    realname,
 				    -1);
 		g_free (name);
 	}
