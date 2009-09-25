@@ -1,7 +1,7 @@
 /* 
  * GSQL - database development tool for GNOME
  *
- * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2009  Estêvão Samuel Procópio <tevaum@gmail.com>
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,6 +64,10 @@ pgsql_session_open (GSQLEPGSQLSession *spec_session,
 	  (gchar *) PQparameterStatus (spec_session->pgconn, "server_version");
 	spec_session->use = TRUE;
 	g_free ( conninfo );
+
+	if ( ! PQexec(spec_session->pgconn, "BEGIN;") ) {
+		GSQL_DEBUG ("Trans: Transaction Not Started!!!");
+	}
 
 	return TRUE;
 }
@@ -179,24 +183,69 @@ void
 pgsql_session_commit (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
-	GSQL_FIXME;
+	GSQLEPGSQLSession *spec = NULL;
+	
+	g_return_if_fail (GSQL_IS_SESSION(session));
+	spec = (GSQLEPGSQLSession *)session->spec;
+	if ( ! PQexec (spec->pgconn, "COMMIT") ) {
+	  GSQL_DEBUG ("Trans: Unable to COMMIT");
+	  return;
+	}
+
+	if ( ! PQexec (spec->pgconn, "BEGIN") ) {
+	  GSQL_DEBUG ("Trans: Unable Start a NEW Transaction");
+	  return;
+	}
+
+	GSQL_DEBUG ("Trans: transaction COMMITTED and RESTARTED");
+	pgsql_session_workspace_info(session, "Changes committed.");
 }
 
 void
 pgsql_session_rollback (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
-	GSQL_FIXME;
+	GSQLEPGSQLSession *spec = NULL;
+	
+	g_return_if_fail (GSQL_IS_SESSION(session));
+	spec = (GSQLEPGSQLSession *)session->spec;
+	if ( ! PQexec (spec->pgconn, "ROLLBACK") ) {
+	  GSQL_DEBUG ("Trans: Unable to ROLLBACK");
+	  return;
+	}
+
+	if ( ! PQexec (spec->pgconn, "BEGIN") ) {
+	  GSQL_DEBUG ("Trans: Unable Start a NEW Transaction");
+	  return;
+	}
+
+	GSQL_DEBUG ("Trans: transaction ROLLED BACK and RESTARTED");
+	pgsql_session_workspace_info(session, "Changes rolled back.");
+}
+
+void
+pgsql_session_workspace_info (GSQLSession *session, gchar *msg) {
+	GSQLWorkspace *workspace = NULL;
+	g_return_if_fail ( GSQL_IS_SESSION (session) );
+
+	workspace = gsql_session_get_workspace (session);
+	g_return_if_fail (GSQL_IS_WORKSPACE(workspace));
+
+	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
 }
 
 gchar *
 pgsql_session_get_error (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC;
+	gchar *err = NULL;
 	g_return_if_fail (GSQL_SESSION (session) != NULL);
 	
 	GSQLEPGSQLSession *sess = session->spec;
 	g_return_if_fail (sess != NULL);
 	
-	return (gchar *) PQerrorMessage (sess->pgconn);
+	err = g_strdup((gchar *) PQerrorMessage (sess->pgconn));
+
+	pgsql_session_rollback (session);
+	return err;
 }

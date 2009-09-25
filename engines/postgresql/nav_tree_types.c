@@ -1,7 +1,7 @@
 /* 
  * GSQL - database development tool for GNOME
  *
- * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2009  Estêvão Samuel Procópio <tevaum@gmail.com>
  *
  *
  * This program is free software; you can redistribute it and/or modify
