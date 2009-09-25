@@ -33,7 +33,7 @@ static GtkActionEntry enginemenu_action[] =
 {
 	{ "MySQLActionMenu", NULL, N_("MySQL") },
 
-	{ "ActionMenuMySQLCharsetList", NULL,  N_("Charter Set"), NULL,  NULL, NULL }
+	{ "ActionMenuMySQLCharsetList", NULL,  N_("Character Set"), NULL,  NULL, NULL }
 };
 
 static GtkActionGroup *action;
@@ -125,7 +125,7 @@ engine_menu_init (GSQLEngine *engine)
 			item = gtk_menu_item_new_with_label (desc_full);
 			
 			g_signal_connect (item, "activate", 
-							  G_CALLBACK (on_charter_set_activate),
+							  G_CALLBACK (on_character_set_activate),
 							  ArrPredefinedCharset[i].name);
 			
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), item);

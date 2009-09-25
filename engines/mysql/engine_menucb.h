@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 
 
 void
-on_charter_set_activate (GtkMenuItem * mi, gpointer data);
+on_character_set_activate (GtkMenuItem * mi, gpointer data);
  
 G_END_DECLS
 
