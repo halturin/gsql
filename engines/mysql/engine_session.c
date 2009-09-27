@@ -49,7 +49,8 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	const gchar *username = NULL,
 				*password = NULL,
 				*database = NULL,
-				*hostname = NULL;
+				*hostname = NULL,
+				*portnumb = NULL;
 	GSQLSession  *session;
 	GSQLWorkspace *workspace;
 	GSQLNavigation *navigation;
@@ -64,6 +65,9 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer)
 	database = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
 	widget = g_object_get_data (G_OBJECT (logon_widget), "hostname");
 	hostname = gtk_entry_get_text (GTK_ENTRY (widget));
+	widget = g_object_get_data (G_OBJECT (logon_widget), "port");
+	portnumb = gtk_entry_get_text (GTK_ENTRY (widget));
+	port = atoi (portnumb);
 
 	
 	if ((g_utf8_strlen(database,128) <= 0) || (g_utf8_strlen(username,128) <= 0))

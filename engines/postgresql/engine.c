@@ -124,9 +124,10 @@ engine_logon_widget_new ()
 	GtkWidget *database_name_entry;
 	GtkWidget *username;
 	GtkWidget *password;
+	GtkWidget *port;
 	GtkWidget *label;
 
-	table = gtk_table_new (6, 2, FALSE);
+	table = gtk_table_new (7, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
 	gtk_widget_show (table);
 	
@@ -139,7 +140,7 @@ engine_logon_widget_new ()
 	gtk_entry_set_invisible_char (GTK_ENTRY (hostname), 9679);
 	gtk_entry_set_activates_default(GTK_ENTRY (hostname), TRUE);
         
-	label = gtk_label_new (_("Host"));
+	label = gtk_label_new (_("Hostname"));
 	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
@@ -167,13 +168,13 @@ engine_logon_widget_new ()
 	username = gtk_entry_new ();
 	gtk_widget_show (username);
 	gtk_table_attach (GTK_TABLE (table), username, 1, 2, 3, 4,
-						(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-						(GtkAttachOptions) (0), 0, 0);
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (username), 32);
 	gtk_entry_set_invisible_char (GTK_ENTRY (username), 9679);
 	gtk_entry_set_activates_default(GTK_ENTRY (username), TRUE);
         
-	label = gtk_label_new (_("User"));
+	label = gtk_label_new (_("Username"));
 	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
@@ -198,11 +199,31 @@ engine_logon_widget_new ()
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+
+	port = gtk_entry_new ();
+	gtk_widget_show (port);
+	gtk_table_attach (GTK_TABLE (table), port, 1, 2, 5, 6,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_entry_set_max_length (GTK_ENTRY (port), 5);
+	gtk_entry_set_text  (GTK_ENTRY (port), "5432");
+	gtk_entry_set_invisible_char (GTK_ENTRY (port), 9679);
+	gtk_entry_set_activates_default(GTK_ENTRY (port), TRUE);
+        
+	label = gtk_label_new (_("Port number"));
+	gtk_widget_show (label);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+
         
 	HOOKUP_OBJECT (table, hostname, "hostname");
 	HOOKUP_OBJECT (table, database_name, "database");
 	HOOKUP_OBJECT (table, username, "username");  
 	HOOKUP_OBJECT (table, password, "password");  
+	HOOKUP_OBJECT (table, port, "port");  
 
 	return table;	
 }

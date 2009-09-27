@@ -34,11 +34,11 @@ pgsql_session_open (GSQLEPGSQLSession *spec_session,
 		    gchar *password,
 		    gchar *database,
 		    gchar *hostname,
-		    guint port)
+		    gchar *port)
 {
 	GSQL_TRACE_FUNC;
 	
-	gchar *conninfo = g_strdup_printf ("host = '%s' port='%d' "\
+	gchar *conninfo = g_strdup_printf ("host = '%s' port='%s' "\
 					   "dbname = '%s' " \
 					   "user = '%s' password = '%s' " \
 					   "connect_timeout = '10'",
