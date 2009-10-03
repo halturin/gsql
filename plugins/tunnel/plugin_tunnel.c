@@ -31,9 +31,11 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 
 #include <libgsql/common.h>
 #include "plugin_tunnel.h"
@@ -73,7 +75,8 @@ struct _SSHSession {
 	/* listen on */
 	const gchar		*localname;
 	guint			localport;
-	gint			sock;
+
+	int			sock;
 
 	/* forwaded from */
 	const gchar		*fwdhost;
@@ -100,7 +103,8 @@ do_open_channel (SSHSession *session);
 static gboolean
 do_listen_fwd (SSHSession *session);
 
-
+static void
+do_accept_threaded (gpointer data);
 
 gboolean 
 plugin_load (GSQLPlugin * plugin)
@@ -119,17 +123,18 @@ plugin_load (GSQLPlugin * plugin)
 
 	plugin->plugin_conf_dialog = plugin_tunnel_conf_dialog;
 
-	SSHSession session;
+	SSHSession *session = g_new0 (SSHSession, 1);
 
-	session.connected = FALSE;
-	session.hostname = "myhost.mynet";
-	session.port = 22;
-	session.username = "megauser";
-	session.password = "megapassword";
-	session.localname = "*";
-	session.localport = 10051;
+	session->connected = FALSE;
+	session->hostname = "192.168.1.33";
+	session->port = 22;
+	session->username = "fantom";
+	session->password = "megapass";
+	session->localname = "*";
+	session->localport = 10051;
+	session->sock = 0;
 
-	do_open_session (&session);
+	do_open_session (session);
 	
 
 	return TRUE;
@@ -195,7 +200,7 @@ do_open_session (SSHSession *session)
 		return FALSE;
 	}
 
-	return session->connected = TRUE;
+	return TRUE; //session->connected = TRUE;
 }
 
 static gboolean
@@ -231,10 +236,11 @@ do_listen_fwd (SSHSession *session)
 	
 	g_return_val_if_fail (session != NULL, FALSE);
 	
-	int sock, ret, i, n;
-	struct addrinfo hints, *lres;
+	int sock = 0, ret, i, n;
+	struct addrinfo hints, *ai;
 	gboolean wildcard = FALSE, lstatus = FALSE;
 	gchar ntop[NI_MAXHOST], strport[NI_MAXSERV];
+	GError *err = NULL;
 
 	if (!session)
 	{
@@ -250,68 +256,116 @@ do_listen_fwd (SSHSession *session)
 		wildcard = TRUE;
 	}
 
-	memset(&hints, 0, sizeof(hints));
+	memset (&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC; /* IPv4 or IPv6 */
 	hints.ai_flags = wildcard ? AI_PASSIVE : 0;
 	hints.ai_socktype = SOCK_STREAM;
 
-	snprintf(strport, sizeof strport, "%d", session->localport);
+	snprintf (strport, sizeof strport, "%d", session->localport);
 	
 	if (ret = getaddrinfo (session->localname, strport, 
-	                       &hints, &lres) != 0)
+	                       &hints, &ai) != 0)
 	{
 		g_warning ("do_listen_fwd (getaddrinfo): %s", gai_strerror (ret));
-
+		freeaddrinfo (ai);
 		return lstatus;
 	}
 
-
-	if ((lres->ai_family != AF_INET && lres->ai_family != AF_INET6) ||
-		(getnameinfo(lres->ai_addr, lres->ai_addrlen, ntop, sizeof(ntop),
-		                strport, sizeof(strport), NI_NUMERICHOST|NI_NUMERICSERV) != 0))
+	if ((ai->ai_family != AF_INET && ai->ai_family != AF_INET6) ||
+		(getnameinfo(ai->ai_addr, ai->ai_addrlen, ntop, sizeof(ntop),
+			            strport, sizeof(strport), NI_NUMERICHOST|NI_NUMERICSERV) != 0))
 	{
 		g_warning ("do_listen_fwd (getnameinfo): failed");
-		freeaddrinfo (lres);
+		freeaddrinfo (ai);
 		return lstatus;
-
 	}
 
-	sock = socket(lres->ai_family, lres->ai_socktype, lres->ai_protocol);
+	sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
 
 	if (sock < 0)
 	{
 		g_warning ("do_listen_fwd (socket): %s",  strerror(errno));
-		
-		freeaddrinfo (lres);
+		freeaddrinfo (ai);
 		return lstatus;
 	}
 
 	i = 1;
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i));
 
-	if (bind(sock, lres->ai_addr, lres->ai_addrlen) < 0)
+	if (bind(sock, ai->ai_addr, ai->ai_addrlen) < 0)
 	{
 		close (sock);
-		freeaddrinfo (lres);
-		
+		freeaddrinfo (ai);
 		return lstatus;
 	}
 
 	if (listen(sock, 128) < 0)
 	{
 		g_warning ("do_listen_fwd (listen): %s",  strerror(errno));
-
+		freeaddrinfo (ai);
 		close (sock);
-		freeaddrinfo (lres);
-		
 		return lstatus;
 	}
 
+	g_debug ("create listening socket (%d)... ok", sock);
+		
 	lstatus = TRUE;
+	
 	session->sock = sock;
 
-	freeaddrinfo (lres);
+	if (!g_thread_create ((GThreadFunc) do_accept_threaded, session, FALSE, &err))
+		g_warning ("cannot create thread");
+	
+	freeaddrinfo (ai);
 	
 	return lstatus;
 }
+
+
+static void
+do_accept_threaded (gpointer data)
+{
+	GSQL_TRACE_FUNC;
+	
+	SSHSession *session = data;
+	int s, sock = session->sock; 
+	socklen_t addrlen = sizeof(struct sockaddr);
+	struct sockaddr addr;
+	pid_t chld;
+
+	signal(SIGCHLD, SIG_IGN);
+
+	for (;;)
+	{
+		
+		g_debug ("accepting on socket (%d)", sock);
+		
+		s = accept (sock, &addr, &addrlen);
+
+		if (s < 0)
+		{
+			g_warning ("do_accept_threaded (sock=%d): %s", sock, strerror(errno));
+			sleep(5);
+			continue;
+		}
+
+		if ( (chld = fork()) == 0)
+		{
+			close (session->sock);
+
+			g_warning ("forked!!!!!!!!!!");
+
+			sleep(25);
+
+			close(s);
+			_exit(0);
+		} 
+
+		close (s);
+
+		
+	}	
+
+}
+
 
