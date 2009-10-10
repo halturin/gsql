@@ -147,10 +147,25 @@ engine_logon_widget_new ()
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
+
+	port = gtk_spin_button_new_with_range (1, 65536, 1);
+	gtk_widget_show (port);
+	gtk_table_attach (GTK_TABLE (table), port, 1, 2, 2, 3,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_spin_button_set_value  (GTK_SPIN_BUTTON (port), 5432);
+        
+	label = gtk_label_new (_("Port number"));
+	gtk_widget_show (label);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
 	
 	database_name = gtk_combo_box_entry_new_text ();
 	gtk_widget_show (database_name);
-	gtk_table_attach (GTK_TABLE (table), database_name, 1, 2, 2, 3,
+	gtk_table_attach (GTK_TABLE (table), database_name, 1, 2, 3, 4,
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (GTK_FILL), 0, 0);
 	database_name_entry = gtk_bin_get_child(GTK_BIN(database_name));
@@ -159,7 +174,7 @@ engine_logon_widget_new ()
 	label = gtk_label_new (_("Database"));
 	gtk_widget_show (label);
 		
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
 						(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 						(GtkAttachOptions) (0), 0, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
@@ -167,7 +182,7 @@ engine_logon_widget_new ()
        
 	username = gtk_entry_new ();
 	gtk_widget_show (username);
-	gtk_table_attach (GTK_TABLE (table), username, 1, 2, 3, 4,
+	gtk_table_attach (GTK_TABLE (table), username, 1, 2, 4, 5,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (username), 32);
@@ -176,7 +191,7 @@ engine_logon_widget_new ()
         
 	label = gtk_label_new (_("Username"));
 	gtk_widget_show (label);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
@@ -184,7 +199,7 @@ engine_logon_widget_new ()
         
 	password = gtk_entry_new ();
 	gtk_widget_show (password);
-	gtk_table_attach (GTK_TABLE (table), password, 1, 2, 4, 5,
+	gtk_table_attach (GTK_TABLE (table), password, 1, 2, 5, 6,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (password), 32);
@@ -194,36 +209,17 @@ engine_logon_widget_new ()
     
 	label = gtk_label_new (_("Password"));
 	gtk_widget_show (label);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
-			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-			  (GtkAttachOptions) (0), 0, 0);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
-
-	port = gtk_entry_new ();
-	gtk_widget_show (port);
-	gtk_table_attach (GTK_TABLE (table), port, 1, 2, 5, 6,
-			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-			  (GtkAttachOptions) (0), 0, 0);
-	gtk_entry_set_max_length (GTK_ENTRY (port), 5);
-	gtk_entry_set_text  (GTK_ENTRY (port), "5432");
-	gtk_entry_set_invisible_char (GTK_ENTRY (port), 9679);
-	gtk_entry_set_activates_default(GTK_ENTRY (port), TRUE);
-        
-	label = gtk_label_new (_("Port number"));
-	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_misc_set_padding (GTK_MISC (label), 14, 0);
-
         
 	HOOKUP_OBJECT (table, hostname, "hostname");
+	HOOKUP_OBJECT (table, port, "port");  
 	HOOKUP_OBJECT (table, database_name, "database");
 	HOOKUP_OBJECT (table, username, "username");  
 	HOOKUP_OBJECT (table, password, "password");  
-	HOOKUP_OBJECT (table, port, "port");  
 
 	return table;	
 }
