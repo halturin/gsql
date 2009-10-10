@@ -65,7 +65,6 @@ engine_menu_init (GSQLEngine *engine)
 	
 	gtk_action_group_add_actions (action, enginemenu_action, 
 				      G_N_ELEMENTS (enginemenu_action), NULL);
-	printf(PACKAGE_UI_DIR "/postgresql/engine_pgsql.ui");
 
 	engine->menu_id = gsql_menu_merge (PACKAGE_UI_DIR "/postgresql/engine_pgsql.ui", action);
 	engine->action = action;

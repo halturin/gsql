@@ -362,11 +362,14 @@ on_popup_view_alter (GtkMenuItem * menuitem,
 				    GSQL_NAV_DETAILS_VALUE, &value,
 				    -1);
 		//GSQL_DEBUG ("Reading [%s] from details", det_name);
-		if ( ! g_strcmp0 (det_name, "view_definition") ) {
-			view_code = g_strdup_printf("create or replace view "\
-						    "%s.%s as\n%s", owner, 
-						    name, value);
-			//GSQL_DEBUG("[%s] = [%s]", det_name, view_code);
+		if ( ! g_strcmp0 (det_name, "Source") ) {
+			view_code = g_strdup_printf("-- DROP VIEW %s.%s;\n\n"\
+						    "CREATE OR REPLACE VIEW " \
+						    "%s.%s as\n%s\n", 
+						    owner, name,
+						    owner, name, value);
+			GSQL_DEBUG("[%s] = [%s]", det_name, view_code);
+			GSQL_FIXME;
 			break;
 		}
 		valid = gtk_tree_model_iter_next (details, &det_iter);

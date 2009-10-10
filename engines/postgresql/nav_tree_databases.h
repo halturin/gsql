@@ -28,6 +28,7 @@
 
 #include "nav_tree_schemas.h"
 #include "nav_tree_languages.h"
+#include "nav_tree_types.h"
 
 G_BEGIN_DECLS
 
@@ -52,6 +53,16 @@ static GSQLNavigationItem databases[] = {
 		nav_tree_refresh_languages,	// expand_handler
 		NULL,				// event_handler
 		NULL, 0 },			// child, childs
+	/* {	TYPES_ID, */
+	/* 	GSQL_STOCK_VIEWS, */
+	/* 	N_("Types"),  */
+	/* 	sql_pgsql_types,  */
+	/* 	NULL,				// object_popup */
+	/* 	NULL,				// object_handler */
+	/* 	(GSQLNavigationHandler)  */
+	/* 	nav_tree_refresh_types,		// expand_handler */
+	/* 	NULL,				// event_handler */
+	/* 	NULL, 0 },			// child, childs */
 };
 
 void

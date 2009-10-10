@@ -38,11 +38,10 @@ ORDER BY d.datname";
 
 static const gchar sql_pgsql_all_schemas[] = 
 "select "\
-"  nsp.nspname, "\
-"  nsp.oid, "\
-"  pg_get_userbyid(nsp.nspowner) AS namespaceowner, "\
-"  nsp.nspacl, "\
-"  des.description "\
+"  nsp.nspname as \"Schema\", "\
+"  pg_get_userbyid(nsp.nspowner) AS \"Owner\", "\
+"  nsp.nspacl as \"ACL\", "\
+"  des.description as \"Description\" "\
 "FROM pg_namespace nsp "\
 "LEFT OUTER JOIN pg_description des ON des.objoid=nsp.oid "\
 "where nspname not in ('information_schema', 'pg_catalog', 'pg_temp_1', 'pg_toast') " \
@@ -50,9 +49,8 @@ static const gchar sql_pgsql_all_schemas[] =
 
 static const gchar sql_pgsql_languages[] =
 "SELECT "\
-"  lan.lanname, lanpltrusted, lanacl,  "\
-"  hp.proname as lanproc, vp.proname as lanval,  "\
-"  description "\
+"  lan.lanname as \"Name\", lanpltrusted as \"Trusted Language\", lanacl as \"ACL\",  "\
+"  description as \"Description\" "\
 "FROM pg_language lan "\
 "JOIN pg_proc hp on hp.oid=lanplcallfoid "\
 "LEFT OUTER JOIN pg_proc vp on vp.oid=lanvalidator "\
@@ -62,7 +60,8 @@ static const gchar sql_pgsql_languages[] =
 
 static const gchar sql_pgsql_users[] =
 "select \
-usename, usecreatedb, usesuper, usecatupd \
+usename as \"User\", usecreatedb as \"Create DB\", "\
+"usesuper as \"Super User\", usecatupd as \"Create Objects\" \
 from pg_user";
 
 static const gchar sql_pgsql_privileges[] =
@@ -73,7 +72,10 @@ order by table_name, privilege_type, grantee";
 
 static const gchar sql_pgsql_processes[]=
 "select \
-procpid, usename, replace(replace(current_query, '<', ''), '>', '') as current_query, query_start, backend_start, client_addr, client_port \
+procpid as \"PID\", usename as \"User\", "\
+"replace(replace(current_query, '<', ''), '>', '') as \"Current Query\", "\
+"query_start as \"Query Start\", backend_start as \"Backend Start\", "\
+"client_addr as \"Client Address\", client_port as \"Client Port\" \
 from pg_stat_activity";
 
 static const gchar sql_pgsql_session_variables[]=
@@ -85,16 +87,12 @@ static const gchar sql_pgsql_global_variables[]=
 /*********** User's objects *************/
 static const gchar sql_pgsql_tables[] =
 "SELECT "\
-"  rel.relname, "\
-"  ns.nspname,"\
-"  pg_get_userbyid(rel.relowner) AS relowner, "\
-"  rel.relacl, "\
-"  rel.relhasoids, "\
-"  rel.relhassubclass, "\
-"  rel.reltuples, "\
-"  des.description, "\
-"  c.conname, "\
-"  c.conkey "\
+"  rel.relname as \"Name\", "\
+"  ns.nspname as \"Schema\","\
+"  pg_get_userbyid(rel.relowner) AS \"Owner\", "\
+"  rel.relacl as \"ACL\", "\
+"  rel.reltuples as \"Tuples\", "\
+"  des.description as \"Description\""\
 "from pg_class rel "\
 "LEFT OUTER JOIN pg_description des "\
 "ON (des.objoid=rel.oid AND des.objsubid=0) "\
@@ -107,25 +105,12 @@ static const gchar sql_pgsql_tables[] =
 
 static const gchar sql_pgsql_table_columns[] = 
 "SELECT "\
-" attname, attlen, attnum, attnotnull, atthasdef, "\
-" pg_catalog.pg_get_expr(def.adbin, def.adrelid) AS defval,  "\
-" CASE WHEN att.attndims > 0 THEN 1 ELSE 0 END AS isarray, "\
-" attndims, format_type(ty.oid,NULL) AS typname, tn.nspname as typnspname,  "\
-" et.typname as elemtypname, cl.relname, na.nspname, att.attstattarget,  "\
-" des.description, cs.relname AS sername, ns.nspname AS serschema, "\
-" (SELECT count(1) FROM pg_type t2 WHERE t2.typname=ty.typname) > 1 AS isdup,"\
-" indkey, "\
-"  CASE "\
-"   WHEN EXISTS ( SELECT inhparent FROM pg_inherits  "\
-"        WHERE inhrelid=att.attrelid ) THEN att.attrelid::regclass "\
-"   ELSE NULL "\
-"  END as inhrelname, "\
-"  EXISTS( "\
-"    SELECT 1  "\
-"    FROM  pg_constraint  "\
-"    WHERE conrelid=att.attrelid  "\
-"    AND contype='f' AND att.attnum=ANY(conkey) "\
-"   ) As isfk "\
+" attname as \"Name\", ty.typname as \"Type\", atttypmod as \"Length\", "\
+"attnum as \"Order\", attnotnull as \"Not Null\", "\
+" pg_catalog.pg_get_expr(def.adbin, def.adrelid) AS \"Default\",  "\
+" CASE WHEN att.attndims > 0 THEN 1 ELSE 0 END AS \"Array\", "\
+" attndims as \"Array Dimensions\", "\
+"des.description as \"Description\" "\
 "FROM pg_attribute att "\
 "JOIN pg_type ty ON ty.oid=att.atttypid "\
 "JOIN pg_namespace tn ON tn.oid=ty.typnamespace "\
@@ -147,13 +132,13 @@ static const gchar sql_pgsql_table_columns[] =
 
 static const gchar sql_pgsql_indexes[] = 
 "select \
-c.relname as index_name, \
-n.nspname as table_schema, \
+c.relname as \"Name\", \
+n.nspname as \"Schema\", \
 case c.relkind when 'r' then 'table' when 'v' then 'view' \
 when 'i' then 'index' when 's' then 'sequence' when 's' \
-then 'special' end as type, \
-u.usename as owner, \
-c2.relname as table_name \
+then 'special' end as \"Type\", \
+u.usename as \"Owner\", \
+c2.relname as \"Table\" \
 from pg_catalog.pg_class c \
 join pg_catalog.pg_index i on i.indexrelid = c.oid	\
 join pg_catalog.pg_class c2 on i.indrelid = c2.oid \
@@ -167,19 +152,13 @@ and c2.relname ilike $2 \
 order by c2.relname, c.relname";
 
 static const gchar sql_pgsql_index_columns[]=
-"SELECT  "\
-"att.attname, att.attlen, att.attnum, att.attnotnull, att.atthasdef,   "\
-"pg_catalog.pg_get_expr(def.adbin, def.adrelid) AS defval,    "\
-"CASE WHEN att.attndims > 0 THEN 1 ELSE 0 END AS isarray,   "\
-"att.attndims, format_type(ty.oid,NULL) AS typname,  "\
-"tn.nspname as typnspname,   et.typname as elemtypname,  "\
-"cl.relname, n.nspname, att.attstattarget, des.description,  "\
-"cs.relname AS sername, ns.nspname AS serschema,   "\
-"(SELECT count(1) FROM pg_type t2 WHERE t2.typname=ty.typname) > 1 AS isdup, "\
-"  i.indkey, CASE WHEN EXISTS ( SELECT inhparent FROM pg_inherits WHERE  "\
-"inhrelid=att.attrelid ) THEN att.attrelid::regclass    ELSE NULL    "\
-"END as inhrelname, EXISTS( SELECT 1 FROM  pg_constraint WHERE conrelid =  "\
-"att.attrelid AND contype='f' AND att.attnum=ANY(conkey) ) As isfk  "\
+"SELECT "\
+" attname as \"Name\", ty.typname as \"Type\", atttypmod as \"Length\", "\
+"attnum as \"Order\", attnotnull as \"Not Null\", "\
+" pg_catalog.pg_get_expr(def.adbin, def.adrelid) AS \"Default\",  "\
+" CASE WHEN att.attndims > 0 THEN 1 ELSE 0 END AS \"Array\", "\
+" attndims as \"Array Dimensions\", "\
+"des.description as \"Description\" "\
 "from pg_catalog.pg_class c1  "\
 "join pg_catalog.pg_index i on i.indexrelid = c1.oid  "\
 "join pg_catalog.pg_class c2 on i.indrelid = c2.oid  "\
@@ -206,9 +185,10 @@ static const gchar sql_pgsql_index_columns[]=
 
 static const gchar sql_pgsql_triggers[] =
 "SELECT "\
-"  t.tgname, t.tgenabled, t.tgisconstraint, t.tgnargs, "\
-"  cl.relname, nspname, des.description, l.lanname, "\
-"  p.prosrc "\
+"  t.tgname as \"Name\", t.tgenabled as \"Enabled\", "\
+"t.tgisconstraint as \"Constraint\", t.tgnargs as \"# Args\", "\
+"des.description as \"Description\", l.lanname as \"Language\", "\
+"p.prosrc as \"Source\" "\
 "FROM pg_trigger t "\
 "JOIN pg_class cl ON cl.oid=tgrelid "\
 "JOIN pg_namespace na ON na.oid=relnamespace "\
@@ -222,17 +202,18 @@ static const gchar sql_pgsql_triggers[] =
 
 static const gchar sql_pgsql_constraints[]=
 "SELECT "\
-"  DISTINCT ON(cls.relname) cls.relname as idxname, contype, "\
-"  indrelid, indkey, indisclustered, indisunique, indisprimary, n.nspname, "\
-"  indnatts, cls.reltablespace AS spcoid, spcname, "\
-"  tab.relname as tabname, indclass, con.oid as conoid, "\
-"  CASE contype  "\
-"  WHEN 'p' THEN desp.description  "\
-"  WHEN 'u' THEN desp.description  "\
-"  ELSE des.description  "\
-"  END AS description, "\
-"  pg_get_expr(indpred, indrelid) as indconstraint, "\
-"  condeferrable, condeferred, amname "\
+"DISTINCT ON(cls.relname) cls.relname as \"Name\", n.nspname as \"Schema\", "\
+"contype as \"Type\", indkey as \"Fields\", indisclustered as \"Clustered\", "\
+"indisunique as \"Unique\", indisprimary as \"Primary Key\", "\
+"indnatts as \"# Columns\", "\
+"CASE contype  "\
+"WHEN 'p' THEN desp.description  "\
+"WHEN 'u' THEN desp.description  "\
+"ELSE des.description  "\
+"END AS \"Description\", "\
+"pg_get_expr(indpred, indrelid) as \"Constraint\", "\
+"condeferrable as \"Deferrable\", condeferred as \"Deferred\", "\
+"amname as \"Access Method\" "\
 "FROM pg_index idx "\
 "JOIN pg_class cls ON cls.oid=indexrelid "\
 "JOIN pg_class tab ON tab.oid=indrelid "\
@@ -255,8 +236,9 @@ static const gchar sql_pgsql_constraints[]=
 
 static const gchar sql_pgsql_views[] =
 "SELECT "\
-"  c.relname as viewname, pg_get_userbyid(c.relowner) AS viewowner,  "\
-"  c.relacl, des.description "\
+"  c.relname as \"Name\", pg_get_userbyid(c.relowner) AS \"Owner\",  "\
+"  c.relacl as \"ACL\", des.description as \"Description\", "\
+"pg_get_viewdef(c.oid) as \"Source\" "\
 "FROM pg_class c "\
 "LEFT OUTER JOIN pg_description des ON (des.objoid=c.oid and des.objsubid=0) "\
 "JOIN pg_namespace ns on c.relnamespace = ns.oid "\
@@ -269,6 +251,24 @@ static const gchar sql_pgsql_views[] =
 
 static const gchar sql_pgsql_types[] = 
 "select "\
+"  t.typname as \"Name\", ns.nspname as \"Schema\", t.typlen as \"Length\", "\
+"  t.typisdefined as \"Defined\", t.typdelim as \"Delimiter\", "\
+"  t.typnotnull as \"Not Null\", t.typbasetype as \"Base Type\",  "\
+"  format_type(t.oid, null) AS \"Alias\", "\
+"  pg_get_userbyid(t.typowner) as \"Owner\",  "\
+"  e.typname as \"Element\", description as \"Description\" "\
+"FROM pg_type t "\
+"LEFT OUTER JOIN pg_type e ON e.oid=t.typelem "\
+"LEFT OUTER JOIN pg_class ct ON ct.oid=t.typrelid "\
+"LEFT OUTER JOIN pg_description des ON des.objoid=t.oid "\
+"JOIN pg_namespace ns on t.typnamespace = ns.oid "\
+"WHERE t.typtype != 'd'  "\
+"AND t.typname NOT LIKE E'\\\\_%' "\
+"AND ns.nspname = $1"\
+"AND ct.relkind = 'c' ";
+
+static const gchar sql_pgsql_sequences[] = 
+"select "\
 "  t.typname, ns.nspname as typnamespace, t.typlen, "\
 "  t.typbyval, t.typtype, t.typisdefined, t.typdelim, "\
 "  t.typnotnull, t.typbasetype,  "\
@@ -277,23 +277,28 @@ static const gchar sql_pgsql_types[] =
 "  e.typname as element, description, ct.oid AS taboid "\
 "FROM pg_type t "\
 "LEFT OUTER JOIN pg_type e ON e.oid=t.typelem "\
-"LEFT OUTER JOIN pg_class ct ON ct.oid=t.typrelid AND ct.relkind <> 'c' "\
+"LEFT OUTER JOIN pg_class ct ON ct.oid=t.typrelid "\
 "LEFT OUTER JOIN pg_description des ON des.objoid=t.oid "\
 "JOIN pg_namespace ns on t.typnamespace = ns.oid "\
 "WHERE t.typtype != 'd'  "\
 "AND t.typname NOT LIKE E'\\\\_%' "\
-"AND ns.nspname = $1";
+"AND ns.nspname = $1"\
+"AND ct.relkind = 'S' ";
 
 static const gchar sql_pgsql_routines[] =
 "select "\
-"  pr.proname as funcname, prons.nspname as funcnamespace,  "\
-"  pg_get_userbyid(proowner) as funcowner, "\
-"  prolang, "\
-"  proisagg, prosecdef, proisstrict, proretset, "\
-"  provolatile, pronargs, prorettype, "\
-"  proargtypes, proargnames, prosrc, "\
-"  probin, proacl, format_type(TYP.oid, NULL) AS typname,  "\
-"  typns.nspname AS typnsp, lanname, des.description "\
+"  pr.proname as \"Name\", prons.nspname as \"Schema\",  "\
+"  pg_get_userbyid(proowner) as \"Owner\", "\
+"  prolang as \"Language\", "\
+"  proisagg as \"Aggregate\", proisstrict as \"Strict\", "\
+"proretset as \"Returns Set\", "\
+"  provolatile as \"Volatile\", pronargs as \"# Args\", "\
+"format_type(typ.oid, NULL) as \"Ret Type\", "\
+"typns.nspname AS \"Ret Type Schema\", "\
+"  proargtypes as \"Arg Types\", proargnames as \"Arg Names\", "
+"prosrc as \"Source\", "\
+"  proacl as \"ACL\", "\
+"  lanname as \"Language\", des.description as \"Description\" "\
 "FROM pg_proc pr "\
 "JOIN pg_type typ ON typ.oid=prorettype "\
 "JOIN pg_namespace typns ON typns.oid=typ.typnamespace "\

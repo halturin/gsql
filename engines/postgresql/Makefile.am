@@ -36,6 +36,7 @@ libgsqlengine_pgsql_la_SOURCES = \
 	nav_tree_constraints.c \
 	nav_tree_views.c \
 	nav_tree_types.c \
+	nav_tree_sequences.c \
 	nav_tree_triggers.c \
 	nav_tree_indexes.c \
 	nav_tree_columns.c \

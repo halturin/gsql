@@ -108,7 +108,7 @@ nav_tree_refresh_constraints (GSQLNavigation *navigation,
 					    -1);
 	
 	var = g_list_nth_data(cursor->var_list,0);
-	var_t = g_list_nth_data(cursor->var_list,1);
+	var_t = g_list_nth_data(cursor->var_list,2);
 	
 	if (state != GSQL_CURSOR_STATE_OPEN) {
 		gsql_cursor_close (cursor);

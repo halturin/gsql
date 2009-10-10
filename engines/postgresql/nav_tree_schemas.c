@@ -40,6 +40,7 @@
 #include "nav_tree_triggers.h"
 #include "nav_tree_indexes.h"
 #include "nav_tree_views.h"
+#include "nav_tree_sequences.h"
 #include "nav_tree_types.h"
 #include "nav_tree_procedures.h"
 #include "nav_tree_privileges.h"
@@ -60,16 +61,6 @@ static GSQLNavigationItem users_objects[] = {
 		nav_tree_refresh_tables,	        // expand_handler
 		NULL,					// event_handler
 		NULL, 0 },				// child, childs
-	{	CONSTRAINTS_ID,
-		GSQL_STOCK_CONSTRAINT, 
-		N_("Constraints"), 
-		sql_pgsql_constraints, 
-		NULL,					// object_popup
-		NULL,					// object_handler
-		(GSQLNavigationHandler) 
-		nav_tree_refresh_constraints,		// expand_handler
-		NULL,					// event_handler
-		NULL, 0 },				// child, childs
 	{	VIEWS_ID, 
 		GSQL_STOCK_VIEWS, 
 		N_("Views"), 
@@ -80,16 +71,36 @@ static GSQLNavigationItem users_objects[] = {
 		nav_tree_refresh_views,			// expand_handler
 		NULL,					// event_handler
 		NULL, 0 },				// child, childs
-	/* {	TYPES_ID,  */
-	/* 	GSQL_STOCK_VIEWS,  */
-	/* 	N_("Types"),  */
-	/* 	sql_pgsql_types,  */
+	{	TYPES_ID,
+		GSQL_STOCK_VIEWS,
+		N_("Types"),
+		sql_pgsql_types,
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler)
+		nav_tree_refresh_types,			// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
+	/* {	TYPES_ID, */
+	/* 	GSQL_STOCK_SEQUENCES, */
+	/* 	N_("Sequences"), */
+	/* 	sql_pgsql_sequences, */
 	/* 	NULL,					// object_popup */
 	/* 	NULL,					// object_handler */
 	/* 	(GSQLNavigationHandler) */
-	/* 	nav_tree_refresh_types,			// expand_handler */
+	/* 	nav_tree_refresh_sequences,		// expand_handler */
 	/* 	NULL,					// event_handler */
 	/* 	NULL, 0 },				// child, childs */
+	{	CONSTRAINTS_ID,
+		GSQL_STOCK_CONSTRAINT, 
+		N_("Constraints"), 
+		sql_pgsql_constraints, 
+		NULL,					// object_popup
+		NULL,					// object_handler
+		(GSQLNavigationHandler) 
+		nav_tree_refresh_constraints,		// expand_handler
+		NULL,					// event_handler
+		NULL, 0 },				// child, childs
 	{	INDEXES_ID,
 		GSQL_STOCK_INDEXES, 
 		N_("Indexes"), 
@@ -219,9 +230,10 @@ nav_tree_refresh_schemas (GSQLNavigation *navigation,
 	GSQLCursorState state;
 	GSQLVariable *var;
 	gchar	*sql = NULL, *realname = NULL, *name = NULL,
-		*parent_realname = NULL;
+		*parent_realname = NULL, key[256];
 	gint 	id, i, n;
 	GtkTreeIter child, parent, child_fake, child_last;
+	GtkListStore *details;
   
 	
 	model = gtk_tree_view_get_model(tv);
@@ -275,6 +287,11 @@ nav_tree_refresh_schemas (GSQLNavigation *navigation,
 	while (gsql_cursor_fetch (cursor, 1) > 0) {
 		i++;		
 		name = (gchar *) var->value;
+
+		g_snprintf (key, 256, "%s%d%s%x",
+			    name, TABLE_ID, name, session);
+		details = gsql_navigation_get_details (navigation, key);
+		pgsql_navigation_fill_details (cursor, details);
       
 		gtk_tree_store_append (GTK_TREE_STORE(model), &child, iter);
 		gtk_tree_store_set (GTK_TREE_STORE(model), &child,
@@ -290,7 +307,7 @@ nav_tree_refresh_schemas (GSQLNavigation *navigation,
 				    GSQL_NAV_TREE_EXPAND_HANDLER,NULL,
 				    GSQL_NAV_TREE_EVENT_HANDLER,NULL,
 				    GSQL_NAV_TREE_STRUCT,	users_objects,
-				    GSQL_NAV_TREE_DETAILS,	NULL,
+				    GSQL_NAV_TREE_DETAILS,	details,
 				    GSQL_NAV_TREE_NUM_ITEMS,
 				    G_N_ELEMENTS(users_objects),
 				    -1);

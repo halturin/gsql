@@ -124,7 +124,7 @@ pgsql_session_switch_database(GSQLSession *session, gchar *database) {
 	GValue gpass={0, }, ghost={0, };
 	PGconn *conn, *newconn;
 	gchar *username = NULL, *password = NULL, *hostname = NULL,
-	  *currentdb = NULL, *port = "5432";
+	  *currentdb = NULL, *port = NULL;
 
 	g_return_if_fail(GSQL_IS_SESSION(session));
 	spec_session = session->spec;
@@ -152,6 +152,8 @@ pgsql_session_switch_database(GSQLSession *session, gchar *database) {
 	// Retrieving username from connection (retrieving it from session
 	// returns NULL)
 	username = PQuser(conn);
+
+	port = PQport(conn);
 
 	if ( ! ( newconn = 
 		g_hash_table_lookup(spec_session->hash_conns, database) ) ) 

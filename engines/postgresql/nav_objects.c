@@ -56,7 +56,7 @@ pgsql_navigation_get_database (GSQLNavigation *nav, GtkTreeView *treeview,
 			    GSQL_NAV_TREE_ID, 
 			    &id, -1);
 	GSQL_DEBUG("ID: [%d] - SCHEMAS_ID: [%d]", id, SCHEMAS_ID);
-	if ( id == SCHEMAS_ID || id == LANGUAGES_ID ) {
+	if ( id == SCHEMAS_ID || id == LANGUAGES_ID || id == TYPES_ID) {
 		// In case of being in the Current Database node
 		GSQLSession *session = gsql_session_get_active();
 		g_return_if_fail (GSQL_IS_SESSION(session));
