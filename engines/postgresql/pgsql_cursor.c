@@ -400,8 +400,6 @@ pgsql_cursor_statement_detect (GSQLCursor *cursor) {
 			if (g_str_has_prefix (stmt_char, "DELETE")) {
 				GSQL_DEBUG ("'delete' statement");
 				cursor->stmt_type = GSQL_CURSOR_STMT_DELETE;
-				cursor->stmt_affected_rows = 
-					PQcmdTuples(e_cursor->result);
 				cursor->stmt_affected_rows = strtoull (affect,
 								       NULL,
 								       10);

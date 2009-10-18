@@ -26,6 +26,17 @@
 #include "engine_session.h"
 
 void
+pgsql_session_workspace_info (GSQLSession *session, gchar *msg) {
+	GSQLWorkspace *workspace = NULL;
+	g_return_if_fail ( GSQL_IS_SESSION (session) );
+
+	workspace = gsql_session_get_workspace (session);
+	g_return_if_fail (GSQL_IS_WORKSPACE(workspace));
+
+	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
+}
+
+void
 pgsql_session_hash_table_destroy (gpointer key, gpointer value, gpointer data);
 
 gboolean
@@ -100,11 +111,11 @@ pgsql_session_hash_table_destroy (gpointer key, gpointer value, gpointer data)
 	PQfinish (conn);
 }
 
-gchar *
+const gchar *
 pgsql_session_get_database(GSQLSession *session) {
 	GSQL_TRACE_FUNC;
 	GValue gdb = {0, };
-	char *database = NULL;
+	const gchar *database = NULL;
 	
 	g_return_if_fail(GSQL_IS_SESSION(session));
 
@@ -123,7 +134,7 @@ pgsql_session_switch_database(GSQLSession *session, gchar *database) {
 	GSQLEPGSQLSession *spec_session;
 	GValue gpass={0, }, ghost={0, };
 	PGconn *conn, *newconn;
-	gchar *username = NULL, *password = NULL, *hostname = NULL,
+	const gchar *username = NULL, *password = NULL, *hostname = NULL,
 	  *currentdb = NULL, *port = NULL;
 
 	g_return_if_fail(GSQL_IS_SESSION(session));
@@ -223,17 +234,6 @@ pgsql_session_rollback (GSQLSession *session)
 
 	GSQL_DEBUG ("Trans: transaction ROLLED BACK and RESTARTED");
 	pgsql_session_workspace_info(session, "Changes rolled back.");
-}
-
-void
-pgsql_session_workspace_info (GSQLSession *session, gchar *msg) {
-	GSQLWorkspace *workspace = NULL;
-	g_return_if_fail ( GSQL_IS_SESSION (session) );
-
-	workspace = gsql_session_get_workspace (session);
-	g_return_if_fail (GSQL_IS_WORKSPACE(workspace));
-
-	gsql_message_add (workspace, GSQL_MESSAGE_NOTICE, msg);
 }
 
 gchar *
