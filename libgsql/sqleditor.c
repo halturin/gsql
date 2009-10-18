@@ -823,7 +823,8 @@ do_sql_run (GSQLEditor *sqleditor)
 		
 			sql = gsql_source_buffer_get_delim_block (search_iter, &s_iter, &e_iter);
 			GSQL_DEBUG ("SQL block running: %s", sql);
-		};
+		}
+		
 		gtk_text_iter_free(search_iter);
 		
 		if (g_utf8_strlen (sql, -1) == 0)
@@ -847,12 +848,6 @@ do_sql_run (GSQLEditor *sqleditor)
 		}
 		
 		GSQL_THREAD_LEAVE;
-		
-		if (sqleditor->cursor)
-		{
-			gsql_cursor_close (sqleditor->cursor);
-			sqleditor->cursor = NULL;
-		}
 		
 		sqleditor->cursor = cursor = gsql_cursor_new (session, sql);
 		cursor->linked_widget = GTK_WIDGET (source);
@@ -1092,6 +1087,13 @@ on_sql_run (GtkToolButton *button, gpointer data)
 	g_return_if_fail (GSQL_IS_EDITOR (sqleditor));
 	
 	sqleditor->private->stepping = FALSE;
+
+	if (sqleditor->cursor)
+	{
+			gsql_cursor_close (sqleditor->cursor);
+			sqleditor->cursor = NULL;
+	}
+	
 	thread = g_thread_create ((GThreadFunc) do_sql_run,
 							  sqleditor, 
 							  FALSE,

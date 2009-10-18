@@ -351,8 +351,6 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 				gsql_cursor_set_state (cursor, state);
 					
 				gsql_session_unlock (cursor->session);
-				
-				gsql_cursor_set_state (cursor, state);
 	
 				if ((state == GSQL_CURSOR_STATE_OPEN) && (cursor->private->notify_on_finish))
 				{
