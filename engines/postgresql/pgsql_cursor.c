@@ -84,22 +84,19 @@ pgsql_cursor_open_bind (GSQLCursor *cursor, GList *args) {
 	GSQL_TRACE_FUNC;
 	GSQLEPGSQLSession *e_session = NULL;
 	GSQLEPGSQLCursor  *e_cursor = NULL;
-	GSQLEPGSQLVariable *e_var;
 	GSQLVariable *var;
 	GSQLWorkspace *workspace = NULL;
 	PGSQL_FIELD *field;
 
-	gulong binds_count = 0, binds_arg, n, n_fields, is_null = 1;
+	gulong binds_arg, n, n_fields, is_null = 1;
 	// store parameters information
 	Oid *paramTypes = NULL;
-	char **paramValues = NULL;
+	const char **paramValues = NULL;
 	int *paramLengths = NULL;
 	int *paramFormats = NULL;
 
-	gulong str_len;
 	GList *vlist = args;
 	GType vtype;
-	gdouble affect = 0;
 	gchar error_str[2048];
 	
 	g_return_if_fail (GSQL_IS_CURSOR(cursor));
@@ -237,12 +234,14 @@ pgsql_cursor_open (GSQLCursor *cursor) {
 	gulong n, n_fields, is_null = 1;
 	gchar error_str[2048];
   
-	g_return_if_fail (GSQL_IS_CURSOR(cursor));
-	g_return_if_fail (GSQL_IS_SESSION(cursor->session));
+	g_return_val_if_fail (GSQL_IS_CURSOR(cursor), GSQL_CURSOR_STATE_ERROR);
+	g_return_val_if_fail (GSQL_IS_SESSION(cursor->session), 
+	                      GSQL_CURSOR_STATE_ERROR);
 	e_session = cursor->session->spec;
 
 	workspace = gsql_session_get_workspace (cursor->session);
-	g_return_if_fail(GSQL_IS_WORKSPACE(workspace));
+	g_return_val_if_fail(GSQL_IS_WORKSPACE(workspace), 
+	                     GSQL_CURSOR_STATE_ERROR);
 	
 	pgconn = e_session->pgconn;
 	
@@ -268,7 +267,8 @@ pgsql_cursor_open (GSQLCursor *cursor) {
 	    PQresultStatus(e_cursor->result) == PGRES_COMMAND_OK)
 		return GSQL_CURSOR_STATE_OPEN;
 
-	if (n_fields == 0 && PQresultStatus != PGRES_COMMAND_OK) {
+	if (n_fields == 0 && 
+	    PQresultStatus(e_cursor->result) != PGRES_COMMAND_OK) {
 		g_sprintf ( error_str, "Error occured: %s", 
 			    pgsql_session_get_error(cursor->session) );
 		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
@@ -288,6 +288,36 @@ pgsql_cursor_open (GSQLCursor *cursor) {
 	}
 
 	return GSQL_CURSOR_STATE_OPEN;
+}
+
+GSQLCursorState 
+pgsql_cursor_stop (GSQLCursor *cursor)
+{
+	GSQL_TRACE_FUNC;
+	
+	GSQLSession *session;
+	GSQLEPGSQLSession *spec_session;
+	GSQLEPGSQLCursor *spec_cursor;
+	PGcancel *cancel = NULL;
+	gchar buff[256];
+	
+	g_return_val_if_fail (GSQL_IS_CURSOR (cursor), GSQL_CURSOR_STATE_ERROR);
+
+	session = cursor->session;
+	g_return_val_if_fail (GSQL_IS_SESSION (session), 
+	                      GSQL_CURSOR_STATE_ERROR);
+
+	spec_session = session->spec;
+	spec_cursor = cursor->spec;
+
+	cancel = PQgetCancel (spec_session->pgconn);
+	if ( ! PQcancel (cancel, buff, 256) ) {
+		pgsql_session_workspace_info (session, buff);
+		PQfreeCancel (cancel);
+		return GSQL_CURSOR_STATE_ERROR;
+	}
+	PQfreeCancel (cancel);
+	return GSQL_CURSOR_STATE_STOP;
 }
 
 gint

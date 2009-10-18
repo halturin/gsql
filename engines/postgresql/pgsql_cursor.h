@@ -34,6 +34,9 @@ pgsql_cursor_open_bind (GSQLCursor *cursor, GList *args);
 GSQLCursorState
 pgsql_cursor_open (GSQLCursor *cursor);
 
+GSQLCursorState 
+pgsql_cursor_stop (GSQLCursor *cursor);
+
 gint
 pgsql_cursor_fetch (GSQLCursor *cursor, gint rows);
 

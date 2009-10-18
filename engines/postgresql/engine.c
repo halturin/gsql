@@ -77,8 +77,9 @@ engine_load (GSQLEngine *engine)
 	/* engine->engine_conf_widget_free = engine_conf_widget_free; */
 
 	/* cursor */
-	engine->cursor_open_with_bind = pgsql_cursor_open_bind;
 	engine->cursor_open = pgsql_cursor_open;
+	engine->cursor_open_with_bind = pgsql_cursor_open_bind;
+	engine->cursor_stop = pgsql_cursor_stop;
 	engine->cursor_fetch = pgsql_cursor_fetch;
 	
 
@@ -86,7 +87,7 @@ engine_load (GSQLEngine *engine)
 	engine_stock_init();
 	engine_menu_init (engine);
 		
-    return TRUE;
+	return TRUE;
 };
 
 gboolean
