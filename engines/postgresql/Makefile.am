@@ -1,4 +1,4 @@
-
+AM_CFLAGS = -Werror
 SUBDIRS = pixmaps
 
 engine_gladedir = $(PACKAGE_GLADE_DIR)/postgresql

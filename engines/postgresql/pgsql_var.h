@@ -60,8 +60,8 @@ struct _GSQLEPGSQLVariable
 
 G_BEGIN_DECLS
 
-/* gboolean */
-/* pgsql_variable_init (GSQLVariable *variable, PGSQL_FIELD *field, PGSQL_BIND *bind); */
+gboolean
+pgsql_variable_init (GSQLVariable *variable, PGSQL_FIELD *field);
 
 void
 pgsql_variable_free (GSQLEPGSQLVariable *var);
