@@ -109,8 +109,9 @@ env_type_renderer_canceled_cb (GtkCellRendererText *renderer,
 
 	model = gtk_tree_view_get_model (tv);
 	sel = gtk_tree_view_get_selection (tv);
-	
-	gtk_tree_selection_get_selected (sel, &model, &iter);
+
+	if (!gtk_tree_selection_get_selected (sel, &model, &iter))
+		return;
 	
 	gtk_tree_model_get (model, &iter,
 						0, &env_type,
