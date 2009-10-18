@@ -178,10 +178,10 @@ gsql_source_editor_new(gchar * buffer_body)
 	gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
 	gsql_source_editor_property_set (source);
 	
-	gtk_source_view_set_mark_category_pixbuf (GTK_SOURCE_VIEW (source), GSQL_EDITOR_MARKER_COMPLETE,
+	gtk_source_view_set_mark_category_icon_from_pixbuf (GTK_SOURCE_VIEW (source), GSQL_EDITOR_MARKER_COMPLETE,
 									   // FIXME. make another icon.
 									   create_pixbuf ("msg_notice.png"));
-	gtk_source_view_set_mark_category_pixbuf (GTK_SOURCE_VIEW (source), GSQL_EDITOR_MARKER_FAILED,
+	gtk_source_view_set_mark_category_icon_from_pixbuf (GTK_SOURCE_VIEW (source), GSQL_EDITOR_MARKER_FAILED,
 									   // FIXME. make another icon.
 									   create_pixbuf ("msg_error.png"));
 	gtk_source_view_set_show_line_marks (GTK_SOURCE_VIEW (source), TRUE);
