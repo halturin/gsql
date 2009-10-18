@@ -22,6 +22,7 @@
  
 #include <glib.h>
 #include <libgsql/session.h>
+#include <libgsql/utils.h>
 #include "mysql_cursor.h"
 #include "engine_session.h"
 #include "mysql_var.h"
@@ -44,17 +45,16 @@ on_cursor_close (GSQLCursor *cursor, gpointer user_data)
 	{
 		e_cursor = (GSQLEMySQLCursor *)cursor->spec;
 		
-		GSQL_DEBUG ("V1");
-		mysql_stmt_free_result(e_cursor->statement);
-		GSQL_DEBUG ("V2");
-		mysql_stmt_close(e_cursor->statement);
-		GSQL_DEBUG ("V3");
+		if (e_cursor->statement)
+		{
+			mysql_stmt_free_result(e_cursor->statement);
+			mysql_stmt_close(e_cursor->statement);
+		}
+		
 		g_free (e_cursor->binds);
-		GSQL_DEBUG ("V4");
 		g_free (e_cursor);
-	};
+	}
 	
-	return;
 }
 
 static gboolean
@@ -66,28 +66,37 @@ mysql_cursor_prepare (GSQLCursor *cursor)
 	GSQLEMySQLCursor  *e_cursor = NULL;
 	GSQLWorkspace *workspace = NULL;
 	gchar error_str[2048];
+	MYSQL_STMT *stmt;
 
 	e_session = cursor->session->spec;
-
+	
 	if (cursor->spec == NULL)
 	{
+		stmt = mysql_stmt_init (e_session->mysql);
+
+		if (!stmt)
+		{
+			g_debug ("Couldn't initiate a statement [mysql_stmt_init]");
+			return FALSE;
+		}
 		e_cursor = g_new0 (GSQLEMySQLCursor, 1);
-		e_cursor->statement = mysql_stmt_init (e_session->mysql);
+		e_cursor->statement = stmt;
+		
 		cursor->spec = e_cursor;
 		g_signal_connect (G_OBJECT (cursor), "close", G_CALLBACK (on_cursor_close), NULL);
-	};
+	}
+
 	
 	if (mysql_stmt_prepare(e_cursor->statement, cursor->sql, g_utf8_strlen(cursor->sql, 1048576)))
 	{
-		g_sprintf (error_str, "Prepare failed: %s", 
-				   gsql_utils_escape_string (mysql_stmt_error (e_cursor->statement)));
+		g_snprintf (error_str, 2048, "Prepare failed: %s", 
+		            gsql_utils_escape_string (mysql_stmt_error (e_cursor->statement)));
 
 		workspace = gsql_session_get_workspace (cursor->session);
 		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 
-		mysql_stmt_reset (e_cursor->statement);
 		return FALSE;
-	};
+	}
 
 	return TRUE;	
 }
@@ -122,9 +131,10 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 	}
 	
 	e_cursor = cursor->spec;
+	
 	binds_count = mysql_stmt_param_count(e_cursor->statement);
-
 	binds_arg = g_list_length (args) / 2;
+	
 	if (binds_arg != binds_count)
 	{
 		GSQL_DEBUG ("Bind count is wrong. Need [%d]. Got [%f]", binds_count, binds_arg);
@@ -226,10 +236,7 @@ mysql_cursor_open_bind (GSQLCursor *cursor, GList *args)
 		return GSQL_CURSOR_STATE_ERROR;
 	}
 	
-
-	
 	return GSQL_CURSOR_STATE_OPEN;
-
 }
 
 
@@ -355,7 +362,7 @@ mysql_cursor_statement_detect (GSQLCursor *cursor)
 	
 	/*  FIXME
 		How to recognize the type of the statement?
-		Any body knows? I it irealy defective!! 
+		Does any body know?  it is realy defective!! 
 	*/
 	
 	e_cursor = cursor->spec;
