@@ -8,9 +8,9 @@
   </phases>
   <calendars>
     <day-types>
-      <day-type id="0" name="Working" description="A default working day"/>
-      <day-type id="1" name="Nonworking" description="A default non working day"/>
-      <day-type id="2" name="Use base" description="Use day from base calendar"/>
+      <day-type id="0" name="&#xDA;til" description="Um dia &#xFA;til padr&#xE3;o"/>
+      <day-type id="1" name="N&#xE3;o &#xFA;til" description="Um dia n&#xE3;o &#xFA;til padr&#xE3;o"/>
+      <day-type id="2" name="Utiliza base" description="Utiliza o dia a partir de um calend&#xE1;rio base"/>
     </day-types>
     <calendar id="1" name="Default">
       <default-week mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
@@ -47,40 +47,41 @@
         </predecessors>
       </task>
     </task>
-    <task id="6" name="PosgreSQL engine" note="" work="735300" start="20090925T000000Z" end="20091020T131500Z" work-start="20090925T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="7" name="Navigation" note="" work="360900" start="20090925T000000Z" end="20091007T131500Z" work-start="20090925T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
-      <task id="8" name="SQL execution/fetching" note="" work="374400" start="20091007T131500Z" end="20091020T131500Z" work-start="20091007T131500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+    <task id="6" name="PosgreSQL engine" note="" work="764100" start="20090925T000000Z" end="20091020T131500Z" work-start="20090925T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="7" name="Navigation" note="" work="360900" start="20090925T000000Z" end="20091007T131500Z" work-start="20090925T080000Z" percent-complete="90" priority="0" type="normal" scheduling="fixed-work"/>
+      <task id="8" name="SQL execution/fetching/stopping" note="" work="374400" start="20091007T131500Z" end="20091020T131500Z" work-start="20091007T131500Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="7" type="FS"/>
         </predecessors>
       </task>
+      <task id="9" name="Edit SQL for Views" note="" work="28800" start="20090925T000000Z" end="20090925T170000Z" work-start="20090925T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
     </task>
-    <task id="9" name="Testing phase" note="" work="178200" start="20091023T131500Z" end="20091029T144500Z" work-start="20091023T131500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+    <task id="10" name="Testing phase" note="" work="178200" start="20091023T131500Z" end="20091029T144500Z" work-start="20091023T131500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
       <predecessors>
         <predecessor id="1" predecessor-id="5" type="FS"/>
         <predecessor id="1" predecessor-id="1" type="FS"/>
         <predecessor id="1" predecessor-id="6" type="FS" lag="259200"/>
       </predecessors>
     </task>
-    <task id="10" name="Release 0.2.2" note="" work="0" start="20091030T000000Z" end="20091030T000000Z" work-start="20091030T080000Z" percent-complete="0" priority="0" type="milestone" scheduling="fixed-work">
+    <task id="11" name="Release 0.2.2" note="" work="0" start="20091030T000000Z" end="20091030T000000Z" work-start="20091030T080000Z" percent-complete="0" priority="0" type="milestone" scheduling="fixed-work">
       <constraint type="must-start-on" time="20091030T000000Z"/>
     </task>
-    <task id="11" name="GSQLNavTree" note="" work="172800" start="20091102T000000Z" end="20091107T170000Z" work-start="20091102T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+    <task id="12" name="GSQLNavTree" note="" work="172800" start="20091102T000000Z" end="20091107T170000Z" work-start="20091102T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
       <predecessors>
-        <predecessor id="1" predecessor-id="10" type="FS" lag="259200"/>
+        <predecessor id="1" predecessor-id="11" type="FS" lag="259200"/>
       </predecessors>
-      <task id="12" name="*_property_get" note="" work="172800" start="20091102T000000Z" end="20091107T170000Z" work-start="20091102T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
+      <task id="13" name="*_property_get" note="" work="172800" start="20091102T000000Z" end="20091107T170000Z" work-start="20091102T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
     </task>
-    <task id="13" name="Bug fixing (0.2.5)" note="" work="144000" start="20090925T000000Z" end="20090929T170000Z" work-start="20090925T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
-    <task id="14" name="GSQLNavHelper" note="" work="212400" start="20091107T170000Z" end="20091115T110000Z" work-start="20091108T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+    <task id="14" name="Bug fixing (0.2.5)" note="" work="144000" start="20090925T000000Z" end="20090929T170000Z" work-start="20090925T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
+    <task id="15" name="GSQLNavHelper" note="" work="212400" start="20091107T170000Z" end="20091115T110000Z" work-start="20091108T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
       <constraint type="must-start-on" time="20091106T000000Z"/>
-      <task id="15" name="GSQLNavTree python bind" note="" work="212400" start="20091107T170000Z" end="20091115T110000Z" work-start="20091108T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="16" name="GSQLNavTree python bind" note="" work="212400" start="20091107T170000Z" end="20091115T110000Z" work-start="20091108T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
-          <predecessor id="1" predecessor-id="11" type="FS"/>
+          <predecessor id="1" predecessor-id="12" type="FS"/>
         </predecessors>
       </task>
     </task>
-    <task id="16" name="Release 0.2.5" note="" work="0" start="20091227T000000Z" end="20091227T000000Z" work-start="20091227T080000Z" percent-complete="0" priority="0" type="milestone" scheduling="fixed-work">
+    <task id="17" name="Release 0.2.5" note="" work="0" start="20091227T000000Z" end="20091227T000000Z" work-start="20091227T080000Z" percent-complete="0" priority="0" type="milestone" scheduling="fixed-work">
       <constraint type="must-start-on" time="20091227T000000Z"/>
     </task>
   </tasks>
@@ -88,22 +89,22 @@
     <group id="1" name="" admin-name="" admin-phone="" admin-email=""/>
   </resource-groups>
   <resources>
-    <resource id="1" name="Taras Halturin" short-name="TH" type="1" units="0" email="halturin@gmail.com" note="" std-rate="0"/>
-    <resource id="2" name="Est&#xEA;v&#xE3;o Samuel Proc&#xF3;pio" short-name="ESP" type="1" units="0" email="tevaum@gmail.com" note="" std-rate="0"/>
+    <resource id="1" name="Est&#xEA;v&#xE3;o Samuel Proc&#xF3;pio" short-name="ESP" type="1" units="0" email="tevaum@gmail.com" note="" std-rate="0"/>
+    <resource id="2" name="Taras Halturin" short-name="TH" type="1" units="0" email="halturin@gmail.com" note="" std-rate="0"/>
   </resources>
   <allocations>
-    <allocation task-id="12" resource-id="1" units="100"/>
-    <allocation task-id="14" resource-id="1" units="100"/>
-    <allocation task-id="9" resource-id="1" units="50"/>
-    <allocation task-id="4" resource-id="1" units="100"/>
-    <allocation task-id="5" resource-id="1" units="100"/>
-    <allocation task-id="16" resource-id="1" units="100"/>
-    <allocation task-id="1" resource-id="1" units="100"/>
-    <allocation task-id="10" resource-id="1" units="100"/>
-    <allocation task-id="3" resource-id="2" units="100"/>
-    <allocation task-id="9" resource-id="2" units="50"/>
-    <allocation task-id="16" resource-id="2" units="100"/>
-    <allocation task-id="6" resource-id="2" units="100"/>
-    <allocation task-id="10" resource-id="2" units="100"/>
+    <allocation task-id="3" resource-id="1" units="100"/>
+    <allocation task-id="10" resource-id="1" units="50"/>
+    <allocation task-id="17" resource-id="1" units="100"/>
+    <allocation task-id="6" resource-id="1" units="100"/>
+    <allocation task-id="11" resource-id="1" units="100"/>
+    <allocation task-id="13" resource-id="2" units="100"/>
+    <allocation task-id="15" resource-id="2" units="100"/>
+    <allocation task-id="10" resource-id="2" units="50"/>
+    <allocation task-id="4" resource-id="2" units="100"/>
+    <allocation task-id="5" resource-id="2" units="100"/>
+    <allocation task-id="17" resource-id="2" units="100"/>
+    <allocation task-id="1" resource-id="2" units="100"/>
+    <allocation task-id="11" resource-id="2" units="100"/>
   </allocations>
 </project>
