@@ -1,19 +1,28 @@
 ;; -*- scheme -*-
 ; object definitions ...
-(define-object Navtree
-    (in-module	"gsql")
-    (parent	"GObject")
-    (c-name	"GSQLNavtree")
-    (gtype-id	"GSQL_NAVTREE_TYPE")
-    
-(define-function gsql_navtree_new
-    (c-name	"gsql_navtree_new")
-    (is-constructor-of "GSQLNavTree")
-    (return-type	"GSQLNavTree")
-    (properties
-	'("id" (optional))
-	'("child-id" (optional))
-	'("stock-name" (optional))
-	'("name" (optional))
-    )
+(define-object GSQLNavTree
+  (in-module "gsql")
+  (parent "GObject")
+  (c-name "GSQLNavTree")
+  (gtype-id "GSQL_NAVTREE_TYPE")
 )
+
+;; Enumerations and flags ...
+
+
+;; From navtree.h
+
+(define-function gsql_navtree_get_type
+  (c-name "gsql_navtree_get_type")
+  (return-type "GType")
+)
+
+(define-function gsql_navtree_new
+  (c-name "gsql_navtree_new")
+  (is-constructor-of "GSQLNavTree")
+  (return-type "GSQLNavTree*")
+  (parameters
+  )
+)
+
+

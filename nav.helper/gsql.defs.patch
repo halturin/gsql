@@ -1,0 +1,31 @@
+--- gsql.orig.defs	2009-10-24 20:13:32.000000000 -0200
++++ gsql.defs	2009-10-24 20:15:07.000000000 -0200
+@@ -1,12 +1,12 @@
+ ;; -*- scheme -*-
+ ; object definitions ...
+-(define-object Tree
+-  (in-module "GSQLNav")
++(define-object GSQLNavTree
++  (in-module "gsql")
+   (parent "GObject")
+   (c-name "GSQLNavTree")
+-  (gtype-id "G_TYPE_SQL_NAV_TREE")
++  (gtype-id "GSQL_NAVTREE_TYPE")
+ )
+ 
+ ;; Enumerations and flags ...
+ 
+ 
+@@ -17,11 +17,11 @@
+   (return-type "GType")
+ )
+ 
+ (define-function gsql_navtree_new
+   (c-name "gsql_navtree_new")
+-  (is-constructor-of "GsqlNavtree")
++  (is-constructor-of "GSQLNavTree")
+   (return-type "GSQLNavTree*")
+   (parameters
+   )
+ )
+ 
