@@ -153,8 +153,8 @@ nav_tree_refresh_tables (GSQLNavigation *navigation,
 	GtkTreeIter child, child_fake, child_last, parent, gparent;
 	gint n;
 	gchar	   key[256];
-	gchar *sql = NULL, *realname = NULL, *name = NULL, *owner = NULL,
-		*currentdb = NULL;
+	gchar *sql = NULL, *realname = NULL, *name = NULL, *owner = NULL;
+	const gchar *currentdb = NULL;
 	GSQLCursor * cursor;
 	GSQLSession *session;
 	GSQLWorkspace *workspace;

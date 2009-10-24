@@ -1,4 +1,3 @@
-
 /* 
  * GSQL - database development tool for GNOME
  *
@@ -94,6 +93,9 @@ G_BEGIN_DECLS
 
 void pgsql_navigation_fill_details (GSQLCursor *cursor, GtkListStore *store);
 
+const gchar *pgsql_navigation_get_database (GSQLNavigation *nav, 
+					    GtkTreeView *treeview,
+					    GtkTreeIter *iter);
 G_END_DECLS
 
 #endif /* _NAV_OBJECTS_H */

@@ -50,8 +50,8 @@ nav_tree_refresh_triggers (GSQLNavigation *navigation,
 	GSQLCursorState state;
 	GtkListStore *details;
 	gchar *sql = NULL, *realname = NULL, *owner = NULL, *name = NULL,
-		key[256], *tbl = "%", *parent_realname = NULL,
-		*currentdb = NULL;
+		key[256], *tbl = "%", *parent_realname = NULL;
+	const gchar *currentdb = NULL;
 	gint id, i,n;
   
 	model = gtk_tree_view_get_model(tv);

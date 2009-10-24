@@ -28,6 +28,8 @@
 #include <libgsql/session.h>
 #include <libgsql/navigation.h>
 #include <libgsql/cvariable.h>
+
+#include "pgsql.h"
 #include "nav_objects.h"
 #include "engine_stock.h"
 #include "nav_sql.h"
@@ -52,8 +54,9 @@ nav_tree_refresh_languages (GSQLNavigation *navigation,
 	GSQLWorkspace *workspace;
 	GSQLCursorState state;
 	GtkListStore *details;
-	gchar *name = NULL, *nameUP = NULL, key[256], *owner,
-	  *currentdb = NULL, *realname = NULL;
+	const gchar *nameUP = NULL, *owner, *currentdb = NULL,
+		*realname = NULL;
+	gchar key[256], *name = NULL;
 	gint id, i,n;
   
 	

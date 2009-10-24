@@ -52,8 +52,9 @@ nav_tree_refresh_type_columns (GSQLNavigation *navigation,
 	GSQLCursor *cursor = NULL;
 	GSQLVariable *var = NULL;
 	GSQLCursorState state;
-	gchar *realname = NULL, *sql = NULL, *owner = NULL, *currentdb = NULL,
-		*name = NULL, key[256];
+	gchar *realname = NULL, *sql = NULL, *owner = NULL, *name = NULL,
+		key[256];
+	const gchar  *currentdb = NULL;
 	gint n, i, id;
 
 	model = gtk_tree_view_get_model(tv);
@@ -192,8 +193,9 @@ nav_tree_refresh_types (GSQLNavigation *navigation,
 	GSQLCursor *cursor = NULL;
 	GSQLVariable *var = NULL;
 	GSQLCursorState state;
-	gchar *realname = NULL, *sql = NULL, *owner = NULL, *currentdb = NULL,
-		*name = NULL, key[256];
+	gchar *realname = NULL, *sql = NULL, *owner = NULL, *name = NULL, 
+		key[256];
+	const gchar *currentdb = NULL;
 	gint n, i, id;
 
 	model = gtk_tree_view_get_model(tv);

@@ -24,11 +24,11 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
-#include <libgsql/common.h>
-#include <libgsql/sqleditor.h>
-#include <libgsql/stock.h>
+
 #include <libgsql/session.h>
-#include <libgsql/navigation.h>
+#include <libgsql/stock.h>
+#include <libgsql/editor.h>
+#include <libgsql/sqleditor.h>
 #include <libgsql/cvariable.h>
 
 #include "nav_objects.h"
@@ -124,8 +124,8 @@ nav_tree_refresh_views (GSQLNavigation *navigation,
 	GSQLVariable *var;
 	GSQLCursorState state;
 	GSQLSession *session;
-	gchar *name, key[256], *sql = NULL, *realname = NULL, *owner = NULL,
-		*currentdb = NULL;
+	gchar *name, key[256], *sql = NULL, *realname = NULL, *owner = NULL;
+	const gchar *currentdb = NULL;
 	gint id, i,n;
 
 	

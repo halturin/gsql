@@ -27,10 +27,11 @@
 #include <libgsql/type_datetime.h>
 #include <libgsql/cvariable.h>
 
+#include "pgsql.h"
 #include "nav_objects.h"
 #include "pgsql_var.h"
 
-gchar *
+const gchar *
 pgsql_navigation_get_database (GSQLNavigation *nav, GtkTreeView *treeview,
 			       GtkTreeIter *iter) 
 {
@@ -38,7 +39,7 @@ pgsql_navigation_get_database (GSQLNavigation *nav, GtkTreeView *treeview,
 	GtkTreeModel *model;
 	GtkTreePath *path = NULL;
 	GtkTreeIter dbiter;
-	gchar *dbname = NULL;
+	const gchar *dbname = NULL;
 	gint id;
 
 	g_return_if_fail (GSQL_IS_NAVIGATION(nav));

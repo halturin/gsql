@@ -23,8 +23,10 @@
 #ifndef PGSQL_VAR_H
 #define PGSQL_VAR_H
 
-#include <postgres.h>
-#include <catalog/pg_type.h>
+#define INT8OID                 20
+#define INT4OID                 23
+#define FLOAT4OID		700
+#define VARCHAROID              1043
 
 #include <libgsql/cvariable.h>
 

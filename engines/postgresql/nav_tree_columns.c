@@ -52,9 +52,10 @@ nav_tree_refresh_columns (GSQLNavigation *navigation,
 	GSQLWorkspace *workspace;
 	GSQLCursorState state;
 	GtkListStore *details;
-	gchar *name = NULL, *nameUP = NULL, *currentdb = NULL, key[256],
-		*parent_realname = NULL, *parent_name = NULL, *sql = NULL, 
-	  	*realname = NULL, *owner = NULL;
+	gchar *name = NULL, *nameUP = NULL, key[256], *parent_realname = NULL,
+		*parent_name = NULL, *sql = NULL, *realname = NULL,
+		*owner = NULL;
+	const gchar *currentdb = NULL;
 	gint		id, i,n;
   
 	
