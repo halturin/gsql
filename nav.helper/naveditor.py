@@ -32,9 +32,10 @@ import pango
 import gtk
 
 try:
-	import gtksourceview
+	import gtksourceview2
 except:
-	print >> sys.stderr, 'GktSourceView are required. Quiting...'
+	print >> sys.stderr, 'GtkSourceView2 is required. Quiting...'
+	exit;
 
 import gsql
 import navstock
@@ -63,10 +64,10 @@ class NavEditor:
 		action = self.build.get_object('action_stock_choose')
 		action.connect('activate', self.action_stock_choose)
 	
-		self.sql_buffer = gtksourceview.SourceBuffer()
-		self.sql_buffer.set_highlight(True)
+		self.sql_buffer = gtksourceview2.Buffer()
+		self.sql_buffer.set_highlight_syntax(True)
 	
-		self.sql_editor = gtksourceview.SourceView(self.sql_buffer)
+		self.sql_editor = gtksourceview2.View(self.sql_buffer)
 		self.sql_editor.set_show_line_numbers(True)
 		self.sql_editor.set_highlight_current_line(True)
 		self.sql_editor.modify_font(pango.FontDescription("Monospace 9"))
@@ -76,8 +77,8 @@ class NavEditor:
 		scroll.add(self.sql_editor)
 		scroll.show_all()
 
-		lm = gtksourceview.SourceLanguagesManager()
-		self.sql_buffer.set_language(lm.get_language_from_mime_type('text/x-sql'))
+		lm = gtksourceview2.LanguageManager()
+		self.sql_buffer.set_language(lm.get_language('sql'))
 		
 		self.widget.show()
 
