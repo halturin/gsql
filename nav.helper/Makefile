@@ -15,3 +15,8 @@ gsql.c: gsql.defs gsql.override
 
 gsql.so: gsql.o navtree.o gsqlmodule.o common.o
 	$(CC) $(LDFLAGS) -shared $^ -o $@
+
+clean:
+	rm *.so
+	rm *.o
+	rm *.pyc
