@@ -29,7 +29,6 @@ oracle_engine_pixmaps_DATA = \
 	object.type.bodies.png \
 	object.types.png \
 	operators.png \
-	oracle.png \
 	package.bodies.png \
 	packages.png \
 	profiles.png \
