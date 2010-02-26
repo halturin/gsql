@@ -31,6 +31,10 @@ binary-post-install/libgsql-dev::
 binary-post-install/gsql-mysql-engine::
 	p=$(@:binary-post-install/%=%); \
 	rm -fv debian/$$p/usr/share/doc/$$p/changelog
+binary-post-install/gsql-postgresql-engine::
+	p=$(@:binary-post-install/%=%); \
+	rm -fv debian/$$p/usr/share/doc/$$p/changelog
+
 binary-post-install/gsql-plugins::
 	p=$(@:binary-post-install/%=%); \
 	rm -fv debian/$$p/usr/share/doc/$$p/changelog

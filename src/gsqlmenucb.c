@@ -634,7 +634,7 @@ on_about_activate (GtkMenuItem *mi, gpointer data)
 	credits = g_strsplit (buffer, "\n", 1024);
 	
 	const gchar *copyright =
-		"Copyright \xc2\xa9 2006-2008 Taras Halturin\n";
+		"Copyright \xc2\xa9 2006-2009 Taras Halturin\n";
 	const gchar *comments =
 		N_("GSQL is an integrated database development tool. This application developing for the GNOME Desktop");
 

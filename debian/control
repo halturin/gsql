@@ -71,6 +71,14 @@ Description: MySQL engine for GSQL
  The GSQL can works with MySQL server, and this module
  is necessary for that.
 
+Package: gsql-postgresql-engine
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, gconf2,
+Description: PostgreSQL engine for GSQL
+ The GSQL can works with PostgreSQL server, and this module
+ is necessary for that.
+
+
 Package: gsql-oracle-engine
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, gconf2,

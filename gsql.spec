@@ -23,6 +23,7 @@ BuildRequires:  libnotify-devel desktop-file-utils gettext chrpath
 BuildRequires:  postgresql-devel, libssh-devel
 
 Requires:       %{name}-engine-mysql = %{version}-%{release}
+Requires:       %{name}-engine-postgresql = %{version}-%{release}
 
 %description
 The mission of GSQL opensource project is to supply database developers with an
@@ -243,7 +244,7 @@ update-desktop-database -q
 
 
 %changelog
-* Thu Oct 29 2009 Taras Halturin <halturin@gmail.com> - 0.2.2
+* Thu Oct 29 2009 Taras Halturin <halturin@gmail.com> - 0.2.2-1
 - New upstream release
 
 * Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1-3

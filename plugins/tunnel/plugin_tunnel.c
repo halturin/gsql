@@ -51,7 +51,7 @@
 #define PLUGIN_HOMEPAGE "http://gsql.org"
 
 /* list of ssh sessions */
-static GList *ssh_sessions = NULL;
+static GList *ssh_list = NULL;
 
 typedef struct _SSHSession		SSHSession;
 
@@ -70,7 +70,7 @@ struct _SSHSession {
 	const gchar *password;
 	guint		port;
 
-	SSH_SESSION *ssh;
+	ssh_session *ssh;
 
 	/* listen on */
 	const gchar		*localname;
@@ -85,6 +85,8 @@ struct _SSHSession {
 	/* list of CHANNELs */
 	GList		*channels;
 
+	ssh_channel *ch;
+
 	gboolean	connected;
 	gchar		err[SSH_SESSION_ERR_LEN];
 };
@@ -94,17 +96,6 @@ static GSQLStockIcon stock_icons[] =
 	{ GSQLP_TUNNEL_STOCK_ICON, "tunnel.png" }
 };
 
-static gboolean 
-do_open_session (SSHSession *session);
-
-static gboolean
-do_open_channel (SSHSession *session);
-
-static gboolean
-do_listen_fwd (SSHSession *session);
-
-static void
-do_accept_threaded (gpointer data);
 
 gboolean 
 plugin_load (GSQLPlugin * plugin)
@@ -125,18 +116,6 @@ plugin_load (GSQLPlugin * plugin)
 
 	SSHSession *session = g_new0 (SSHSession, 1);
 
-	session->connected = FALSE;
-	session->hostname = "192.168.1.33";
-	session->port = 22;
-	session->username = "fantom";
-	session->password = "megapass";
-	session->localname = "*";
-	session->localport = 10051;
-	session->sock = 0;
-
-	do_open_session (session);
-	
-
 	return TRUE;
 }
 
@@ -146,226 +125,6 @@ plugin_unload (GSQLPlugin * plugin)
 	GSQL_TRACE_FUNC;
 
 	return TRUE;
-}
-
-static gboolean 
-do_open_session (SSHSession *session)
-{
-
-	SSH_SESSION *ssh = ssh_new();
-	SSH_OPTIONS *opts = ssh_options_new();
-	
-
-	ssh_options_set_port (opts, session->port);
-	ssh_options_set_host (opts, session->hostname);
-	
-	ssh_set_options (ssh, opts);
-
-	if (ssh_connect(ssh) != SSH_OK)
-	{
-		//ssh_options_free (opts);
-		ssh_disconnect (ssh);
-
-		SSH_SESSION_SET_ERROR (session, "Error at connection :%s\n", ssh_get_error (ssh));
-		
-		return FALSE;
-	}
-
-	ssh_is_server_known(ssh);
-
-	if (ssh_userauth_autopubkey(ssh) != SSH_AUTH_SUCCESS)
-	{
-		g_debug ("Authenticating with pubkey: %s\n",ssh_get_error(ssh));
-		
-		if (ssh_userauth_password (ssh, session->username, 
-		                           session->password) != SSH_AUTH_SUCCESS)
-		{
-			SSH_SESSION_SET_ERROR (session, "Authentication with password failed: %s\n",
-			                       ssh_get_error (ssh));
-
-			//ssh_options_free (opts);
-			ssh_disconnect (ssh);
-			
-			return FALSE;
-		}
-	}
-
-	session->ssh = ssh;
-
-	if (!do_listen_fwd (session))
-	{
-		//ssh_options_free (opts);
-		ssh_disconnect (ssh);
-		
-		return FALSE;
-	}
-
-	return TRUE; //session->connected = TRUE;
-}
-
-static gboolean
-do_open_channel (SSHSession *session)
-{
-	GSQL_TRACE_FUNC;
-
-	g_return_val_if_fail (session != NULL, FALSE);
-
-	CHANNEL *ch = NULL;
-	
-	ch = channel_new (session->ssh);
-
-	if (channel_open_forward (ch, session->fwdhost, session->fwdport, 
-	                          session->localname, session->localport) != SSH_OK)
-	{
-		SSH_SESSION_SET_ERROR (session, "Error when opening forward:%s\n", 
-		                       ssh_get_error (session->ssh));
-		
-		return FALSE;
-	}
-
-	g_debug ("Chanel is forwarded");
-
-	return TRUE;
-}
-
-
-static gboolean
-do_listen_fwd (SSHSession *session)
-{
-	GSQL_TRACE_FUNC;
-	
-	g_return_val_if_fail (session != NULL, FALSE);
-	
-	int sock = 0, ret, i, n;
-	struct addrinfo hints, *ai;
-	gboolean wildcard = FALSE, lstatus = FALSE;
-	gchar ntop[NI_MAXHOST], strport[NI_MAXSERV];
-	GError *err = NULL;
-
-	if (!session)
-	{
-		g_warning ("do_listen_fwd: 'session' is NULL");
-		return lstatus;
-	}
-
-	if ((strcmp (session->localname, "0.0.0.0") == 0) ||
-	    (strcmp (session->localname, "*") == 0) ||
-	    (session->localname == NULL ? 1 :
-		     (*session->localname == '\0' ? 1 : 0)) )
-	{
-		wildcard = TRUE;
-	}
-
-	memset (&hints, 0, sizeof(hints));
-	hints.ai_family = AF_UNSPEC; /* IPv4 or IPv6 */
-	hints.ai_flags = wildcard ? AI_PASSIVE : 0;
-	hints.ai_socktype = SOCK_STREAM;
-
-	snprintf (strport, sizeof strport, "%d", session->localport);
-	
-	if (ret = getaddrinfo (session->localname, strport, 
-	                       &hints, &ai) != 0)
-	{
-		g_warning ("do_listen_fwd (getaddrinfo): %s", gai_strerror (ret));
-		freeaddrinfo (ai);
-		return lstatus;
-	}
-
-	if ((ai->ai_family != AF_INET && ai->ai_family != AF_INET6) ||
-		(getnameinfo(ai->ai_addr, ai->ai_addrlen, ntop, sizeof(ntop),
-			            strport, sizeof(strport), NI_NUMERICHOST|NI_NUMERICSERV) != 0))
-	{
-		g_warning ("do_listen_fwd (getnameinfo): failed");
-		freeaddrinfo (ai);
-		return lstatus;
-	}
-
-	sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-
-	if (sock < 0)
-	{
-		g_warning ("do_listen_fwd (socket): %s",  strerror(errno));
-		freeaddrinfo (ai);
-		return lstatus;
-	}
-
-	i = 1;
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i));
-
-	if (bind(sock, ai->ai_addr, ai->ai_addrlen) < 0)
-	{
-		close (sock);
-		freeaddrinfo (ai);
-		return lstatus;
-	}
-
-	if (listen(sock, 128) < 0)
-	{
-		g_warning ("do_listen_fwd (listen): %s",  strerror(errno));
-		freeaddrinfo (ai);
-		close (sock);
-		return lstatus;
-	}
-
-	g_debug ("create listening socket (%d)... ok", sock);
-		
-	lstatus = TRUE;
-	
-	session->sock = sock;
-
-	if (!g_thread_create ((GThreadFunc) do_accept_threaded, session, FALSE, &err))
-		g_warning ("cannot create thread");
-	
-	freeaddrinfo (ai);
-	
-	return lstatus;
-}
-
-
-static void
-do_accept_threaded (gpointer data)
-{
-	GSQL_TRACE_FUNC;
-	
-	SSHSession *session = data;
-	int s, sock = session->sock; 
-	socklen_t addrlen = sizeof(struct sockaddr);
-	struct sockaddr addr;
-	pid_t chld;
-
-	signal(SIGCHLD, SIG_IGN);
-
-	for (;;)
-	{
-		
-		g_debug ("accepting on socket (%d)", sock);
-		
-		s = accept (sock, &addr, &addrlen);
-
-		if (s < 0)
-		{
-			g_warning ("do_accept_threaded (sock=%d): %s", sock, strerror(errno));
-			sleep(5);
-			continue;
-		}
-
-		if ( (chld = fork()) == 0)
-		{
-			close (session->sock);
-
-			g_warning ("forked!!!!!!!!!!");
-
-			sleep(25);
-
-			close(s);
-			_exit(0);
-		} 
-
-		close (s);
-
-		
-	}	
-
 }
 
 
