@@ -31,6 +31,9 @@ G_BEGIN_DECLS
 void
 plugin_vte_conf_dialog ();
 
+void
+plugin_tunnel_conf_load ();
+
 G_END_DECLS
 
 #endif /* _VTE_CONF_H */

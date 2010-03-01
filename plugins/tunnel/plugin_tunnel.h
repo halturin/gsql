@@ -25,8 +25,62 @@
 
 #include <glib.h>
 #include <libgsql/sqleditor.h>
+#include <libgsql/session.h>
+
+#include <libssh/libssh.h>
 
 #define GSQLP_TUNNEL_STOCK_ICON "gsql-plugin-tunnel-icon"
+
+#define SSH_SESSION_ERR_LEN	512
+
+//#define SSH_SESSION_SET_ERROR(session, params...) \
+	//	memset (session->err, 0, 512); \
+		//g_snprintf (session->err, 512, params)
+
+typedef struct _SSHLink		SSHLink;
+typedef struct _SSHChannel	SSHChannel;
+
+struct _SSHLink {
+	
+	const gchar *linkname;
+
+	/* connect to */
+	const gchar *hostname;
+	const gchar *username;
+	const gchar *password;
+	guint		port;
+
+	ssh_session *ssh;
+
+	/* listen on */
+	const gchar		*localname;
+	guint			localport;
+
+	int			sock;
+
+	/* forwarded from */
+	const gchar		*fwdhost;
+	guint			fwdport;
+
+	/* list of SSHChannel */
+	GList		*channel_list;
+
+	ssh_channel *ch;
+
+	gboolean	connected;
+	gchar		err[SSH_SESSION_ERR_LEN];
+};
+
+struct _SSHChannel {
+
+	ssh_channel	*channel;
+
+	guint64		rx; // we count this 
+	guint64		tx; // for the future 
+	
+	GSQLSession *session; // is it possible to get it right there? check it!
+
+};
 
 
 G_BEGIN_DECLS

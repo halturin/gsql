@@ -217,3 +217,23 @@ gsql_conf_value_set_boolean (gchar *path, gboolean value)
 	
 }
 
+gboolean
+gsql_conf_dir_exist (gchar *path)
+{
+	GSQL_TRACE_FUNC;
+
+	gboolean ret;
+
+	g_return_if_fail (path);
+
+	GError *error = NULL;
+
+	ret = gconf_client_dir_exists (gconf_client,
+						  path,
+						  &error);
+	if (error)
+		g_error_free (error);
+
+	return ret;
+}
+

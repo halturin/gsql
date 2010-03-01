@@ -24,8 +24,6 @@
 #include <libgsql/stock.h>
 #include <gtk/gtk.h>
 
-#include <libssh/libssh.h>
-
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
@@ -50,46 +48,6 @@
 #define PLUGIN_AUTHOR "Taras Halturin"
 #define PLUGIN_HOMEPAGE "http://gsql.org"
 
-/* list of ssh sessions */
-static GList *ssh_list = NULL;
-
-typedef struct _SSHSession		SSHSession;
-
-#define SSH_SESSION_ERR_LEN	512
-
-#define SSH_SESSION_SET_ERROR(session, params...) \
-		memset (session->err, 0, 512); \
-		g_snprintf (session->err, 512, params)
-
-
-struct _SSHSession {
-
-	/* connect to */
-	const gchar *hostname;
-	const gchar *username;
-	const gchar *password;
-	guint		port;
-
-	ssh_session *ssh;
-
-	/* listen on */
-	const gchar		*localname;
-	guint			localport;
-
-	int			sock;
-
-	/* forwaded from */
-	const gchar		*fwdhost;
-	guint			fwdport;
-
-	/* list of CHANNELs */
-	GList		*channels;
-
-	ssh_channel *ch;
-
-	gboolean	connected;
-	gchar		err[SSH_SESSION_ERR_LEN];
-};
 
 static GSQLStockIcon stock_icons[] = 
 {
@@ -114,7 +72,7 @@ plugin_load (GSQLPlugin * plugin)
 
 	plugin->plugin_conf_dialog = plugin_tunnel_conf_dialog;
 
-	SSHSession *session = g_new0 (SSHSession, 1);
+	plugin_tunnel_conf_load ();
 
 	return TRUE;
 }

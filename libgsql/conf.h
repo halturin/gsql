@@ -60,6 +60,9 @@ gsql_conf_value_set_string (gchar *path, gchar *value);
 void
 gsql_conf_value_set_boolean (gchar *path, gboolean value);
 
+gboolean
+gsql_conf_dir_exist (gchar *path);
+
 
 void
 gsql_conf_nitify_add (gchar *path, GSQLConfNotifyFunc func, gpointer userdata);

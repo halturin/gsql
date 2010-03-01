@@ -27,6 +27,10 @@
 
 #define GSQLP_TUNNEL_GLADE_DIALOG PACKAGE_GLADE_DIR"/plugins/tunnel_config.xml"
 
+/* list of ssh sessions */
+static GList *ssh_links = NULL;
+
+
 static void
 on_conf_button_new_activate (GtkButton *button,
 											gpointer user_data);
@@ -49,6 +53,26 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 							  gchar		*c_path,
 							  gchar		*new_text,
 							  gpointer  user_data);
+
+void
+plugin_tunnel_conf_load ()
+{
+	static gboolean is_loaded = FALSE;
+
+	if (is_loaded)
+	{
+		g_debug ("Plugin Tunnel: the config is already loaded");
+		return;
+	}
+
+	while (gsql_conf_dir_exist ("1"))
+	{
+		is_loaded = TRUE;
+
+
+	}
+
+}
 
 void
 plugin_tunnel_conf_dialog ()
@@ -119,9 +143,17 @@ on_conf_button_new_activate (GtkButton *button,
 	GtkTreeModel *model;
 	GtkTreePath  *path;
 	GtkTreeViewColumn *col;
+	gboolean bvalue = FALSE;
 	
 	model = gtk_tree_view_get_model (tv);
 	gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+
+	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
+						0, bvalue,
+						-1);
+	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
+						1, "enter name here",
+						-1);
 
 	path = gtk_tree_model_get_path (model, &iter);
 	
@@ -168,11 +200,13 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 
 	path = gtk_tree_path_new_from_string (c_path);
 	model = gtk_tree_view_get_model (tv);
-	
 	gtk_tree_model_get_iter (model, &iter, path);
+
 	gtk_tree_path_free (path);
 
 	GSQL_DEBUG ("new:[%s]", new_text);
+
+	//g_snprintf(tmp, 256 ,"%s/tunnel/link%s/%s", GSQL_CONF_PLUGINS_ROOT_KEY, new_text);
 	
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter,
 					   1, new_text,
@@ -197,6 +231,8 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 	path = gtk_tree_path_new_from_string (path_str);
 	model = gtk_tree_view_get_model (tv);
 	gtk_tree_model_get_iter (model, &iter, path);
+
+	gtk_tree_path_free (path);
 	
 	gtk_tree_model_get (model, &iter,  
 						0, 
@@ -218,11 +254,24 @@ on_tv_cursor_changed (GtkTreeView *tv,
 	GtkTreeSelection *sel;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
+	gboolean bvalue = FALSE;
+	gboolean selected;
 	
 	model = gtk_tree_view_get_model (tv);
 	sel = gtk_tree_view_get_selection (tv);
 
+	selected = gtk_tree_selection_get_selected (sel, &model, &iter);
+
+	if (selected)
+	{
+		gtk_tree_model_get (model, &iter,  
+						0, 
+						&bvalue, -1);
+
+		
+	}
+	
 	gtk_widget_set_sensitive (GTK_WIDGET (user_data),
-							  gtk_tree_selection_get_selected (sel, &model, &iter));
+							  !bvalue && selected);
 
 }

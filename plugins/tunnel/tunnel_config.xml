@@ -63,8 +63,10 @@
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderer_name">
                                 <property name="editable">True</property>
-                                <property name="width_chars">48</property>
                               </object>
+                              <attributes>
+                                <attribute name="text">1</attribute>
+                              </attributes>
                             </child>
                           </object>
                         </child>

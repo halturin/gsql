@@ -28,8 +28,11 @@
 
 G_BEGIN_DECLS
 
-void
+void 
 plugin_tunnel_conf_dialog ();
+
+void
+plugin_tunnel_conf_load ();
 
 G_END_DECLS
 
