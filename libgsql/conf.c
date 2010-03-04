@@ -217,6 +217,26 @@ gsql_conf_value_set_boolean (gchar *path, gboolean value)
 	
 }
 
+GSList *
+gsql_conf_dir_list (gchar *path)
+{
+	GSQL_TRACE_FUNC;
+
+	GSList *ret;
+
+	g_return_if_fail (path);
+
+	GError *error = NULL;
+
+	ret = gconf_client_all_dirs (gconf_client,
+						  path,
+						  &error);
+	if (error)
+		g_error_free (error);
+
+	return ret;
+}
+
 gboolean
 gsql_conf_dir_exist (gchar *path)
 {
@@ -235,5 +255,29 @@ gsql_conf_dir_exist (gchar *path)
 		g_error_free (error);
 
 	return ret;
+
 }
 
+void
+gsql_conf_value_unset (gchar *path, gboolean recursive)
+{
+	GSQL_TRACE_FUNC;
+
+	GError *error = NULL;
+
+	g_debug ("removing: %s", path);
+
+	if (recursive)
+	{
+		gconf_client_unset (gconf_client,
+		    				path,
+		    				&error);
+	} else {
+
+		gconf_client_recursive_unset (gconf_client,
+		    							path,
+		    							0,
+		    							&error);
+	}
+
+}

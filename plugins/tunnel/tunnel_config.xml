@@ -8,6 +8,8 @@
       <column type="gboolean"/>
       <!-- column-name Parameters -->
       <column type="gchararray"/>
+      <!-- column-name Link -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkDialog" id="tunnel_config_dialog">

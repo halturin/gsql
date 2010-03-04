@@ -57,6 +57,10 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 void
 plugin_tunnel_conf_load ()
 {
+	GSQL_TRACE_FUNC;
+
+	GSList *lst, *flst;
+	
 	static gboolean is_loaded = FALSE;
 
 	if (is_loaded)
@@ -65,12 +69,22 @@ plugin_tunnel_conf_load ()
 		return;
 	}
 
-	while (gsql_conf_dir_exist ("1"))
+	flst = lst = gsql_conf_dir_list (GSQL_CONF_PLUGINS_ROOT_KEY "/tunnel/sessions");
+
+	if (!lst)
+		return;
+
+	while (lst)
 	{
 		is_loaded = TRUE;
+		g_debug ("PARSE listing: [%s]", (gchar *) lst->data);
 
-
+		g_free (lst->data);
+		lst = lst->next;
+		
 	}
+
+	g_slist_free (flst);
 
 }
 
@@ -144,21 +158,47 @@ on_conf_button_new_activate (GtkButton *button,
 	GtkTreePath  *path;
 	GtkTreeViewColumn *col;
 	gboolean bvalue = FALSE;
+	gchar tmp[256];
+	gint i;
 	
+	
+	i = 1;
+	while (i < 128)
+	{
+		g_snprintf (tmp, 256 ,"%s/tunnel/sessions/link%d", GSQL_CONF_PLUGINS_ROOT_KEY, i);
+		
+		if (!gsql_conf_dir_exist (tmp))
+			break;
+
+		i++;
+	}
+
+	g_return_if_fail (i<128);
+	
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/name", GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_value_set_string (tmp, N_("enter name here"));
+
 	model = gtk_tree_view_get_model (tv);
 	gtk_list_store_append (GTK_LIST_STORE (model), &iter);
 
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
 						0, bvalue,
 						-1);
+
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
-						1, "enter name here",
+						1, N_("enter name here"),
+						-1);
+
+	g_snprintf (tmp, 12, "link%d", i);
+	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
+						2, tmp,
 						-1);
 
 	path = gtk_tree_model_get_path (model, &iter);
 	
 	col = gtk_tree_view_get_column (tv, 0);
 	gtk_tree_view_set_cursor (tv, path, col, TRUE);
+
 
 }
 
@@ -171,12 +211,21 @@ on_conf_button_remove_activate (GtkButton *button,
 	GtkTreeModel *model;
 	GtkTreeSelection *sel = NULL;
 	GtkTreeIter iter;
+	gchar tmp[256];
+	gchar *link;
 	
 	model = gtk_tree_view_get_model (tv);
 	sel = gtk_tree_view_get_selection (tv);
 	
 	if (!gtk_tree_selection_get_selected (sel, &model, &iter))
 		return;
+
+	gtk_tree_model_get (model, &iter,  
+						2, 
+						&link, -1);
+
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/%s", GSQL_CONF_PLUGINS_ROOT_KEY, link);
+	gsql_conf_value_unset (link, TRUE);
 	
 	gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
 
