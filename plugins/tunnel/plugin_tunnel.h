@@ -39,35 +39,43 @@
 
 typedef struct _SSHLink		SSHLink;
 typedef struct _SSHChannel	SSHChannel;
+typedef enum {
+	GSQLP_TUNNEL_STATE_NOT_CONNECTED,
+	GSQLP_TUNNEL_STATE_FAILED,
+	GSQLP_TUNNEL_STATE_CONNECTED,
+	GSQLP_TUNNEL_STATE_CONNECTION
+} GSQLPTunnelState;
 
 struct _SSHLink {
 	
-	const gchar *linkname;
+	gchar name[128];
 
 	/* connect to */
-	const gchar *hostname;
-	const gchar *username;
-	const gchar *password;
+	gchar hostname[128];
+	gchar username[128];
+	gchar password[64];
 	guint		port;
 
-	ssh_session *ssh;
+	ssh_session ssh;
 
 	/* listen on */
-	const gchar		*localname;
+	gchar		localname[128];
 	guint			localport;
 
 	int			sock;
 
 	/* forwarded from */
-	const gchar		*fwdhost;
+	gchar		fwdhost[128];
 	guint			fwdport;
 
 	/* list of SSHChannel */
 	GList		*channel_list;
 
-	ssh_channel *ch;
-
-	gboolean	connected;
+	gboolean	autoconnect;
+	GSQLPTunnelState	state;
+	
+	gboolean	has_changed;
+	
 	gchar		err[SSH_SESSION_ERR_LEN];
 };
 

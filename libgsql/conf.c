@@ -264,20 +264,29 @@ gsql_conf_value_unset (gchar *path, gboolean recursive)
 	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
+	gboolean	ret;
 
 	g_debug ("removing: %s", path);
 
-	if (recursive)
+	if (!recursive)
 	{
-		gconf_client_unset (gconf_client,
+		ret = gconf_client_unset (gconf_client,
 		    				path,
 		    				&error);
 	} else {
 
-		gconf_client_recursive_unset (gconf_client,
+		ret = gconf_client_recursive_unset (gconf_client,
 		    							path,
 		    							0,
 		    							&error);
 	}
 
+	if (!ret)
+		g_debug ("Can not to unset the key '%s'", path);
+	
+	if (error)
+	{
+		g_debug (error->message);
+		g_error_free (error);
+	}
 }
