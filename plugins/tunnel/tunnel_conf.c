@@ -29,7 +29,7 @@
 #define GSQLP_TUNNEL_GLADE_DIALOG PACKAGE_GLADE_DIR"/plugins/tunnel_config.xml"
 
 /* list of ssh sessions */
-static GHashTable *ssh_links = NULL;
+static GHashTable *tunnels = NULL;
 
 
 static void
@@ -56,10 +56,10 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 							  gpointer  user_data);
 
 static void
-ssh_links_hash_remove_key_notify (gpointer user_data);
+tunnels_hash_remove_key_notify (gpointer user_data);
 
 static void 
-ssh_links_hash_remove_value_notify (gpointer user_data);
+tunnels_hash_remove_value_notify (gpointer user_data);
 
 static void
 do_set_treeview_links (gpointer key, gpointer value, 
@@ -76,6 +76,7 @@ static void tunnel_localport_notify (gpointer user_data);
 static void tunnel_fwdhost_notify (gpointer user_data);
 static void tunnel_fwdport_notify (gpointer user_data);
 static void tunnel_autoconnect_notify (gpointer user_data);
+static gboolean tunnels_hash_equal (gpointer key, gpointer value, gpointer user_data);
 
 
 void
@@ -88,7 +89,7 @@ plugin_tunnel_conf_load ()
 	gchar	*str;
 	guint	d;
 	gboolean b;
-	SSHLink	*link;
+	GSQLPTunnel	*link;
 	
 	static gboolean is_loaded = FALSE;
 
@@ -103,23 +104,25 @@ plugin_tunnel_conf_load ()
 	if (!lst)
 		return;
 
-	if (!ssh_links)
-		ssh_links = g_hash_table_new_full (g_str_hash,
+	if (!tunnels)
+		tunnels = g_hash_table_new_full (g_str_hash,
 		    								g_str_equal,
-		    								ssh_links_hash_remove_key_notify,
-		    								ssh_links_hash_remove_value_notify);
+		    								tunnels_hash_remove_key_notify,
+		    								tunnels_hash_remove_value_notify);
 
 	while (lst)
 	{
 		is_loaded = TRUE;
-		g_debug ("PARSE listing: [%s]", (gchar *) lst->data);
 
-		// we dont call  we store it into hash table
-
-		link = g_new0 (SSHLink, 1);
+		link = gsqlp_tunnel_new ();
+		//g_object_ref (link);
 		
 		str = g_path_get_basename (lst->data);
-		g_hash_table_insert (ssh_links, str, link);
+		g_snprintf (link->confname, 32, "%s", str);
+
+		g_debug ("PARSE listing: [%s]", (gchar *) lst->data);
+		
+		g_hash_table_insert (tunnels, str, link);
 
 		link->ssh = ssh_new ();
 		
@@ -135,7 +138,7 @@ plugin_tunnel_conf_load ()
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->name, 128, "%s", str);
 
-//		gsql_conf_nitify_add (path, tunnel_name_notify, link);
+		gsql_conf_nitify_add (path, tunnel_name_notify, link);
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "hostname");	
 		if (str = gsql_conf_value_get_string (path))
@@ -145,19 +148,19 @@ plugin_tunnel_conf_load ()
 			ssh_options_set (link->ssh, SSH_OPTIONS_HOST, link->hostname);
 		}
 
-//		gsql_conf_nitify_add (path, tunnel_hostname_notify, link);
+		gsql_conf_nitify_add (path, tunnel_hostname_notify, link);
 		
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "username");	
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->username, 128, "%s", str);
 
-//		gsql_conf_nitify_add (path, tunnel_username_notify, link);
+		gsql_conf_nitify_add (path, tunnel_username_notify, link);
 		
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "password");	
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->password, 128, "%s", str);
 
-//		gsql_conf_nitify_add (path, tunnel_password_notify, link);
+		gsql_conf_nitify_add (path, tunnel_password_notify, link);
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "port");	
 		if (d = gsql_conf_value_get_int (path))
@@ -167,7 +170,7 @@ plugin_tunnel_conf_load ()
 			ssh_options_set (link->ssh, SSH_OPTIONS_PORT, &link->port);
 		}
 
-//		gsql_conf_nitify_add (path, tunnel_port_notify, link);
+		gsql_conf_nitify_add (path, tunnel_port_notify, link);
 		
 		// localhost settings
 
@@ -175,13 +178,13 @@ plugin_tunnel_conf_load ()
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->localname, 128, "%s", str);
 
-//		gsql_conf_nitify_add (path, tunnel_localname_notify, link);
+		gsql_conf_nitify_add (path, tunnel_localname_notify, link);
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "localport");	
 		if (d = gsql_conf_value_get_int (path))
 			link->localport = d;
 
-//		gsql_conf_nitify_add (path, tunnel_localport_notify, link);
+		gsql_conf_nitify_add (path, tunnel_localport_notify, link);
 		
 		// forwarded host settings
 
@@ -189,19 +192,20 @@ plugin_tunnel_conf_load ()
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->fwdhost, 128, "%s", str);
 
-//		gsql_conf_nitify_add (path, tunnel_fwdhost_notify, link);
+		gsql_conf_nitify_add (path, tunnel_fwdhost_notify, link);
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "fwdport");	
 		if (d = gsql_conf_value_get_int (path))
 			link->fwdport = d;
 
-//		gsql_conf_nitify_add (path, tunnel_fwdport_notify, link);
+		gsql_conf_nitify_add (path, tunnel_fwdport_notify, link);
 
 		// ----
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "autoconnect");
 		b = gsql_conf_value_get_boolean (path);
+		link->autoconnect = b;
 
-//		gsql_conf_nitify_add (path, tunnel_autoconnect_notify, link);
+		gsql_conf_nitify_add (path, tunnel_autoconnect_notify, link);
 
 		if (b) // autoconnect
 		{
@@ -272,7 +276,7 @@ plugin_tunnel_conf_dialog ()
 	g_signal_connect (rnd, "edited",
 					  G_CALLBACK (on_connection_name_edited), tv);
 
-	g_hash_table_foreach (ssh_links, do_set_treeview_links, tv);
+	g_hash_table_foreach (tunnels, do_set_treeview_links, tv);
 	
 	gtk_dialog_run (dialog);
 
@@ -294,7 +298,7 @@ on_conf_button_new_activate (GtkButton *button,
 	gchar tmp[256];
 	gint i;
 
-	SSHLink *link;
+	GSQLPTunnel *link;
 	
 	
 	i = 1;
@@ -329,10 +333,11 @@ on_conf_button_new_activate (GtkButton *button,
 						2, tmp,
 						-1);
 
-	link = g_new0 (SSHLink, 1);
+	link = gsqlp_tunnel_new();
 	g_snprintf (link->name, 128, "%s", N_("enter name here"));
+	g_snprintf (link->confname, 32, "%s", tmp);
 	
-	g_hash_table_insert (ssh_links, g_strdup (tmp),
+	g_hash_table_insert (tunnels, g_strdup (tmp),
 		    		link
 		    		);
 
@@ -341,6 +346,58 @@ on_conf_button_new_activate (GtkButton *button,
 	col = gtk_tree_view_get_column (tv, 0);
 	gtk_tree_view_set_cursor (tv, path, col, TRUE);
 
+	// set notifiers
+	
+	// name
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/name", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_name_notify, link);
+
+	// hostname 
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/hostname", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_hostname_notify, link);
+
+	// username
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/username", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_username_notify, link);
+
+	// password
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/password", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_password_notify, link);
+
+	// remote port
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/port", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_port_notify, link);
+
+	// localname
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/localname", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_localname_notify, link);
+
+	// localport
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/localport", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_localport_notify, link);
+
+	// forwarded host
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/fwdhost", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_fwdhost_notify, link);
+
+	// forwarded port
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/username", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_fwdport_notify, link);
+
+	// autoconnect
+	g_snprintf (tmp, 256, "%s/tunnel/sessions/link%d/autoconnect", 
+	    		GSQL_CONF_PLUGINS_ROOT_KEY, i);
+	gsql_conf_nitify_add (tmp, tunnel_autoconnect_notify, link);
+	
 }
 
 static void
@@ -366,9 +423,9 @@ on_conf_button_remove_activate (GtkButton *button,
 						&link, -1);
 
 	g_snprintf (tmp, 256, "%s/tunnel/sessions/%s", GSQL_CONF_PLUGINS_ROOT_KEY, link);
-	gsql_conf_value_unset (link, TRUE);
+	gsql_conf_value_unset (tmp, TRUE);
 
-	g_hash_table_remove (ssh_links, link);
+	g_hash_table_remove (tunnels, link);
 	
 	gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
 
@@ -387,6 +444,9 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 	GtkTreePath *path = NULL;
 	GtkTreeModel *model;
 	GtkTreeView *tv = user_data;
+
+	gchar str[128];
+	gchar *cname;
 	
 	GtkTreeIter iter;
 
@@ -398,11 +458,16 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 
 	GSQL_DEBUG ("new:[%s]", new_text);
 
-	//g_snprintf(tmp, 256 ,"%s/tunnel/link%s/%s", GSQL_CONF_PLUGINS_ROOT_KEY, new_text);
-	
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter,
 					   1, new_text,
 					   -1);
+
+	gtk_tree_model_get (model, &iter, 2, &cname, -1);
+
+	g_snprintf (str, 128, "%s/tunnel/sessions/%s/name", 
+	    					GSQL_CONF_PLUGINS_ROOT_KEY, cname);
+
+	gsql_conf_value_set_string (str, new_text);
 	
 }
 
@@ -419,6 +484,8 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 	gboolean bvalue;
 	gpointer p = NULL;
 	guint n;
+	gchar *cname;
+	gchar str[128];
 	
 	path = gtk_tree_path_new_from_string (path_str);
 	model = gtk_tree_view_get_model (tv);
@@ -430,6 +497,12 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 						0, 
 						&bvalue, -1);
 
+	gtk_tree_model_get (model, &iter, 2, &cname, -1);
+
+	g_snprintf (str, 128, "%s/tunnel/sessions/%s/autoconnect", 
+	    					GSQL_CONF_PLUGINS_ROOT_KEY, cname);
+
+	gsql_conf_value_set_boolean (str, !bvalue);
 	
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
 						0, !bvalue,
@@ -469,7 +542,7 @@ on_tv_cursor_changed (GtkTreeView *tv,
 }
 
 static void
-ssh_links_hash_remove_key_notify (gpointer user_data)
+tunnels_hash_remove_key_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
@@ -477,11 +550,11 @@ ssh_links_hash_remove_key_notify (gpointer user_data)
 }
 
 static void 
-ssh_links_hash_remove_value_notify (gpointer user_data)
+tunnels_hash_remove_value_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	// here we need to free all of SSHLink structure
+	g_object_unref (user_data);
 	
 
 }
@@ -494,7 +567,8 @@ do_set_treeview_links (gpointer key, gpointer value,
 
 	GtkTreeModel	*model;
 	GtkTreeIter		iter;
-	SSHLink			*link = value;
+	GSQLPTunnel		*link = value;
+	GSQLPTunnelState	state;
 
 	g_return_if_fail (GTK_IS_TREE_VIEW (user_data));
 
@@ -504,8 +578,10 @@ do_set_treeview_links (gpointer key, gpointer value,
 
 	// 'connect' status
 
+	state = gsqlp_tunnel_get_state (link);
+
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
-						0, (link->state == GSQLP_TUNNEL_STATE_CONNECTED ? TRUE : FALSE),
+						0, (state == GSQLP_TUNNEL_STATE_CONNECTED ? TRUE : FALSE),
 						-1);
 	// connection name
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
@@ -524,13 +600,17 @@ tunnel_name_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
-	gchar *key;
+	GSQLPTunnel *link = user_data;
 	gchar path[512];
+	gchar *value;
 
-	key = (gchar *) g_hash_table_lookup (ssh_links, link);
+	g_return_if_fail (GSQLP_IS_TUNNEL (link));
 
-	g_snprintf (path, 512, "%s/tunnel/%s/name", GSQL_CONF_PLUGINS_ROOT_KEY, key);
+	g_snprintf (path, 512, "%s/tunnel/sessions/%s/name", GSQL_CONF_PLUGINS_ROOT_KEY, link->confname);
+
+	value = gsql_conf_value_get_string (path);
+
+	g_snprintf (link->name, 128,"%s", value);
 
 	g_debug ("notify PATH: %s", path);
 
@@ -541,7 +621,7 @@ static void tunnel_hostname_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -550,7 +630,7 @@ static void tunnel_username_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -559,7 +639,7 @@ static void tunnel_password_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -568,7 +648,7 @@ static void tunnel_port_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -577,7 +657,7 @@ static void tunnel_localname_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -586,7 +666,7 @@ static void tunnel_localport_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -595,7 +675,7 @@ static void tunnel_fwdhost_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -604,7 +684,7 @@ static void tunnel_fwdport_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 
@@ -613,7 +693,7 @@ static void tunnel_autoconnect_notify (gpointer user_data)
 {
 	GSQL_TRACE_FUNC;
 
-	SSHLink *link = user_data;
+	GSQLPTunnel *link = user_data;
 
 }
 

@@ -37,18 +37,34 @@
 	//	memset (session->err, 0, 512); \
 		//g_snprintf (session->err, 512, params)
 
-typedef struct _SSHLink		SSHLink;
-typedef struct _SSHChannel	SSHChannel;
+
+typedef struct _GSQLPTunnel GSQLPTunnel;
+typedef struct _GSQLPTunnelClass GSQLPTunnelClass;
+typedef struct _GSQLPTunnelPrivate GSQLPTunnelPrivate;
+
+typedef struct _GSQLPChannel	GSQLPChannel;
+
+
 typedef enum {
-	GSQLP_TUNNEL_STATE_NOT_CONNECTED,
-	GSQLP_TUNNEL_STATE_FAILED,
+	GSQLP_TUNNEL_STATE_NONE,
+	GSQLP_TUNNEL_STATE_ERROR,
 	GSQLP_TUNNEL_STATE_CONNECTED,
 	GSQLP_TUNNEL_STATE_CONNECTION
 } GSQLPTunnelState;
 
-struct _SSHLink {
+#define GSQLP_TUNNEL_TYPE 			(gsqlp_tunnel_get_type ())
+#define GSQLP_TUNNEL(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), GSQLP_TUNNEL_TYPE, GSQLPTunnel))
+#define GSQLP_TUNNEL_CLASS(klass)	(G_TYPE_CHECK_INSTANCE_CAST ((klass), GSQLP_TUNNEL_TYPE, GSQLPTunnelClass))
+
+#define GSQLP_IS_TUNNEL(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQLP_TUNNEL_TYPE))
+#define GSQLP_IS_TUNNEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQLP_TUNNEL_TYPE))
+
+struct _GSQLPTunnel {
+
+	GObject parent;
 	
 	gchar name[128];
+	gchar confname[32];
 
 	/* connect to */
 	gchar hostname[128];
@@ -68,18 +84,29 @@ struct _SSHLink {
 	gchar		fwdhost[128];
 	guint			fwdport;
 
-	/* list of SSHChannel */
+	/* list of GSQLPChannel */
 	GList		*channel_list;
 
 	gboolean	autoconnect;
-	GSQLPTunnelState	state;
 	
 	gboolean	has_changed;
 	
 	gchar		err[SSH_SESSION_ERR_LEN];
+
+	GSQLPTunnelPrivate	*private;
+	
 };
 
-struct _SSHChannel {
+struct _GSQLPTunnelClass
+{
+	GObjectClass parent;
+	
+	/* Signals */
+	void (*state_changed) (GSQLPTunnel *tunnel);
+};
+
+
+struct _GSQLPChannel {
 
 	ssh_channel	*channel;
 
@@ -92,6 +119,15 @@ struct _SSHChannel {
 
 
 G_BEGIN_DECLS
+
+GType
+gsqlp_tunnel_get_type ();
+
+GSQLPTunnelState
+gsqlp_tunnel_get_state (GSQLPTunnel *tunnel);
+
+GSQLPTunnel *
+gsqlp_tunnel_new (void);
 
 
 G_END_DECLS

@@ -48,6 +48,23 @@
 #define PLUGIN_AUTHOR "Taras Halturin"
 #define PLUGIN_HOMEPAGE "http://gsql.org"
 
+static GObjectClass *parent_class;
+static void gsqlp_tunnel_class_init (GSQLPTunnelClass *klass);
+static void gsqlp_tunnel_init (GSQLPTunnel *obj);
+
+
+
+struct _GSQLPTunnelPrivate {
+
+	GSQLPTunnelState	state;
+};
+
+enum {
+	SIG_STATE_CHANGED,
+	SIG_LAST
+};
+
+static guint tunnel_signals[SIG_LAST] = { 0 };
 
 static GSQLStockIcon stock_icons[] = 
 {
@@ -84,5 +101,122 @@ plugin_unload (GSQLPlugin * plugin)
 
 	return TRUE;
 }
+
+GType
+gsqlp_tunnel_get_type ()
+{
+	static GType obj_type = 0;
+	
+	if (!obj_type)
+	{
+		static const GTypeInfo obj_info = 
+		{
+			sizeof (GSQLPTunnelClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gsqlp_tunnel_class_init,
+			(GClassFinalizeFunc) NULL,
+			NULL,
+			sizeof (GSQLPTunnel),
+			0,
+			(GInstanceInitFunc) gsqlp_tunnel_init,
+			NULL
+		};
+		obj_type = g_type_register_static (G_TYPE_OBJECT,
+										   "GSQLPTunnel", &obj_info, 0);
+		
+	}
+	
+	return obj_type;	
+}
+
+
+GSQLPTunnelState
+gsqlp_tunnel_get_state (GSQLPTunnel *tunnel)
+{
+	GSQL_TRACE_FUNC;
+
+	g_return_val_if_fail (GSQLP_IS_TUNNEL (tunnel), GSQLP_TUNNEL_STATE_ERROR);
+	
+	return tunnel->private->state;	
+}
+
+GSQLPTunnel *
+gsqlp_tunnel_new (void)
+{
+	GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel;
+	
+	tunnel = g_object_new (GSQLP_TUNNEL_TYPE, NULL);	
+	
+	return tunnel;
+}
+
+
+static void
+gsqlp_tunnel_dispose (GObject *obj)
+{
+	GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel = GSQLP_TUNNEL (obj);
+	
+	parent_class->dispose(obj);
+	
+}
+
+static void
+gsqlp_tunnel_finalize (GObject *obj)
+{
+	GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel = GSQLP_TUNNEL (obj);
+
+	g_free (tunnel->private);
+
+	parent_class->finalize (obj);
+}
+
+static void
+gsqlp_tunnel_class_init (GSQLPTunnelClass *klass)
+{
+	GSQL_TRACE_FUNC;
+
+	GObjectClass *obj_class;
+	
+	g_return_if_fail (klass != NULL);
+	obj_class = (GObjectClass *) klass;
+	
+	parent_class = g_type_class_peek_parent (klass);
+	
+	tunnel_signals [SIG_STATE_CHANGED] = 
+		g_signal_new ("state_changed", 
+					  G_TYPE_FROM_CLASS (obj_class),
+					  G_SIGNAL_RUN_FIRST,
+					  G_STRUCT_OFFSET (GSQLPTunnelClass,
+									   state_changed),
+					  NULL, // GSignalAccumulator
+					  NULL, g_cclosure_marshal_VOID__VOID,
+					  G_TYPE_NONE, 0);
+	
+	obj_class->dispose = gsqlp_tunnel_dispose;
+	obj_class->finalize = gsqlp_tunnel_finalize;
+	
+}
+
+static void 
+gsqlp_tunnel_init (GSQLPTunnel *obj)
+{
+	GSQL_TRACE_FUNC;
+
+	g_return_if_fail (obj != NULL);
+	
+	obj->private = g_new0 (GSQLPTunnelPrivate, 1);
+	obj->private->state = GSQLP_TUNNEL_STATE_NONE;
+
+}
+
+
+
 
 

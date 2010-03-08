@@ -55,7 +55,7 @@ gsql_conf_notify_handler (GConfClient *client, guint cnxn_id,
 	GSQL_TRACE_FUNC;
 		
 	GSQLConfNotifyFunc handler;
-	
+
 	handler = g_object_get_data (G_OBJECT(userdata), "fhandler");
 	
 	if (handler)
@@ -264,7 +264,7 @@ gsql_conf_value_unset (gchar *path, gboolean recursive)
 	GSQL_TRACE_FUNC;
 
 	GError *error = NULL;
-	gboolean	ret;
+	gboolean	ret = TRUE;
 
 	g_debug ("removing: %s", path);
 
@@ -275,10 +275,7 @@ gsql_conf_value_unset (gchar *path, gboolean recursive)
 		    				&error);
 	} else {
 
-		ret = gconf_client_recursive_unset (gconf_client,
-		    							path,
-		    							0,
-		    							&error);
+		gconf_client_remove_dir (gconf_client, path, &error);
 	}
 
 	if (!ret)
@@ -286,7 +283,7 @@ gsql_conf_value_unset (gchar *path, gboolean recursive)
 	
 	if (error)
 	{
-		g_debug (error->message);
+		g_debug ("%s", error->message);
 		g_error_free (error);
 	}
 }
