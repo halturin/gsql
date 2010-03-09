@@ -129,6 +129,11 @@ gsqlp_tunnel_get_state (GSQLPTunnel *tunnel);
 GSQLPTunnel *
 gsqlp_tunnel_new (void);
 
+void
+gsqlp_tunnel_do_connect (GSQLPTunnel *tunnel);
+
+void
+gsqlp_tunnel_do_disconnect (GSQLPTunnel *tunnel);
 
 G_END_DECLS
 

@@ -216,7 +216,25 @@ gsqlp_tunnel_init (GSQLPTunnel *obj)
 
 }
 
+void
+gsqlp_tunnel_do_connect (GSQLPTunnel *tunnel)
+{
+	GSQL_TRACE_FUNC;
 
 
+	tunnel->private->state = GSQLP_TUNNEL_STATE_CONNECTED;
+	g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
 
+}
+
+void
+gsqlp_tunnel_do_disconnect (GSQLPTunnel *tunnel)
+{
+	GSQL_TRACE_FUNC;
+
+
+	tunnel->private->state = GSQLP_TUNNEL_STATE_NONE;
+	g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+
+}
 

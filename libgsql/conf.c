@@ -71,6 +71,8 @@ void
 gsql_conf_nitify_add (gchar *path, GSQLConfNotifyFunc func, gpointer userdata)
 {
 	GSQL_TRACE_FUNC;
+
+	GError *error = NULL;
 	
 	g_return_if_fail (G_IS_OBJECT (userdata));
 
@@ -275,7 +277,7 @@ gsql_conf_value_unset (gchar *path, gboolean recursive)
 		    				&error);
 	} else {
 
-		gconf_client_remove_dir (gconf_client, path, &error);
+		gconf_client_recursive_unset (gconf_client, path, 0, &error);
 	}
 
 	if (!ret)
@@ -286,4 +288,6 @@ gsql_conf_value_unset (gchar *path, gboolean recursive)
 		g_debug ("%s", error->message);
 		g_error_free (error);
 	}
+
+	gconf_client_suggest_sync (gconf_client, &error);
 }

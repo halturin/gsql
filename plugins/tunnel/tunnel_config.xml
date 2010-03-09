@@ -8,8 +8,8 @@
       <column type="gboolean"/>
       <!-- column-name Parameters -->
       <column type="gchararray"/>
-      <!-- column-name Link -->
-      <column type="gchararray"/>
+      <!-- column-name Tunnel -->
+      <column type="gpointer"/>
     </columns>
   </object>
   <object class="GtkDialog" id="tunnel_config_dialog">
@@ -47,7 +47,9 @@
                         <property name="can_focus">True</property>
                         <property name="model">liststore_sessions</property>
                         <property name="headers_clickable">False</property>
+                        <property name="rules_hint">True</property>
                         <property name="search_column">0</property>
+                        <property name="tooltip_column">1</property>
                         <child>
                           <object class="GtkTreeViewColumn" id="tvcolumn_connect">
                             <property name="title">Connect</property>
@@ -62,6 +64,7 @@
                         <child>
                           <object class="GtkTreeViewColumn" id="tvcolumn_name">
                             <property name="title">Name</property>
+                            <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderer_name">
                                 <property name="editable">True</property>
@@ -69,6 +72,15 @@
                               <attributes>
                                 <attribute name="text">1</attribute>
                               </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="tvcolumn_status">
+                            <property name="sizing">autosize</property>
+                            <property name="title">Status</property>
+                            <child>
+                              <object class="GtkCellRendererPixbuf" id="cellrenderer_status"/>
                             </child>
                           </object>
                         </child>
@@ -237,6 +249,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="max_length">64</property>
+                        <property name="visibility">False</property>
                         <property name="invisible_char">&#x2022;</property>
                         <property name="invisible_char_set">True</property>
                       </object>
