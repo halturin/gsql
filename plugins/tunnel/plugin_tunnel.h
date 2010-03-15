@@ -31,7 +31,7 @@
 
 #define GSQLP_TUNNEL_STOCK_ICON "gsql-plugin-tunnel-icon"
 
-#define SSH_SESSION_ERR_LEN	512
+#define GSQLP_TUNNEL_ERR_LEN	512
 
 //#define SSH_SESSION_SET_ERROR(session, params...) \
 	//	memset (session->err, 0, 512); \
@@ -52,12 +52,20 @@ typedef enum {
 	GSQLP_TUNNEL_STATE_CONNECTION
 } GSQLPTunnelState;
 
+typedef enum {
+	GSQLP_TUNNEL_AUTH_PASS = 1,
+	GSQLP_TUNNEL_AUTH_PUB,
+} GSQLPTunnelAuthType;
+
 #define GSQLP_TUNNEL_TYPE 			(gsqlp_tunnel_get_type ())
 #define GSQLP_TUNNEL(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), GSQLP_TUNNEL_TYPE, GSQLPTunnel))
 #define GSQLP_TUNNEL_CLASS(klass)	(G_TYPE_CHECK_INSTANCE_CAST ((klass), GSQLP_TUNNEL_TYPE, GSQLPTunnelClass))
 
 #define GSQLP_IS_TUNNEL(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQLP_TUNNEL_TYPE))
 #define GSQLP_IS_TUNNEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQLP_TUNNEL_TYPE))
+
+#define GSQLP_TUNNEL_LOCK(tunnel)	pthread_mutex_lock (&tunnel->mutex);
+#define GSQLP_TUNNEL_UNLOCK(tunnel)	pthread_mutex_unlock (&tunnel->mutex);
 
 struct _GSQLPTunnel {
 
@@ -72,7 +80,10 @@ struct _GSQLPTunnel {
 	gchar password[64];
 	guint		port;
 
+	GSQLPTunnelAuthType auth_type;
+	
 	ssh_session ssh;
+	pthread_mutex_t mutex;
 
 	/* listen on */
 	gchar		localname[128];
@@ -91,7 +102,7 @@ struct _GSQLPTunnel {
 	
 	gboolean	has_changed;
 	
-	gchar		err[SSH_SESSION_ERR_LEN];
+	gchar		err[GSQLP_TUNNEL_ERR_LEN];
 
 	GSQLPTunnelPrivate	*private;
 	

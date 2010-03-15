@@ -62,6 +62,12 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
     					gpointer user_data);
 
 static void
+do_set_name_with_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
+    					GtkTreeModel *model,
+    					GtkTreeIter  *iter,
+    					gpointer user_data);
+
+static void
 tunnels_hash_remove_key_notify (gpointer user_data);
 
 static void 
@@ -87,6 +93,11 @@ static void on_entry_fsremoteadr_changed (GtkEditable *editable,
 											gpointer user_data);
 static void on_entry_fsremoteport_changed (GtkSpinButton *spinbutton, 
 											gpointer user_data);
+static void on_rb_authpass_changed (GtkToggleButton *action,
+											gpointer user_data);
+static void on_rb_authpub_changed (GtkToggleButton *action,
+											gpointer user_data);
+
 
 void
 plugin_tunnel_conf_load ()
@@ -124,7 +135,6 @@ plugin_tunnel_conf_load ()
 		is_loaded = TRUE;
 
 		link = gsqlp_tunnel_new ();
-		//g_object_ref (link);
 		
 		str = g_path_get_basename (lst->data);
 		g_snprintf (link->confname, 32, "%s", str);
@@ -132,14 +142,6 @@ plugin_tunnel_conf_load ()
 		g_debug ("PARSE listing: [%s]", (gchar *) lst->data);
 		
 		g_hash_table_insert (tunnels, str, link);
-
-		link->ssh = ssh_new ();
-		
-		if (!link->ssh)
-		{
-			g_debug ("Couldn't allocate new SSH session");
-			break;
-		}
 
 		// remote host settings
 		
@@ -149,11 +151,7 @@ plugin_tunnel_conf_load ()
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "hostname");	
 		if (str = gsql_conf_value_get_string (path))
-		{
 			g_snprintf (link->hostname, 128, "%s", str);
-
-			ssh_options_set (link->ssh, SSH_OPTIONS_HOST, link->hostname);
-		}
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "username");	
 		if (str = gsql_conf_value_get_string (path))
@@ -162,6 +160,16 @@ plugin_tunnel_conf_load ()
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "password");	
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->password, 128, "%s", str);
+
+		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "auth_type");
+		if (d = gsql_conf_value_get_int (path))
+		{
+			link->auth_type = d;
+			
+		} else {
+			
+			link->auth_type = GSQLP_TUNNEL_AUTH_PASS;
+		}
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "port");	
 		if (d = gsql_conf_value_get_int (path))
@@ -172,8 +180,6 @@ plugin_tunnel_conf_load ()
 
 			link->port = 22;
 		}
-		
-		ssh_options_set (link->ssh, SSH_OPTIONS_PORT, &link->port);
 
 		// localhost settings
 
@@ -245,6 +251,7 @@ plugin_tunnel_conf_dialog ()
 	GtkTreeViewColumn *column;
 	GtkWidget *widget;
 	GtkEntry *entry;
+	GtkToggleButton *tb;
 
 	bld = gtk_builder_new();
 
@@ -281,6 +288,10 @@ plugin_tunnel_conf_dialog ()
 					  G_CALLBACK (on_connect_toggled), tv);
 
 	rnd = (GtkCellRendererText *) gtk_builder_get_object (bld, "cellrenderer_name");
+	column = (GtkTreeViewColumn *) gtk_builder_get_object (bld, "tvcolumn_name");
+	gtk_tree_view_column_set_cell_data_func (column, (GtkCellRenderer *) rnd, 
+	    									do_set_name_with_status,
+	    									tv, NULL);
 	
 	g_signal_connect (rnd, "edited",
 					  G_CALLBACK (on_connection_name_edited), tv);
@@ -290,8 +301,8 @@ plugin_tunnel_conf_dialog ()
 	
 	gtk_tree_view_column_set_cell_data_func (column, (GtkCellRenderer *) pxbuf, 
 	    									do_set_image_status,
-	    									NULL, NULL);
-
+	    									tv, NULL);
+	
 	// callbacks for connection details
 	entry = (GtkEntry *) gtk_builder_get_object (bld, "cshostname");
 	g_signal_connect (entry, "changed",
@@ -332,6 +343,16 @@ plugin_tunnel_conf_dialog ()
 	g_signal_connect (entry, "value-changed",
 	    			  G_CALLBACK (on_entry_fsremoteport_changed), tv);
 	HOOKUP_OBJECT (G_OBJECT (tv), GTK_WIDGET (entry), "remoteport");
+
+	tb = (GtkToggleButton *) gtk_builder_get_object (bld, "rb_auth_pass");
+	g_signal_connect (tb, "toggled",
+	    			  G_CALLBACK (on_rb_authpass_changed), tv);
+	HOOKUP_OBJECT (G_OBJECT (tv), GTK_WIDGET (tb), "rb_auth_pass");
+
+	tb = (GtkToggleButton *) gtk_builder_get_object (bld, "rb_auth_pub");
+	g_signal_connect (tb, "toggled",
+	    			  G_CALLBACK (on_rb_authpub_changed), tv);
+	HOOKUP_OBJECT (G_OBJECT (tv), GTK_WIDGET (tb), "rb_auth_pub");
 
 	g_hash_table_foreach (tunnels, do_set_treeview_links, tv);
 	
@@ -550,6 +571,7 @@ on_tv_cursor_changed (GtkTreeView *tv,
 	gboolean selected;
 	GtkEntry *entry;
 	GSQLPTunnel *tunnel;
+	GtkToggleButton *tb;
 	
 	model = gtk_tree_view_get_model (tv);
 	sel = gtk_tree_view_get_selection (tv);
@@ -601,6 +623,21 @@ on_tv_cursor_changed (GtkTreeView *tv,
 	entry = (GtkEntry *) g_object_get_data (G_OBJECT (tv), "remoteport");
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry), tunnel->fwdport);
 
+	switch (tunnel->auth_type) {
+
+		case GSQLP_TUNNEL_AUTH_PUB:
+			tb = (GtkToggleButton *) g_object_get_data (G_OBJECT (tv), "rb_auth_pub");
+			gtk_toggle_button_set_active (tb, TRUE);
+			break;
+
+		case GSQLP_TUNNEL_AUTH_PASS:
+		default:
+			tb = (GtkToggleButton *) g_object_get_data (G_OBJECT (tv), "rb_auth_pass");
+			gtk_toggle_button_set_active (tb, TRUE);
+
+
+	}
+
 }
 
 static void
@@ -617,8 +654,6 @@ tunnels_hash_remove_value_notify (gpointer user_data)
 	GSQL_TRACE_FUNC;
 
 	g_object_unref (user_data);
-	
-
 }
 
 static void
@@ -663,10 +698,11 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
     					GtkTreeIter  *iter,
     					gpointer user_data)
 {
-	GSQL_TRACE_FUNC;
+	//GSQL_TRACE_FUNC;
 
 	GSQLPTunnel *tunnel;
 	GSQLPTunnelState	state;
+	GtkTreeIter *it;
 	gchar *stock;
 	GValue val = {0, };
 
@@ -675,7 +711,7 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 						&tunnel, -1);
 
 	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
-	
+
 	state = gsqlp_tunnel_get_state (tunnel);
 
 	switch (state)
@@ -701,6 +737,52 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 	g_value_set_static_string (&val, stock);
 	g_object_set_property (G_OBJECT (rndr), "stock-id", &val);
 	
+}
+
+static void
+do_set_name_with_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
+    					GtkTreeModel *model,
+    					GtkTreeIter  *iter,
+    					gpointer user_data)
+{
+	//GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel;
+	GSQLPTunnelState	state;
+	GtkTreeIter *it;
+	gchar buff[512];
+	GValue val = {0, };
+
+	gtk_tree_model_get (model, iter,  
+						2, 
+						&tunnel, -1);
+
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+
+	state = gsqlp_tunnel_get_state (tunnel);
+
+	g_value_init (&val, G_TYPE_STRING);
+
+	memset (buff, 0, 512);
+	
+	switch (state)
+	{
+		case GSQLP_TUNNEL_STATE_CONNECTED:
+				g_snprintf (buff, 512, "%s\n<small>connected</small>", tunnel->name);
+				break;
+		
+		case GSQLP_TUNNEL_STATE_ERROR:
+				g_snprintf (buff, 512, "%s\n<span color='red'><small>%s</small></span>", tunnel->name, tunnel->err);
+				break;
+
+		case GSQLP_TUNNEL_STATE_NONE:
+		default:
+				g_snprintf (buff, 512, "%s\n<small>not connected</small>", tunnel->name);
+
+	}
+	
+	g_value_set_static_string (&val, buff);
+	g_object_set_property (G_OBJECT (rndr), "markup", &val);
 }
 
 
@@ -959,7 +1041,7 @@ on_entry_fslocalport_changed (GtkSpinButton *spinbutton,
 
 	g_debug ("set new local port: %d", ivalue);
 
-	tunnel->port = ivalue;
+	tunnel->localport = ivalue;
 	
 	g_snprintf (str, 256, "%s/tunnel/sessions/%s/localport", 
 	    					GSQL_CONF_PLUGINS_ROOT_KEY, tunnel->confname);
@@ -1055,3 +1137,91 @@ on_entry_fsremoteport_changed (GtkSpinButton *spinbutton,
 	gsql_conf_value_set_int (str, tunnel->fwdport);
 
 }
+
+static void on_rb_authpass_changed (GtkToggleButton * button,
+											gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	GtkTreeSelection *sel;
+	GtkTreeView	*tv = user_data;
+	GtkTreeModel *model;
+	GtkTreeIter		iter;
+	GSQLPTunnel		*tunnel = NULL;
+	gboolean	ret;
+	gchar str[256];
+
+	g_return_if_fail (GTK_IS_TREE_VIEW (tv));
+
+	model = gtk_tree_view_get_model (tv);
+	sel = gtk_tree_view_get_selection (tv);
+
+	if (!gtk_tree_selection_get_selected (sel, &model, &iter))
+		return;
+
+	gtk_tree_model_get (model, &iter,  
+						2, 
+						&tunnel, -1);
+
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+	
+	ret = gtk_toggle_button_get_active (button);
+	
+	g_debug ("Auth by PASS: %s", ret ? "True": "False");
+	if (ret)
+	{
+		tunnel->auth_type = GSQLP_TUNNEL_AUTH_PASS;
+
+		g_snprintf (str, 256, "%s/tunnel/sessions/%s/auth_type", 
+	    					GSQL_CONF_PLUGINS_ROOT_KEY, tunnel->confname);
+		
+		gsql_conf_value_set_int (str, tunnel->auth_type);
+	}
+	
+
+
+}
+
+static void on_rb_authpub_changed (GtkToggleButton *button,
+											gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	GtkTreeSelection *sel;
+	GtkTreeView	*tv = user_data;
+	GtkTreeModel *model;
+	GtkTreeIter		iter;
+	GSQLPTunnel		*tunnel = NULL;
+	gboolean	ret;
+	gchar str[256];
+
+	g_return_if_fail (GTK_IS_TREE_VIEW (tv));
+
+	model = gtk_tree_view_get_model (tv);
+	sel = gtk_tree_view_get_selection (tv);
+
+	if (!gtk_tree_selection_get_selected (sel, &model, &iter))
+		return;
+
+	gtk_tree_model_get (model, &iter,  
+						2, 
+						&tunnel, -1);
+
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+	
+	ret = gtk_toggle_button_get_active (button);
+	
+	g_debug ("Auth by PUB: %s", ret ? "True": "False");
+	if (ret)
+	{
+		tunnel->auth_type = GSQLP_TUNNEL_AUTH_PUB;
+
+		g_snprintf (str, 256, "%s/tunnel/sessions/%s/auth_type", 
+	    					GSQL_CONF_PLUGINS_ROOT_KEY, tunnel->confname);
+		
+		gsql_conf_value_set_int (str, tunnel->auth_type);
+	}
+
+
+}
+

@@ -27,6 +27,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <pthread.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -34,6 +36,7 @@
 #include <string.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdlib.h>
 
 #include <libgsql/common.h>
 #include "plugin_tunnel.h"
@@ -52,7 +55,12 @@ static GObjectClass *parent_class;
 static void gsqlp_tunnel_class_init (GSQLPTunnelClass *klass);
 static void gsqlp_tunnel_init (GSQLPTunnel *obj);
 
-
+static const gchar *common_keys[] = {
+	".ssh/id_rsa",
+	".ssh/id_dsa",
+	".ssh/identity",
+	NULL
+};
 
 struct _GSQLPTunnelPrivate {
 
@@ -84,6 +92,8 @@ plugin_load (GSQLPlugin * plugin)
 	plugin->info.homepage = PLUGIN_HOMEPAGE;
 	plugin->info.version = PLUGIN_VERSION;
 	plugin->file_logo = "tunnel.png";
+
+	ssh_init ();
 	
 	gsql_factory_add (stock_icons, G_N_ELEMENTS(stock_icons));
 
@@ -134,7 +144,7 @@ gsqlp_tunnel_get_type ()
 GSQLPTunnelState
 gsqlp_tunnel_get_state (GSQLPTunnel *tunnel)
 {
-	GSQL_TRACE_FUNC;
+//	GSQL_TRACE_FUNC;
 
 	g_return_val_if_fail (GSQLP_IS_TUNNEL (tunnel), GSQLP_TUNNEL_STATE_ERROR);
 	
@@ -173,6 +183,8 @@ gsqlp_tunnel_finalize (GObject *obj)
 	GSQLPTunnel *tunnel = GSQLP_TUNNEL (obj);
 
 	g_free (tunnel->private);
+
+	pthread_mutex_destroy (&tunnel->mutex);
 
 	parent_class->finalize (obj);
 }
@@ -214,6 +226,255 @@ gsqlp_tunnel_init (GSQLPTunnel *obj)
 	obj->private = g_new0 (GSQLPTunnelPrivate, 1);
 	obj->private->state = GSQLP_TUNNEL_STATE_NONE;
 
+	pthread_mutex_init (&obj->mutex, NULL);
+
+}
+
+static gpointer
+do_connect_bg (gpointer p)
+{
+	GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel = p;
+	gboolean wildcard = FALSE;
+	struct addrinfo hints, *ai;
+	int sock = 0, i;
+	gchar ntop[NI_MAXHOST], strport[NI_MAXSERV];
+	char *hexa;
+	unsigned char *hash = NULL;
+	
+	gint ret;
+
+	memset (tunnel->err, 0, GSQLP_TUNNEL_ERR_LEN);
+	
+	if (tunnel->ssh) 
+	{
+		if ((tunnel->private->state == GSQLP_TUNNEL_STATE_NONE) || 
+			 (tunnel->private->state == GSQLP_TUNNEL_STATE_ERROR))
+		{
+			ssh_free (tunnel->ssh);
+			tunnel->ssh = ssh_new ();
+		} else 
+			return NULL;
+	} else
+		tunnel->ssh = ssh_new ();
+
+	ssh_options_set (tunnel->ssh, SSH_OPTIONS_HOST, tunnel->hostname);
+	ssh_options_set (tunnel->ssh, SSH_OPTIONS_USER, tunnel->username);
+	ssh_options_set (tunnel->ssh, SSH_OPTIONS_PORT, &tunnel->port);
+
+	if (ssh_connect(tunnel->ssh))
+	{
+		g_debug ("plugin tunnel (%s): auth failed [%s]", tunnel->name, ssh_get_error (tunnel->ssh));
+
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+		tunnel->autoconnect = FALSE;
+
+		ssh_disconnect (tunnel->ssh);
+		
+		return NULL;
+	}
+	
+	ret = ssh_is_server_known (tunnel->ssh);
+	i = ssh_get_pubkey_hash(tunnel->ssh, &hash);
+
+	if (i > 0)
+	{	
+		switch (ret)
+		{
+			case SSH_SERVER_KNOWN_OK:
+				break;
+
+			case SSH_SERVER_KNOWN_CHANGED:
+
+				g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"%s: [%s]", N_("Host key for server changed"),
+				    ssh_get_hexa(hash, i));
+				
+				tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+				break;
+
+			case SSH_SERVER_FOUND_OTHER:
+				g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"%s: [%s]", N_("The host key for this server was not found but an other type of key exists:"),
+				    ssh_get_hexa(hash, i));
+				
+				tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+
+				break;
+
+			case SSH_SERVER_FILE_NOT_FOUND:
+			case SSH_SERVER_NOT_KNOWN:
+
+				if (ssh_write_knownhost(tunnel->ssh) < 0)
+				{
+					g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    			"Error: %s", strerror(errno));
+				
+					tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+				}
+
+				break;
+
+			case SSH_SERVER_ERROR:
+				g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"%s", ssh_get_error (tunnel->ssh));
+				
+				tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+				break;
+		}
+		
+	} else {
+
+		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"%s", N_("The length of hash is 0"));
+		
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+	}
+
+	if (tunnel->private->state == GSQLP_TUNNEL_STATE_ERROR)
+	{
+		tunnel->autoconnect = FALSE;
+		g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+
+		g_debug ("WARNING: %s", tunnel->err);
+		
+		if (hash)
+			free (hash);
+
+		ssh_disconnect (tunnel->ssh);
+
+		return NULL;
+	}
+
+	free (hash);
+
+	switch (tunnel->auth_type) {
+
+		case GSQLP_TUNNEL_AUTH_PUB:
+
+			g_debug ("Auth type = PUB");
+			ret = ssh_userauth_autopubkey(tunnel->ssh, NULL);
+			break;
+
+		case GSQLP_TUNNEL_AUTH_PASS:
+		default:
+			g_debug ("Auth type = PASS");
+			ret = ssh_userauth_password (tunnel->ssh, tunnel->username, tunnel->password);
+			break;
+	}
+	
+	if (ret != SSH_AUTH_SUCCESS)
+	{
+		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"Error: %s", ssh_get_error (tunnel->ssh));
+
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+		tunnel->autoconnect = FALSE;
+
+		g_debug ("WARNING2: %s", tunnel->err);
+
+		g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+		ssh_disconnect (tunnel->ssh);
+
+		return NULL;
+	} else 
+		g_debug ("WARNING3: SSH connected");
+	
+
+	if ((strcmp (tunnel->localname, "0.0.0.0") == 0) ||
+		(strcmp (tunnel->localname, "*") == 0) ||
+		(tunnel->localname == NULL ? 1 :
+			 (*tunnel->localname == '\0' ? 1 : 0)) )
+	{
+		wildcard = TRUE;
+	}
+
+	memset (&hints, 0, sizeof(hints));
+	hints.ai_family = AF_UNSPEC; // IPv4 or IPv6 
+	hints.ai_flags = wildcard ? AI_PASSIVE : 0;
+	hints.ai_socktype = SOCK_STREAM;
+
+	snprintf (strport, NI_MAXSERV, "%d", tunnel->localport);
+
+	if (ret = getaddrinfo (tunnel->localname, strport, 
+	                      &hints, &ai) != 0)
+	{
+		g_debug ("WARNING4: getaddinfo");
+		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"Error [%s]: %s", tunnel->name, gai_strerror (ret));
+		freeaddrinfo (ai);
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+
+		g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+		ssh_disconnect (tunnel->ssh);
+
+		return NULL;
+	} 
+		 
+
+	if ((ai->ai_family != AF_INET && ai->ai_family != AF_INET6) ||
+		(getnameinfo(ai->ai_addr, ai->ai_addrlen, ntop, sizeof(ntop),
+		            strport, sizeof(strport), NI_NUMERICHOST|NI_NUMERICSERV) != 0))
+	{
+		g_debug ("WARNING4: getnameinfo");
+		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"Error [%s]: getnameinfo", tunnel->name);
+
+		freeaddrinfo (ai);
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+
+		g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+		ssh_disconnect (tunnel->ssh);
+		
+		return NULL;
+	}
+
+	sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+
+	if (sock < 0)
+	{
+		g_debug ("WARNING4: socket");
+		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"Error [%s]: %s", tunnel->name, strerror(errno));
+
+		freeaddrinfo (ai);
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+
+		g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+		ssh_disconnect (tunnel->ssh);
+
+		return NULL;
+	}
+
+	i = 1;
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i));
+
+	if ((bind(sock, ai->ai_addr, ai->ai_addrlen) < 0)
+		|| (listen(sock, 128) < 0))
+	{
+		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
+		    		"Error [%s]: %s", tunnel->name, strerror(errno));
+		close (sock);
+		freeaddrinfo (ai);
+		tunnel->private->state = GSQLP_TUNNEL_STATE_ERROR;
+
+		g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+		ssh_disconnect (tunnel->ssh);
+
+		return NULL;
+	}
+
+	freeaddrinfo (ai);
+	
+	tunnel->sock = sock;
+	tunnel->private->state = GSQLP_TUNNEL_STATE_CONNECTED;
+	
+	g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+
+	g_debug ("CONNECTED!!!");
+
+	return NULL;
 }
 
 void
@@ -221,9 +482,15 @@ gsqlp_tunnel_do_connect (GSQLPTunnel *tunnel)
 {
 	GSQL_TRACE_FUNC;
 
+	GThread *thread = NULL;
+	GError *error = NULL;
 
-	tunnel->private->state = GSQLP_TUNNEL_STATE_CONNECTED;
-	g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+
+	thread = g_thread_create (do_connect_bg, tunnel, FALSE, &error);
+
+	if (!thread)
+		g_debug ("plugin tunnel: can not create a thread");
 
 }
 
@@ -232,7 +499,14 @@ gsqlp_tunnel_do_disconnect (GSQLPTunnel *tunnel)
 {
 	GSQL_TRACE_FUNC;
 
+	close (tunnel->sock);
+	tunnel->sock = -1;
 
+	ssh_disconnect (tunnel->ssh);
+	ssh_free (tunnel->ssh);
+
+	tunnel->ssh = NULL;
+	
 	tunnel->private->state = GSQLP_TUNNEL_STATE_NONE;
 	g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
 
