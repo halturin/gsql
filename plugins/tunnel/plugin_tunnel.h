@@ -119,12 +119,14 @@ struct _GSQLPTunnelClass
 
 struct _GSQLPChannel {
 
-	ssh_channel	*channel;
+	ssh_channel	channel;
+
+	gint sock;
 
 	guint64		rx; // we count this 
 	guint64		tx; // for the future 
 	
-	GSQLSession *session; // is it possible to get it right there? check it!
+	GSQLSession *session; // is it possible to get it right here? check it!
 
 };
 
