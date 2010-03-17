@@ -345,6 +345,7 @@ tunnel_processing_thread (gpointer p)
 			lenr = 0;
 			lenr = channel_poll (pch->channel, FALSE);
 
+			
 			if ((lenr == SSH_EOF) || (lenr == SSH_ERROR))
 			{
 				g_debug ("channel_pool return SSH_EOF or SSH_ERROR. remove it.");
@@ -373,49 +374,55 @@ tunnel_processing_thread (gpointer p)
 				continue;
 			}
 
-			memset (buff, 0, CHANNEL_BUFF);
-			lenr = channel_read_nonblocking (pch->channel, buff, lenr, FALSE);
-
-			if (i == SSH_EOF || i == SSH_ERROR)
+			while (lenr > 0)
 			{
-				g_debug ("channel_read_nonblocking return SSH_EOF or SSH_ERROR. remove it.");
+				memset (buff, 0, CHANNEL_BUFF);
+				i = channel_read_nonblocking (pch->channel, buff, CHANNEL_BUFF, FALSE);
 
-				FD_CLR (pch->sock, &fds);
+				if (i == SSH_EOF || i == SSH_ERROR)
+				{
+					g_debug ("channel_read_nonblocking return SSH_EOF or SSH_ERROR. remove it.");
 
-				rem = lst;
+					FD_CLR (pch->sock, &fds);
+
+					rem = lst;
 				
-				GSQLP_TUNNEL_LOCK(tunnel);
-				lst = g_list_previous (lst);
-				GSQLP_TUNNEL_UNLOCK(tunnel);
+					GSQLP_TUNNEL_LOCK(tunnel);
+					lst = g_list_previous (lst);
+					GSQLP_TUNNEL_UNLOCK(tunnel);
 				
-				tunnel_channel_remove (tunnel, rem);
-				continue;
-			}
+					tunnel_channel_remove (tunnel, rem);
+					break;
+				}
 
-			lenw = write (pch->sock, buff, lenr);
+				lenw = write (pch->sock, buff, i);
 			
-			if ((lenw == -1) && (errno == EAGAIN) && (tunnel->private->state == GSQLP_TUNNEL_STATE_CONNECTED))
-			{
-				g_debug ("error write. EAGAIN");
-			}
+				if ((lenw == -1) && (errno == EAGAIN) && (tunnel->private->state == GSQLP_TUNNEL_STATE_CONNECTED))
+				{
+					g_debug ("error write. EAGAIN");
+				}
 
-			if (lenw == -1)
-			{
-				g_debug ("write (to socket) return -1. remove it.");
+				if (lenw == -1)
+				{
+					g_debug ("write (to socket) return -1. remove it.");
 
-				FD_CLR (pch->sock, &fds);
+					FD_CLR (pch->sock, &fds);
 
-				rem = lst;
+					rem = lst;
 				
-				GSQLP_TUNNEL_LOCK(tunnel);
-				lst = g_list_previous (lst);
-				GSQLP_TUNNEL_UNLOCK(tunnel);
+					GSQLP_TUNNEL_LOCK(tunnel);
+					lst = g_list_previous (lst);
+					GSQLP_TUNNEL_UNLOCK(tunnel);
 
-				tunnel_channel_remove (tunnel, rem);
+					tunnel_channel_remove (tunnel, rem);
 
-				continue;
-			}
+					break;
+				}
 
+				lenr -= i;
+
+			} // while (lenr > 0) 
+			
 			GSQLP_TUNNEL_LOCK(tunnel);
 			lst = g_list_previous (lst);
 			GSQLP_TUNNEL_UNLOCK(tunnel);
@@ -426,7 +433,7 @@ tunnel_processing_thread (gpointer p)
 
 		fdmax++;
 		tv.tv_sec = 0;
-		tv.tv_usec = 100;
+		tv.tv_usec = 20000;
 		
 		lenr = select (fdmax, &fds, NULL, NULL, &tv);
 
@@ -750,6 +757,8 @@ do_connect_bg (gpointer p)
 	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_CONNECTED);
 	
 	g_debug ("CONNECTED!!! and waiting for the connection");
+
+	sftp_new (tunnel->ssh);
 
 	while (i = accept (sock, NULL, NULL))
 	{
