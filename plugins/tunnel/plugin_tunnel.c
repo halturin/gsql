@@ -295,6 +295,8 @@ tunnel_channel_add (GSQLPTunnel *tunnel, ssh_channel channel, gint sock)
 
 	GSQLP_TUNNEL_UNLOCK(tunnel);
 
+	g_debug("addddeeeed");
+
 	return TRUE;
 }
 
@@ -310,9 +312,6 @@ tunnel_processing_thread (gpointer p)
 	struct timespec ts;
 	gint i, lenr, lenw, fdmax;
 	fd_set fds;
-	
-//	ts.tv_sec = 0;
-//	ts.tv_nsec = 1000000000; /* 100ms */
 
 #define CHANNEL_BUFF 32768
 	gchar buff[CHANNEL_BUFF]; /* 32K seems to be enough */
@@ -325,7 +324,6 @@ tunnel_processing_thread (gpointer p)
 		if (!tunnel->channel_list)
 		{
 			GSQLP_TUNNEL_UNLOCK(tunnel);
-//			nanosleep (&ts, NULL);
 
 			continue;
 		}
@@ -399,7 +397,8 @@ tunnel_processing_thread (gpointer p)
 			
 				if ((lenw == -1) && (errno == EAGAIN) && (tunnel->private->state == GSQLP_TUNNEL_STATE_CONNECTED))
 				{
-					g_debug ("error write. EAGAIN");
+					//g_debug ("error write. EAGAIN");
+					continue;
 				}
 
 				if (lenw == -1)
@@ -418,6 +417,8 @@ tunnel_processing_thread (gpointer p)
 
 					break;
 				}
+
+				pch->rx +=lenw;
 
 				lenr -= i;
 
@@ -449,42 +450,50 @@ tunnel_processing_thread (gpointer p)
 			if (FD_ISSET (pch->sock, &fds))
 			{
 				memset (buff, 0, CHANNEL_BUFF);
-				lenr = read (pch->sock, buff, 1);
 
-				if ((lenr == -1) && ((lenr == EAGAIN) || (lenr == EWOULDBLOCK)))
+				while (1)
 				{
-					GSQLP_TUNNEL_LOCK(tunnel);
-					lst = g_list_previous (lst);
-					GSQLP_TUNNEL_UNLOCK(tunnel);
-					continue;
+					lenr = read (pch->sock, buff, CHANNEL_BUFF);
+					
+					if ((lenr < 1) && (errno == EAGAIN))
+						break;
+					
+					if (lenr == -1)
+					{
+						g_debug ("error. removing....");
+						rem = lst;
+				
+						GSQLP_TUNNEL_LOCK(tunnel);
+						lst = g_list_previous (lst);
+						GSQLP_TUNNEL_UNLOCK(tunnel);
+
+						tunnel_channel_remove (tunnel, rem);
+
+						break;
+					}
+					
+					lenw = channel_write (pch->channel, buff, lenr);
+					//g_debug ("lenr = %d", lenr);
+
+					if (lenw == SSH_ERROR)
+					{
+						g_debug ("channel_write return SSH_ERROR. remove it.");
+
+						rem = lst;
+				
+						GSQLP_TUNNEL_LOCK(tunnel);
+						lst = g_list_previous (lst);
+						GSQLP_TUNNEL_UNLOCK(tunnel);
+				
+						tunnel_channel_remove (tunnel, rem);
+						break;
+					}
+
+					pch->tx += lenw;
 				}
 
-				if (lenr == -1)
-				{
-					rem = lst;
 				
-					GSQLP_TUNNEL_LOCK(tunnel);
-					lst = g_list_previous (lst);
-					GSQLP_TUNNEL_UNLOCK(tunnel);
-
-					tunnel_channel_remove (tunnel, rem);
-				}
-
-				lenw = channel_write (pch->channel, buff, lenr);
-
-				if (lenw == SSH_ERROR)
-				{
-					g_debug ("channel_write return SSH_ERROR. remove it.");
-
-					rem = lst;
-				
-					GSQLP_TUNNEL_LOCK(tunnel);
-					lst = g_list_previous (lst);
-					GSQLP_TUNNEL_UNLOCK(tunnel);
-				
-					tunnel_channel_remove (tunnel, rem);
-					continue;
-				}
+				    
 
 			} 
 
@@ -519,6 +528,7 @@ do_connect_bg (gpointer p)
 	static GError *error = NULL;
 
 	ssh_channel channel = NULL;
+	struct timespec ts;
 	
 	gint ret;
 
@@ -760,19 +770,48 @@ do_connect_bg (gpointer p)
 
 	sftp_new (tunnel->ssh);
 
-	while (i = accept (sock, NULL, NULL))
+	ts.tv_sec = 0;
+	ts.tv_nsec = 100000000; /* 0.1sec */
+
+	i = fcntl (sock, F_GETFL, 0);
+	fcntl (sock, F_SETFL, i | O_NONBLOCK);
+
+	while (1)
 	{
+		i = accept (sock, NULL, NULL);
+
+		if ((i == -1) && (errno == EAGAIN))
+		{
+			nanosleep (&ts, NULL);
+
+			if (tunnel->private->state != GSQLP_TUNNEL_STATE_CONNECTED)
+				break;
+			else 
+				continue;
+		}
+		 
+
+		if (i == -1)
+		{
+			// error
+
+			break;
+
+		}
+
+		g_debug ("sock %d", i);
+		
 		channel = channel_new (tunnel->ssh);
-g_debug ("a1 [%s:%d]", tunnel->fwdhost, tunnel->fwdport);
-		if (channel_open_forward (channel, tunnel->fwdhost, 22, //tunnel->fwdport,
+
+		if (channel_open_forward (channel, tunnel->fwdhost, tunnel->fwdport,
 		    					"127.0.0.1", 0) != SSH_OK)
 		{
 			g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
 		    		"%s", ssh_get_error (tunnel->ssh));
-			g_debug ("%s", tunnel->err);
+			g_debug ("%s [%s:%d]", tunnel->err, tunnel->fwdhost, tunnel->fwdport);
 			continue;
 		}
-g_debug ("a2");
+
 		if (!tunnel_channel_add (tunnel, channel, i))
 		{	
 			channel_close (channel);
@@ -782,6 +821,7 @@ g_debug ("a2");
 
 		}
 
+		
 		if (thread)
 			continue;
 
@@ -824,8 +864,7 @@ gsqlp_tunnel_do_disconnect (GSQLPTunnel *tunnel)
 
 	tunnel->ssh = NULL;
 	
-	tunnel->private->state = GSQLP_TUNNEL_STATE_NONE;
-	g_signal_emit_by_name (G_OBJECT (tunnel), "state-changed");
+	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_NONE);
 
 }
 

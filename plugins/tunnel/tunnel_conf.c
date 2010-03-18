@@ -62,12 +62,6 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
     					gpointer user_data);
 
 static void
-do_set_name_with_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
-    					GtkTreeModel *model,
-    					GtkTreeIter  *iter,
-    					gpointer user_data);
-
-static void
 tunnels_hash_remove_key_notify (gpointer user_data);
 
 static void 
@@ -79,6 +73,9 @@ do_set_treeview_links (gpointer key, gpointer value,
 
 static void on_entry_cshostname_changed (GtkEditable *editable, 
 											gpointer user_data);
+static gboolean on_entry_cshostname_unfocused (GtkWidget *widget,
+												GdkEventFocus *event,
+												gpointer user_data);
 static void on_entry_csport_changed (GtkSpinButton *spinbutton,
 									 gpointer user_data);
 static void on_entry_csusername_changed (GtkEditable *editable, 
@@ -208,10 +205,17 @@ plugin_tunnel_conf_load ()
 		if (str = gsql_conf_value_get_string (path))
 			g_snprintf (link->fwdhost, 128, "%s", str);
 
-		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "fwdport");	
+		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "fwdport");
+		g_debug ("path = [%s]", path);
 		if (d = gsql_conf_value_get_int (path))
+		{
+			g_debug ("==================== %d", d);
 			link->fwdport = d;
-
+		} else {
+			g_debug ("++++++++++++++++++++ %d", d);
+			link->fwdport = 22;
+			gsql_conf_value_set_int (path, link->fwdport);
+		}
 		// ----
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "autoconnect");
 		b = gsql_conf_value_get_boolean (path);
@@ -287,12 +291,7 @@ plugin_tunnel_conf_dialog ()
 	g_signal_connect (rndt, "toggled",
 					  G_CALLBACK (on_connect_toggled), tv);
 
-	rnd = (GtkCellRendererText *) gtk_builder_get_object (bld, "cellrenderer_name");
-	column = (GtkTreeViewColumn *) gtk_builder_get_object (bld, "tvcolumn_name");
-	gtk_tree_view_column_set_cell_data_func (column, (GtkCellRenderer *) rnd, 
-	    									do_set_name_with_status,
-	    									tv, NULL);
-	
+	rnd = (GtkCellRendererText *) gtk_builder_get_object (bld, "cellrenderer_name");	
 	g_signal_connect (rnd, "edited",
 					  G_CALLBACK (on_connection_name_edited), tv);
 
@@ -307,6 +306,8 @@ plugin_tunnel_conf_dialog ()
 	entry = (GtkEntry *) gtk_builder_get_object (bld, "cshostname");
 	g_signal_connect (entry, "changed",
 	    			  G_CALLBACK (on_entry_cshostname_changed), tv);
+	g_signal_connect (GTK_WIDGET (entry), "focus-out-event", 
+	    			  G_CALLBACK (on_entry_cshostname_unfocused), tv);
 	HOOKUP_OBJECT (G_OBJECT (tv), GTK_WIDGET (entry), "hostname");
 
 	entry = (GtkEntry *) gtk_builder_get_object (bld, "csport");
@@ -618,6 +619,11 @@ on_tv_cursor_changed (GtkTreeView *tv,
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry), tunnel->localport);
 
 	entry = (GtkEntry *) g_object_get_data (G_OBJECT (tv), "remotename");
+	if (!*tunnel->fwdhost)
+	{
+		// if the forwarded hostname is empty set the hostname of the connection 
+		g_snprintf (tunnel->fwdhost, 128, "%s", tunnel->hostname);
+	}
 	gtk_entry_set_text (entry, tunnel->fwdhost);
 
 	entry = (GtkEntry *) g_object_get_data (G_OBJECT (tv), "remoteport");
@@ -716,20 +722,17 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 
 	switch (state)
 	{
-		case GSQLP_TUNNEL_STATE_NONE:
-				stock = "gtk-disconnect";
-				break;
-
 		case GSQLP_TUNNEL_STATE_CONNECTED:
-				stock = "gtk-connect";
+				stock = "gtk-yes";
 				break;
 		
 		case GSQLP_TUNNEL_STATE_ERROR:
-				stock = "gtk-stop";
+				stock = "gtk-no";
 				break;
 
+		case GSQLP_TUNNEL_STATE_NONE:
 		default:
-				stock = NULL;
+				stock = "gtk-disconnect";
 
 	}
 
@@ -738,53 +741,6 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 	g_object_set_property (G_OBJECT (rndr), "stock-id", &val);
 	
 }
-
-static void
-do_set_name_with_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
-    					GtkTreeModel *model,
-    					GtkTreeIter  *iter,
-    					gpointer user_data)
-{
-	//GSQL_TRACE_FUNC;
-
-	GSQLPTunnel *tunnel;
-	GSQLPTunnelState	state;
-	GtkTreeIter *it;
-	gchar buff[512];
-	GValue val = {0, };
-
-	gtk_tree_model_get (model, iter,  
-						2, 
-						&tunnel, -1);
-
-	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
-
-	state = gsqlp_tunnel_get_state (tunnel);
-
-	g_value_init (&val, G_TYPE_STRING);
-
-	memset (buff, 0, 512);
-	
-	switch (state)
-	{
-		case GSQLP_TUNNEL_STATE_CONNECTED:
-				g_snprintf (buff, 512, "%s\n<small>connected</small>", tunnel->name);
-				break;
-		
-		case GSQLP_TUNNEL_STATE_ERROR:
-				g_snprintf (buff, 512, "%s\n<span color='red'><small>%s</small></span>", tunnel->name, tunnel->err);
-				break;
-
-		case GSQLP_TUNNEL_STATE_NONE:
-		default:
-				g_snprintf (buff, 512, "%s\n<small>not connected</small>", tunnel->name);
-
-	}
-	
-	g_value_set_static_string (&val, buff);
-	g_object_set_property (G_OBJECT (rndr), "markup", &val);
-}
-
 
 static void 
 on_entry_cshostname_changed (GtkEditable *editable, 
@@ -798,6 +754,7 @@ on_entry_cshostname_changed (GtkEditable *editable,
 	GtkTreeIter		iter;
 	GSQLPTunnel		*tunnel;
 	GSQLPTunnelState	state;
+	GtkEntry *entry;
 	gboolean	bvalue;
 	gchar *svalue;
 	gchar str[256];
@@ -828,6 +785,58 @@ on_entry_cshostname_changed (GtkEditable *editable,
 
 	gsql_conf_value_set_string (str, tunnel->hostname);
 	
+}
+
+static gboolean 
+on_entry_cshostname_unfocused (GtkWidget *widget,
+												GdkEventFocus *event,
+												gpointer user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	GtkTreeSelection *sel;
+	GtkTreeView	*tv = user_data;
+	GtkTreeModel *model;
+	GtkTreeIter		iter;
+	GSQLPTunnel		*tunnel;
+	GtkEntry		*entry;
+
+	g_return_val_if_fail (GTK_IS_TREE_VIEW (tv), FALSE);
+	model = gtk_tree_view_get_model (tv);
+
+	sel = gtk_tree_view_get_selection (tv);
+
+
+	if (!gtk_tree_selection_get_selected (sel, &model, &iter))
+		return FALSE;
+
+	gtk_tree_model_get (model, &iter,  
+						2, 
+						&tunnel, -1);
+
+	g_return_val_if_fail (GSQLP_IS_TUNNEL (tunnel), FALSE);
+
+	if (!*tunnel->fwdhost)
+	{
+		entry = (GtkEntry *) g_object_get_data (G_OBJECT (tv), "remotename");
+			// if the forwarded hostname is empty set the hostname of the connection 
+		g_snprintf (tunnel->fwdhost, 128, "%s", tunnel->hostname);
+
+		gtk_entry_set_text (entry, tunnel->fwdhost);
+	}
+
+	if (!*tunnel->localname)
+	{
+		entry = (GtkEntry *) g_object_get_data (G_OBJECT (tv), "localname");
+			// if the local hostname is empty set "localhost"
+		g_snprintf (tunnel->localname, 128, "%s", "localhost");
+
+		gtk_entry_set_text (entry, tunnel->localname);
+	}
+	
+
+	return FALSE;
+
 }
 
 static void 
@@ -1129,7 +1138,7 @@ on_entry_fsremoteport_changed (GtkSpinButton *spinbutton,
 
 	g_debug ("set new fwd port: %d", ivalue);
 
-	tunnel->port = ivalue;
+	tunnel->fwdport = ivalue;
 	
 	g_snprintf (str, 256, "%s/tunnel/sessions/%s/fwdport", 
 	    					GSQL_CONF_PLUGINS_ROOT_KEY, tunnel->confname);
