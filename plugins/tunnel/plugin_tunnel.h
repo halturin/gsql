@@ -34,9 +34,9 @@
 
 #define GSQLP_TUNNEL_ERR_LEN	512
 
-//#define SSH_SESSION_SET_ERROR(session, params...) \
-	//	memset (session->err, 0, 512); \
-		//g_snprintf (session->err, 512, params)
+#define GSQLP_TUNNEL_SET_ERROR(tunnel, params...) \
+		memset (tunnel->err, 0, 512); \
+		g_snprintf (tunnel->err, 512, params)
 
 
 typedef struct _GSQLPTunnel GSQLPTunnel;
@@ -50,7 +50,7 @@ typedef enum {
 	GSQLP_TUNNEL_STATE_NONE,
 	GSQLP_TUNNEL_STATE_ERROR,
 	GSQLP_TUNNEL_STATE_CONNECTED,
-	GSQLP_TUNNEL_STATE_CONNECTION
+	GSQLP_TUNNEL_STATE_CONNECTING
 } GSQLPTunnelState;
 
 typedef enum {

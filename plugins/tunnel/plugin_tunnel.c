@@ -527,17 +527,18 @@ do_connect_bg (gpointer p)
 	} else
 		tunnel->ssh = ssh_new ();
 
-	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_CONNECTION);
-	state = GSQLP_TUNNEL_STATE_CONNECTION;
+	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_CONNECTING);
+	state = GSQLP_TUNNEL_STATE_CONNECTING;
 	
 	ssh_options_set (tunnel->ssh, SSH_OPTIONS_HOST, tunnel->hostname);
 	ssh_options_set (tunnel->ssh, SSH_OPTIONS_USER, tunnel->username);
 	ssh_options_set (tunnel->ssh, SSH_OPTIONS_PORT, &tunnel->port);
+	i = 30;
+	ssh_options_set (tunnel->ssh, SSH_OPTIONS_TIMEOUT, &i);
 
 	if (ssh_connect(tunnel->ssh))
 	{
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    "Connection failed: %s", tunnel->name, ssh_get_error (tunnel->ssh));
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", ssh_get_error (tunnel->ssh));
 
 		gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_ERROR);
 		tunnel->autoconnect = FALSE;
@@ -558,19 +559,14 @@ do_connect_bg (gpointer p)
 				break;
 
 			case SSH_SERVER_KNOWN_CHANGED:
-
-				g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"%s: [%s]", N_("Host key for server changed"),
-				    ssh_get_hexa(hash, i));
+				GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", N_("Host key for server changed"));
 
 				state = GSQLP_TUNNEL_STATE_ERROR;
 				
 				break;
 
 			case SSH_SERVER_FOUND_OTHER:
-				g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"%s: [%s]", N_("The host key for this server was not found but an other type of key exists:"),
-				    ssh_get_hexa(hash, i));
+				GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", N_("The host key not found"));
 
 				state = GSQLP_TUNNEL_STATE_ERROR;
 
@@ -578,11 +574,9 @@ do_connect_bg (gpointer p)
 
 			case SSH_SERVER_FILE_NOT_FOUND:
 			case SSH_SERVER_NOT_KNOWN:
-
 				if (ssh_write_knownhost(tunnel->ssh) < 0)
 				{
-					g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    			"Error: %s", strerror(errno));
+					GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", strerror(errno));
 
 					state = GSQLP_TUNNEL_STATE_ERROR;
 				}
@@ -590,8 +584,7 @@ do_connect_bg (gpointer p)
 				break;
 
 			case SSH_SERVER_ERROR:
-				g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"%s", ssh_get_error (tunnel->ssh));
+				GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", ssh_get_error (tunnel->ssh));
 				
 				state = GSQLP_TUNNEL_STATE_ERROR;
 
@@ -600,8 +593,7 @@ do_connect_bg (gpointer p)
 		
 	} else {
 
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"%s", N_("The length of hash is 0"));
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", N_("Incorrect public key hash"));
 		
 		state = GSQLP_TUNNEL_STATE_ERROR;
 	}
@@ -610,8 +602,6 @@ do_connect_bg (gpointer p)
 	{
 		tunnel->autoconnect = FALSE;
 		gsqlp_tunnel_set_state (tunnel, state);
-		
-		g_debug ("WARNING: %s [state: %d]", tunnel->err, tunnel->private->state);
 		
 		if (hash)
 			free (hash);
@@ -627,34 +617,26 @@ do_connect_bg (gpointer p)
 	switch (tunnel->auth_type) {
 
 		case GSQLP_TUNNEL_AUTH_PUB:
-
-			g_debug ("Auth type = PUB");
 			ret = ssh_userauth_autopubkey(tunnel->ssh, NULL);
 			break;
 
 		case GSQLP_TUNNEL_AUTH_PASS:
 		default:
-			g_debug ("Auth type = PASS");
 			ret = ssh_userauth_password (tunnel->ssh, tunnel->username, tunnel->password);
 			break;
 	}
 	
 	if (ret != SSH_AUTH_SUCCESS)
 	{
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"Error: %s", ssh_get_error (tunnel->ssh));
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", ssh_get_error (tunnel->ssh));
 
 		gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_ERROR);
 		tunnel->autoconnect = FALSE;
 
-		g_debug ("WARNING2: %s", tunnel->err);
-
 		ssh_disconnect (tunnel->ssh);
 
 		return NULL;
-	} else 
-		g_debug ("WARNING3: SSH connected");
-	
+	} 
 
 	if ((strcmp (tunnel->localname, "0.0.0.0") == 0) ||
 		(strcmp (tunnel->localname, "*") == 0) ||
@@ -674,9 +656,7 @@ do_connect_bg (gpointer p)
 	if (ret = getaddrinfo (tunnel->localname, strport, 
 	                      &hints, &ai) != 0)
 	{
-		g_debug ("WARNING4: getaddinfo");
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"Error [%s]: %s", tunnel->name, gai_strerror (ret));
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", gai_strerror (ret));
 		
 		freeaddrinfo (ai);
 
@@ -692,9 +672,7 @@ do_connect_bg (gpointer p)
 		(getnameinfo(ai->ai_addr, ai->ai_addrlen, ntop, sizeof(ntop),
 		            strport, sizeof(strport), NI_NUMERICHOST|NI_NUMERICSERV) != 0))
 	{
-		g_debug ("WARNING4: getnameinfo");
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"Error [%s]: getnameinfo", tunnel->name);
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", strerror(errno));
 
 		freeaddrinfo (ai);
 		
@@ -709,9 +687,7 @@ do_connect_bg (gpointer p)
 
 	if (sock < 0)
 	{
-		g_debug ("WARNING4: socket");
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"Error [%s]: %s", tunnel->name, strerror(errno));
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", strerror(errno));
 
 		freeaddrinfo (ai);
 		
@@ -730,8 +706,8 @@ do_connect_bg (gpointer p)
 	if ((bind(sock, ai->ai_addr, ai->ai_addrlen) < 0)
 		|| (listen(sock, 128) < 0))
 	{
-		g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"Error [%s]: %s", tunnel->name, strerror(errno));
+		GSQLP_TUNNEL_SET_ERROR (tunnel, "%s", strerror(errno));
+		
 		close (sock);
 		freeaddrinfo (ai);
 		

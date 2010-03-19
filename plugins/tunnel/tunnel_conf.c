@@ -579,6 +579,7 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 	GtkTreeModel *model;
 	GtkTreePath *path;
 	GSQLPTunnel *tunnel;
+	GSQLPTunnelState state;
 	gboolean bvalue;
 	gpointer p = NULL;
 	guint n;
@@ -599,6 +600,8 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 
 	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
 
+	state = gsqlp_tunnel_get_state (tunnel);
+	
 	g_snprintf (str, 128, "%s/tunnel/sessions/%s/autoconnect", 
 	    					GSQL_CONF_PLUGINS_ROOT_KEY, tunnel->confname);
 
@@ -608,9 +611,11 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 
 	} else {
 
-		if (g_list_length (tunnel->channel_list) > 0)
+		if ((g_list_length (tunnel->channel_list) > 0) || 
+			(state == GSQLP_TUNNEL_STATE_CONNECTING))
 		{
-			// do not allow dissconnect with active sessions;
+			// do not allow dissconnect with active sessions
+			// or connection in progress
 
 			g_debug ("U can't do that. still have active sessions via this tunnel");
 		
@@ -741,6 +746,7 @@ do_set_treeview_links (gpointer key, gpointer value,
 	GtkTreeIter		iter;
 	GSQLPTunnel		*link = value;
 	GSQLPTunnelState	state;
+	gboolean b = FALSE;
 
 	g_return_if_fail (GTK_IS_TREE_VIEW (user_data));
 
@@ -751,9 +757,10 @@ do_set_treeview_links (gpointer key, gpointer value,
 	// 'connect' status
 
 	state = gsqlp_tunnel_get_state (link);
-
+	
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
-						0, (state == GSQLP_TUNNEL_STATE_CONNECTED ? TRUE : FALSE),
+						0, (((state == GSQLP_TUNNEL_STATE_CONNECTED) || 
+						     (state == GSQLP_TUNNEL_STATE_CONNECTING)) ? TRUE : FALSE),
 						-1);
 	// connection name
 	gtk_list_store_set(GTK_LIST_STORE (model), &iter,
@@ -805,7 +812,7 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 	}
 
 	g_object_set (G_OBJECT (rndr), "stock-id", stock, NULL);
-	
+
 }
 
 static void
@@ -842,6 +849,13 @@ do_set_name_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 			    d);
 
 			break;
+
+		case GSQLP_TUNNEL_STATE_CONNECTING:
+			g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, 
+			    "%s\n<small><i>Connecting...</i></small>", 
+			    tunnel->name,
+			    tunnel->err);
+			break;
 		
 		case GSQLP_TUNNEL_STATE_ERROR:
 			g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, 
@@ -871,8 +885,8 @@ do_set_connect_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 	//GSQL_TRACE_FUNC;
 
 	GSQLPTunnel *tunnel;
-	GSQLPTunnelState	state;
 	GtkTreeIter *it;
+	GSQLPTunnelState	state;
 	gchar str[GSQLP_TUNNEL_ERR_LEN];
 	
 	gtk_tree_model_get (model, iter,  
@@ -883,9 +897,11 @@ do_set_connect_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 
 	state = gsqlp_tunnel_get_state (tunnel);
 
-	if (g_list_length (tunnel->channel_list)>0)
+	if ( (g_list_length (tunnel->channel_list) > 0) || 
+	     (state == GSQLP_TUNNEL_STATE_CONNECTING) )
 	{
 		// do not allow disconnect with active session
+		// or connection in progress
 		gtk_cell_renderer_set_sensitive (rndr, FALSE);
 		
 	} else {
