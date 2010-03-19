@@ -28,6 +28,7 @@
 #include <libgsql/session.h>
 
 #include <libssh/libssh.h>
+#include <libssh/sftp.h>
 
 #define GSQLP_TUNNEL_STOCK_ICON "gsql-plugin-tunnel-icon"
 
@@ -83,6 +84,7 @@ struct _GSQLPTunnel {
 	GSQLPTunnelAuthType auth_type;
 	
 	ssh_session ssh;
+	sftp_session sftp;
 	pthread_mutex_t mutex;
 
 	/* listen on */

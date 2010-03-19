@@ -54,9 +54,24 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 							  gchar		*c_path,
 							  gchar		*new_text,
 							  gpointer  user_data);
+static void
+on_connection_name_editing_started (GtkCellRendererText *renderer,
+    							GtkCellEditable *editable,
+    							gchar *path,
+							  gpointer  user_data);
 
 static void
 do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
+    					GtkTreeModel *model,
+    					GtkTreeIter  *iter,
+    					gpointer user_data);
+static void
+do_set_name_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
+    					GtkTreeModel *model,
+    					GtkTreeIter  *iter,
+    					gpointer user_data);
+static void
+do_set_connect_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
     					GtkTreeModel *model,
     					GtkTreeIter  *iter,
     					gpointer user_data);
@@ -285,16 +300,30 @@ plugin_tunnel_conf_dialog ()
 	g_signal_connect ((gpointer) button, "clicked",
 						G_CALLBACK (on_conf_button_remove_activate),
 						tv);
-
+	// connect column
 	rndt = (GtkCellRendererToggle *) gtk_builder_get_object (bld, "cellrenderer_connect");
-	
+
 	g_signal_connect (rndt, "toggled",
 					  G_CALLBACK (on_connect_toggled), tv);
+	column = (GtkTreeViewColumn *) gtk_builder_get_object (bld, "tvcolumn_connect");
+	gtk_tree_view_column_set_cell_data_func (column, (GtkCellRenderer *) rndt, 
+	    									do_set_connect_status,
+	    									tv, NULL);
 
+	// name column
 	rnd = (GtkCellRendererText *) gtk_builder_get_object (bld, "cellrenderer_name");	
+
 	g_signal_connect (rnd, "edited",
 					  G_CALLBACK (on_connection_name_edited), tv);
+	g_signal_connect (rnd, "editing-started",
+					  G_CALLBACK (on_connection_name_editing_started), tv);
 
+	column = (GtkTreeViewColumn *) gtk_builder_get_object (bld, "tvcolumn_name");
+	gtk_tree_view_column_set_cell_data_func (column, (GtkCellRenderer *) rnd, 
+	    									do_set_name_status,
+	    									tv, NULL);
+
+	// status column
 	column = (GtkTreeViewColumn *) gtk_builder_get_object (bld, "tvcolumn_status");
 	pxbuf = (GtkCellRendererPixbuf *) gtk_builder_get_object (bld, "cellrenderer_status");
 	
@@ -505,6 +534,41 @@ on_connection_name_edited (GtkCellRendererText *renderer,
 }
 
 static void
+on_connection_name_editing_started (GtkCellRendererText *renderer,
+    							GtkCellEditable *editable,
+    							gchar *c_path,
+							  gpointer  user_data)
+{
+	GSQL_TRACE_FUNC;
+
+	GtkTreePath *path = NULL;
+	GtkTreeModel *model;
+	GtkTreeView *tv = user_data;
+	GSQLPTunnel *tunnel;
+
+	gchar str[128];
+	
+	GtkTreeIter iter;
+
+	path = gtk_tree_path_new_from_string (c_path);
+	model = gtk_tree_view_get_model (tv);
+	gtk_tree_model_get_iter (model, &iter, path);
+
+	gtk_tree_path_free (path);
+
+	gtk_tree_model_get (model, &iter, 2, &tunnel, -1);
+
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+
+	if (GTK_IS_ENTRY (editable)) {
+		GtkEntry *entry = GTK_ENTRY (editable);
+
+		gtk_entry_set_text(entry, tunnel->name);
+	}
+
+}
+
+static void
 on_connect_toggled (GtkCellRendererToggle *cell,
 								   gchar *path_str,
 								   GtkTreeView *tv)
@@ -545,8 +609,13 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 	} else {
 
 		if (g_list_length (tunnel->channel_list) > 0)
-				// do not allow dissconnect with active sessions;
-				return;
+		{
+			// do not allow dissconnect with active sessions;
+
+			g_debug ("U can't do that. still have active sessions via this tunnel");
+		
+			return;
+		}
 		else
 				gsqlp_tunnel_do_disconnect (tunnel);
 	}
@@ -710,7 +779,6 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 	GSQLPTunnelState	state;
 	GtkTreeIter *it;
 	gchar *stock;
-	GValue val = {0, };
 
 	gtk_tree_model_get (model, iter,  
 						2, 
@@ -736,11 +804,97 @@ do_set_image_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 
 	}
 
-	g_value_init (&val, G_TYPE_STRING);
-	g_value_set_static_string (&val, stock);
-	g_object_set_property (G_OBJECT (rndr), "stock-id", &val);
+	g_object_set (G_OBJECT (rndr), "stock-id", stock, NULL);
 	
 }
+
+static void
+do_set_name_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
+    					GtkTreeModel *model,
+    					GtkTreeIter  *iter,
+    					gpointer user_data)
+{
+	//GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel;
+	GSQLPTunnelState	state;
+	GtkTreeIter *it;
+	gchar str[GSQLP_TUNNEL_ERR_LEN];
+	guint d = 0;
+	GList *lst;
+	
+	gtk_tree_model_get (model, iter,  
+						2, 
+						&tunnel, -1);
+
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+
+	state = gsqlp_tunnel_get_state (tunnel);
+
+	switch (state)
+	{
+		case GSQLP_TUNNEL_STATE_CONNECTED:
+			lst = g_list_first (tunnel->channel_list);
+			d = g_list_length (lst);
+			g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, 
+			    "%s\n<small><span color='darkgreen'>Connected.</span> Sessions: %d</small>",
+			    tunnel->name,
+			    d);
+
+			break;
+		
+		case GSQLP_TUNNEL_STATE_ERROR:
+			g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, 
+			    "%s\n<small><span color='red'>Error: %s</span></small>", 
+			    tunnel->name,
+			    tunnel->err);
+
+			break;
+
+		case GSQLP_TUNNEL_STATE_NONE:
+		default:
+			g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, "%s\n<small>Not connected</small>",
+				    tunnel->name);
+
+	}
+
+	g_object_set (G_OBJECT (rndr), "markup", str, NULL);
+
+}
+
+static void
+do_set_connect_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
+    					GtkTreeModel *model,
+    					GtkTreeIter  *iter,
+    					gpointer user_data)
+{
+	//GSQL_TRACE_FUNC;
+
+	GSQLPTunnel *tunnel;
+	GSQLPTunnelState	state;
+	GtkTreeIter *it;
+	gchar str[GSQLP_TUNNEL_ERR_LEN];
+	
+	gtk_tree_model_get (model, iter,  
+						2, 
+						&tunnel, -1);
+
+	g_return_if_fail (GSQLP_IS_TUNNEL (tunnel));
+
+	state = gsqlp_tunnel_get_state (tunnel);
+
+	if (g_list_length (tunnel->channel_list)>0)
+	{
+		// do not allow disconnect with active session
+		gtk_cell_renderer_set_sensitive (rndr, FALSE);
+		
+	} else {
+		// have active sessions
+		gtk_cell_renderer_set_sensitive (rndr, TRUE);
+	}
+
+}
+
 
 static void 
 on_entry_cshostname_changed (GtkEditable *editable, 
