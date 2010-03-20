@@ -614,10 +614,8 @@ on_connect_toggled (GtkCellRendererToggle *cell,
 		if ((g_list_length (tunnel->channel_list) > 0) || 
 			(state == GSQLP_TUNNEL_STATE_CONNECTING))
 		{
-			// do not allow dissconnect with active sessions
-			// or connection in progress
-
-			g_debug ("U can't do that. still have active sessions via this tunnel");
+			// do not allow disconnect having the active sessions
+			// or the connection in progress
 		
 			return;
 		}
@@ -900,12 +898,12 @@ do_set_connect_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 	if ( (g_list_length (tunnel->channel_list) > 0) || 
 	     (state == GSQLP_TUNNEL_STATE_CONNECTING) )
 	{
-		// do not allow disconnect with active session
-		// or connection in progress
+		// do not allow disconnect having the active sessions
+		// or the connection in progress
 		gtk_cell_renderer_set_sensitive (rndr, FALSE);
 		
 	} else {
-		// have active sessions
+		// the connection has active sessions
 		gtk_cell_renderer_set_sensitive (rndr, TRUE);
 	}
 

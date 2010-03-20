@@ -102,8 +102,6 @@ struct _GSQLPTunnel {
 
 	gboolean	autoconnect;
 	
-	gboolean	has_changed;
-	
 	gchar		err[GSQLP_TUNNEL_ERR_LEN];
 
 	GSQLPTunnelPrivate	*private;
