@@ -178,6 +178,7 @@ AC_DEFUN([CHECK_ORACLE],
       $ORACLE_HOME/rdbms/demo
       $ORACLE_HOME/plsql/public
       $ORACLE_HOME/rdbms/public
+      $ORACLE_HOME/rdbms/include
       $ORACLE_HOME/network/public
       $ORACLE_HOME/sdk/
       $ORACLE_HOME/sdk/include/

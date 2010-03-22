@@ -158,6 +158,11 @@ gsqlp_tunnel_set_state (GSQLPTunnel *tunnel, GSQLPTunnelState state)
 	GSQL_TRACE_FUNC;
 
 	GSQLP_TUNNEL_LOCK(tunnel);
+	
+	if (state == GSQLP_TUNNEL_STATE_CONNECTED)
+	// clear error message
+	    memset (tunnel->err, 0, GSQLP_TUNNEL_ERR_LEN);
+	
 	tunnel->private->state = state;
 	GSQLP_TUNNEL_UNLOCK(tunnel)
 	
@@ -791,13 +796,15 @@ do_connect_bg (gpointer p)
 		    					"127.0.0.1", 0) != SSH_OK)
 		{
 			g_snprintf (tunnel->err, GSQLP_TUNNEL_ERR_LEN,
-		    		"%s", ssh_get_error (tunnel->ssh));
+		    		N_("Forwarding failed. Seems like administratively prohibited."));
 			g_debug ("%s [%s:%d]", tunnel->err, tunnel->fwdhost, tunnel->fwdport);
+			
+			close (i);
 			continue;
 		}
 		
 		if (!tunnel_channel_add (tunnel, channel, i))
-		{	
+		{
 			channel_close (channel);
 			close (i);
 
@@ -820,6 +827,7 @@ do_connect_bg (gpointer p)
 	ssh_free (tunnel->ssh);
 	tunnel->ssh = NULL;
 	
+	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_NONE);
 	g_debug ("exit from accepting");
 	
 	return NULL;

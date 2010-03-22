@@ -841,6 +841,16 @@ do_set_name_status (GtkTreeViewColumn *column, GtkCellRenderer *rndr,
 		case GSQLP_TUNNEL_STATE_CONNECTED:
 			lst = g_list_first (tunnel->channel_list);
 			d = g_list_length (lst);
+			
+			if (*tunnel->err)
+			{
+			    g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, 
+			    "%s\n<small><i><span color='darkorange'>%s</span></i></small>",
+			    tunnel->name,
+			    tunnel->err);
+			    
+			    break;
+			}
 			g_snprintf (str, GSQLP_TUNNEL_ERR_LEN, 
 			    "%s\n<small><span color='darkgreen'>Connected.</span> Sessions: %d</small>",
 			    tunnel->name,
