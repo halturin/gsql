@@ -259,12 +259,14 @@ tunnel_channel_remove (GSQLPTunnel *tunnel, GList *rch)
 
 	GSQLP_TUNNEL_LOCK(tunnel);
 
+	channel_send_eof(pch->channel);
+
 	channel_close (pch->channel);
 	close (pch->sock);
-
-	tunnel->channel_list = g_list_remove (tunnel->channel_list, rch);
+	
+	tunnel->channel_list = g_list_remove (tunnel->channel_list, pch);
 	tunnel->channel_list = g_list_last (tunnel->channel_list);
-
+	
 	g_free (pch);
 
 	GSQLP_TUNNEL_UNLOCK(tunnel);
@@ -301,10 +303,7 @@ tunnel_channel_add (GSQLPTunnel *tunnel, ssh_channel channel, gint sock)
 	tunnel->channel_list = g_list_append (tunnel->channel_list, pch);
 	tunnel->channel_list = g_list_last (tunnel->channel_list);
 
-
 	GSQLP_TUNNEL_UNLOCK(tunnel);
-
-	g_debug("addddeeeed");
 
 	return TRUE;
 }
@@ -343,8 +342,12 @@ tunnel_processing_thread (gpointer p)
 		}
 
 		if (!lst)
-			nanosleep (&ts, NULL);		
+		{
+			g_debug ("sleeping");
+			nanosleep (&ts, NULL);	
 
+			continue;
+		}
 		FD_ZERO (&fds);
 		fdmax = 0;
 		
@@ -385,13 +388,13 @@ tunnel_processing_thread (gpointer p)
 			{
 				memset (buff, 0, CHANNEL_BUFF);
 				i = channel_read_nonblocking (pch->channel, buff, CHANNEL_BUFF, FALSE);
-				
-				if (i == SSH_EOF || i == SSH_ERROR)
+
+				if ( ((i == 0) && (channel_is_eof (pch->channel))) || (i == SSH_ERROR))
 				{
 					g_debug ("channel_read_nonblocking return SSH_EOF or SSH_ERROR. remove it.");
 
 					FD_CLR (pch->sock, &fds);
-
+					
 					broken = TRUE;
 					
 					break;
@@ -467,19 +470,19 @@ tunnel_processing_thread (gpointer p)
 
 				while (1)
 				{
-					
 					lenr = read (pch->sock, buff, CHANNEL_BUFF);
 					
-					if ((lenr < 1) && (errno == EAGAIN))
+					if ((lenr == -1) && (errno == EAGAIN))
 						break;
 					
-					if (lenr < 1)
+					if (lenr == -1)
 					{
 						g_debug ("error. removing....");
 						broken = TRUE;
 
 						break;
 					}
+
 					
 					lenw = channel_write (pch->channel, buff, lenr);
 					//g_debug ("lenr = %d", lenr);
@@ -506,10 +509,10 @@ tunnel_processing_thread (gpointer p)
 				lst = g_list_previous (lst);
 				
 				tunnel_channel_remove (tunnel, rem);
+				
 			}
 
-		} while (lst);
-		
+		} while (lst);		
 	}
 
 	g_debug ("++++++ out from tunnel_processing_thread");

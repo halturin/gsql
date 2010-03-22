@@ -122,36 +122,28 @@ plugin_tunnel_conf_load ()
 	guint	d;
 	gboolean b;
 	GSQLPTunnel	*link;
-	
-	static gboolean is_loaded = FALSE;
-
-	if (is_loaded)
-	{
-		g_debug ("Plugin Tunnel: the config is already loaded");
-		return;
-	}
-
-	flst = lst = gsql_conf_dir_list (GSQL_CONF_PLUGINS_ROOT_KEY "/tunnel/sessions");
-
-	if (!lst)
-		return;
 
 	if (!tunnels)
 		tunnels = g_hash_table_new_full (g_str_hash,
 		    								g_str_equal,
 		    								tunnels_hash_remove_key_notify,
 		    								tunnels_hash_remove_value_notify);
+	else
+		// is already loaded
+		return;
+	
+	flst = lst = gsql_conf_dir_list (GSQL_CONF_PLUGINS_ROOT_KEY "/tunnel/sessions");
+
+	if (!lst)
+		// nothing to be read
+		return;
 
 	while (lst)
 	{
-		is_loaded = TRUE;
-
 		link = gsqlp_tunnel_new ();
 		
 		str = g_path_get_basename (lst->data);
 		g_snprintf (link->confname, 32, "%s", str);
-
-		g_debug ("PARSE listing: [%s]", (gchar *) lst->data);
 		
 		g_hash_table_insert (tunnels, str, link);
 
@@ -221,13 +213,13 @@ plugin_tunnel_conf_load ()
 			g_snprintf (link->fwdhost, 128, "%s", str);
 
 		g_snprintf (path, 512, "%s/%s", (gchar *) lst->data, "fwdport");
-		g_debug ("path = [%s]", path);
+
 		if (d = gsql_conf_value_get_int (path))
 		{
-			g_debug ("==================== %d", d);
 			link->fwdport = d;
+
 		} else {
-			g_debug ("++++++++++++++++++++ %d", d);
+
 			link->fwdport = 22;
 			gsql_conf_value_set_int (path, link->fwdport);
 		}
@@ -236,14 +228,8 @@ plugin_tunnel_conf_load ()
 		b = gsql_conf_value_get_boolean (path);
 		link->autoconnect = b;
 
-		if (b) // autoconnect
-		{
-			g_debug ("Do autoconnect... %s", link->name);
-
-			// call threaded func
-
+		if (b) // autoconnect threaded
 			gsqlp_tunnel_do_connect (link);
-		}
 		
 		g_free(lst->data);
 		lst = lst->next;
