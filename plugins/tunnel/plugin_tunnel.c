@@ -440,7 +440,7 @@ tunnel_processing_thread (gpointer p)
 		lenr = select (fdmax, &fds, NULL, NULL, &tv);
 
 		if (lenr == -1)
-		// seems to be closed. do break this loop.
+		// seems to be closed. break this loop.
 			break;
 
 		if (lenr == 0)
