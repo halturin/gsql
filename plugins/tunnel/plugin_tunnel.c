@@ -259,8 +259,6 @@ tunnel_channel_remove (GSQLPTunnel *tunnel, GList *rch)
 
 	GSQLP_TUNNEL_LOCK(tunnel);
 
-	channel_send_eof(pch->channel);
-
 	channel_close (pch->channel);
 	close (pch->sock);
 	
@@ -348,6 +346,7 @@ tunnel_processing_thread (gpointer p)
 
 			continue;
 		}
+		
 		FD_ZERO (&fds);
 		fdmax = 0;
 		
@@ -360,7 +359,6 @@ tunnel_processing_thread (gpointer p)
 			lenr = 0;
 			lenr = channel_poll (pch->channel, FALSE);
 
-			
 			if ((lenr == SSH_EOF) || (lenr == SSH_ERROR))
 			{
 				g_debug ("channel_pool return SSH_EOF or SSH_ERROR. remove it.");
@@ -376,20 +374,13 @@ tunnel_processing_thread (gpointer p)
 
 			FD_SET (pch->sock, &fds);
 			fdmax = (fdmax > pch->sock) ? fdmax : pch->sock;
-			
-			if (lenr == 0)
-			{
-				lst = g_list_previous (lst);
-
-				continue;
-			}
 
 			while (lenr > 0)
 			{
 				memset (buff, 0, CHANNEL_BUFF);
 				i = channel_read_nonblocking (pch->channel, buff, CHANNEL_BUFF, FALSE);
 
-				if ( ((i == 0) && (channel_is_eof (pch->channel))) || (i == SSH_ERROR))
+				if (i < 1)
 				{
 					g_debug ("channel_read_nonblocking return SSH_EOF or SSH_ERROR. remove it.");
 
@@ -403,10 +394,7 @@ tunnel_processing_thread (gpointer p)
 				lenw = write (pch->sock, buff, i);
 			
 				if ((lenw == -1) && (errno == EAGAIN))
-				{
-					//g_debug ("error write. EAGAIN");
-					continue;
-				}
+					break;
 
 				if (lenw == -1)
 				{
@@ -448,17 +436,15 @@ tunnel_processing_thread (gpointer p)
 		lenr = select (fdmax, &fds, NULL, NULL, &tv);
 
 		if (lenr == -1)
-		// seems to be closed. break this loop.
+		{
+			g_debug (" seems to be closed. break this loop.");
 			break;
-
-		if (lenr == 0)
-		// nothing to be read
-			continue;
+		}
 
 		GSQLP_TUNNEL_LOCK(tunnel);
 		lst = tunnel->channel_list;
 		GSQLP_TUNNEL_UNLOCK(tunnel);
-		
+
 		do
 		{
 			broken = FALSE;
@@ -468,22 +454,8 @@ tunnel_processing_thread (gpointer p)
 			{
 				memset (buff, 0, CHANNEL_BUFF);
 
-				while (1)
-				{
-					lenr = read (pch->sock, buff, CHANNEL_BUFF);
-					
-					if ((lenr == -1) && (errno == EAGAIN))
-						break;
-					
-					if (lenr == -1)
-					{
-						g_debug ("error. removing....");
-						broken = TRUE;
-
-						break;
-					}
-
-					
+				while ((lenr = read (pch->sock, buff, CHANNEL_BUFF)) > 0)
+				{					
 					lenw = channel_write (pch->channel, buff, lenr);
 					//g_debug ("lenr = %d", lenr);
 
@@ -497,6 +469,9 @@ tunnel_processing_thread (gpointer p)
 
 					pch->tx += lenw;
 				}
+
+				if (lenr == 0)
+					broken = TRUE;
 			}
 
 			if (!broken)
