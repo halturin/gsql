@@ -263,7 +263,6 @@ tunnel_channel_remove (GSQLPTunnel *tunnel, GList *rch)
 	close (pch->sock);
 	
 	tunnel->channel_list = g_list_remove (tunnel->channel_list, pch);
-	tunnel->channel_list = g_list_last (tunnel->channel_list);
 	
 	g_free (pch);
 
@@ -299,7 +298,6 @@ tunnel_channel_add (GSQLPTunnel *tunnel, ssh_channel channel, gint sock)
 	fcntl (sock, F_SETFL, flags | O_NONBLOCK);
 	
 	tunnel->channel_list = g_list_append (tunnel->channel_list, pch);
-	tunnel->channel_list = g_list_last (tunnel->channel_list);
 
 	GSQLP_TUNNEL_UNLOCK(tunnel);
 
@@ -341,9 +339,7 @@ tunnel_processing_thread (gpointer p)
 
 		if (!lst)
 		{
-			g_debug ("sleeping");
 			nanosleep (&ts, NULL);	
-
 			continue;
 		}
 		
@@ -351,7 +347,7 @@ tunnel_processing_thread (gpointer p)
 		fdmax = 0;
 		
 		/* reading from the channels and writing to the sockets */
-		do
+		while (lst)
 		{
 			broken = FALSE;
 			pch = (GSQLPChannel *) lst->data;
@@ -364,7 +360,7 @@ tunnel_processing_thread (gpointer p)
 				g_debug ("channel_pool return SSH_EOF or SSH_ERROR. remove it.");
 
 				rem = lst;
-				lst = g_list_previous (lst);
+				lst = g_list_next (lst);
 				
 				tunnel_channel_remove (tunnel, rem);
 
@@ -415,17 +411,17 @@ tunnel_processing_thread (gpointer p)
 
 			if (!broken)
 			{
-				lst = g_list_previous (lst);
+				lst = g_list_next (lst);
 
 			} else {
 
 				rem = lst;
-				lst = g_list_previous (lst);
+				lst = g_list_next (lst);
 				
 				tunnel_channel_remove (tunnel, rem);
 			}
 			
-		} while (lst);
+		}
 
 		/* reading from the sockets and writing to the channels */
 
@@ -436,16 +432,13 @@ tunnel_processing_thread (gpointer p)
 		lenr = select (fdmax, &fds, NULL, NULL, &tv);
 
 		if (lenr == -1)
-		{
-			g_debug (" seems to be closed. break this loop.");
 			break;
-		}
 
 		GSQLP_TUNNEL_LOCK(tunnel);
 		lst = tunnel->channel_list;
 		GSQLP_TUNNEL_UNLOCK(tunnel);
 
-		do
+		while (lst)
 		{
 			broken = FALSE;
 			pch = lst->data;
@@ -476,21 +469,19 @@ tunnel_processing_thread (gpointer p)
 
 			if (!broken)
 			{
-				lst = g_list_previous (lst);
+				lst = g_list_next (lst);
 
 			} else {
 
 				rem = lst;
-				lst = g_list_previous (lst);
+				lst = g_list_next (lst);
 				
 				tunnel_channel_remove (tunnel, rem);
 				
 			}
 
-		} while (lst);		
-	}
-
-	g_debug ("++++++ out from tunnel_processing_thread");
+		} //while (lst)		
+	} // while (1)
 
 	lst = tunnel->channel_list;
 
@@ -498,15 +489,13 @@ tunnel_processing_thread (gpointer p)
 	{
 		rem = lst;
 
-		lst = g_list_previous (lst);
+		lst = g_list_next (lst);
 				
 		tunnel_channel_remove (tunnel, rem);
 	}
 
 	tunnel->channel_list = NULL;
 
-	g_debug ("------ out from tunnel_processing_thread");
-	
 }
 
 static gpointer
@@ -741,8 +730,6 @@ do_connect_bg (gpointer p)
 	tunnel->sock = sock;
 	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_CONNECTED);
 	
-	g_debug ("CONNECTED!!! and waiting for the connection");
-
 	tunnel->sftp = sftp_new (tunnel->ssh);
 	sftp_init (tunnel->sftp);
 
@@ -806,7 +793,6 @@ do_connect_bg (gpointer p)
 	tunnel->ssh = NULL;
 	
 	gsqlp_tunnel_set_state (tunnel, GSQLP_TUNNEL_STATE_NONE);
-	g_debug ("exit from accepting");
 	
 	return NULL;
 }
