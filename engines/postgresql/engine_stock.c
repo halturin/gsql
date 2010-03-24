@@ -30,6 +30,8 @@
 static GSQLStockIcon stock_icons[] = {
 	{ GSQLE_PGSQL_STOCK_PGSQL,		 "pgsql.png" },
 	{ GSQLE_PGSQL_STOCK_PROCESS_LIST,	 "process.list.png" },
+	{ GSQLE_PGSQL_STOCK_TYPES,	 	 "types.png" },
+	{ GSQLE_PGSQL_STOCK_LANGUAGES,		 "languages.png" },
 };
 
 void

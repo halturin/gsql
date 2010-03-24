@@ -29,6 +29,8 @@
 #define GSQLE_PGSQL_STOCK_PROCESS_LIST		"gsqle-pgsql-process-list"
 #define GSQLE_PGSQL_STOCK_SESSION_VARIABLES "gsqle-pgsql-session-variables"
 #define GSQLE_PGSQL_STOCK_GLOBAL_VARIABLES  "gsqle-pgsql-global-variables"
+#define GSQLE_PGSQL_STOCK_TYPES  	"gsqle-pgsql-types"
+#define GSQLE_PGSQL_STOCK_LANGUAGES  	"gsqle-pgsql-languages"
 
 G_BEGIN_DECLS
 

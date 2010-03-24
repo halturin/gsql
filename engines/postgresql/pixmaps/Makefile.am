@@ -8,7 +8,9 @@ pgsql_engine_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@/postgresql
 
 pgsql_engine_pixmaps_DATA = \
 	pgsql.png \
-	process.list.png
+	process.list.png \
+	types.png \
+	languages.png
 
 
 EXTRA_DIST = $(pgsql_engine_pixmaps_DATA)

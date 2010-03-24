@@ -72,7 +72,7 @@ static GSQLNavigationItem users_objects[] = {
 		NULL,					// event_handler
 		NULL, 0 },				// child, childs
 	{	TYPES_ID,
-		GSQL_STOCK_VIEWS,
+		GSQLE_PGSQL_STOCK_TYPES,
 		N_("Types"),
 		sql_pgsql_types,
 		NULL,					// object_popup

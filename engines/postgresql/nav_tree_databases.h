@@ -29,6 +29,7 @@
 #include "nav_tree_schemas.h"
 #include "nav_tree_languages.h"
 #include "nav_tree_types.h"
+#include "engine_stock.h"
 
 G_BEGIN_DECLS
 
@@ -44,7 +45,7 @@ static GSQLNavigationItem databases[] = {
 		NULL,				// event_handler
 		NULL, 0 },			// child, childs
 	{	LANGUAGES_ID,
-		GSQL_STOCK_TABLES,
+		GSQLE_PGSQL_STOCK_LANGUAGES,
 		N_("Languages"), 
 		sql_pgsql_languages, 
 		NULL,				// object_popup
