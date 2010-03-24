@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-17 23:19-0300\n"
+"POT-Creation-Date: 2010-03-25 01:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,1106 +16,1069 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../engines/mysql/engine_conf.c:60 ../engines/postgresql/engine_conf.c:60
+#: engines/mysql/engine_conf.c:60 engines/postgresql/engine_conf.c:60
 msgid "<b>Character set</b>"
 msgstr ""
 
-#: ../engines/mysql/engine_conf.c:74 ../engines/postgresql/engine_conf.c:74
+#: engines/mysql/engine_conf.c:74 engines/postgresql/engine_conf.c:74
 msgid "Use custom character set"
 msgstr ""
 
-#: ../engines/mysql/engine_menu.c:34
+#: engines/mysql/engine_menu.c:34
 msgid "MySQL"
 msgstr ""
 
-#: ../engines/mysql/engine_menu.c:36 ../engines/postgresql/engine_menu.c:36
+#: engines/mysql/engine_menu.c:36 engines/postgresql/engine_menu.c:36
 msgid "Character Set"
 msgstr ""
 
-#: ../engines/mysql/engine_menucb.c:58
-#: ../engines/postgresql/engine_menucb.c:58
+#: engines/mysql/engine_menucb.c:58 engines/postgresql/engine_menucb.c:58
 #, c-format
 msgid "Character set was changed to '%s'"
 msgstr ""
 
-#: ../engines/mysql/engine_mysql.c:139 ../engines/postgresql/engine.c:144
+#: engines/mysql/engine_mysql.c:139 engines/postgresql/engine.c:144
 msgid "Hostname"
 msgstr ""
 
-#: ../engines/mysql/engine_mysql.c:155 ../engines/postgresql/engine.c:159
+#: engines/mysql/engine_mysql.c:155 engines/postgresql/engine.c:159
 msgid "Port number"
 msgstr ""
 
-#: ../engines/mysql/engine_mysql.c:171 ../engines/oracle/engine_oracle.c:200
+#: engines/mysql/engine_mysql.c:171 engines/oracle/engine_oracle.c:200
 msgid "Database name"
 msgstr ""
 
-#: ../engines/mysql/engine_mysql.c:189 ../engines/oracle/engine_oracle.c:218
-#: ../engines/postgresql/engine.c:193
+#: engines/mysql/engine_mysql.c:189 engines/oracle/engine_oracle.c:218
+#: engines/postgresql/engine.c:193
 msgid "Username"
 msgstr ""
 
-#: ../engines/mysql/engine_mysql.c:207 ../engines/oracle/engine_oracle.c:236
-#: ../engines/postgresql/engine.c:211
+#: engines/mysql/engine_mysql.c:207 engines/oracle/engine_oracle.c:236
+#: engines/postgresql/engine.c:211
 msgid "Password"
 msgstr ""
 
-#: ../engines/mysql/engine_session.c:75
+#: engines/mysql/engine_session.c:75
 msgid "The Database and Username fields are required."
 msgstr ""
 
-#: ../engines/mysql/engine_session.c:133 ../engines/mysql/engine_session.c:259
+#: engines/mysql/engine_session.c:133 engines/mysql/engine_session.c:259
 #, c-format
 msgid ""
 "Connect to the MySQL database \"<b>%s</b>\" succesfully\n"
 "<small>(%s)</small>"
 msgstr ""
 
-#: ../engines/mysql/engine_session.c:175
+#: engines/mysql/engine_session.c:175
 msgid "Restoring the connection is automatic"
 msgstr ""
 
-#: ../engines/mysql/mysql.c:115 ../engines/oracle/oracle.c:248
+#: engines/mysql/mysql.c:115 engines/oracle/oracle.c:248
 msgid "Transaction commited"
 msgstr ""
 
-#: ../engines/mysql/mysql.c:147 ../engines/oracle/oracle.c:276
+#: engines/mysql/mysql.c:147 engines/oracle/oracle.c:276
 msgid "Transaction rolled back"
 msgstr ""
 
-#: ../engines/mysql/mysql_cursor.c:333
+#: engines/mysql/mysql_cursor.c:340
 msgid ""
 "Data truncated. It is mean that internal error occured. Please, report this "
 "bug."
 msgstr ""
 
-#: ../engines/mysql/nav_objects.c:97 ../engines/oracle/nav_objects.c:95
-#: ../engines/postgresql/nav_objects.c:139 ../libgsql/sqleditor.c:1503
-#: ../plugins/exporter/export_csv.c:342
+#: engines/mysql/nav_objects.c:97 engines/oracle/nav_objects.c:95
+#: engines/postgresql/nav_objects.c:140 libgsql/sqleditor.c:1505
+#: plugins/exporter/export_csv.c:342
+#, c-format
 msgid "GSQL: Unsupported type"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__columns.c:156
-#: ../engines/mysql/nav_tree__constraints.c:134
-#: ../engines/mysql/nav_tree__indexes.c:148
-#: ../engines/mysql/nav_tree__privileges.c:113
-#: ../engines/mysql/nav_tree__procedures.c:139
-#: ../engines/mysql/nav_tree__processlist.c:110
-#: ../engines/mysql/nav_tree__processlist.c:111
-#: ../engines/mysql/nav_tree__tables.c:227
-#: ../engines/mysql/nav_tree__tables.c:340
-#: ../engines/mysql/nav_tree__triggers.c:129
-#: ../engines/mysql/nav_tree__users.c:102
-#: ../engines/mysql/nav_tree__variables.c:131
-#: ../engines/mysql/nav_tree__views.c:179
-#: ../engines/oracle/nav_tree__arguments.c:178
-#: ../engines/oracle/nav_tree__clusters.c:144
-#: ../engines/oracle/nav_tree__columns.c:195
-#: ../engines/oracle/nav_tree__constraints.c:168
-#: ../engines/oracle/nav_tree__dblinks.c:116
-#: ../engines/oracle/nav_tree__dimens.c:119
-#: ../engines/oracle/nav_tree__indexes.c:174
-#: ../engines/oracle/nav_tree__indextypes.c:146
-#: ../engines/oracle/nav_tree__java.c:172
-#: ../engines/oracle/nav_tree__libraries.c:143
-#: ../engines/oracle/nav_tree__mviews.c:161
-#: ../engines/oracle/nav_tree__objects.c:201
-#: ../engines/oracle/nav_tree__operators.c:146
-#: ../engines/oracle/nav_tree__packages.c:198
-#: ../engines/oracle/nav_tree__privileges.c:144
-#: ../engines/oracle/nav_tree__procedures.c:192
-#: ../engines/oracle/nav_tree__queues.c:119
-#: ../engines/oracle/nav_tree__recycle.c:280
-#: ../engines/oracle/nav_tree__redo_logs.c:154
-#: ../engines/oracle/nav_tree__resourcs.c:240
-#: ../engines/oracle/nav_tree__roles.c:185
-#: ../engines/oracle/nav_tree__rollback.c:117
-#: ../engines/oracle/nav_tree__sequences.c:138
-#: ../engines/oracle/nav_tree__srv_inst.c:135
-#: ../engines/oracle/nav_tree__storetabs.c:142
-#: ../engines/oracle/nav_tree__synonyms.c:132
-#: ../engines/oracle/nav_tree__tables.c:261
-#: ../engines/oracle/nav_tree__tables.c:512
-#: ../engines/oracle/nav_tree__tablespaces.c:204
-#: ../engines/oracle/nav_tree__triggers.c:170
-#: ../engines/oracle/nav_tree__users.c:136
-#: ../engines/oracle/nav_tree__views.c:226
-#: ../engines/postgresql/nav_tree_columns.c:156
-#: ../engines/postgresql/nav_tree_constraints.c:128
-#: ../engines/postgresql/nav_tree_databases.c:162
-#: ../engines/postgresql/nav_tree_indexes.c:139
-#: ../engines/postgresql/nav_tree_languages.c:114
-#: ../engines/postgresql/nav_tree_privileges.c:113
-#: ../engines/postgresql/nav_tree_procedures.c:139
-#: ../engines/postgresql/nav_tree_sequences.c:103
-#: ../engines/postgresql/nav_tree_tables.c:223
-#: ../engines/postgresql/nav_tree_tables.c:337
-#: ../engines/postgresql/nav_tree_triggers.c:122
-#: ../engines/postgresql/nav_tree_types.c:114
-#: ../engines/postgresql/nav_tree_types.c:246
-#: ../engines/postgresql/nav_tree_users.c:98
-#: ../engines/postgresql/nav_tree_variables.c:131
-#: ../engines/postgresql/nav_tree_views.c:177
+#: engines/mysql/nav_tree__columns.c:156
+#: engines/mysql/nav_tree__constraints.c:134
+#: engines/mysql/nav_tree__indexes.c:148
+#: engines/mysql/nav_tree__privileges.c:113
+#: engines/mysql/nav_tree__procedures.c:139
+#: engines/mysql/nav_tree__processlist.c:110
+#: engines/mysql/nav_tree__processlist.c:111
+#: engines/mysql/nav_tree__tables.c:227 engines/mysql/nav_tree__tables.c:340
+#: engines/mysql/nav_tree__triggers.c:129 engines/mysql/nav_tree__users.c:102
+#: engines/mysql/nav_tree__variables.c:131 engines/mysql/nav_tree__views.c:179
+#: engines/oracle/nav_tree__arguments.c:178
+#: engines/oracle/nav_tree__clusters.c:144
+#: engines/oracle/nav_tree__columns.c:195
+#: engines/oracle/nav_tree__constraints.c:168
+#: engines/oracle/nav_tree__dblinks.c:116
+#: engines/oracle/nav_tree__dimens.c:119
+#: engines/oracle/nav_tree__indexes.c:174
+#: engines/oracle/nav_tree__indextypes.c:146
+#: engines/oracle/nav_tree__java.c:172
+#: engines/oracle/nav_tree__libraries.c:143
+#: engines/oracle/nav_tree__mviews.c:161
+#: engines/oracle/nav_tree__objects.c:201
+#: engines/oracle/nav_tree__operators.c:146
+#: engines/oracle/nav_tree__packages.c:198
+#: engines/oracle/nav_tree__privileges.c:144
+#: engines/oracle/nav_tree__procedures.c:192
+#: engines/oracle/nav_tree__queues.c:119
+#: engines/oracle/nav_tree__recycle.c:280
+#: engines/oracle/nav_tree__redo_logs.c:154
+#: engines/oracle/nav_tree__resourcs.c:240
+#: engines/oracle/nav_tree__roles.c:185
+#: engines/oracle/nav_tree__rollback.c:117
+#: engines/oracle/nav_tree__sequences.c:138
+#: engines/oracle/nav_tree__srv_inst.c:135
+#: engines/oracle/nav_tree__storetabs.c:142
+#: engines/oracle/nav_tree__synonyms.c:132
+#: engines/oracle/nav_tree__tables.c:261 engines/oracle/nav_tree__tables.c:512
+#: engines/oracle/nav_tree__tablespaces.c:204
+#: engines/oracle/nav_tree__triggers.c:170
+#: engines/oracle/nav_tree__users.c:136 engines/oracle/nav_tree__views.c:226
+#: engines/postgresql/nav_tree_columns.c:157
+#: engines/postgresql/nav_tree_constraints.c:128
+#: engines/postgresql/nav_tree_databases.c:162
+#: engines/postgresql/nav_tree_indexes.c:139
+#: engines/postgresql/nav_tree_languages.c:117
+#: engines/postgresql/nav_tree_privileges.c:113
+#: engines/postgresql/nav_tree_procedures.c:139
+#: engines/postgresql/nav_tree_sequences.c:104
+#: engines/postgresql/nav_tree_tables.c:223
+#: engines/postgresql/nav_tree_tables.c:337
+#: engines/postgresql/nav_tree_triggers.c:122
+#: engines/postgresql/nav_tree_types.c:115
+#: engines/postgresql/nav_tree_types.c:248
+#: engines/postgresql/nav_tree_users.c:98
+#: engines/postgresql/nav_tree_variables.c:131
+#: engines/postgresql/nav_tree_views.c:177
 msgid "Incorrect data"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__indexes.c:40
-#: ../engines/mysql/nav_tree__tables.c:69
-#: ../engines/mysql/nav_tree__views.c:65
-#: ../engines/oracle/nav_tree__clusters.c:40
-#: ../engines/oracle/nav_tree__constraints.c:39
-#: ../engines/oracle/nav_tree__indexes.c:40
-#: ../engines/oracle/nav_tree__tables.c:71
-#: ../engines/oracle/nav_tree__triggers.c:42
-#: ../engines/oracle/nav_tree__views.c:68
-#: ../engines/postgresql/nav_tree_indexes.c:40
-#: ../engines/postgresql/nav_tree_tables.c:67
-#: ../engines/postgresql/nav_tree_views.c:66
+#: engines/mysql/nav_tree__indexes.c:40 engines/mysql/nav_tree__tables.c:69
+#: engines/mysql/nav_tree__views.c:65 engines/oracle/nav_tree__clusters.c:40
+#: engines/oracle/nav_tree__constraints.c:39
+#: engines/oracle/nav_tree__indexes.c:40 engines/oracle/nav_tree__tables.c:71
+#: engines/oracle/nav_tree__triggers.c:42 engines/oracle/nav_tree__views.c:68
+#: engines/postgresql/nav_tree_indexes.c:40
+#: engines/postgresql/nav_tree_tables.c:67
+#: engines/postgresql/nav_tree_views.c:66
 msgid "Columns"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__indexes.c:182
-#: ../engines/mysql/nav_tree__schemas.c:298
-#: ../engines/mysql/nav_tree__tables.c:258
-#: ../engines/mysql/nav_tree__views.c:213
-#: ../engines/oracle/nav_tree__clusters.c:178
-#: ../engines/oracle/nav_tree__constraints.c:231
-#: ../engines/oracle/nav_tree__indexes.c:208
-#: ../engines/oracle/nav_tree__indextypes.c:180
-#: ../engines/oracle/nav_tree__java.c:206
-#: ../engines/oracle/nav_tree__libraries.c:177
-#: ../engines/oracle/nav_tree__objects.c:235
-#: ../engines/oracle/nav_tree__operators.c:180
-#: ../engines/oracle/nav_tree__packages.c:232
-#: ../engines/oracle/nav_tree__procedures.c:227
-#: ../engines/oracle/nav_tree__redo_logs.c:194
-#: ../engines/oracle/nav_tree__resourcs.c:276
-#: ../engines/oracle/nav_tree__roles.c:221
-#: ../engines/oracle/nav_tree__schemas.c:628
-#: ../engines/oracle/nav_tree__sequences.c:172
-#: ../engines/oracle/nav_tree__storetabs.c:176
-#: ../engines/oracle/nav_tree__synonyms.c:166
-#: ../engines/oracle/nav_tree__tables.c:295
-#: ../engines/oracle/nav_tree__tablespaces.c:240
-#: ../engines/oracle/nav_tree__triggers.c:204
-#: ../engines/oracle/nav_tree__users.c:170
-#: ../engines/oracle/nav_tree__views.c:260
-#: ../engines/postgresql/nav_tree_databases.c:198
-#: ../engines/postgresql/nav_tree_indexes.c:176
-#: ../engines/postgresql/nav_tree_schemas.c:320
-#: ../engines/postgresql/nav_tree_tables.c:256
-#: ../engines/postgresql/nav_tree_types.c:286
-#: ../engines/postgresql/nav_tree_views.c:216 ../libgsql/navigation.c:334
-#: ../libgsql/navigation.c:777
+#: engines/mysql/nav_tree__indexes.c:182 engines/mysql/nav_tree__schemas.c:298
+#: engines/mysql/nav_tree__tables.c:258 engines/mysql/nav_tree__views.c:213
+#: engines/oracle/nav_tree__clusters.c:178
+#: engines/oracle/nav_tree__constraints.c:231
+#: engines/oracle/nav_tree__indexes.c:208
+#: engines/oracle/nav_tree__indextypes.c:180
+#: engines/oracle/nav_tree__java.c:206
+#: engines/oracle/nav_tree__libraries.c:177
+#: engines/oracle/nav_tree__objects.c:235
+#: engines/oracle/nav_tree__operators.c:180
+#: engines/oracle/nav_tree__packages.c:232
+#: engines/oracle/nav_tree__procedures.c:227
+#: engines/oracle/nav_tree__redo_logs.c:194
+#: engines/oracle/nav_tree__resourcs.c:276
+#: engines/oracle/nav_tree__roles.c:221 engines/oracle/nav_tree__schemas.c:628
+#: engines/oracle/nav_tree__sequences.c:172
+#: engines/oracle/nav_tree__storetabs.c:176
+#: engines/oracle/nav_tree__synonyms.c:166
+#: engines/oracle/nav_tree__tables.c:295
+#: engines/oracle/nav_tree__tablespaces.c:240
+#: engines/oracle/nav_tree__triggers.c:204
+#: engines/oracle/nav_tree__users.c:170 engines/oracle/nav_tree__views.c:260
+#: engines/postgresql/nav_tree_databases.c:198
+#: engines/postgresql/nav_tree_indexes.c:176
+#: engines/postgresql/nav_tree_schemas.c:320
+#: engines/postgresql/nav_tree_tables.c:256
+#: engines/postgresql/nav_tree_types.c:288
+#: engines/postgresql/nav_tree_views.c:216 libgsql/navigation.c:334
+#: libgsql/navigation.c:777
 msgid "Processing..."
 msgstr ""
 
 #. id
 #. stock
-#: ../engines/mysql/nav_tree__schemas.c:55
-#: ../engines/oracle/nav_tree__schemas.c:99
-#: ../engines/postgresql/nav_tree_schemas.c:57
+#: engines/mysql/nav_tree__schemas.c:55 engines/oracle/nav_tree__schemas.c:99
+#: engines/postgresql/nav_tree_schemas.c:57
 msgid "Tables"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:64
-#: ../engines/mysql/nav_tree__tables.c:99
-#: ../engines/oracle/nav_tree__schemas.c:109
-#: ../engines/oracle/nav_tree__tables.c:101
-#: ../engines/postgresql/nav_tree_schemas.c:96
-#: ../engines/postgresql/nav_tree_tables.c:100
+#: engines/mysql/nav_tree__schemas.c:64 engines/mysql/nav_tree__tables.c:99
+#: engines/oracle/nav_tree__schemas.c:109
+#: engines/oracle/nav_tree__tables.c:101
+#: engines/postgresql/nav_tree_schemas.c:96
+#: engines/postgresql/nav_tree_tables.c:100
 msgid "Constraints"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:73
-#: ../engines/oracle/nav_tree__schemas.c:119
-#: ../engines/postgresql/nav_tree_schemas.c:66
+#: engines/mysql/nav_tree__schemas.c:73 engines/oracle/nav_tree__schemas.c:119
+#: engines/postgresql/nav_tree_schemas.c:66
 msgid "Views"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:82
-#: ../engines/mysql/nav_tree__tables.c:79
-#: ../engines/oracle/nav_tree__clusters.c:50
-#: ../engines/oracle/nav_tree__schemas.c:129
-#: ../engines/oracle/nav_tree__tables.c:81
-#: ../engines/postgresql/nav_tree_schemas.c:106
-#: ../engines/postgresql/nav_tree_tables.c:78
+#: engines/mysql/nav_tree__schemas.c:82 engines/mysql/nav_tree__tables.c:79
+#: engines/oracle/nav_tree__clusters.c:50
+#: engines/oracle/nav_tree__schemas.c:129 engines/oracle/nav_tree__tables.c:81
+#: engines/postgresql/nav_tree_schemas.c:106
+#: engines/postgresql/nav_tree_tables.c:78
 msgid "Indexes"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:91
-#: ../engines/mysql/nav_tree__tables.c:89
-#: ../engines/mysql/nav_tree__views.c:75
-#: ../engines/oracle/nav_tree__schemas.c:139
-#: ../engines/oracle/nav_tree__tables.c:91
-#: ../engines/oracle/nav_tree__views.c:78
-#: ../engines/postgresql/nav_tree_schemas.c:116
-#: ../engines/postgresql/nav_tree_tables.c:89
-#: ../engines/postgresql/nav_tree_views.c:77
+#: engines/mysql/nav_tree__schemas.c:91 engines/mysql/nav_tree__tables.c:89
+#: engines/mysql/nav_tree__views.c:75 engines/oracle/nav_tree__schemas.c:139
+#: engines/oracle/nav_tree__tables.c:91 engines/oracle/nav_tree__views.c:78
+#: engines/postgresql/nav_tree_schemas.c:116
+#: engines/postgresql/nav_tree_tables.c:89
+#: engines/postgresql/nav_tree_views.c:77
 msgid "Triggers"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:100
-#: ../engines/oracle/nav_tree__schemas.c:149
+#: engines/mysql/nav_tree__schemas.c:100
+#: engines/oracle/nav_tree__schemas.c:149
 msgid "Procedures"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:109
-#: ../engines/oracle/nav_tree__schemas.c:159
-#: ../engines/postgresql/nav_tree_schemas.c:137
+#: engines/mysql/nav_tree__schemas.c:109
+#: engines/oracle/nav_tree__schemas.c:159
+#: engines/postgresql/nav_tree_schemas.c:137
 msgid "Functions"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:119
-#: ../engines/postgresql/nav_tree_schemas.c:148
+#: engines/mysql/nav_tree__schemas.c:119
+#: engines/postgresql/nav_tree_schemas.c:148
 msgid "Privileges"
 msgstr ""
 
 #. id
 #. stock
-#: ../engines/mysql/nav_tree__schemas.c:132
+#: engines/mysql/nav_tree__schemas.c:132
 msgid "Session Variables"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:141
+#: engines/mysql/nav_tree__schemas.c:141
 msgid "Global Variables"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:157
-#: ../engines/oracle/nav_tree__schemas.c:436
+#: engines/mysql/nav_tree__schemas.c:157
+#: engines/oracle/nav_tree__schemas.c:436
 msgid "My Schema"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:167
-#: ../engines/oracle/nav_tree__schemas.c:448
+#: engines/mysql/nav_tree__schemas.c:167
+#: engines/oracle/nav_tree__schemas.c:448
 msgid "All Schemas"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:177
-#: ../engines/oracle/nav_tree__schemas.c:459
-#: ../engines/postgresql/nav_tree_schemas.c:186
+#: engines/mysql/nav_tree__schemas.c:177
+#: engines/oracle/nav_tree__schemas.c:459
+#: engines/postgresql/nav_tree_schemas.c:186
 msgid "Users"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:188
-#: ../engines/postgresql/nav_tree_schemas.c:198
+#: engines/mysql/nav_tree__schemas.c:188
+#: engines/postgresql/nav_tree_schemas.c:198
 msgid "Process List"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__schemas.c:199
+#: engines/mysql/nav_tree__schemas.c:199
 msgid "Variables"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__tables.c:138
-#: ../engines/mysql/nav_tree__views.c:89
-#: ../engines/oracle/nav_tree__tables.c:171
-#: ../engines/oracle/nav_tree__views.c:125
-#: ../engines/postgresql/nav_tree_tables.c:140
-#: ../engines/postgresql/nav_tree_views.c:92
+#: engines/mysql/nav_tree__tables.c:138 engines/mysql/nav_tree__views.c:89
+#: engines/oracle/nav_tree__tables.c:171 engines/oracle/nav_tree__views.c:125
+#: engines/postgresql/nav_tree_tables.c:140
+#: engines/postgresql/nav_tree_views.c:92
 msgid "Browse data"
 msgstr ""
 
-#: ../engines/mysql/nav_tree__tables.c:139
-#: ../engines/mysql/nav_tree__views.c:90
-#: ../engines/oracle/nav_tree__tables.c:172
-#: ../engines/oracle/nav_tree__views.c:126
-#: ../engines/postgresql/nav_tree_tables.c:141
-#: ../engines/postgresql/nav_tree_views.c:93
+#: engines/mysql/nav_tree__tables.c:139 engines/mysql/nav_tree__views.c:90
+#: engines/oracle/nav_tree__tables.c:172 engines/oracle/nav_tree__views.c:126
+#: engines/postgresql/nav_tree_tables.c:141
+#: engines/postgresql/nav_tree_views.c:93
 msgid "Open SQL editor to browse the data  [ F3 ]"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:96
+#: engines/oracle/engine_conf.c:96
 msgid "Use the system environment"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:100
+#: engines/oracle/engine_conf.c:100
 msgid "<small> Warning: changes would be applied after restart</small>"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:154
+#: engines/oracle/engine_conf.c:154
 msgid "Name"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:172 ../libgsql/workspace.c:237
+#: engines/oracle/engine_conf.c:172 libgsql/workspace.c:237
 msgid "Value"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:188
+#: engines/oracle/engine_conf.c:188
 msgid "Add"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:192
+#: engines/oracle/engine_conf.c:192
 msgid "Delete"
 msgstr ""
 
-#: ../engines/oracle/engine_conf.c:196
+#: engines/oracle/engine_conf.c:196
 msgid "<b>Environment</b>"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:34
+#: engines/oracle/engine_menu.c:34
 msgid "Server output"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:34 ../src/gsqlmenu.c:44
+#: engines/oracle/engine_menu.c:34 src/gsqlmenu.c:44
 msgid "Exit"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:39
+#: engines/oracle/engine_menu.c:39
 msgid "Oracle"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:41
+#: engines/oracle/engine_menu.c:41
 msgid "Empty Recycle bin"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:42
+#: engines/oracle/engine_menu.c:42
 msgid "Job manager"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:44
+#: engines/oracle/engine_menu.c:44
 msgid "Find code"
 msgstr ""
 
-#: ../engines/oracle/engine_menu.c:45
+#: engines/oracle/engine_menu.c:45
 msgid "Find object"
 msgstr ""
 
-#: ../engines/oracle/engine_oracle.c:258
+#: engines/oracle/engine_oracle.c:258
 msgid "Connect as "
 msgstr ""
 
-#: ../engines/oracle/engine_oracle.c:272
+#: engines/oracle/engine_oracle.c:272
 msgid "Options"
 msgstr ""
 
-#: ../engines/oracle/engine_session.c:167
-#: ../engines/oracle/engine_session.c:300
+#: engines/oracle/engine_session.c:167 engines/oracle/engine_session.c:300
 #, c-format
 msgid ""
 "Connect to the Oracle database \"<b>%s</b>\" succesfully\n"
 "<small>(%s)</small>"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__indextypes.c:41
-#: ../engines/oracle/nav_tree__java.c:41
-#: ../engines/oracle/nav_tree__libraries.c:39
-#: ../engines/oracle/nav_tree__objects.c:42
-#: ../engines/oracle/nav_tree__operators.c:41
-#: ../engines/oracle/nav_tree__packages.c:52
-#: ../engines/oracle/nav_tree__packages.c:74
-#: ../engines/oracle/nav_tree__procedures.c:54
-#: ../engines/oracle/nav_tree__storetabs.c:40
-#: ../engines/oracle/nav_tree__tables.c:121
-#: ../engines/oracle/nav_tree__triggers.c:52
-#: ../engines/oracle/nav_tree__views.c:88
+#: engines/oracle/nav_tree__indextypes.c:41 engines/oracle/nav_tree__java.c:41
+#: engines/oracle/nav_tree__libraries.c:39
+#: engines/oracle/nav_tree__objects.c:42
+#: engines/oracle/nav_tree__operators.c:41
+#: engines/oracle/nav_tree__packages.c:52
+#: engines/oracle/nav_tree__packages.c:74
+#: engines/oracle/nav_tree__procedures.c:54
+#: engines/oracle/nav_tree__storetabs.c:40
+#: engines/oracle/nav_tree__tables.c:121
+#: engines/oracle/nav_tree__triggers.c:52 engines/oracle/nav_tree__views.c:88
 msgid "Depends On"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__indextypes.c:51
-#: ../engines/oracle/nav_tree__java.c:51
-#: ../engines/oracle/nav_tree__libraries.c:49
-#: ../engines/oracle/nav_tree__objects.c:52
-#: ../engines/oracle/nav_tree__operators.c:51
-#: ../engines/oracle/nav_tree__packages.c:62
-#: ../engines/oracle/nav_tree__procedures.c:64
-#: ../engines/oracle/nav_tree__sequences.c:41
-#: ../engines/oracle/nav_tree__storetabs.c:50
-#: ../engines/oracle/nav_tree__synonyms.c:40
-#: ../engines/oracle/nav_tree__tables.c:131
-#: ../engines/oracle/nav_tree__views.c:98
+#: engines/oracle/nav_tree__indextypes.c:51 engines/oracle/nav_tree__java.c:51
+#: engines/oracle/nav_tree__libraries.c:49
+#: engines/oracle/nav_tree__objects.c:52
+#: engines/oracle/nav_tree__operators.c:51
+#: engines/oracle/nav_tree__packages.c:62
+#: engines/oracle/nav_tree__procedures.c:64
+#: engines/oracle/nav_tree__sequences.c:41
+#: engines/oracle/nav_tree__storetabs.c:50
+#: engines/oracle/nav_tree__synonyms.c:40
+#: engines/oracle/nav_tree__tables.c:131 engines/oracle/nav_tree__views.c:98
 msgid "Dependent Objects"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__packages.c:42
-#: ../engines/oracle/nav_tree__procedures.c:44
+#: engines/oracle/nav_tree__packages.c:42
+#: engines/oracle/nav_tree__procedures.c:44
 msgid "Arguments"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__procedures.c:452
+#: engines/oracle/nav_tree__procedures.c:452
 msgid "Not supported"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__procedures.c:485
+#: engines/oracle/nav_tree__procedures.c:485
 msgid "Failed to save the database object"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__procedures.c:491
+#: engines/oracle/nav_tree__procedures.c:491
 msgid "The database object has been saved"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__procedures.c:520
+#: engines/oracle/nav_tree__procedures.c:520
 msgid "Unsaved database object"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__procedures.c:533
+#: engines/oracle/nav_tree__procedures.c:533
 msgid ""
 "The database object you are about to close has been changed. Apply changes?"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__redo_logs.c:40
+#: engines/oracle/nav_tree__redo_logs.c:40
 msgid "Log Members"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__resourcs.c:40
+#: engines/oracle/nav_tree__resourcs.c:40
 msgid "Resources"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__roles.c:42
-#: ../engines/oracle/nav_tree__users.c:41
+#: engines/oracle/nav_tree__roles.c:42 engines/oracle/nav_tree__users.c:41
 msgid "Granted Roles"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__roles.c:52
-#: ../engines/oracle/nav_tree__users.c:51
+#: engines/oracle/nav_tree__roles.c:52 engines/oracle/nav_tree__users.c:51
 msgid "System Privileges"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__roles.c:62
-#: ../engines/oracle/nav_tree__users.c:61
+#: engines/oracle/nav_tree__roles.c:62 engines/oracle/nav_tree__users.c:61
 msgid "Object Privileges"
 msgstr ""
 
 #. id
 #. stock
-#: ../engines/oracle/nav_tree__schemas.c:72
+#: engines/oracle/nav_tree__schemas.c:72
 msgid "Instance Properties"
 msgstr ""
 
 #. id
 #. stock
-#: ../engines/oracle/nav_tree__schemas.c:82
+#: engines/oracle/nav_tree__schemas.c:82
 msgid "Server Options"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:169
+#: engines/oracle/nav_tree__schemas.c:169
 msgid "Packages"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:179
+#: engines/oracle/nav_tree__schemas.c:179
 msgid "Package Bodies"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:189
+#: engines/oracle/nav_tree__schemas.c:189
 msgid "Sequences"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:199
+#: engines/oracle/nav_tree__schemas.c:199
 msgid "Clusters"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:209
+#: engines/oracle/nav_tree__schemas.c:209
 msgid "Materialized Views"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:219
+#: engines/oracle/nav_tree__schemas.c:219
 msgid "Synonyms"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:229
+#: engines/oracle/nav_tree__schemas.c:229
 msgid "Database Links"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:239
+#: engines/oracle/nav_tree__schemas.c:239
 msgid "Object Types"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:249
+#: engines/oracle/nav_tree__schemas.c:249
 msgid "Object Type Bodies"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:259
+#: engines/oracle/nav_tree__schemas.c:259
 msgid "Collection Types"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:269
+#: engines/oracle/nav_tree__schemas.c:269
 msgid "Libraries"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:279
+#: engines/oracle/nav_tree__schemas.c:279
 msgid "Queues"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:289
+#: engines/oracle/nav_tree__schemas.c:289
 msgid "Java Source"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:299
+#: engines/oracle/nav_tree__schemas.c:299
 msgid "Java Classes"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:309
+#: engines/oracle/nav_tree__schemas.c:309
 msgid "Java Resources"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:319
+#: engines/oracle/nav_tree__schemas.c:319
 msgid "Index Types"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:329
+#: engines/oracle/nav_tree__schemas.c:329
 msgid "Operators"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:339
+#: engines/oracle/nav_tree__schemas.c:339
 msgid "Dimensions"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:349
+#: engines/oracle/nav_tree__schemas.c:349
 msgid "Resource Plans"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:359
+#: engines/oracle/nav_tree__schemas.c:359
 msgid "Consumer Groups"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:369
+#: engines/oracle/nav_tree__schemas.c:369
 msgid "Store Tables"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:385
+#: engines/oracle/nav_tree__schemas.c:385
 msgid "Session Privileges"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:395
+#: engines/oracle/nav_tree__schemas.c:395
 msgid "Enabled Roles"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:405
+#: engines/oracle/nav_tree__schemas.c:405
 msgid "Resource Limits"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:415
+#: engines/oracle/nav_tree__schemas.c:415
 msgid "Tablespace Quotas"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:425
+#: engines/oracle/nav_tree__schemas.c:425
 msgid "Free Space"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:469
+#: engines/oracle/nav_tree__schemas.c:469
 msgid "Roles"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:479
+#: engines/oracle/nav_tree__schemas.c:479
 msgid "Profiles"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:489
+#: engines/oracle/nav_tree__schemas.c:489
 msgid "Tablespaces"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:499
+#: engines/oracle/nav_tree__schemas.c:499
 msgid "Rollback Segments"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:509
+#: engines/oracle/nav_tree__schemas.c:509
 msgid "Redo Log Groups"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:520
+#: engines/oracle/nav_tree__schemas.c:520
 msgid "Current Instance"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__schemas.c:529
+#: engines/oracle/nav_tree__schemas.c:529
 msgid "Recycle Bin"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__tables.c:111
+#: engines/oracle/nav_tree__tables.c:111
 msgid "MView Logs"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__tablespaces.c:40
+#: engines/oracle/nav_tree__tablespaces.c:40
 msgid "Data Files"
 msgstr ""
 
-#: ../engines/oracle/nav_tree__tablespaces.c:50
+#: engines/oracle/nav_tree__tablespaces.c:50
 msgid "Disk Groups"
 msgstr ""
 
-#: ../engines/oracle/oracle.c:347
+#: engines/oracle/oracle.c:347
 msgid "Session reconnected"
 msgstr ""
 
-#: ../engines/postgresql/engine.c:175
+#: engines/postgresql/engine.c:175
 msgid "Database"
 msgstr ""
 
-#: ../engines/postgresql/engine_menu.c:34
+#: engines/postgresql/engine_menu.c:34
 msgid "PostgreSQL"
 msgstr ""
 
-#: ../engines/postgresql/engine_session.c:69
+#: engines/postgresql/engine_session.c:69
 msgid "Database and Username are required."
 msgstr ""
 
-#: ../engines/postgresql/engine_session.c:122
+#: engines/postgresql/engine_session.c:122
 #, c-format
 msgid ""
 "Connected to the PostgreSQL database \"<b>%s</b>\".\n"
 "<small>(%s)</small>"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_databases.c:72
-#: ../engines/postgresql/nav_tree_tables.c:125
+#: engines/postgresql/nav_tree_databases.c:72
+#: engines/postgresql/nav_tree_tables.c:125
 msgid "Create..."
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_databases.c:73
+#: engines/postgresql/nav_tree_databases.c:73
 msgid "Create database"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_databases.c:77
+#: engines/postgresql/nav_tree_databases.c:77
 msgid "Drop..."
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_databases.c:78
+#: engines/postgresql/nav_tree_databases.c:78
 msgid "Drop database"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_databases.h:38
+#: engines/postgresql/nav_tree_databases.h:38
 msgid "Schemas"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_databases.h:48
+#: engines/postgresql/nav_tree_databases.h:48
 msgid "Languages"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_processlist.c:60
+#: engines/postgresql/nav_tree_processlist.c:60
 msgid "Kill"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_processlist.c:61
+#: engines/postgresql/nav_tree_processlist.c:61
 msgid "Kill process"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_processlist.c:248
+#: engines/postgresql/nav_tree_processlist.c:248
 #, c-format
 msgid "Killing %s..."
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_schemas.c:76
+#: engines/postgresql/nav_tree_schemas.c:76
 msgid "Types"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_schemas.c:165
+#: engines/postgresql/nav_tree_schemas.c:165
 msgid "Current Database"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_schemas.c:175
+#: engines/postgresql/nav_tree_schemas.c:175
 msgid "All Databases"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_tables.c:126
+#: engines/postgresql/nav_tree_tables.c:126
 msgid "Create table"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_views.c:96 ../src/gsqlmenu.c:38
+#: engines/postgresql/nav_tree_views.c:96 src/gsqlmenu.c:38
 msgid "Edit"
 msgstr ""
 
-#: ../engines/postgresql/nav_tree_views.c:97
+#: engines/postgresql/nav_tree_views.c:97
 msgid "Open SQL editor to change the view "
 msgstr ""
 
-#: ../libgsql/common.c:95 ../libgsql/common.c:119
+#: libgsql/common.c:95 libgsql/common.c:119
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr ""
 
-#: ../libgsql/conf.c:40
+#: libgsql/conf.c:40
 msgid "Cannot initialize configuration manager."
 msgstr ""
 
-#: ../libgsql/cursor.c:461
+#: libgsql/cursor.c:459
 #, c-format
 msgid "The %s engine does not support this feature"
 msgstr ""
 
-#: ../libgsql/editor.c:84
+#: libgsql/editor.c:84
 msgid "Undo"
 msgstr ""
 
-#: ../libgsql/editor.c:85
+#: libgsql/editor.c:85
 msgid "Redo"
 msgstr ""
 
-#: ../libgsql/editor.c:86
+#: libgsql/editor.c:86
 msgid "Copy"
 msgstr ""
 
-#: ../libgsql/editor.c:87
+#: libgsql/editor.c:87
 msgid "Cut"
 msgstr ""
 
-#: ../libgsql/editor.c:88
+#: libgsql/editor.c:88
 msgid "Paste"
 msgstr ""
 
-#: ../libgsql/editor.c:89
+#: libgsql/editor.c:89
 msgid "Clear"
 msgstr ""
 
-#: ../libgsql/navigation.c:105
+#: libgsql/navigation.c:105
 msgid "Copy name"
 msgstr ""
 
-#: ../libgsql/navigation.c:106
+#: libgsql/navigation.c:106
 msgid "Copy this name  [ Ctrl+C ]"
 msgstr ""
 
-#: ../libgsql/navigation.c:110
+#: libgsql/navigation.c:110
 msgid "Refresh"
 msgstr ""
 
-#: ../libgsql/navigation.c:111
+#: libgsql/navigation.c:111
 msgid "Refresh the current list of objects [ F5 ]"
 msgstr ""
 
-#: ../libgsql/navigation.c:246
+#: libgsql/navigation.c:246
 msgid "Sessions"
 msgstr ""
 
-#: ../libgsql/session.c:148
+#: libgsql/session.c:148
 msgid "Reconnect"
 msgstr ""
 
-#: ../libgsql/session.c:148
+#: libgsql/session.c:148
 msgid "Reconnect current session"
 msgstr ""
 
-#: ../libgsql/session.c:149
+#: libgsql/session.c:149
 msgid "Duplicate"
 msgstr ""
 
-#: ../libgsql/session.c:149
+#: libgsql/session.c:149
 msgid "Duplicate current session"
 msgstr ""
 
 #. GSQL_STOCK_SESSION_CLOSE
-#: ../libgsql/session.c:150
+#: libgsql/session.c:150
 msgid "Close Session"
 msgstr ""
 
-#: ../libgsql/session.c:150
+#: libgsql/session.c:150
 msgid "Close current session"
 msgstr ""
 
-#: ../libgsql/session.c:151
+#: libgsql/session.c:151
 msgid "Close All Session"
 msgstr ""
 
-#: ../libgsql/session.c:151
+#: libgsql/session.c:151
 msgid "Close all session"
 msgstr ""
 
-#: ../libgsql/session.c:152 ../libgsql/stock.c:82
+#: libgsql/session.c:152 libgsql/stock.c:82
 msgid "Commit"
 msgstr ""
 
-#: ../libgsql/session.c:153 ../libgsql/stock.c:83
+#: libgsql/session.c:153 libgsql/stock.c:83
 msgid "Rollback"
 msgstr ""
 
-#: ../libgsql/session.c:444
+#: libgsql/session.c:444
 msgid "Untitled"
 msgstr ""
 
-#: ../libgsql/session.c:498
+#: libgsql/session.c:498
 msgid ""
 "The current session already in use. Please, try later or stop the running "
 "statement."
 msgstr ""
 
-#: ../libgsql/session.c:685
+#: libgsql/session.c:685
 msgid "Unsaved Files"
 msgstr ""
 
-#: ../libgsql/session.c:706
+#: libgsql/session.c:706
 msgid "Unsaved documents..."
 msgstr ""
 
-#: ../libgsql/session.c:719
+#: libgsql/session.c:719
 msgid ""
 "Select the files which you want to save. Note that checking the session name "
 "will result in selection of all the unsaved files in this session."
 msgstr ""
 
-#: ../libgsql/sqleditor.c:96
+#: libgsql/sqleditor.c:96
 msgid "Run"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:96
+#: libgsql/sqleditor.c:96
 msgid "Run  [ F9 ]"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:97
+#: libgsql/sqleditor.c:97
 msgid "Run Step"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:97
+#: libgsql/sqleditor.c:97
 msgid "Run Step  [ F8 ]"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:98
+#: libgsql/sqleditor.c:98
 msgid "Stop Execution"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:100
+#: libgsql/sqleditor.c:100
 msgid "Fetch next"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:101
+#: libgsql/sqleditor.c:101
 msgid "Fetch all"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:102
+#: libgsql/sqleditor.c:102
 msgid "Stop fetching"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:109
+#: libgsql/sqleditor.c:109
 msgid "Run at cursor"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:110
+#: libgsql/sqleditor.c:110
 msgid "Stop on error"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:354
+#: libgsql/sqleditor.c:354
 msgid "Use custom fetch limit"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:369
+#: libgsql/sqleditor.c:369
 msgid "Set custom limit value"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:863
+#: libgsql/sqleditor.c:858
 msgid "Start SQL execution..."
 msgstr ""
 
-#: ../libgsql/sqleditor.c:877
+#: libgsql/sqleditor.c:872
 #, c-format
 msgid "Query execution finished at line %d [elapsed: %02f]"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:941
+#: libgsql/sqleditor.c:936
 msgid "Query execution finished [DML]. Affected rows"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:943 ../libgsql/sqleditor.c:954
-#: ../libgsql/sqleditor.c:965 ../libgsql/sqleditor.c:976
-#: ../libgsql/sqleditor.c:986 ../libgsql/sqleditor.c:996
-#: ../libgsql/sqleditor.c:1006 ../libgsql/sqleditor.c:1016
-#: ../libgsql/sqleditor.c:1025
+#: libgsql/sqleditor.c:938 libgsql/sqleditor.c:949 libgsql/sqleditor.c:960
+#: libgsql/sqleditor.c:971 libgsql/sqleditor.c:981 libgsql/sqleditor.c:991
+#: libgsql/sqleditor.c:1001 libgsql/sqleditor.c:1011 libgsql/sqleditor.c:1020
 msgid "at line"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:944 ../libgsql/sqleditor.c:955
-#: ../libgsql/sqleditor.c:966 ../libgsql/sqleditor.c:977
-#: ../libgsql/sqleditor.c:987 ../libgsql/sqleditor.c:997
-#: ../libgsql/sqleditor.c:1007 ../libgsql/sqleditor.c:1017
-#: ../libgsql/sqleditor.c:1026
+#: libgsql/sqleditor.c:939 libgsql/sqleditor.c:950 libgsql/sqleditor.c:961
+#: libgsql/sqleditor.c:972 libgsql/sqleditor.c:982 libgsql/sqleditor.c:992
+#: libgsql/sqleditor.c:1002 libgsql/sqleditor.c:1012 libgsql/sqleditor.c:1021
 msgid "elapsed"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:952
+#: libgsql/sqleditor.c:947
 msgid "Query execution finished. Inserted rows"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:963
+#: libgsql/sqleditor.c:958
 msgid "Query execution finished. Updated rows"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:974
+#: libgsql/sqleditor.c:969
 msgid "Query execution finished. Deleted rows"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:985
+#: libgsql/sqleditor.c:980
 msgid "Query execution finished"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:995
+#: libgsql/sqleditor.c:990
 msgid "Query execution finished. Object created"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1005
+#: libgsql/sqleditor.c:1000
 msgid "Query execution finished. Object droped"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1015
+#: libgsql/sqleditor.c:1010
 msgid "Query execution finished. Object altered"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1024
+#: libgsql/sqleditor.c:1019
 msgid "Query execution finished [DDL]"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1033
+#: libgsql/sqleditor.c:1028
 msgid "Unknown statement type"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1257 ../libgsql/sqleditor.c:1531
+#: libgsql/sqleditor.c:1259 libgsql/sqleditor.c:1533
 #, c-format
 msgid ""
 "The maximum limit of fetch is reached [%d]. You can extend this limit in the "
 "settings."
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1507
+#: libgsql/sqleditor.c:1509
 msgid "&lt;value&gt;"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1523
+#: libgsql/sqleditor.c:1525
 msgid "The fetching has been canceled."
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1543
+#: libgsql/sqleditor.c:1545
 #, c-format
 msgid "Rows fetched: %d [total: %llu]"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1691
+#: libgsql/sqleditor.c:1693
 msgid "Save as..."
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1746 ../libgsql/sqleditor.c:1770
+#: libgsql/sqleditor.c:1748 libgsql/sqleditor.c:1772
 #, c-format
 msgid "Failed to save file '%s'. %s"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1788
+#: libgsql/sqleditor.c:1790
 #, c-format
 msgid "File saved: %s [%d bytes]"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:1954
+#: libgsql/sqleditor.c:1956
 #, c-format
 msgid "Failed to reload file '%s'. %s"
 msgstr ""
 
-#: ../libgsql/sqleditor.c:2005 ../src/gsqlfiles.c:107 ../src/gsqlfiles.c:154
+#: libgsql/sqleditor.c:2007 src/gsqlfiles.c:107 src/gsqlfiles.c:154
 #, c-format
 msgid "Failed to load file '%s'. %s"
 msgstr ""
 
-#: ../libgsql/stock.c:80
+#: libgsql/stock.c:80
 msgid "Close session"
 msgstr ""
 
-#: ../libgsql/stock.c:81
+#: libgsql/stock.c:81
 msgid "New session"
 msgstr ""
 
-#: ../libgsql/type_datetime.c:312 ../libgsql/type_datetime.c:313
+#: libgsql/type_datetime.c:312 libgsql/type_datetime.c:313
 msgid "DateTime value"
 msgstr ""
 
-#: ../libgsql/utils.c:120 ../libgsql/utils.c:146 ../libgsql/utils.c:200
-#: ../libgsql/utils.c:243
+#: libgsql/utils.c:120 libgsql/utils.c:146 libgsql/utils.c:200
+#: libgsql/utils.c:243
 msgid "Western"
 msgstr ""
 
-#: ../libgsql/utils.c:122 ../libgsql/utils.c:202 ../libgsql/utils.c:239
+#: libgsql/utils.c:122 libgsql/utils.c:202 libgsql/utils.c:239
 msgid "Central European"
 msgstr ""
 
-#: ../libgsql/utils.c:124
+#: libgsql/utils.c:124
 msgid "South European"
 msgstr ""
 
-#: ../libgsql/utils.c:126 ../libgsql/utils.c:142 ../libgsql/utils.c:253
+#: libgsql/utils.c:126 libgsql/utils.c:142 libgsql/utils.c:253
 msgid "Baltic"
 msgstr ""
 
-#: ../libgsql/utils.c:128 ../libgsql/utils.c:204 ../libgsql/utils.c:217
-#: ../libgsql/utils.c:221 ../libgsql/utils.c:223 ../libgsql/utils.c:241
+#: libgsql/utils.c:128 libgsql/utils.c:204 libgsql/utils.c:217
+#: libgsql/utils.c:221 libgsql/utils.c:223 libgsql/utils.c:241
 msgid "Cyrillic"
 msgstr ""
 
-#: ../libgsql/utils.c:130 ../libgsql/utils.c:210 ../libgsql/utils.c:251
+#: libgsql/utils.c:130 libgsql/utils.c:210 libgsql/utils.c:251
 msgid "Arabic"
 msgstr ""
 
-#: ../libgsql/utils.c:132 ../libgsql/utils.c:245
+#: libgsql/utils.c:132 libgsql/utils.c:245
 msgid "Greek"
 msgstr ""
 
-#: ../libgsql/utils.c:134
+#: libgsql/utils.c:134
 msgid "Hebrew Visual"
 msgstr ""
 
-#: ../libgsql/utils.c:136 ../libgsql/utils.c:208 ../libgsql/utils.c:249
+#: libgsql/utils.c:136 libgsql/utils.c:208 libgsql/utils.c:249
 msgid "Hebrew"
 msgstr ""
 
-#: ../libgsql/utils.c:138 ../libgsql/utils.c:206 ../libgsql/utils.c:247
+#: libgsql/utils.c:138 libgsql/utils.c:206 libgsql/utils.c:247
 msgid "Turkish"
 msgstr ""
 
-#: ../libgsql/utils.c:140
+#: libgsql/utils.c:140
 msgid "Nordic"
 msgstr ""
 
-#: ../libgsql/utils.c:144
+#: libgsql/utils.c:144
 msgid "Celtic"
 msgstr ""
 
-#: ../libgsql/utils.c:148
+#: libgsql/utils.c:148
 msgid "Romanian"
 msgstr ""
 
-#: ../libgsql/utils.c:151 ../libgsql/utils.c:153 ../libgsql/utils.c:155
-#: ../libgsql/utils.c:157 ../libgsql/utils.c:159 ../libgsql/utils.c:161
-#: ../libgsql/utils.c:163 ../libgsql/utils.c:165
+#: libgsql/utils.c:151 libgsql/utils.c:153 libgsql/utils.c:155
+#: libgsql/utils.c:157 libgsql/utils.c:159 libgsql/utils.c:161
+#: libgsql/utils.c:163 libgsql/utils.c:165
 msgid "Unicode"
 msgstr ""
 
-#: ../libgsql/utils.c:168
+#: libgsql/utils.c:168
 msgid "Armenian"
 msgstr ""
 
-#: ../libgsql/utils.c:170 ../libgsql/utils.c:172 ../libgsql/utils.c:186
+#: libgsql/utils.c:170 libgsql/utils.c:172 libgsql/utils.c:186
 msgid "Chinese Traditional"
 msgstr ""
 
-#: ../libgsql/utils.c:174
+#: libgsql/utils.c:174
 msgid "Cyrillic/Russian"
 msgstr ""
 
-#: ../libgsql/utils.c:177 ../libgsql/utils.c:179 ../libgsql/utils.c:181
-#: ../libgsql/utils.c:213 ../libgsql/utils.c:228
+#: libgsql/utils.c:177 libgsql/utils.c:179 libgsql/utils.c:181
+#: libgsql/utils.c:213 libgsql/utils.c:228
 msgid "Japanese"
 msgstr ""
 
-#: ../libgsql/utils.c:184 ../libgsql/utils.c:215 ../libgsql/utils.c:219
-#: ../libgsql/utils.c:234
+#: libgsql/utils.c:184 libgsql/utils.c:215 libgsql/utils.c:219
+#: libgsql/utils.c:234
 msgid "Korean"
 msgstr ""
 
-#: ../libgsql/utils.c:189 ../libgsql/utils.c:191 ../libgsql/utils.c:193
-#: ../libgsql/utils.c:197
+#: libgsql/utils.c:189 libgsql/utils.c:191 libgsql/utils.c:193
+#: libgsql/utils.c:197
 msgid "Chinese Simplified"
 msgstr ""
 
-#: ../libgsql/utils.c:195
+#: libgsql/utils.c:195
 msgid "Georgian"
 msgstr ""
 
-#: ../libgsql/utils.c:225
+#: libgsql/utils.c:225
 msgid "Cyrillic/Ukrainian"
 msgstr ""
 
-#: ../libgsql/utils.c:230 ../libgsql/utils.c:236 ../libgsql/utils.c:255
+#: libgsql/utils.c:230 libgsql/utils.c:236 libgsql/utils.c:255
 msgid "Vietnamese"
 msgstr ""
 
-#: ../libgsql/utils.c:232
+#: libgsql/utils.c:232
 msgid "Thai"
 msgstr ""
 
-#: ../libgsql/workspace.c:214
+#: libgsql/workspace.c:214
 msgid "Attribute"
 msgstr ""
 
-#: ../libgsql/workspace.c:258
+#: libgsql/workspace.c:258
 msgid ""
 "In this area a detailed information about the selected object from the tree "
 "of database objects is displayed. In case when a class of objects is "
@@ -1132,101 +1095,135 @@ msgid ""
 "the selected object."
 msgstr ""
 
-#: ../libgsql/workspace.c:285 ../libgsql/workspace.c:286 ../src/gsqlmenu.c:50
+#: libgsql/workspace.c:285 libgsql/workspace.c:286 src/gsqlmenu.c:50
 msgid "Details"
 msgstr ""
 
-#: ../libgsql/workspace.c:1033
+#: libgsql/workspace.c:1033
 msgid "Save messages to file..."
 msgstr ""
 
-#: ../libgsql/workspace.c:1100
+#: libgsql/workspace.c:1100
 msgid "Copy text"
 msgstr ""
 
-#: ../libgsql/workspace.c:1115 ../src/gsql.c:400
+#: libgsql/workspace.c:1115 src/gsql.c:400
 msgid "Select all"
 msgstr ""
 
-#: ../libgsql/workspace.c:1124
+#: libgsql/workspace.c:1124
 msgid "Save to file"
 msgstr ""
 
-#: ../libgsql/workspace.c:1145
+#: libgsql/workspace.c:1145
 msgid "Clear all"
 msgstr ""
 
-#: ../plugins/exporter/export_csv.c:100 ../plugins/exporter/export_csv.c:137
+#: plugins/exporter/export_csv.c:100 plugins/exporter/export_csv.c:137
 #, c-format
 msgid "Export failed. file :'%s'. %s"
 msgstr ""
 
-#: ../plugins/exporter/export_csv.c:355
+#: plugins/exporter/export_csv.c:355
 #, c-format
 msgid "Export failed: %s"
 msgstr ""
 
-#: ../plugins/exporter/export_html.c:65 ../plugins/exporter/export_plain.c:76
-#: ../plugins/exporter/export_xml.c:66
+#: plugins/exporter/export_html.c:65 plugins/exporter/export_plain.c:76
+#: plugins/exporter/export_xml.c:66
 #, c-format
 msgid "Export failed:['%s'] %s"
 msgstr ""
 
-#: ../plugins/exporter/exporter_dialog.glade.h:1
-msgid "..."
-msgstr ""
-
-#: ../plugins/exporter/exporter_dialog.glade.h:2
+#: plugins/exporter/exporter_dialog.glade:8
 msgid "Export"
 msgstr ""
 
-#: ../plugins/exporter/exporter_dialog.glade.h:3
-msgid "Export type:"
-msgstr ""
-
-#: ../plugins/exporter/exporter_dialog.glade.h:4
-msgid "Include headers"
-msgstr ""
-
-#: ../plugins/exporter/exporter_dialog.glade.h:5
-msgid "Only fetched result"
-msgstr ""
-
-#: ../plugins/exporter/exporter_dialog.glade.h:6
-msgid "Select encoding:"
-msgstr ""
-
-#: ../plugins/exporter/exporter_dialog.glade.h:7
+#: plugins/exporter/exporter_dialog.glade:31
 msgid "Target file:"
 msgstr ""
 
-#: ../plugins/exporter/exporter_dialog.glade.h:8
-#: ../plugins/runner/runner_dialog.glade.h:14 ../src/gsql_dialogs.glade.h:36
+#: plugins/exporter/exporter_dialog.glade:61
+msgid "..."
+msgstr ""
+
+#: plugins/exporter/exporter_dialog.glade:84
+msgid "Select encoding:"
+msgstr ""
+
+#: plugins/exporter/exporter_dialog.glade:113
+msgid "Export type:"
+msgstr ""
+
+#: plugins/exporter/exporter_dialog.glade:141
+msgid "Only fetched result"
+msgstr ""
+
+#: plugins/exporter/exporter_dialog.glade:156
+msgid "Include headers"
+msgstr ""
+
+#: plugins/exporter/exporter_dialog.glade:190
+#: plugins/runner/runner_dialog.glade:252 src/gsql_dialogs.glade:842
+#: src/gsql_dialogs.glade:932
 msgid "gtk-cancel"
 msgstr ""
 
-#: ../plugins/exporter/exporter_dialog.glade.h:9
-#: ../src/gsql_dialogs.glade.h:40
+#: plugins/exporter/exporter_dialog.glade:201 src/gsql_dialogs.glade:858
 msgid "gtk-save"
 msgstr ""
 
-#: ../plugins/exporter/exportercb.c:57
+#: plugins/exporter/exportercb.c:57
 msgid "Target filename..."
 msgstr ""
 
-#: ../plugins/exporter/plugin_exporter.c:47
+#: plugins/exporter/plugin_exporter.c:47
 msgid "Export result set"
 msgstr ""
 
-#: ../plugins/runner/plugin_runner.c:52
+#: plugins/runner/plugin_runner.c:52
 msgid "Periodical execution"
 msgstr ""
 
-#: ../plugins/runner/plugin_runner.c:53
+#: plugins/runner/plugin_runner.c:53
 msgid "Periodical run"
 msgstr ""
 
-#: ../plugins/runner/runner_dialog.glade.h:1
+#: plugins/runner/runner_dialog.glade:7
+msgid "Periodocal run"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:44
+msgid "Cycles limit"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:61
+msgid "How many hours wait before start"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:70
+#: plugins/runner/runner_dialog.glade:139
+msgid "h"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:82
+msgid "How many minutes wait before start"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:94
+#: plugins/runner/runner_dialog.glade:161
+msgid "m"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:114
+msgid "Suspended start time"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:183
+msgid "s"
+msgstr ""
+
+#: plugins/runner/runner_dialog.glade:201
 msgid ""
 "1 Min\n"
 "2 Min\n"
@@ -1235,60 +1232,31 @@ msgid ""
 "10 Min"
 msgstr ""
 
-#: ../plugins/runner/runner_dialog.glade.h:6
+#: plugins/runner/runner_dialog.glade:216
 msgid "Custom period"
 msgstr ""
 
-#: ../plugins/runner/runner_dialog.glade.h:7
-msgid "Cycles limit"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:8
-msgid "How many hours wait before start"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:9
-msgid "How many minutes wait before start"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:10
-msgid "Periodocal run"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:11
+#: plugins/runner/runner_dialog.glade:231
 msgid "Predefined"
 msgstr ""
 
-#: ../plugins/runner/runner_dialog.glade.h:12
+#: plugins/runner/runner_dialog.glade:275
 msgid "Start"
 msgstr ""
 
-#: ../plugins/runner/runner_dialog.glade.h:13
-msgid "Suspended start time"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:15
-msgid "h"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:16
-msgid "m"
-msgstr ""
-
-#: ../plugins/runner/runner_dialog.glade.h:17
-msgid "s"
-msgstr ""
-
-#: ../plugins/vte/plugin_vte.c:50
+#: plugins/vte/plugin_vte.c:50
 msgid "Open Terminal"
 msgstr ""
 
-#: ../plugins/vte/plugin_vte.c:50
+#: plugins/vte/plugin_vte.c:50
 msgid "Open terminal"
 msgstr ""
 
-#: ../plugins/vte/vte_dialog_conf.glade.h:2
-#, no-c-format
+#: plugins/vte/vte_dialog_conf.glade:8
+msgid "GSQL terminal plugin "
+msgstr ""
+
+#: plugins/vte/vte_dialog_conf.glade:43
 msgid ""
 "Available options:\n"
 "\t<b>%h</b> - hostname\t<b>%u</b> - username\n"
@@ -1297,68 +1265,63 @@ msgid ""
 "-p<b>%p</b></small>"
 msgstr ""
 
-#: ../plugins/vte/vte_dialog_conf.glade.h:6
-msgid "GSQL terminal plugin "
-msgstr ""
-
-#: ../plugins/vte/vte_dialog_conf.glade.h:7 ../src/gsql_dialogs.glade.h:37
+#: plugins/vte/vte_dialog_conf.glade:72 src/gsql_dialogs.glade:752
 msgid "gtk-close"
 msgstr ""
 
-#: ../plugins/vte/vtecb.c:62
+#: plugins/vte/vtecb.c:62
 msgid "The command line was not set properly"
 msgstr ""
 
-#: ../src/gsql.c:273 ../src/main.c:114
+#: src/gsql.c:273 src/main.c:114
 msgid "Engines not found at "
 msgstr ""
 
-#: ../src/gsql.c:284
+#: src/gsql.c:284
 msgid "Database logon"
 msgstr ""
 
-#: ../src/gsql.c:307
+#: src/gsql.c:307
 msgid "Choose the engine:"
 msgstr ""
 
-#: ../src/gsql.c:374
+#: src/gsql.c:374
 msgid "Close session(s)"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:1
-msgid " Save changes before closing?"
+#: src/gsql_dialogs.glade:8
+msgid "Preferences"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:2
-msgid "...preview..."
+#: src/gsql_dialogs.glade:50
+msgid "Start with:"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:3
-msgid "<b>Color scheme</b>"
+#: src/gsql_dialogs.glade:60
+msgid "Show database navigation area"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:4
-msgid "<b>Date Time format</b>"
+#: src/gsql_dialogs.glade:75
+msgid "Show message area"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:5
-msgid "<b>Font</b>"
+#: src/gsql_dialogs.glade:90
+msgid "Widescreen layout"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:6
-msgid "<b>Options</b>"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:7
-msgid "<b>Result fetching</b>"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:8
+#: src/gsql_dialogs.glade:110
 msgid "<b>Workspace</b>"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:10
-#, no-c-format
+#: src/gsql_dialogs.glade:140
+msgid "Restore size and position of the window"
+msgstr ""
+
+#: src/gsql_dialogs.glade:161 src/gsql_dialogs.glade:647
+msgid "<b>Options</b>"
+msgstr ""
+
+#: src/gsql_dialogs.glade:208
 msgid ""
 "Available options:\n"
 "\t<b>%Y</b> - Years\t<b>%M</b> - Months\t\t<b>%D</b> - Days\n"
@@ -1367,257 +1330,257 @@ msgid ""
 "\t<small>Example: %0D/%0M/%Y %0h:%0m:%0s</small>"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:15
-msgid "Configure"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:16
-msgid "Display line numbers"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:17
-msgid "Editor"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:18
-msgid "Enable auto indent"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:19
-msgid "Enable text wrapping"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:20
-msgid "General"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:21
-msgid "Highlight current line"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:22
-msgid "Insert spaces instead tabs"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:23
-msgid "Max. limit:"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:24
-msgid "Plugins"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:25
-msgid "Preferences"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:26
+#: src/gsql_dialogs.glade:227
 msgid "Preview"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:27
-msgid "Restore size and position of the window"
+#: src/gsql_dialogs.glade:243
+msgid "...preview..."
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:28
-msgid "Show database navigation area"
+#: src/gsql_dialogs.glade:263
+msgid "<b>Date Time format</b>"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:29
-msgid "Show message area"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:30
-msgid "Start with:"
-msgstr ""
-
-#: ../src/gsql_dialogs.glade.h:31
+#: src/gsql_dialogs.glade:302
 msgid "Step limit:"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:32
-msgid "Tab width"
+#: src/gsql_dialogs.glade:334
+msgid "Max. limit:"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:33
-msgid "This is not a file. Do you want clean up the entire text?"
+#: src/gsql_dialogs.glade:371
+msgid "<b>Result fetching</b>"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:34
+#: src/gsql_dialogs.glade:390
+msgid "General"
+msgstr ""
+
+#: src/gsql_dialogs.glade:420
 msgid "Use system font"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:35
-msgid "Widescreen layout"
+#: src/gsql_dialogs.glade:456
+msgid "<b>Font</b>"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:38
+#: src/gsql_dialogs.glade:495
+msgid "<b>Color scheme</b>"
+msgstr ""
+
+#: src/gsql_dialogs.glade:527
+msgid "Display line numbers"
+msgstr ""
+
+#: src/gsql_dialogs.glade:543
+msgid "Highlight current line"
+msgstr ""
+
+#: src/gsql_dialogs.glade:558
+msgid "Enable text wrapping"
+msgstr ""
+
+#: src/gsql_dialogs.glade:573
+msgid "Enable auto indent"
+msgstr ""
+
+#: src/gsql_dialogs.glade:588
+msgid "Insert spaces instead tabs"
+msgstr ""
+
+#: src/gsql_dialogs.glade:609
+msgid "Tab width"
+msgstr ""
+
+#: src/gsql_dialogs.glade:670
+msgid "Editor"
+msgstr ""
+
+#: src/gsql_dialogs.glade:704
+msgid "Configure"
+msgstr ""
+
+#: src/gsql_dialogs.glade:732
+msgid "Plugins"
+msgstr ""
+
+#: src/gsql_dialogs.glade:807
+msgid " Save changes before closing?"
+msgstr ""
+
+#: src/gsql_dialogs.glade:826
 msgid "gtk-discard"
 msgstr ""
 
-#: ../src/gsql_dialogs.glade.h:39
+#: src/gsql_dialogs.glade:914
+msgid "This is not a file. Do you want clean up the entire text?"
+msgstr ""
+
+#: src/gsql_dialogs.glade:947
 msgid "gtk-ok"
 msgstr ""
 
-#: ../src/gsqlfiles.c:42
+#: src/gsqlfiles.c:42
 msgid "New"
 msgstr ""
 
-#: ../src/gsqlfiles.c:42
+#: src/gsqlfiles.c:42
 msgid "New SQL"
 msgstr ""
 
-#: ../src/gsqlfiles.c:43
+#: src/gsqlfiles.c:43
 msgid "Open"
 msgstr ""
 
-#: ../src/gsqlfiles.c:43
+#: src/gsqlfiles.c:43
 msgid "Open file"
 msgstr ""
 
-#: ../src/gsqlfiles.c:44
+#: src/gsqlfiles.c:44
 msgid "Save"
 msgstr ""
 
-#: ../src/gsqlfiles.c:45
+#: src/gsqlfiles.c:45
 msgid "Save As..."
 msgstr ""
 
-#: ../src/gsqlfiles.c:45
+#: src/gsqlfiles.c:45
 msgid "Save file as..."
 msgstr ""
 
-#: ../src/gsqlfiles.c:46
+#: src/gsqlfiles.c:46
 msgid "Close"
 msgstr ""
 
-#: ../src/gsqlfiles.c:47
+#: src/gsqlfiles.c:47
 msgid "Close All"
 msgstr ""
 
-#: ../src/gsqlfiles.c:48
+#: src/gsqlfiles.c:48
 msgid "Reload"
 msgstr ""
 
-#: ../src/gsqlhelp.c:36
+#: src/gsqlhelp.c:36
 msgid "_Help"
 msgstr ""
 
-#: ../src/gsqlhelp.c:38
+#: src/gsqlhelp.c:38
 msgid "User's Manual"
 msgstr ""
 
-#: ../src/gsqlhelp.c:40
+#: src/gsqlhelp.c:40
 msgid "Home Page"
 msgstr ""
 
-#: ../src/gsqlhelp.c:41
+#: src/gsqlhelp.c:41
 msgid "API Reference"
 msgstr ""
 
-#: ../src/gsqlhelp.c:42
+#: src/gsqlhelp.c:42
 msgid "Bug Report"
 msgstr ""
 
-#: ../src/gsqlhelp.c:43
+#: src/gsqlhelp.c:43
 msgid "Wish List"
 msgstr ""
 
-#: ../src/gsqlhelp.c:45
+#: src/gsqlhelp.c:45
 msgid "About"
 msgstr ""
 
-#: ../src/gsqlmenu.c:37
+#: src/gsqlmenu.c:37
 msgid "_File"
 msgstr ""
 
-#: ../src/gsqlmenu.c:39
+#: src/gsqlmenu.c:39
 msgid "Search"
 msgstr ""
 
-#: ../src/gsqlmenu.c:40
+#: src/gsqlmenu.c:40
 msgid "_View"
 msgstr ""
 
-#: ../src/gsqlmenu.c:41
+#: src/gsqlmenu.c:41
 msgid "_Session"
 msgstr ""
 
-#: ../src/gsqlmenu.c:42
+#: src/gsqlmenu.c:42
 msgid "_Tools"
 msgstr ""
 
-#: ../src/gsqlmenu.c:46
+#: src/gsqlmenu.c:46
 msgid "Next Session"
 msgstr ""
 
-#: ../src/gsqlmenu.c:46 ../src/gsqlmenu.c:47
+#: src/gsqlmenu.c:46 src/gsqlmenu.c:47
 msgid "Switch to the next session"
 msgstr ""
 
-#: ../src/gsqlmenu.c:47
+#: src/gsqlmenu.c:47
 msgid "Previous Session"
 msgstr ""
 
-#: ../src/gsqlmenu.c:48
+#: src/gsqlmenu.c:48
 msgid "Next Page"
 msgstr ""
 
-#: ../src/gsqlmenu.c:49
+#: src/gsqlmenu.c:49
 msgid "Previous Page"
 msgstr ""
 
-#: ../src/gsqlmenu.c:50
+#: src/gsqlmenu.c:50
 msgid "Switch to the details page"
 msgstr ""
 
 #. GSQL_STOCK_SESSION_NEW
-#: ../src/gsqlmenu.c:54
+#: src/gsqlmenu.c:54
 msgid "New Session"
 msgstr ""
 
-#: ../src/gsqlmenu.c:54
+#: src/gsqlmenu.c:54
 msgid "Open new session"
 msgstr ""
 
-#: ../src/gsqlmenu.c:59
+#: src/gsqlmenu.c:59
 msgid "Full Screen"
 msgstr ""
 
-#: ../src/gsqlmenu.c:60
+#: src/gsqlmenu.c:60
 msgid "Navigator"
 msgstr ""
 
-#: ../src/gsqlmenu.c:61
+#: src/gsqlmenu.c:61
 msgid "Messages"
 msgstr ""
 
-#: ../src/gsqlmenucb.c:82
+#: src/gsqlmenucb.c:82
 msgid "Open file..."
 msgstr ""
 
-#: ../src/gsqlmenucb.c:93
+#: src/gsqlmenucb.c:93
 msgid "Charset"
 msgstr ""
 
-#: ../src/gsqlmenucb.c:639
+#: src/gsqlmenucb.c:639
 msgid ""
 "GSQL is an integrated database development tool. This application developing "
 "for the GNOME Desktop"
 msgstr ""
 
-#: ../src/main.c:46
+#: src/main.c:46
 msgid "Enable tracing information (useful for bugs hunting)"
 msgstr ""
 
-#: ../src/main.c:48
+#: src/main.c:48
 msgid "Enable debugging information (useful for bugs hunting)"
 msgstr ""
 
-#: ../src/main.c:59
+#: src/main.c:59
 msgid " - Integrated Database Development Tool"
 msgstr ""
 
-#: ../src/main.c:79
+#: src/main.c:79
 msgid "GSQL. Integrated Database Development Tool"
 msgstr ""
