@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GSQL 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 23:51+0300\n"
+"POT-Creation-Date: 2010-03-25 02:26+0300\n"
 "PO-Revision-Date: 2006-07-24 16:15+0500\n"
 "Last-Translator: Halturin Taras <halturin@gmail.com>\n"
 "Language-Team: ru <en@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: engines/mysql/engine_conf.c:60
+#: engines/mysql/engine_conf.c:60 engines/postgresql/engine_conf.c:60
 msgid "<b>Character set</b>"
 msgstr ""
 
-#: engines/mysql/engine_conf.c:74
+#: engines/mysql/engine_conf.c:74 engines/postgresql/engine_conf.c:74
 msgid "Use custom character set"
 msgstr ""
 
@@ -28,43 +28,49 @@ msgstr ""
 msgid "MySQL"
 msgstr ""
 
-#: engines/mysql/engine_menu.c:36
-msgid "Charter Set"
+#: engines/mysql/engine_menu.c:36 engines/postgresql/engine_menu.c:36
+msgid "Character Set"
 msgstr ""
 
-#: engines/mysql/engine_menucb.c:58
+#: engines/mysql/engine_menucb.c:58 engines/postgresql/engine_menucb.c:58
 #, c-format
 msgid "Character set was changed to '%s'"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:138
+#: engines/mysql/engine_mysql.c:139 engines/postgresql/engine.c:144
 msgid "Hostname"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:155 engines/oracle/engine_oracle.c:200
+#: engines/mysql/engine_mysql.c:155 engines/postgresql/engine.c:159
+msgid "Port number"
+msgstr ""
+
+#: engines/mysql/engine_mysql.c:171 engines/oracle/engine_oracle.c:200
 msgid "Database name"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:173 engines/oracle/engine_oracle.c:218
+#: engines/mysql/engine_mysql.c:189 engines/oracle/engine_oracle.c:218
+#: engines/postgresql/engine.c:193
 msgid "Username"
 msgstr ""
 
-#: engines/mysql/engine_mysql.c:191 engines/oracle/engine_oracle.c:236
+#: engines/mysql/engine_mysql.c:207 engines/oracle/engine_oracle.c:236
+#: engines/postgresql/engine.c:211
 msgid "Password"
 msgstr ""
 
-#: engines/mysql/engine_session.c:71
+#: engines/mysql/engine_session.c:75
 msgid "The Database and Username fields are required."
 msgstr ""
 
-#: engines/mysql/engine_session.c:129 engines/mysql/engine_session.c:255
+#: engines/mysql/engine_session.c:133 engines/mysql/engine_session.c:259
 #, c-format
 msgid ""
 "Connect to the MySQL database \"<b>%s</b>\" succesfully\n"
 "<small>(%s)</small>"
 msgstr ""
 
-#: engines/mysql/engine_session.c:171
+#: engines/mysql/engine_session.c:175
 msgid "Restoring the connection is automatic"
 msgstr ""
 
@@ -76,14 +82,16 @@ msgstr ""
 msgid "Transaction rolled back"
 msgstr ""
 
-#: engines/mysql/mysql_cursor.c:333
+#: engines/mysql/mysql_cursor.c:340
 msgid ""
 "Data truncated. It is mean that internal error occured. Please, report this "
 "bug."
 msgstr ""
 
 #: engines/mysql/nav_objects.c:97 engines/oracle/nav_objects.c:95
-#: libgsql/sqleditor.c:1503 plugins/exporter/export_csv.c:342
+#: engines/postgresql/nav_objects.c:140 libgsql/sqleditor.c:1505
+#: plugins/exporter/export_csv.c:342
+#, c-format
 msgid "GSQL: Unsupported type"
 msgstr ""
 
@@ -127,6 +135,22 @@ msgstr ""
 #: engines/oracle/nav_tree__tablespaces.c:204
 #: engines/oracle/nav_tree__triggers.c:170
 #: engines/oracle/nav_tree__users.c:136 engines/oracle/nav_tree__views.c:226
+#: engines/postgresql/nav_tree_columns.c:157
+#: engines/postgresql/nav_tree_constraints.c:128
+#: engines/postgresql/nav_tree_databases.c:162
+#: engines/postgresql/nav_tree_indexes.c:139
+#: engines/postgresql/nav_tree_languages.c:117
+#: engines/postgresql/nav_tree_privileges.c:113
+#: engines/postgresql/nav_tree_procedures.c:139
+#: engines/postgresql/nav_tree_sequences.c:104
+#: engines/postgresql/nav_tree_tables.c:223
+#: engines/postgresql/nav_tree_tables.c:337
+#: engines/postgresql/nav_tree_triggers.c:122
+#: engines/postgresql/nav_tree_types.c:115
+#: engines/postgresql/nav_tree_types.c:248
+#: engines/postgresql/nav_tree_users.c:98
+#: engines/postgresql/nav_tree_variables.c:131
+#: engines/postgresql/nav_tree_views.c:177
 msgid "Incorrect data"
 msgstr ""
 
@@ -135,6 +159,9 @@ msgstr ""
 #: engines/oracle/nav_tree__constraints.c:39
 #: engines/oracle/nav_tree__indexes.c:40 engines/oracle/nav_tree__tables.c:71
 #: engines/oracle/nav_tree__triggers.c:42 engines/oracle/nav_tree__views.c:68
+#: engines/postgresql/nav_tree_indexes.c:40
+#: engines/postgresql/nav_tree_tables.c:67
+#: engines/postgresql/nav_tree_views.c:66
 msgid "Columns"
 msgstr ""
 
@@ -160,35 +187,50 @@ msgstr ""
 #: engines/oracle/nav_tree__tablespaces.c:240
 #: engines/oracle/nav_tree__triggers.c:204
 #: engines/oracle/nav_tree__users.c:170 engines/oracle/nav_tree__views.c:260
-#: libgsql/navigation.c:334 libgsql/navigation.c:777
+#: engines/postgresql/nav_tree_databases.c:198
+#: engines/postgresql/nav_tree_indexes.c:176
+#: engines/postgresql/nav_tree_schemas.c:320
+#: engines/postgresql/nav_tree_tables.c:256
+#: engines/postgresql/nav_tree_types.c:288
+#: engines/postgresql/nav_tree_views.c:216 libgsql/navigation.c:334
+#: libgsql/navigation.c:777
 msgid "Processing..."
 msgstr ""
 
 #. id
 #. stock
 #: engines/mysql/nav_tree__schemas.c:55 engines/oracle/nav_tree__schemas.c:99
+#: engines/postgresql/nav_tree_schemas.c:57
 msgid "Tables"
 msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:64 engines/mysql/nav_tree__tables.c:99
 #: engines/oracle/nav_tree__schemas.c:109
 #: engines/oracle/nav_tree__tables.c:101
+#: engines/postgresql/nav_tree_schemas.c:96
+#: engines/postgresql/nav_tree_tables.c:100
 msgid "Constraints"
 msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:73 engines/oracle/nav_tree__schemas.c:119
+#: engines/postgresql/nav_tree_schemas.c:66
 msgid "Views"
 msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:82 engines/mysql/nav_tree__tables.c:79
 #: engines/oracle/nav_tree__clusters.c:50
 #: engines/oracle/nav_tree__schemas.c:129 engines/oracle/nav_tree__tables.c:81
+#: engines/postgresql/nav_tree_schemas.c:106
+#: engines/postgresql/nav_tree_tables.c:78
 msgid "Indexes"
 msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:91 engines/mysql/nav_tree__tables.c:89
 #: engines/mysql/nav_tree__views.c:75 engines/oracle/nav_tree__schemas.c:139
 #: engines/oracle/nav_tree__tables.c:91 engines/oracle/nav_tree__views.c:78
+#: engines/postgresql/nav_tree_schemas.c:116
+#: engines/postgresql/nav_tree_tables.c:89
+#: engines/postgresql/nav_tree_views.c:77
 msgid "Triggers"
 msgstr ""
 
@@ -199,10 +241,12 @@ msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:109
 #: engines/oracle/nav_tree__schemas.c:159
+#: engines/postgresql/nav_tree_schemas.c:137
 msgid "Functions"
 msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:119
+#: engines/postgresql/nav_tree_schemas.c:148
 msgid "Privileges"
 msgstr ""
 
@@ -228,10 +272,12 @@ msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:177
 #: engines/oracle/nav_tree__schemas.c:459
+#: engines/postgresql/nav_tree_schemas.c:186
 msgid "Users"
 msgstr ""
 
 #: engines/mysql/nav_tree__schemas.c:188
+#: engines/postgresql/nav_tree_schemas.c:198
 msgid "Process List"
 msgstr ""
 
@@ -241,11 +287,15 @@ msgstr ""
 
 #: engines/mysql/nav_tree__tables.c:138 engines/mysql/nav_tree__views.c:89
 #: engines/oracle/nav_tree__tables.c:171 engines/oracle/nav_tree__views.c:125
+#: engines/postgresql/nav_tree_tables.c:140
+#: engines/postgresql/nav_tree_views.c:92
 msgid "Browse data"
 msgstr ""
 
 #: engines/mysql/nav_tree__tables.c:139 engines/mysql/nav_tree__views.c:90
 #: engines/oracle/nav_tree__tables.c:172 engines/oracle/nav_tree__views.c:126
+#: engines/postgresql/nav_tree_tables.c:141
+#: engines/postgresql/nav_tree_views.c:93
 msgid "Open SQL editor to browse the data  [ F3 ]"
 msgstr ""
 
@@ -261,7 +311,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: engines/oracle/engine_conf.c:172 libgsql/workspace.c:230
+#: engines/oracle/engine_conf.c:172 libgsql/workspace.c:237
 msgid "Value"
 msgstr ""
 
@@ -552,6 +602,87 @@ msgstr ""
 msgid "Session reconnected"
 msgstr ""
 
+#: engines/postgresql/engine.c:175
+msgid "Database"
+msgstr ""
+
+#: engines/postgresql/engine_menu.c:34
+msgid "PostgreSQL"
+msgstr ""
+
+#: engines/postgresql/engine_session.c:69
+msgid "Database and Username are required."
+msgstr ""
+
+#: engines/postgresql/engine_session.c:122
+#, c-format
+msgid ""
+"Connected to the PostgreSQL database \"<b>%s</b>\".\n"
+"<small>(%s)</small>"
+msgstr ""
+
+#: engines/postgresql/nav_tree_databases.c:72
+#: engines/postgresql/nav_tree_tables.c:125
+msgid "Create..."
+msgstr ""
+
+#: engines/postgresql/nav_tree_databases.c:73
+msgid "Create database"
+msgstr ""
+
+#: engines/postgresql/nav_tree_databases.c:77
+msgid "Drop..."
+msgstr ""
+
+#: engines/postgresql/nav_tree_databases.c:78
+msgid "Drop database"
+msgstr ""
+
+#: engines/postgresql/nav_tree_databases.h:39
+msgid "Schemas"
+msgstr ""
+
+#: engines/postgresql/nav_tree_databases.h:49
+msgid "Languages"
+msgstr ""
+
+#: engines/postgresql/nav_tree_processlist.c:60
+msgid "Kill"
+msgstr ""
+
+#: engines/postgresql/nav_tree_processlist.c:61
+msgid "Kill process"
+msgstr ""
+
+#: engines/postgresql/nav_tree_processlist.c:248
+#, c-format
+msgid "Killing %s..."
+msgstr ""
+
+#: engines/postgresql/nav_tree_schemas.c:76
+msgid "Types"
+msgstr ""
+
+#: engines/postgresql/nav_tree_schemas.c:165
+msgid "Current Database"
+msgstr ""
+
+#: engines/postgresql/nav_tree_schemas.c:175
+msgid "All Databases"
+msgstr ""
+
+#: engines/postgresql/nav_tree_tables.c:126
+msgid "Create table"
+msgstr ""
+
+#: engines/postgresql/nav_tree_views.c:96 src/gsqlmenu.c:38
+msgid "Edit"
+msgstr ""
+
+#: engines/postgresql/nav_tree_views.c:97
+msgid "Open SQL editor to change the view "
+msgstr ""
+
 #: libgsql/common.c:95 libgsql/common.c:119
 #, c-format
 msgid "Couldn't find pixmap file: %s"
@@ -561,7 +692,7 @@ msgstr ""
 msgid "Cannot initialize configuration manager."
 msgstr ""
 
-#: libgsql/cursor.c:461
+#: libgsql/cursor.c:459
 #, c-format
 msgid "The %s engine does not support this feature"
 msgstr ""
@@ -723,107 +854,107 @@ msgstr ""
 msgid "Set custom limit value"
 msgstr ""
 
-#: libgsql/sqleditor.c:863
+#: libgsql/sqleditor.c:858
 msgid "Start SQL execution..."
 msgstr ""
 
-#: libgsql/sqleditor.c:877
+#: libgsql/sqleditor.c:872
 #, c-format
 msgid "Query execution finished at line %d [elapsed: %02f]"
 msgstr ""
 
-#: libgsql/sqleditor.c:941
+#: libgsql/sqleditor.c:936
 msgid "Query execution finished [DML]. Affected rows"
 msgstr ""
 
-#: libgsql/sqleditor.c:943 libgsql/sqleditor.c:954 libgsql/sqleditor.c:965
-#: libgsql/sqleditor.c:976 libgsql/sqleditor.c:986 libgsql/sqleditor.c:996
-#: libgsql/sqleditor.c:1006 libgsql/sqleditor.c:1016 libgsql/sqleditor.c:1025
+#: libgsql/sqleditor.c:938 libgsql/sqleditor.c:949 libgsql/sqleditor.c:960
+#: libgsql/sqleditor.c:971 libgsql/sqleditor.c:981 libgsql/sqleditor.c:991
+#: libgsql/sqleditor.c:1001 libgsql/sqleditor.c:1011 libgsql/sqleditor.c:1020
 msgid "at line"
 msgstr ""
 
-#: libgsql/sqleditor.c:944 libgsql/sqleditor.c:955 libgsql/sqleditor.c:966
-#: libgsql/sqleditor.c:977 libgsql/sqleditor.c:987 libgsql/sqleditor.c:997
-#: libgsql/sqleditor.c:1007 libgsql/sqleditor.c:1017 libgsql/sqleditor.c:1026
+#: libgsql/sqleditor.c:939 libgsql/sqleditor.c:950 libgsql/sqleditor.c:961
+#: libgsql/sqleditor.c:972 libgsql/sqleditor.c:982 libgsql/sqleditor.c:992
+#: libgsql/sqleditor.c:1002 libgsql/sqleditor.c:1012 libgsql/sqleditor.c:1021
 msgid "elapsed"
 msgstr ""
 
-#: libgsql/sqleditor.c:952
+#: libgsql/sqleditor.c:947
 msgid "Query execution finished. Inserted rows"
 msgstr ""
 
-#: libgsql/sqleditor.c:963
+#: libgsql/sqleditor.c:958
 msgid "Query execution finished. Updated rows"
 msgstr ""
 
-#: libgsql/sqleditor.c:974
+#: libgsql/sqleditor.c:969
 msgid "Query execution finished. Deleted rows"
 msgstr ""
 
-#: libgsql/sqleditor.c:985
+#: libgsql/sqleditor.c:980
 msgid "Query execution finished"
 msgstr ""
 
-#: libgsql/sqleditor.c:995
+#: libgsql/sqleditor.c:990
 msgid "Query execution finished. Object created"
 msgstr ""
 
-#: libgsql/sqleditor.c:1005
+#: libgsql/sqleditor.c:1000
 msgid "Query execution finished. Object droped"
 msgstr ""
 
-#: libgsql/sqleditor.c:1015
+#: libgsql/sqleditor.c:1010
 msgid "Query execution finished. Object altered"
 msgstr ""
 
-#: libgsql/sqleditor.c:1024
+#: libgsql/sqleditor.c:1019
 msgid "Query execution finished [DDL]"
 msgstr ""
 
-#: libgsql/sqleditor.c:1033
+#: libgsql/sqleditor.c:1028
 msgid "Unknown statement type"
 msgstr ""
 
-#: libgsql/sqleditor.c:1257 libgsql/sqleditor.c:1531
+#: libgsql/sqleditor.c:1259 libgsql/sqleditor.c:1533
 #, c-format
 msgid ""
 "The maximum limit of fetch is reached [%d]. You can extend this limit in the "
 "settings."
 msgstr ""
 
-#: libgsql/sqleditor.c:1507
+#: libgsql/sqleditor.c:1509
 msgid "&lt;value&gt;"
 msgstr ""
 
-#: libgsql/sqleditor.c:1523
+#: libgsql/sqleditor.c:1525
 msgid "The fetching has been canceled."
 msgstr ""
 
-#: libgsql/sqleditor.c:1543
+#: libgsql/sqleditor.c:1545
 #, c-format
 msgid "Rows fetched: %d [total: %llu]"
 msgstr ""
 
-#: libgsql/sqleditor.c:1691
+#: libgsql/sqleditor.c:1693
 msgid "Save as..."
 msgstr ""
 
-#: libgsql/sqleditor.c:1746 libgsql/sqleditor.c:1770
+#: libgsql/sqleditor.c:1748 libgsql/sqleditor.c:1772
 #, c-format
 msgid "Failed to save file '%s'. %s"
 msgstr ""
 
-#: libgsql/sqleditor.c:1788
+#: libgsql/sqleditor.c:1790
 #, c-format
 msgid "File saved: %s [%d bytes]"
 msgstr ""
 
-#: libgsql/sqleditor.c:1954
+#: libgsql/sqleditor.c:1956
 #, c-format
 msgid "Failed to reload file '%s'. %s"
 msgstr ""
 
-#: libgsql/sqleditor.c:2005 src/gsqlfiles.c:107 src/gsqlfiles.c:154
+#: libgsql/sqleditor.c:2007 src/gsqlfiles.c:107 src/gsqlfiles.c:154
 #, c-format
 msgid "Failed to load file '%s'. %s"
 msgstr ""
@@ -943,11 +1074,11 @@ msgstr ""
 msgid "Thai"
 msgstr ""
 
-#: libgsql/workspace.c:207
+#: libgsql/workspace.c:214
 msgid "Attribute"
 msgstr ""
 
-#: libgsql/workspace.c:251
+#: libgsql/workspace.c:258
 msgid ""
 "In this area a detailed information about the selected object from the tree "
 "of database objects is displayed. In case when a class of objects is "
@@ -964,27 +1095,27 @@ msgid ""
 "the selected object."
 msgstr ""
 
-#: libgsql/workspace.c:278 libgsql/workspace.c:279 src/gsqlmenu.c:50
+#: libgsql/workspace.c:285 libgsql/workspace.c:286 src/gsqlmenu.c:50
 msgid "Details"
 msgstr ""
 
-#: libgsql/workspace.c:1016
+#: libgsql/workspace.c:1033
 msgid "Save messages to file..."
 msgstr ""
 
-#: libgsql/workspace.c:1083
+#: libgsql/workspace.c:1100
 msgid "Copy text"
 msgstr ""
 
-#: libgsql/workspace.c:1098 src/gsql.c:400
+#: libgsql/workspace.c:1115 src/gsql.c:400
 msgid "Select all"
 msgstr ""
 
-#: libgsql/workspace.c:1107
+#: libgsql/workspace.c:1124
 msgid "Save to file"
 msgstr ""
 
-#: libgsql/workspace.c:1128
+#: libgsql/workspace.c:1145
 msgid "Clear all"
 msgstr ""
 
@@ -1033,12 +1164,12 @@ msgid "Include headers"
 msgstr ""
 
 #: plugins/exporter/exporter_dialog.glade:190
-#: plugins/runner/runner_dialog.glade:252 src/gsql_dialogs.glade:809
-#: src/gsql_dialogs.glade:892
+#: plugins/runner/runner_dialog.glade:252 src/gsql_dialogs.glade:842
+#: src/gsql_dialogs.glade:932
 msgid "gtk-cancel"
 msgstr ""
 
-#: plugins/exporter/exporter_dialog.glade:201 src/gsql_dialogs.glade:823
+#: plugins/exporter/exporter_dialog.glade:201 src/gsql_dialogs.glade:858
 msgid "gtk-save"
 msgstr ""
 
@@ -1134,7 +1265,7 @@ msgid ""
 "-p<b>%p</b></small>"
 msgstr ""
 
-#: plugins/vte/vte_dialog_conf.glade:72 src/gsql_dialogs.glade:729
+#: plugins/vte/vte_dialog_conf.glade:72 src/gsql_dialogs.glade:752
 msgid "gtk-close"
 msgstr ""
 
@@ -1166,31 +1297,31 @@ msgstr ""
 msgid "Start with:"
 msgstr ""
 
-#: src/gsql_dialogs.glade:62
+#: src/gsql_dialogs.glade:60
 msgid "Show database navigation area"
 msgstr ""
 
-#: src/gsql_dialogs.glade:78
+#: src/gsql_dialogs.glade:75
 msgid "Show message area"
 msgstr ""
 
-#: src/gsql_dialogs.glade:94
+#: src/gsql_dialogs.glade:90
 msgid "Widescreen layout"
 msgstr ""
 
-#: src/gsql_dialogs.glade:112
+#: src/gsql_dialogs.glade:110
 msgid "<b>Workspace</b>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:144
+#: src/gsql_dialogs.glade:140
 msgid "Restore size and position of the window"
 msgstr ""
 
-#: src/gsql_dialogs.glade:161 src/gsql_dialogs.glade:628
+#: src/gsql_dialogs.glade:161 src/gsql_dialogs.glade:647
 msgid "<b>Options</b>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:204
+#: src/gsql_dialogs.glade:208
 msgid ""
 "Available options:\n"
 "\t<b>%Y</b> - Years\t<b>%M</b> - Months\t\t<b>%D</b> - Days\n"
@@ -1199,95 +1330,95 @@ msgid ""
 "\t<small>Example: %0D/%0M/%Y %0h:%0m:%0s</small>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:226
+#: src/gsql_dialogs.glade:227
 msgid "Preview"
 msgstr ""
 
-#: src/gsql_dialogs.glade:239
+#: src/gsql_dialogs.glade:243
 msgid "...preview..."
 msgstr ""
 
-#: src/gsql_dialogs.glade:258
+#: src/gsql_dialogs.glade:263
 msgid "<b>Date Time format</b>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:297
+#: src/gsql_dialogs.glade:302
 msgid "Step limit:"
 msgstr ""
 
-#: src/gsql_dialogs.glade:325
+#: src/gsql_dialogs.glade:334
 msgid "Max. limit:"
 msgstr ""
 
-#: src/gsql_dialogs.glade:358
+#: src/gsql_dialogs.glade:371
 msgid "<b>Result fetching</b>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:377
+#: src/gsql_dialogs.glade:390
 msgid "General"
 msgstr ""
 
-#: src/gsql_dialogs.glade:410
+#: src/gsql_dialogs.glade:420
 msgid "Use system font"
 msgstr ""
 
-#: src/gsql_dialogs.glade:443
+#: src/gsql_dialogs.glade:456
 msgid "<b>Font</b>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:480
+#: src/gsql_dialogs.glade:495
 msgid "<b>Color scheme</b>"
 msgstr ""
 
-#: src/gsql_dialogs.glade:513
+#: src/gsql_dialogs.glade:527
 msgid "Display line numbers"
 msgstr ""
 
-#: src/gsql_dialogs.glade:528
+#: src/gsql_dialogs.glade:543
 msgid "Highlight current line"
 msgstr ""
 
-#: src/gsql_dialogs.glade:543
+#: src/gsql_dialogs.glade:558
 msgid "Enable text wrapping"
 msgstr ""
 
-#: src/gsql_dialogs.glade:558
+#: src/gsql_dialogs.glade:573
 msgid "Enable auto indent"
 msgstr ""
 
-#: src/gsql_dialogs.glade:573
+#: src/gsql_dialogs.glade:588
 msgid "Insert spaces instead tabs"
 msgstr ""
 
-#: src/gsql_dialogs.glade:591
+#: src/gsql_dialogs.glade:609
 msgid "Tab width"
 msgstr ""
 
-#: src/gsql_dialogs.glade:650
+#: src/gsql_dialogs.glade:670
 msgid "Editor"
 msgstr ""
 
-#: src/gsql_dialogs.glade:686
+#: src/gsql_dialogs.glade:704
 msgid "Configure"
 msgstr ""
 
-#: src/gsql_dialogs.glade:705
+#: src/gsql_dialogs.glade:732
 msgid "Plugins"
 msgstr ""
 
-#: src/gsql_dialogs.glade:775
+#: src/gsql_dialogs.glade:807
 msgid " Save changes before closing?"
 msgstr ""
 
-#: src/gsql_dialogs.glade:798
+#: src/gsql_dialogs.glade:826
 msgid "gtk-discard"
 msgstr ""
 
-#: src/gsql_dialogs.glade:871
+#: src/gsql_dialogs.glade:914
 msgid "This is not a file. Do you want clean up the entire text?"
 msgstr ""
 
-#: src/gsql_dialogs.glade:902
+#: src/gsql_dialogs.glade:947
 msgid "gtk-ok"
 msgstr ""
 
@@ -1361,10 +1492,6 @@ msgstr ""
 
 #: src/gsqlmenu.c:37
 msgid "_File"
-msgstr ""
-
-#: src/gsqlmenu.c:38
-msgid "Edit"
 msgstr ""
 
 #: src/gsqlmenu.c:39

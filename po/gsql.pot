@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 01:15+0300\n"
+"POT-Creation-Date: 2010-03-25 02:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -638,11 +638,11 @@ msgstr ""
 msgid "Drop database"
 msgstr ""
 
-#: engines/postgresql/nav_tree_databases.h:38
+#: engines/postgresql/nav_tree_databases.h:39
 msgid "Schemas"
 msgstr ""
 
-#: engines/postgresql/nav_tree_databases.h:48
+#: engines/postgresql/nav_tree_databases.h:49
 msgid "Languages"
 msgstr ""
 
