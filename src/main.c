@@ -26,22 +26,13 @@
 
 #include <gtk/gtk.h>
 #include <glib.h>
-
-#ifdef WITH_GNOME
-#include <libgnome/libgnome.h>
-#include <libgnomeui/libgnomeui.h>
-#endif
-
 #include <libgsql/common.h>
-#include <libgsql/conf.h>
-#include <libgsql/engines.h>
-#include <libgsql/plugins.h>
-#include <libgsql/stock.h>
-#include "gsql.h"
+#include "gsql-app.h"
 
 
 static gchar *sql_files = NULL;
-static GList *files = NULL;
+static gboolean gsql_opt_trace_enable = FALSE;
+static gboolean gsql_opt_debug_enable = FALSE;
 
 static GOptionEntry opts[] =
 {
@@ -63,18 +54,13 @@ static GOptionEntry opts[] =
 int
 main (int argc, char *argv[])
 {
-#ifdef WITH_GNOME
-	GnomeProgram *program;
-#endif
 	GError *error = NULL;
-	GOptionContext *context = g_option_context_new(_(" - Integrated Database Development Tool"));
-	GtkWidget *dialog;
+
+	GOptionContext *context = g_option_context_new(N_(" - Integrated Database Development Tool"));
+
 	g_thread_init (NULL);
 	gdk_threads_init ();
 	gdk_threads_enter ();
-	
-	gsql_opt_trace_enable = FALSE;
-	gsql_opt_debug_enable = FALSE;
 	
 	g_option_context_add_main_entries(context, opts, GETTEXT_PACKAGE);
 	g_option_context_add_group(context, gtk_get_option_group(TRUE));
@@ -83,51 +69,22 @@ main (int argc, char *argv[])
 	g_option_context_free(context);
 
 
-#ifdef WITH_GNOME	
-	program = gnome_program_init (PACKAGE, VERSION, LIBGNOMEUI_MODULE,
-				argc, argv, 
-				GNOME_PARAM_HUMAN_READABLE_NAME,
-				N_("GSQL. Integrated Database Development Tool"),
-				GNOME_PARAM_APP_DATADIR,
-				PACKAGE_DATA_DIR, NULL);
-#endif
-
 #ifdef ENABLE_NLS
+
+#include <libintl.h>
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
+
 #endif
 	gtk_set_locale ();
 	
 	
-	gsql_main_thread = (gpointer) g_thread_self ();
+//	gsql_main_thread = (gpointer) g_thread_self ();
 
 	gtk_init (&argc, &argv);
 	
-	add_pixmap_directory (PACKAGE_PIXMAPS_DIR);
-	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/plugins");
-	gsql_stock_init ();
-	
-	gsql_conf_init ();
-	gsql_window_create ();
-	
-	gsql_engines_lookup ();
-	gsql_plugins_lookup ();
-	
-	gtk_widget_show (gsql_window);
-	
-	if (!gsql_engines_count())
-	{
-		dialog = gtk_message_dialog_new (GTK_WINDOW (gsql_window),
-							 GTK_DIALOG_MODAL,
-							 GTK_MESSAGE_ERROR,
-							 GTK_BUTTONS_CLOSE,
-							 N_("Engines not found at " PACKAGE_ENGINES_DIR) );
-		g_signal_connect_swapped (dialog, "response",
-						  G_CALLBACK (gtk_widget_destroy),
-						  dialog);
-		gtk_widget_show (dialog);
-	}
+	gtk_widget_show (gsql_app_new ());
 	
 	gtk_main ();
 

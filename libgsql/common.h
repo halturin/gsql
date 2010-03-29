@@ -44,22 +44,11 @@
 #  define Q_(String) g_strip_context ((String), (String))
 #  define N_(String) (String)
 #endif
-
-#define HOOKUP_OBJECT(component,widget,name) \
-  g_object_set_data_full (G_OBJECT (component), name, \
-    gtk_widget_ref (widget), (GDestroyNotify) gtk_widget_unref)
-
-#define HOOKUP_OBJECT_NO_REF(component,widget,name) \
-  g_object_set_data (G_OBJECT (component), name, widget)
   
 #define GSQL_GLADE_DIALOGS PACKAGE_GLADE_DIR"/gsql_dialogs.glade"
 
-extern GtkWidget   *gsql_window;
 extern gpointer gsql_main_thread;
 /* debug routines */
-
-extern gboolean gsql_opt_trace_enable;
-extern gboolean gsql_opt_debug_enable;
 
 G_BEGIN_DECLS
 
@@ -75,16 +64,6 @@ create_pixmap (const gchar * filename);
 /* This is used to create the pixbufs used in the interface. */
 GdkPixbuf *
 create_pixbuf (const gchar * filename);
-
-/* marshallers */
-void
-gsql_marshal_VOID__STRING_STRING (GClosure  *closure,
-								  GValue	*return_value,
-								  guint		n_params,
-								  const GValue  *params,
-								  gpointer  *invocation,
-								  gpointer  *marshal);
-
 
 /* #ifdef HAVE_ENABLE_TRACE */
 
@@ -129,10 +108,7 @@ gsql_marshal_VOID__STRING_STRING (GClosure  *closure,
 	{ \
 		gdk_flush (); \
 		gdk_threads_leave (); \
-	}; \
-
-gpointer
-gsql_thread_join (GThread *thread);
+	} \
 
 
 G_END_DECLS

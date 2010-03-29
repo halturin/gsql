@@ -1,5 +1,5 @@
 DEFS='pkg-config --variable=defsdir pygtk-2.0'
-CFLAGS=-I/usr/include/python2.5 -I/usr/include/pygtk-2.0 -I. `pkg-config --cflags glib-2.0 gtk+-2.0`
+CFLAGS=-fPIC -I/usr/include/python2.6 -I/usr/include/pygtk-2.0 -I.. `pkg-config --cflags glib-2.0 gtk+-2.0`
 LDFLAGS=`pkg-config --libs gtk+-2.0 pygtk-2.0`
 
 all: gsql.c gsql.so
@@ -13,7 +13,7 @@ gsql.c: gsql.defs gsql.override
 	--override gsql.override \
 	gsql.defs > $@
 
-gsql.so: gsql.o navtree.o gsqlmodule.o common.o
+gsql.so: gsql.o navtree.o gsqlmodule.o
 	$(CC) $(LDFLAGS) -shared $^ -o $@
 
 clean:

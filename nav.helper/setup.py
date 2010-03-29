@@ -17,7 +17,7 @@ extention = Extension(
 				    '/usr/include/freetype2',
 				    '/usr/include/directfb',
 				    '/usr/include/libpng12',
-				    '../libgsql'],
+				    '..', '.'],
 		    libraries = ['gtk-x11-2.0','gdk-x11-2.0',
 		    'atk-1.0','pangoft2-1.0',
 		    'gdk_pixbuf-2.0','m',

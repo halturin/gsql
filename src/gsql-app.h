@@ -1,7 +1,7 @@
 /* 
  * GSQL - database development tool for GNOME
  *
- * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2006-2010  Taras Halturin  halturin@gmail.com
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,45 +20,46 @@
  */
 
  
-#ifndef _MENU_H
-#define _MENU_H
+#ifndef _GSQLAPP_H
+#define _GSQLAPP_H
 
 #include <glib.h>
 #include <gtk/gtk.h>
 
-typedef struct _GSQLMenu GSQLMenu;
+typedef struct _GSQLApp			GSQLApp;
+typedef struct _GSQLAppClass 	GSQLAppClass;
+typedef struct _GSQLAppPrivate   GSQLAppPrivate;
 
-struct _GSQLMenu
+
+#define GSQL_APP_TYPE 			(gsql_app_get_type ())
+#define GSQL_APP(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), GSQL_APP_TYPE, GSQLApp))
+#define GSQL_APP_CLASS(klass)	(G_TYPE_CHECK_INSTANCE_CAST ((klass), GSQL_APP_TYPE, GSQLAppClass))
+
+#define GSQL_IS_APP(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQL_APP_TYPE))
+#define GSQL_IS_APP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQL_APP_TYPE))
+
+
+struct _GSQLApp
 {
-	GtkAccelGroup  *accel;
-	GtkUIManager   *ui;
+	GtkWindow parent;
 
-	GtkWidget *gsqlmenu;
+	GSQLAppPrivate *private;
 };
+
+struct _GSQLAppClass
+{
+	GtkWindowClass   parent;
+	
+};
+
 
 G_BEGIN_DECLS
 
-void
-gsql_menu_init ();
-
-guint
-gsql_menu_merge (gchar *ui_file, GtkActionGroup *action);
-
-guint
-gsql_menu_merge_from_string (const gchar *str, GtkActionGroup *action);
-
-void
-gsql_menu_merge_action (GtkActionGroup *action);
-
-guint
-gsql_menu_merge_ui (gchar *ui_file);
+GType gsql_app_get_type (void);
 
 GtkWidget *
-gsql_menu_get_widget (gchar *name);
-
+gsql_app_new (void);
 
 G_END_DECLS
 
-#endif /* _MENU_H */
-
- 
+#endif /* _NAVIGATION_H */

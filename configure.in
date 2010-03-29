@@ -207,7 +207,7 @@ AC_DEFINE_UNQUOTED(PACKAGE_MENU_DIR, "${packageprefix}/${packagemenudir}", [Menu
 
 
 # gtk-doc
-GTK_DOC_CHECK([1.4])
+#GTK_DOC_CHECK([1.4])
 
 AC_OUTPUT([
 Makefile

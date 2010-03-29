@@ -6,7 +6,7 @@
  *
  * GSQL Navigation Helper (is a part of GSQL)
  *
- * Copyright (C) 2009  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2010  Taras Halturin  halturin@gmail.com
  *
  *
  * This program is free software; you can redistribute it and/or modify
