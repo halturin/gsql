@@ -31,8 +31,6 @@
 
 
 static gchar *sql_files = NULL;
-static gboolean gsql_opt_trace_enable = FALSE;
-static gboolean gsql_opt_debug_enable = FALSE;
 
 static GOptionEntry opts[] =
 {

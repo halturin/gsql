@@ -7,7 +7,23 @@ lib_LTLIBRARIES = \
 	libgsql.la 
 
 libgsql_la_SOURCES = \
-	common.h
+	common.h    \
+	gsql-iface.c    \
+	gsql-iface.h    \
+	gsql-appui.c    \
+	gsql-appui.h    \
+	common.c    \
+	libgsql.h    \
+	content.c    \
+	content.h    \
+	session.c    \
+	session.h    \
+	utils.c    \
+	utils.h    \
+	cursor.c    \
+	cursor.h    \
+	variable.c    \
+	variable.h
 
 libgsql_la_LIBADD = \
 	$(PACKAGE_LIBS)

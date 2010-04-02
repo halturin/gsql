@@ -25,7 +25,11 @@ bin_PROGRAMS = gsql
 gsql_SOURCES = \
 	main.c\
 	gsql-app.c \
-	gsql-app.h
+	gsql-app.h \
+	session-manager.c \
+	session-manager.h \
+	content-manager.c \
+	content-manager.h
 
 
 gsql_LDADD = \

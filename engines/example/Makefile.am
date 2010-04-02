@@ -14,18 +14,6 @@ schema_DATA = gsql-engine-example.schemas
 
 libgsqldir = $(PACKAGE_ENGINES_DIR)
 
-libgsql_LTLIBRARIES = \
-	libgsqlengine_example.la 
-
-libgsqlengine_example_la_SOURCES = \
-	engine_example.c
-
-libgsqlengine_example_la_CFLAGS = 
-
-libgsqlengine_example_la_LIBADD =          \
-	$(PACKAGE_LIBS)          \
-	$(top_builddir)/libgsql/libgsql.la
-
 INCLUDES = \
 	$(PACKAGE_CFLAGS)
 

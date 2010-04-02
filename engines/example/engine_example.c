@@ -35,9 +35,9 @@
 #define ENGINE_HOMEPAGE "http://gsql.org"
 
 #include <config.h>
-#include <libgsql/engines.h>
+//#include <libgsql/engines.h>
 #include <libgsql/common.h>
-#include <libgsql/workspace.h>
+//#include <libgsql/workspace.h>
 
 GtkWidget *
 engine_logon_widget_new ();
@@ -49,7 +49,7 @@ gboolean
 engine_load (GSQLEngine *engine)
 {
 	GSQL_TRACE_FUNC;
-
+/*
 	engine->info.author = ENGINE_AUTHOR;
 	engine->info.id = ENGINE_ID;
 	engine->info.name = ENGINE_NAME;
@@ -61,6 +61,7 @@ engine_load (GSQLEngine *engine)
 
 	engine->file_logo = "example/example.png";
 	engine->stock_logo = "example-logo";//GSQLE_EXAMPLE_STOCK_EXAMPLE;
+	 */
 //	engine->session_open = engine_session_open;
 
 	/* logon widget */
@@ -77,7 +78,7 @@ engine_load (GSQLEngine *engine)
 //	engine->cursor_fetch = mysql_cursor_fetch;
 	
 	
-	add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/example");
+	//add_pixmap_directory (PACKAGE_PIXMAPS_DIR "/example");
 	// engine_stock_init();
 	//engine_menu_init (engine);
 	

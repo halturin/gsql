@@ -34,35 +34,7 @@ struct _GSQLAppPrivate {
 static void gsql_app_class_init (GSQLAppClass *class);
 static void gsql_app_init (GSQLApp *app);
 
-
-
-GType
-gsql_app_get_type ()
-{
-	static GType obj_type = 0;
-	
-	if (!obj_type)
-	{
-		static const GTypeInfo obj_info = 
-		{
-			sizeof (GSQLAppClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gsql_app_class_init,
-			(GClassFinalizeFunc) NULL,
-			NULL,
-			sizeof (GSQLApp),
-			0,
-			(GInstanceInitFunc) gsql_app_init,
-			NULL
-		};
-		obj_type = g_type_register_static (GTK_TYPE_WINDOW,
-										   "GSQLApp", &obj_info, 0);
-		
-	}
-	
-	return obj_type;	
-}
+G_DEFINE_TYPE (GSQLApp, gsql_app, GTK_TYPE_WINDOW)
 
 GtkWidget *
 gsql_app_new (void)

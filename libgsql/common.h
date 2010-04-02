@@ -29,74 +29,21 @@
 #endif
 
 #include <gtk/gtk.h>
-
-#ifdef ENABLE_NLS
-
 #include <glib/gi18n.h>
-
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define Q_(String) g_strip_context ((String), (String))
-#  define N_(String) (String)
-#endif
   
 #define GSQL_GLADE_DIALOGS PACKAGE_GLADE_DIR"/gsql_dialogs.glade"
 
-extern gpointer gsql_main_thread;
-/* debug routines */
-
-G_BEGIN_DECLS
-
-/* Use this function to set the directory containing installed pixmaps. */
-void 
-add_pixmap_directory (const gchar * directory);
-
-
-/* This is used to create the pixmaps used in the interface. */
-GtkWidget *
-create_pixmap (const gchar * filename);
-
-/* This is used to create the pixbufs used in the interface. */
-GdkPixbuf *
-create_pixbuf (const gchar * filename);
-
-/* #ifdef HAVE_ENABLE_TRACE */
-
 #define GSQL_TRACE_FUNC \
 	if (gsql_opt_trace_enable) \
-		g_print("trace: [%p] %s [%s:%d]\n", (gpointer) g_thread_self(), __func__, __FILE__, __LINE__)
-
-/* #else */
-
-/* #define GSQL_TRACE_FUNC; */
-
-/* #endif */
-
-/* #ifdef HAVE_ENABLE_DEBUG */
+		g_print("trace: [%p] %s [%s:%d]\n", (gpointer) g_thread_self(), __func__, __FILE__, __LINE__);
 
 #define GSQL_DEBUG(params...) \
 	if (gsql_opt_debug_enable) \
 		g_debug (params)
 
-/* #else */
-
-/* #define GSQL_DEBUG(params...) */
-
-/* #endif */
-
-/* #ifdef HAVE_ENABLE_FIXME */
 #define GSQL_FIXME \
 	g_message ("FIXME: file [%s] line [%d]", __FILE__, __LINE__)
-/* #else */
 
-/* #define GSQL_FIXME */
-
-/* #endif */
 
 #define GSQL_THREAD_ENTER \
 	if (gsql_main_thread !=(gpointer)  g_thread_self()) \
@@ -109,6 +56,25 @@ create_pixbuf (const gchar * filename);
 		gdk_flush (); \
 		gdk_threads_leave (); \
 	} \
+
+extern gpointer gsql_main_thread;
+extern gboolean gsql_opt_trace_enable;
+extern gboolean gsql_opt_debug_enable;
+
+G_BEGIN_DECLS
+
+
+void 
+gsql_add_pixmap_directory (const gchar * directory);
+
+GtkWidget *
+gsql_create_pixmap (const gchar * filename);
+
+GdkPixbuf *
+gsql_create_pixbuf (const gchar * filename);
+
+gpointer
+gsql_thread_join (GThread *thread);
 
 
 G_END_DECLS
