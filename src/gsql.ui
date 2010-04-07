@@ -1,0 +1,65 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+    <menu name="MenuFile" action="ActionMenuFile">
+   	<placeholder name="PHolderMenuFile" />
+    	<placeholder name="PHolderPrint" />
+	<menuitem name="Quit" action="ActionExit" />
+    </menu>
+    
+    <menu name="MenuEdit" action="ActionMenuEdit">
+	<placeholder name="PHolderEdit" />
+	<menuitem name="Preferences" action="ActionEditPreferences" />
+    </menu>
+    
+    <menu name="MenuView" action="ActionMenuView">
+      <menuitem name="MenuFullScreen" action="ActionFullScreen"/>
+      <menuitem name="MenuShowToolbar" action="ActionShowToolbar"/>
+      <menuitem name="MenuShowStatusBar" action="ActionShowStatusbar"/>
+      <separator/>
+      <placeholder name="PHolderView"/>
+      <separator/>
+      <menuitem name="MenuPreferences" action="ActionMenuPreferences"/>
+    </menu>
+    
+    <menu name="MenuSearch" action="ActionMenuSearch">
+	   <placeholder name="PHolderSearch"/>
+    </menu>
+    
+    <menu name="MenuSessions" action="ActionMenuSession">
+      <placeholder name="PHolderSession"/>
+    </menu>
+    
+    <menu name="MenuSessions" action="ActionMenuObject">
+      <placeholder name="PHolderObject"/>
+    </menu>
+    
+    <placeholder name="PHolderEngines" />
+    
+    <menu name="MenuTools" action="ActionMenuTools">
+	<placeholder name="PHolderTools" />
+    </menu>
+    
+    <menu name="MenuHelp" action="ActionMenuHelp">
+	<menuitem name="UsersManual" action="ActionUsersManual" />
+   	<separator name="SeparatorA" />
+   	<menuitem name="HomePage" action="ActionHomePage" />
+   	<menuitem name="APIReference" action="ActionAPIReference" />
+   	<menuitem name="BugReport" action="ActionBugReport" />
+   	<menuitem name="RequestsQuestions" action="ActionRequestsQuestions" />
+   	<separator name="SeparatorB" />
+   	<menuitem name="About" action="ActionAbout" />
+    </menu>
+
+  </menubar>
+  
+  <toolbar name="ToolbarMain">
+	<placeholder name="PHolderSessionToolbar" />
+	<placeholder name="PHolderFileToolbar" />
+	<placeholder name="PHolderEditToolbar" />
+	<placeholder name="PHolderExecutionToolbar />
+	<placeholder name="PholderPluginToolbar />
+  </toolbar>
+  
+</ui>
+

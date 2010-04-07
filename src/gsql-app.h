@@ -25,10 +25,19 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <libgsql/conf.h>
 
 typedef struct _GSQLApp			GSQLApp;
 typedef struct _GSQLAppClass 	GSQLAppClass;
 typedef struct _GSQLAppPrivate   GSQLAppPrivate;
+
+#define GSQL_CONF_UI_RESTORE_SIZE_POS           GSQL_CONF_ROOT_KEY "/ui/restore_size_and_position"
+#define GSQL_CONF_UI_SIZE_X                                     GSQL_CONF_ROOT_KEY "/ui/size_x"
+#define GSQL_CONF_UI_SIZE_Y                                     GSQL_CONF_ROOT_KEY "/ui/size_y"
+#define GSQL_CONF_UI_POS_X                                      GSQL_CONF_ROOT_KEY "/ui/pos_x"
+#define GSQL_CONF_UI_POS_Y                                      GSQL_CONF_ROOT_KEY "/ui/pos_y"
+#define GSQL_CONF_UI_MAXIMIZED                          GSQL_CONF_ROOT_KEY "/ui/window_maximized"
+#define GSQL_CONF_UI_FULLSCREEN                         GSQL_CONF_ROOT_KEY "/ui/window_fullscreen"
 
 
 #define GSQL_APP_TYPE 			(gsql_app_get_type ())

@@ -19,32 +19,3 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#ifndef _SESSION_MANAGER_H
-#define _SESSION_MANAGER_H
-
-#include <libgsql/common.h>
-#include <libgsql/session.h>
-
-typedef struct _GSQLSessionManager GSQLSessionManager;
-typedef struct _GSQLSessionManagerClass GSQLSessionManagerClass;
-typedef struct _GSQLSessionManagerPrivate GSQLSessionManagerPrivate;
-
-
-struct _GSQLSessionManager
-{
-	GObject	parent;
-
-
-};
-
-struct _GSQLSessionManagerClass
-{
-	GObjectClass	parent;
-
-};
-
-
-GType gsql_session_manager_get_type (void);
-
-
-#endif

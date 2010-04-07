@@ -23,7 +23,9 @@ libgsql_la_SOURCES = \
 	cursor.c    \
 	cursor.h    \
 	variable.c    \
-	variable.h
+	variable.h    \
+	conf.c    \
+	conf.h
 
 libgsql_la_LIBADD = \
 	$(PACKAGE_LIBS)

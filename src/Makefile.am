@@ -29,7 +29,12 @@ gsql_SOURCES = \
 	session-manager.c \
 	session-manager.h \
 	content-manager.c \
-	content-manager.h
+	content-manager.h \
+	gsql-statusbar.c \
+	gsql-statusbar.h \
+	gsql-actions.h \
+	gsql-callbacks.h \
+	gsql-callbacks.c
 
 
 gsql_LDADD = \

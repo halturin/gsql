@@ -19,32 +19,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#ifndef _SESSION_MANAGER_H
-#define _SESSION_MANAGER_H
+#ifndef GSQL_CALLBACKS_H
+#define GSQL_CALLBACKS_H
 
 #include <libgsql/common.h>
-#include <libgsql/session.h>
 
-typedef struct _GSQLSessionManager GSQLSessionManager;
-typedef struct _GSQLSessionManagerClass GSQLSessionManagerClass;
-typedef struct _GSQLSessionManagerPrivate GSQLSessionManagerPrivate;
+void
+on_gsql_quit (GtkMenuItem *mi, gpointer data);
 
+void
+on_gsql_preferences (GtkMenuItem *mi, gpointer data);
 
-struct _GSQLSessionManager
-{
-	GObject	parent;
+void
+on_gsql_user_manual_activate (GtkMenuItem *mi, gpointer data);
 
+void
+on_gsql_home_page_activate (GtkMenuItem *mi, gpointer data);
 
-};
+void
+on_gsql_api_activate (GtkMenuItem *mi, gpointer data);
 
-struct _GSQLSessionManagerClass
-{
-	GObjectClass	parent;
+void
+on_gsql_bug_report_activate (GtkMenuItem *mi, gpointer data);
 
-};
+void
+on_gsql_mailgroup_activate (GtkMenuItem *mi, gpointer data);
 
-
-GType gsql_session_manager_get_type (void);
-
+void
+on_about_activate (GtkMenuItem *mi, gpointer data);
 
 #endif

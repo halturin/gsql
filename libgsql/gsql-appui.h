@@ -87,6 +87,10 @@ typedef struct _GSQLAppUI 			GSQLAppUI;
 typedef struct _GSQLAppUIClass		GSQLAppUIClass;
 typedef struct _GSQLAppUIPrivate	GSQLAppUIPrivate;
 
+typedef struct _GSQLStockIcon GSQLStockIcon;
+typedef struct _GSQLActionEntry GSQLActionEntry;
+typedef struct _GSQLToggleActionEntry GSQLToggleActionEntry;
+
 
 struct _GSQLAppUI
 {
@@ -100,12 +104,24 @@ struct _GSQLAppUIClass
 	GtkUIManagerClass parent;
 };
 
-typedef struct _GSQLStockIcon GSQLStockIcon;
-
 struct _GSQLStockIcon
 {
 	const char *name;
 	const char *file;
+};
+
+struct _GSQLActionEntry
+{
+	GtkActionEntry	entry;
+	gboolean 		customizable;
+	const gchar		*name;
+};
+
+struct _GSQLToggleActionEntry
+{
+	GtkToggleActionEntry	entry;
+	gboolean 				customizable;
+	const gchar				*name;
 };
 
 GType gsql_appui_get_type (void);
