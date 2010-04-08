@@ -273,7 +273,7 @@ mysql_cursor_open (GSQLCursor *cursor)
 	if (mysql_stmt_execute(e_cursor->statement)) 
 	{
 		g_sprintf (error_str, "Error occured: %s", mysql_stmt_error (e_cursor->statement));
-		GSQL_DEBUG (error_str);
+		GSQL_DEBUG ("%s", error_str);
 		gsql_message_add (workspace, GSQL_MESSAGE_ERROR, error_str);
 		mysql_stmt_reset (e_cursor->statement);
 
