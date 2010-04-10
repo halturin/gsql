@@ -91,7 +91,6 @@ typedef struct _GSQLStockIcon GSQLStockIcon;
 typedef struct _GSQLActionEntry GSQLActionEntry;
 typedef struct _GSQLToggleActionEntry GSQLToggleActionEntry;
 
-
 struct _GSQLAppUI
 {
 	GtkUIManager parent;
@@ -110,19 +109,6 @@ struct _GSQLStockIcon
 	const char *file;
 };
 
-struct _GSQLActionEntry
-{
-	GtkActionEntry	entry;
-	gboolean 		customizable;
-	const gchar		*name;
-};
-
-struct _GSQLToggleActionEntry
-{
-	GtkToggleActionEntry	entry;
-	gboolean 				customizable;
-	const gchar				*name;
-};
 
 GType gsql_appui_get_type (void);
 
@@ -131,6 +117,20 @@ GSQLAppUI * gsql_appui_new (void);
 void gsql_appui_add_action_group (GSQLAppUI *appui, 
     								const gchar *group_name,
     								GtkActionGroup *group);
+void
+gsql_appui_add_actions (GSQLAppUI *appui,
+    									const gchar *group_name,
+    									GtkActionEntry *entries,
+    									gint n_entries,
+    									gpointer user_data);
+
+void
+gsql_appui_add_toggle_actions (GSQLAppUI *appui,
+    									const gchar *group_name,
+    									GtkToggleActionEntry *entries,
+    									gint n_entries,
+    									gpointer user_data);
+
 
 void gsql_appui_remove_action_group (GSQLAppUI *appui, 
     								GtkActionGroup *group);
@@ -140,6 +140,7 @@ void gsql_appui_remove_action_group_n (GSQLAppUI *appui,
 
 GtkAction * gsql_appui_get_action (GSQLAppUI *appui, const gchar *group_name,
     								const gchar *action_name);
+GtkWidget * gsql_appui_get_widget (GSQLAppUI *appui, const gchar *widget_name);
 
 gint gsql_appui_merge (GSQLAppUI *appui, const gchar *filename);
 

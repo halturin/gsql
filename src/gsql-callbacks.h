@@ -31,6 +31,15 @@ void
 on_gsql_preferences (GtkMenuItem *mi, gpointer data);
 
 void
+on_gsql_fullscreen (GtkMenuItem *mi, gpointer data);
+
+void
+on_gsql_showtoolbar (GtkMenuItem *mi, gpointer data);
+
+void
+on_gsql_showstatusbar (GtkMenuItem *mi, gpointer data);
+
+void
 on_gsql_user_manual_activate (GtkMenuItem *mi, gpointer data);
 
 void

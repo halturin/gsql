@@ -42,7 +42,6 @@
 struct _GSQLAppUIPrivate
 {
 	GHashTable		*action_groups;
-	GHashTable		*customizable_actions;
 	GtkIconFactory	*icon_factory;
 };
 
@@ -142,8 +141,7 @@ gsql_appui_new (void)
  * desc. FIXME.
  */
 void
-gsql_appui_add_action_group (GSQLAppUI *appui, 
-    								const gchar *group_name,
+gsql_appui_add_action_group (GSQLAppUI *appui, const gchar *group_name,
     								GtkActionGroup *group)
 {
 	GSQL_TRACE_FUNC
@@ -158,12 +156,24 @@ gsql_appui_add_action_group (GSQLAppUI *appui,
 	    					g_strdup (group_name), group);
 }
 
+
+/**
+ * gsql_appui_add_actions:
+ *
+ * @appui: A #GSQLAppUI object
+ * @group_name: name of action group
+ * @entries: array of #GtkActionEntry
+ * @n_entries: number of @entries. (G_N_ELEMENTS (@group))
+ * @user_data: 
+ *
+ * desc. FIXME.
+ */
 void
-gsql_appui_add_action_group_entries (GSQLAppUI *appui,
-    									const gchar *group_name,
-    									GtkActionEntry *entries,
-    									gint n_entries,
-    									gboolean customizable)
+gsql_appui_add_actions (GSQLAppUI *appui,
+    					const gchar *group_name,
+    					GtkActionEntry *entries,
+    					gint n_entries,
+    					gpointer user_data)
 {
 	GSQL_TRACE_FUNC
 
@@ -171,11 +181,48 @@ gsql_appui_add_action_group_entries (GSQLAppUI *appui,
 	g_return_if_fail (group_name != NULL);
 
 	GtkActionGroup *group;
-
+	
 	group = gtk_action_group_new (group_name);
 
-	
+	gtk_action_group_add_actions (group,
+	    						  (GtkActionEntry *) entries,
+	    						  n_entries, user_data);
 
+	gsql_appui_add_action_group (appui, group_name, group);
+}
+
+/**
+ * gsql_appui_add_toggle_actions:
+ *
+ * @appui: A #GSQLAppUI object
+ * @group_name: name of action group
+ * @entries: array of #GtkToggleActionEntry
+ * @n_entries: number of @entries. (G_N_ELEMENTS (@group))
+ * @user_data: 
+ *
+ * desc. FIXME.
+ */
+void
+gsql_appui_add_toggle_actions (GSQLAppUI *appui,
+    							const gchar *group_name,
+    							GtkToggleActionEntry *entries,
+    							gint n_entries,
+    							gpointer user_data)
+{
+	GSQL_TRACE_FUNC
+
+	g_return_if_fail (GSQL_IS_APPUI (appui));
+	g_return_if_fail (group_name != NULL);
+
+	GtkActionGroup *group;
+	
+	group = gtk_action_group_new (group_name);
+
+	gtk_action_group_add_toggle_actions (group,
+	    						  (GtkToggleActionEntry *) entries,
+	    						  n_entries, user_data);
+
+	gsql_appui_add_action_group (appui, group_name, group);
 }
 
 
@@ -208,7 +255,7 @@ gsql_appui_remove_action_group (GSQLAppUI *appui,
  * @appui: A #GSQLAppUI object
  * @group_name: name of action group
  *
- * desc. FIXME.
+ * Remove the action group by name. FIXME.
  */
 void
 gsql_appui_remove_action_group_n (GSQLAppUI *appui, 
@@ -267,6 +314,25 @@ gsql_appui_get_action (GSQLAppUI *appui, const gchar *group_name,
 	    				action_name, group_name);
 
 	return NULL;
+}
+
+/**
+ * gsql_appui_get_widget:
+ *
+ * @appui: a #GSQLAppUI object
+ * @widget_name: the name of widget you would like find
+ *
+ * Return value: a #GtkWidget object or NULL if no widget was found
+ *
+ */
+GtkWidget *
+gsql_appui_get_widget (GSQLAppUI *appui, const gchar *widget_name)
+{
+	GSQL_TRACE_FUNC
+
+	g_return_val_if_fail (GSQL_IS_APPUI (appui), NULL);
+
+	return gtk_ui_manager_get_widget (GTK_UI_MANAGER (appui), widget_name);
 }
 
 /**

@@ -22,48 +22,57 @@
 #include "gsql-callbacks.h"
 
 
-static GSQLActionEntry	menu_entries_file[] = {
-	{ {"ActionMenuFile", NULL, N_("_File") , FALSE } },
-	{ {"ActionExit", GTK_STOCK_QUIT, N_("_Quit"), "<control>Q",
-			N_("Quit GSQL"), G_CALLBACK (on_gsql_quit) }, FALSE }
+static GtkActionEntry	menu_entries_file[] = {
+	{ "ActionMenuFile", NULL, N_("_File") },
+	{ "ActionExit", GTK_STOCK_QUIT, N_("_Quit"), "<control>Q",
+			N_("Quit GSQL"), G_CALLBACK (on_gsql_quit) }
 };
 
-static GSQLActionEntry	menu_entries_edit[] = {
-	{ "ActionMenuEdit", NULL, N_("_Edit")},
+static GtkActionEntry	menu_entries_edit[] = {
+	{ "ActionMenuEdit", NULL, N_("_Edit") },
 	{ "ActionEditPreferences", NULL, N_("Preferences"), NULL,
 			N_("Customize the GSQL behavior"), G_CALLBACK (on_gsql_preferences) }
 };
 
-static GSQLActionEntry	menu_entries_view[] = {
-	{ "ActionMenuView", NULL, N_("_View")}
+static GtkActionEntry	menu_entries_view[] = {
+	{ "ActionMenuView", NULL, N_("_View") },
+
+};
+
+static GtkToggleActionEntry menu_toggle_entries_view[] = {
+	{ "ActionFullScreen", GTK_STOCK_FULLSCREEN, N_("Full Screen"), "F11",
+			N_("Switch to full screen mode"), G_CALLBACK (on_gsql_fullscreen) },
+	{ "ActionShowToolbar", NULL, N_("Show Toolbar"), NULL,
+			N_("Show toolbar"), G_CALLBACK (on_gsql_showtoolbar) },
+	{ "ActionShowStatusbar", NULL, N_("Show Statusbar"), NULL,
+			N_("Show statusbar"), G_CALLBACK (on_gsql_showstatusbar) }
+	
+};
+
+
+static GtkActionEntry	menu_entries_search[] = {
+	{ "ActionMenuSearch", NULL, N_("Search") }
 
 
 
 };
 
-static GSQLActionEntry	menu_entries_search[] = {
-	{ "ActionMenuSearch", NULL, N_("Search")}
+static GtkActionEntry	menu_entries_session[] = {
+	{ "ActionMenuSession", NULL, N_("_Session") }
 
 
 
 };
 
-static GSQLActionEntry	menu_entries_session[] = {
-	{ "ActionMenuSession", NULL, N_("_Session")}
+static GtkActionEntry	menu_entries_tools[] = {
+	{ "ActionMenuTools", NULL, N_("Tools") }
 
 
 
 };
 
-static GSQLActionEntry	menu_entries_tools[] = {
-	{ "ActionMenuTools", NULL, N_("Tools")}
-
-
-
-};
-
-static GSQLActionEntry	menu_entries_help[] = {
-	{ "ActionMenuHelp", NULL, N_("_Help")},
+static GtkActionEntry	menu_entries_help[] = {
+	{ "ActionMenuHelp", NULL, N_("_Help") },
 	
 	{ "ActionUsersManual", GTK_STOCK_HELP, N_("User's Manual"), "F1", 
 		N_("User's Manual"), G_CALLBACK(on_gsql_user_manual_activate) },

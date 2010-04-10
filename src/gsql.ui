@@ -52,14 +52,12 @@
     </menu>
 
   </menubar>
-  
   <toolbar name="ToolbarMain">
 	<placeholder name="PHolderSessionToolbar" />
 	<placeholder name="PHolderFileToolbar" />
 	<placeholder name="PHolderEditToolbar" />
-	<placeholder name="PHolderExecutionToolbar />
-	<placeholder name="PholderPluginToolbar />
+	<placeholder name="PHolderExecutionToolbar" />
+	<placeholder name="PholderPluginToolbar" />
   </toolbar>
-  
 </ui>
 

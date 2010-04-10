@@ -143,28 +143,66 @@ GSQL_DEBUG ("1");
 	app->private->mainvbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (app), app->private->mainvbox);
 
-	/*gsql_appui_add_action_group (app->private->appui,
-	    					"ActionGroupFile",
-	    					menu_entries_file);
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupFile",
+	    									menu_entries_file,
+	    									G_N_ELEMENTS (menu_entries_file),
+	    									NULL);
 	
-	gsql_appui_add_action_group (app->private->appui,
-	    					"ActionGroupEdit",
-	    					menu_entries_edit);
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupEdit",
+	    									menu_entries_edit,
+	    									G_N_ELEMENTS (menu_entries_edit),
+	    									NULL);
 
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupView",
+	    									menu_entries_view,
+	    									G_N_ELEMENTS (menu_entries_view),
+	    									NULL);
+
+	gsql_appui_add_toggle_actions (app->private->appui,
+	    							"ToggleActionView",
+	    							menu_toggle_entries_view,
+	    							G_N_ELEMENTS (menu_toggle_entries_view),
+	    							NULL);
+
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupSearch",
+	    									menu_entries_search,
+	    									G_N_ELEMENTS (menu_entries_search),
+	    									NULL);
+
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupSession",
+	    									menu_entries_session,
+	    									G_N_ELEMENTS (menu_entries_session),
+	    									NULL);
+	
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupTools",
+	    									menu_entries_tools,
+	    									G_N_ELEMENTS (menu_entries_tools),
+	    									NULL);
+
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupHelp",
+	    									menu_entries_help,
+	    									G_N_ELEMENTS (menu_entries_help),
+	    									NULL);
+	
 	app->private->uim_id = gsql_appui_merge (app->private->appui, 
 	    										PACKAGE_UI_DIR "/gsql.ui");
 
-	*/
-
-	GSQL_DEBUG ("aaaaa:[%s]", menu_entries_file[1].name);
-
 
 GSQL_DEBUG ("2");
-	app->private->mainmenu = gtk_menu_new ();
+	app->private->mainmenu = gsql_appui_get_widget (app->private->appui,
+	    											"/MenuMain");
 	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
 	    				app->private->mainmenu, FALSE, FALSE, 0);
 GSQL_DEBUG ("3");
-	app->private->maintoolbar = gtk_toolbar_new  ();
+	app->private->maintoolbar = gsql_appui_get_widget (app->private->appui,
+	    											"/ToolbarMain");
 	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
 	    				app->private->maintoolbar, FALSE, FALSE, 0);
 GSQL_DEBUG ("4");
