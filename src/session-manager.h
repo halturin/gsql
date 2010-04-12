@@ -24,22 +24,36 @@
 
 #include <libgsql/common.h>
 #include <libgsql/session.h>
+#include <gdl/gdl.h>
 
 typedef struct _GSQLSessionManager GSQLSessionManager;
 typedef struct _GSQLSessionManagerClass GSQLSessionManagerClass;
 typedef struct _GSQLSessionManagerPrivate GSQLSessionManagerPrivate;
 
 
+#define GSQL_SSMN_TYPE 			(gsql_ssmn_get_type ())
+#define GSQL_SSMN(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+									GSQL_SSMN_TYPE, GSQLSessionManager))
+
+#define GSQL_SSMN_CLASS(klass)	(G_TYPE_CHECK_INSTANCE_CAST ((klass), \
+									GSQL_SSMN_TYPE, GSQLSessionManagerClass))
+
+#define GSQL_IS_SSMN(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQL_SSMN_TYPE))
+#define GSQL_IS_SSMN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQL_SSMN_TYPE))
+
+
+
 struct _GSQLSessionManager
 {
-	GObject	parent;
+	GtkWidget		parent;
 
+	GSQLSessionManagerPrivate *private;
 
 };
 
 struct _GSQLSessionManagerClass
 {
-	GObjectClass	parent;
+	GtkWidgetClass	parent;
 
 };
 

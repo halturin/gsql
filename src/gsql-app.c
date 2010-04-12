@@ -205,14 +205,20 @@ GSQL_DEBUG ("3");
 	    											"/ToolbarMain");
 	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
 	    				app->private->maintoolbar, FALSE, FALSE, 0);
+
+
+	// create and pack session manager
+
 GSQL_DEBUG ("4");
-	app->private->statusbar = gtk_statusbar_new ();
-	gtk_box_pack_end (GTK_BOX (app->private->mainvbox), 
-	    				app->private->statusbar, FALSE, FALSE, 0);
-GSQL_DEBUG ("5");
 	app->private->sessionbar = gtk_toolbar_new ();
 	gtk_box_pack_end (GTK_BOX (app->private->mainvbox), 
 	    				app->private->sessionbar, FALSE, FALSE, 0);
+	
+	
+GSQL_DEBUG ("5");
+	app->private->statusbar = gtk_statusbar_new ();
+	gtk_box_pack_end (GTK_BOX (app->private->mainvbox), 
+	    				app->private->statusbar, FALSE, FALSE, 0);
 GSQL_DEBUG ("6");	
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (app->private->statusbar), FALSE);
 GSQL_DEBUG ("7");	

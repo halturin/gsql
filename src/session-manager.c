@@ -22,12 +22,74 @@
 
 #include "session-manager.h"
 #include <libgsql/gsql-appui.h>
+#include <libgsql/session.h>
 
 struct _GSQLSessionManagerPrivate
 {
-	gint tmp;
+	GdlDockLayout	*layout;
+	GtkWidget		*dock;
+	GList			*sessions; // list of GSQLSession objects
 
 };
 
+G_DEFINE_TYPE (GSQLSessionManager, gsql_ssmn, GTK_TYPE_WIDGET);
 
+static void
+gsql_ssmn_dispose (GObject *object)
+{
+	GSQL_TRACE_FUNC
+
+	GSQLSessionManager *ssmn = GSQL_SSMN (object);
+
+	g_object_unref (ssmn->private->layout);
+
+}
+
+static void
+gsql_ssmn_finalize (GObject *object)
+{
+	GSQL_TRACE_FUNC
+
+
+
+}
+
+static void
+gsql_ssmn_class_init (GSQLSessionManagerClass *ssmn_class)
+{
+	GSQL_TRACE_FUNC
+
+	GObjectClass *object_class = G_OBJECT_CLASS (ssmn_class);
+
+	object_class->dispose = gsql_ssmn_dispose;
+	object_class->finalize = gsql_ssmn_finalize;
+}
+
+static void
+gsql_ssmn_init (GSQLSessionManager *ssmn )
+{
+	GSQL_TRACE_FUNC
+
+	ssmn->private = g_new0 (GSQLSessionManagerPrivate, 1);
+
+	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (ssmn->private), GTK_NO_WINDOW);
+	
+	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (ssmn->private), FALSE);
+
+}
+
+GtkWidget *
+gsql_ssmn_new ()
+{
+	GSQL_TRACE_FUNC
+
+	GSQLSessionManager *ssmn;
+
+	ssmn = g_object_new (GSQL_SSMN_TYPE, NULL);
+	ssmn->private->dock = gdl_dock_new();
+	
+	ssmn->private->layout = gdl_dock_layout_new (GDL_DOCK (ssmn->private->dock));
+
+	return GTK_WIDGET (ssmn);
+}
 

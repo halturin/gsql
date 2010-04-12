@@ -39,7 +39,8 @@ gsql_SOURCES = \
 
 gsql_LDADD = \
 	$(top_builddir)/libgsql/libgsql.la \
-	$(PACKAGE_LIBS)
+	$(PACKAGE_LIBS) \
+	$(GDL_LIBS)
 
 
 EXTRA_DIST = \
@@ -47,5 +48,6 @@ EXTRA_DIST = \
 	$(gsql_ui_DATA)
 
 AM_CPPFLAGS = \
-	$(PACKAGE_CFLAGS)
+	$(PACKAGE_CFLAGS)\
+	$(GDL_CFLAGS)
 
