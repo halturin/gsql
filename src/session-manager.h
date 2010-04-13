@@ -45,7 +45,7 @@ typedef struct _GSQLSessionManagerPrivate GSQLSessionManagerPrivate;
 
 struct _GSQLSessionManager
 {
-	GtkWidget		parent;
+	GtkVBox		parent;
 
 	GSQLSessionManagerPrivate *private;
 
@@ -53,12 +53,13 @@ struct _GSQLSessionManager
 
 struct _GSQLSessionManagerClass
 {
-	GtkWidgetClass	parent;
+	GtkVBoxClass	parent;
 
 };
 
 
 GType gsql_session_manager_get_type (void);
 
+GtkWidget *gsql_ssmn_new ();
 
 #endif

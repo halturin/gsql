@@ -27,12 +27,20 @@
     </menu>
     
     <menu name="MenuSessions" action="ActionMenuSession">
-      <placeholder name="PHolderSession"/>
+	<menuitem name="MenuNewSession" action="ActionNewSession" />
+	<menuitem name="MenuRecentSession" action="ActionRecentSessions" />
+	<menuitem name="MenuActiveSession" action="ActionActiveSessions" />
+	<separator/>
+	<menuitem name="MenuCloneSession" action="ActionCloneSession" />
+	<menuitem name="MenuReconnectSession" action="ActionReconnectSession" />
+	<separator/>
+	<menuitem name="MenuCommitSession" action="ActionCommitSession" />
+	<menuitem name="MenuRollbackSession" action="ActionRollbackSession" />
+	<separator/>
+	<menuitem name="MenuCloseSession" action="ActionCloseSession" />
+	<menuitem name="MenuCloseAllSessions" action="ActionCloseAllSessions" />
     </menu>
-    
-    <menu name="MenuSessions" action="ActionMenuObject">
-      <placeholder name="PHolderObject"/>
-    </menu>
+
     
     <placeholder name="PHolderEngines" />
     

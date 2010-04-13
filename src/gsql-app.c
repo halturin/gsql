@@ -25,6 +25,7 @@
 
 #include "gsql-app.h"
 #include "gsql-actions.h"
+#include "session-manager.h"
 
 static gpointer parent_class = NULL;
 
@@ -206,8 +207,10 @@ GSQL_DEBUG ("3");
 	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
 	    				app->private->maintoolbar, FALSE, FALSE, 0);
 
+	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
+	    				GTK_WIDGET (gsql_ssmn_new ()), TRUE, TRUE, 0);
 
-	// create and pack session manager
+	
 
 GSQL_DEBUG ("4");
 	app->private->sessionbar = gtk_toolbar_new ();
