@@ -93,7 +93,6 @@ gsql_colorhinter_update_color (GSQLColorHinter *ch)
 		    					GTK_STATE_NORMAL, &ch->private->fg);
 }
 
-
 static void
 on_button_pressed (GtkWidget *widget, GdkEventButton *event,
     				gpointer user_data)
@@ -119,9 +118,22 @@ on_button_pressed (GtkWidget *widget, GdkEventButton *event,
 		gsql_colorhinter_update_color (ch);
 		
 		g_debug ("res = OK");
-	} 
+	} else gsql_colorhinter_clear_color (ch);
 
 	gtk_widget_destroy (dialog);
+
+}
+
+void
+gsql_colorhinter_clear_color (GSQLColorHinter *ch)
+{
+	GSQL_TRACE_FUNC
+
+	gtk_widget_modify_bg (GTK_WIDGET (ch->private->ebox), 
+		    					GTK_STATE_NORMAL, NULL);
+
+	gtk_widget_modify_fg (GTK_WIDGET (ch->private->label), 
+		    					GTK_STATE_NORMAL, NULL);
 
 }
 

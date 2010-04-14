@@ -64,4 +64,6 @@ void gsql_colorhinter_save_color (GSQLColorHinter *ch, const gchar *name);
 
 void gsql_colorhinter_load_color (GSQLColorHinter *ch, const gchar *name);
 
+void gsql_colorhinter_clear_color (GSQLColorHinter *ch);
+
 #endif
