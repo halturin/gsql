@@ -34,7 +34,9 @@ gsql_SOURCES = \
 	gsql-statusbar.h \
 	gsql-actions.h \
 	gsql-callbacks.h \
-	gsql-callbacks.c
+	gsql-callbacks.c \
+	color-hinter.c \
+	color-hinter.h
 
 
 gsql_LDADD = \

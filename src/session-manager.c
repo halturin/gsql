@@ -20,9 +20,11 @@
  */
 
 
+
+
+
 #include "session-manager.h"
-#include <libgsql/gsql-appui.h>
-#include <libgsql/session.h>
+#include "color-hinter.h"
 
 struct _GSQLSessionManagerPrivate
 {
@@ -115,11 +117,9 @@ gsql_ssmn_new ()
 	GSQL_TRACE_FUNC
 
 	GSQLSessionManager 	*ssmn;
-	GtkToolItem			*colorhint, *dummy;
-	GtkWidget 			*label;
-	GdkColor color;
-	GtkWidget *ebox;
-
+	GtkToolItem			*dummy;
+	GSQLColorHinter		*colorhint;
+	
 	ssmn = g_object_new (GSQL_SSMN_TYPE, NULL);
 	ssmn->private->dock = gdl_dock_new();
 	
@@ -135,37 +135,13 @@ gsql_ssmn_new ()
 	    				dummy,
 	    				-1);
 	
-	colorhint = gtk_tool_item_new ();
-	ebox = gtk_event_box_new ();
-	
-	label = gtk_label_new (N_("<small>Color\nHint</small>"));
-	gtk_widget_set_tooltip_text (label, N_("Click here to set the color"));
-	gtk_container_add (GTK_CONTAINER (ebox), label);
-	
-	gdk_color_parse("gray", &color);
-	gtk_widget_modify_bg(GTK_WIDGET(ebox), GTK_STATE_NORMAL, &color);
-
-	color.red = ~color.red;
-	color.green = ~color.green;
-	color.blue = ~color.blue;
-	
-	gtk_widget_modify_fg(GTK_WIDGET(label), GTK_STATE_NORMAL, &color);
-	
-
-	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_CENTER);
-	gtk_misc_set_padding (GTK_MISC (label), 16, 0);
-	
-	gtk_container_add (GTK_CONTAINER (colorhint), ebox);
+	colorhint = gsql_colorhinter_new ();
 
 	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
-	    				gtk_separator_tool_item_new (),
-	    				-1);
-	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), colorhint,
-	    				-1);
-
-
+	    				gtk_separator_tool_item_new (),	-1);
 	
+	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
+	    				GTK_TOOL_ITEM (colorhint), -1);
 	
 	gtk_widget_show_all (GTK_WIDGET (ssmn));
 	
