@@ -100,25 +100,46 @@ on_button_pressed (GtkWidget *widget, GdkEventButton *event,
 	GtkWidget *dialog = NULL;
 	GtkWidget *selection;
 	GSQLColorHinter *ch = user_data;
+	GtkWidget *button;
 	guint res;
 
+#define GSQL_CH_RESPONSE_CLEAR 10
+
 	dialog = gtk_color_selection_dialog_new (N_("Set the color hint for the current session"));
+	
+	button = gtk_dialog_add_button (GTK_DIALOG (dialog), N_("Clear"), 
+	    								GSQL_CH_RESPONSE_CLEAR);
+	gtk_box_reorder_child (GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (dialog))), 
+	    					button, 0);
+	
 	selection = gtk_color_selection_dialog_get_color_selection (GTK_COLOR_SELECTION_DIALOG (dialog));
 	
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (selection), 
 	    									&ch->private->bg);
+	gtk_color_selection_set_has_palette (GTK_COLOR_SELECTION (selection), 
+	    									TRUE);
 
 	res = gtk_dialog_run (GTK_DIALOG (dialog));
 
-	if (res == GTK_RESPONSE_OK)
+	switch (res)
 	{
-		gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (selection), 
+		case GTK_RESPONSE_OK:
+
+			gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (selection), 
 	    									&ch->private->bg);
 
-		gsql_colorhinter_update_color (ch);
+			gsql_colorhinter_update_color (ch);
 		
-		g_debug ("res = OK");
-	} else gsql_colorhinter_clear_color (ch);
+			g_debug ("res = OK");
+
+			break;
+
+		case GSQL_CH_RESPONSE_CLEAR:
+			
+			gsql_colorhinter_clear_color (ch);
+
+			break;		
+	}
 
 	gtk_widget_destroy (dialog);
 
@@ -207,6 +228,8 @@ gsql_colorhinter_new ()
 	gtk_misc_set_padding (GTK_MISC (ch->private->label), 16, 0);
 	
 	gtk_container_add (GTK_CONTAINER (ch), ch->private->ebox);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (ch), FALSE);
 
 	return ch;
 }

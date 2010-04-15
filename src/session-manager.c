@@ -32,6 +32,7 @@ struct _GSQLSessionManagerPrivate
 	GtkWidget		*dock;
 	GList			*sessions; // list of GSQLSession objects
 	GtkWidget		*sessionbar;
+	GtkWidget		*colorhint;
 
 };
 
@@ -43,7 +44,7 @@ void on_ssmn_rollback_session (GtkMenuItem *mi, gpointer data);
 void on_ssmn_close_session (GtkMenuItem *mi, gpointer data);
 void on_ssmn_close_all_sessions (GtkMenuItem *mi, gpointer data);
 
-static GtkActionEntry	entries_session[] = {
+static GtkActionEntry	session_entries[] = {
 	{ "ActionNewSession", GTK_STOCK_CONNECT, N_("New session"), NULL,
 			N_("Open a new session to the database"), G_CALLBACK (on_ssmn_new_session) },
 	{ "ActionRecentSessions", NULL, N_("Recent sessions"), NULL,
@@ -112,7 +113,7 @@ gsql_ssmn_init (GSQLSessionManager *ssmn )
 
 
 GtkWidget *
-gsql_ssmn_new ()
+gsql_ssmn_new (GSQLAppUI *appui)
 {
 	GSQL_TRACE_FUNC
 
@@ -134,8 +135,11 @@ gsql_ssmn_new ()
 	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
 	    				dummy,
 	    				-1);
+
+	gtk_container_set_border_width (GTK_CONTAINER (ssmn->private->sessionbar), 1);
 	
 	colorhint = gsql_colorhinter_new ();
+	ssmn->private->colorhint = GTK_WIDGET (colorhint);
 
 	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
 	    				gtk_separator_tool_item_new (),	-1);
@@ -144,6 +148,11 @@ gsql_ssmn_new ()
 	    				GTK_TOOL_ITEM (colorhint), -1);
 	
 	gtk_widget_show_all (GTK_WIDGET (ssmn));
+
+	gsql_appui_add_actions (appui, "ActionGroupSession",
+	    					session_entries,
+	    					G_N_ELEMENTS (session_entries), 
+	    					NULL);
 	
 	return GTK_WIDGET (ssmn);
 }

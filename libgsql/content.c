@@ -107,7 +107,7 @@ gsql_content_get_type ()
 		
 	}
 	
-	return obj_type;	
+	return obj_type;
 }
 
 

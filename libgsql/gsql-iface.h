@@ -36,11 +36,11 @@ struct _GSQLInterface
 	GTypeInterface g_iface;
 
 	GSQLAppUI *	(*get_ui) (GSQLIface *iface, GError **error);
-	GSQLAppPreferences * (*get_preferences) (GSQLIface *iface, GError **error);
+	//GSQLAppPreferences * (*get_preferences) (GSQLIface *iface, GError **error);
 
 	GObject* (*get_object) (GSQLIface *iface, const gchar iface_name,
 	    					GError **error);
-}
+};
  
 GType gsql_iface_get_type (void);
 

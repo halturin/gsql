@@ -24,6 +24,7 @@
 
 #include <libgsql/common.h>
 #include <libgsql/session.h>
+#include <libgsql/gsql-appui.h>
 #include <gdl/gdl.h>
 
 typedef struct _GSQLSessionManager GSQLSessionManager;
@@ -60,6 +61,6 @@ struct _GSQLSessionManagerClass
 
 GType gsql_session_manager_get_type (void);
 
-GtkWidget *gsql_ssmn_new ();
+GtkWidget *gsql_ssmn_new (GSQLAppUI *appui);
 
 #endif
