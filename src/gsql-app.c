@@ -355,3 +355,13 @@ gsql_app_interface_init (GSQLInterface *iface)
 
 }
 
+GSQLSessionManager *
+gsql_app_get_ssmn (GSQLApp *app)
+{
+	GSQL_TRACE_FUNC
+	
+	g_return_val_if_fail (GSQL_IS_APP (app), NULL);
+
+	return app->private->ssmn;
+}
+

@@ -26,6 +26,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <libgsql/conf.h>
+#include "session-manager.h"
 
 typedef struct _GSQLApp			GSQLApp;
 typedef struct _GSQLAppClass 	GSQLAppClass;
@@ -65,6 +66,9 @@ struct _GSQLAppClass
 G_BEGIN_DECLS
 
 GType gsql_app_get_type (void);
+
+GSQLSessionManager *
+gsql_app_get_ssmn (GSQLApp *app);
 
 GtkWidget *
 gsql_app_new (void);

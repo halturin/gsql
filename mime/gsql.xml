@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-gsql">
-    <comment>GSQL Project</comment>
+    <comment>GSQL Project. SQL file</comment>
     <glob pattern="*.sql"/>
   </mime-type>
+  <mime-type type="application/x-session-gsql">
+    <comment>GSQL Project. Database session</comment>
+  </mime-type>
+  
 </mime-info>

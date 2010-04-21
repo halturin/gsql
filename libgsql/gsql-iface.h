@@ -40,6 +40,7 @@ struct _GSQLInterface
 	GTypeInterface parent;
 
 	GSQLAppUI *	(*get_ui) (GSQLIface *iface, GError **error);
+
 	//GSQLAppPreferences * (*get_preferences) (GSQLIface *iface, GError **error);
 
 	GObject* (*get_object) (GSQLIface *iface, const gchar iface_name,

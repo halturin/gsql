@@ -20,11 +20,11 @@
  */
 
 
-
-
-
 #include "session-manager.h"
 #include "color-hinter.h"
+#include "gsql-app.h"
+
+#define GSQL_MIME_SESSION	"application/x-gsql"
 
 struct _GSQLSessionManagerPrivate
 {
@@ -34,6 +34,7 @@ struct _GSQLSessionManagerPrivate
 	GtkWidget		*sessionbar;
 	GtkWidget		*colorhint;
 
+	GtkRecentManager	*recent_sessions;
 };
 
 void on_ssmn_new_session (GtkMenuItem *mi, gpointer data);
@@ -115,15 +116,60 @@ on_ssmn_recent_activate (gpointer data)
 }
 
 static void
+gsql_ssmn_recent_manager_update (GSQLSessionManager *ssmn, gchar *uri,
+    								gboolean add)
+{
+	GSQL_TRACE_FUNC
+
+	GtkRecentManager *rm = ssmn->private->recent_sessions;
+
+	if (add)
+	{
+		GtkRecentData *recent;
+
+		recent = g_slice_new0 (GtkRecentData);
+
+		recent->display_name = "test1111";
+		recent->description = "test desc";
+		recent->mime_type = GSQL_MIME_SESSION;
+		recent->app_name = (gchar *) g_get_application_name ();
+		recent->app_exec = g_strjoin (" ", "gsql", "%u", NULL);
+		recent->groups = NULL;
+		recent->is_private = TRUE;
+
+		gtk_recent_manager_add_full (rm, uri, recent);
+
+		g_free (recent->app_exec);
+		g_slice_free (GtkRecentData, recent);
+		
+	} else {
+		
+		gtk_recent_manager_remove_item (rm, uri, NULL);
+	}
+
+}
+
+
+static void
 gsql_ssmn_recent_sessions_menu (GtkRecentChooser *recent)
 {
-
+	GtkRecentFilter *filter;
+	
 	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent), TRUE);
 	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent), TRUE);
 	gtk_recent_chooser_set_show_tips (GTK_RECENT_CHOOSER (recent), TRUE);
 	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent), GTK_RECENT_SORT_MRU);
 	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (recent), 20);
 
+	filter = gtk_recent_filter_new ();
+
+	// FIXME
+//	gtk_recent_filter_add_application (filter, g_get_application_name ());
+
+	gtk_recent_filter_add_mime_type (filter, GSQL_MIME_SESSION);
+	
+	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent), filter);
+	
 	g_signal_connect (recent, "item-activated",
 	    				G_CALLBACK (on_ssmn_recent_activate), NULL);
 }
@@ -199,12 +245,15 @@ gsql_ssmn_new ()
 {
 	GSQL_TRACE_FUNC
 
-	GSQLSessionManager 	*ssmn;
+	static GSQLSessionManager 	*ssmn;
 	GtkToolItem			*dummy;
 	GSQLColorHinter		*colorhint;
 	GtkAction			*action;
 
 	GSQLAppUI *appui;
+
+	if (ssmn)
+		return ssmn;
 	
 	ssmn = g_object_new (GSQL_SSMN_TYPE, NULL);
 	ssmn->private->dock = gdl_dock_new();
@@ -251,7 +300,10 @@ gsql_ssmn_new ()
 	
 	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);
 
-	
+	ssmn->private->recent_sessions = gtk_recent_manager_get_default ();
+
+	gsql_ssmn_recent_manager_update (ssmn, "gsql://asdfasfdasdfasdf", TRUE);
+
 	gsql_ssmn_recent_sessions_menu (GTK_RECENT_CHOOSER (action));
 	
 	gsql_ssmn_update_actions_status (ssmn);
@@ -269,6 +321,8 @@ on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
 	GSQL_TRACE_FUNC
 
 	GSQLSessionManager 	*ssmn = NULL;
+
+	ssmn = gsql_app_get_ssmn (GSQL_APP (gsqlapp));
 
 	gsql_ssmn_update_actions_status (ssmn);
 }
