@@ -26,6 +26,8 @@
 
 #include <libgsql/common.h>
 
+GSQLIface *gsqlapp;
+
 /* debug routines */
 gpointer gsql_main_thread;
 gboolean gsql_opt_trace_enable;

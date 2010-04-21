@@ -41,6 +41,9 @@
 	<menuitem name="MenuCloseAllSessions" action="ActionCloseAllSessions" />
     </menu>
 
+    <menu name="MenuObject" action="ActionMenuObject">
+	<placeholder name="PHolderObject" />
+    </menu>
     
     <placeholder name="PHolderEngines" />
     
@@ -61,6 +64,7 @@
 
   </menubar>
   <toolbar name="ToolbarMain">
+	<toolitem name="Open" action="ActionFileOpenRecent" />
 	<placeholder name="PHolderSessionToolbar" />
 	<placeholder name="PHolderFileToolbar" />
 	<placeholder name="PHolderEditToolbar" />

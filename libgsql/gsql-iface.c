@@ -19,6 +19,107 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+/**
+ * SECTION:gsql-iface
+ * @short_description: GSQL application interface 
+ * @see_also: #GSQLAppUI
+ *
+ * #GSQLIface is subclass of #GTypeInterface
+ *
+ * <note>
+ * 		<para>
+ *			FIXME desc
+ *		</para>
+ * </note>
+ */
 
- 
- 
+
+#include <libgsql/common.h>
+#include <libgsql/gsql-iface.h>
+#include <libgsql/gsql-appui.h>
+
+static void
+gsql_iface_init ()
+{
+	static gboolean initdone = FALSE;
+
+	if (!initdone)
+	{
+		// register signals
+
+		initdone = TRUE;
+	}
+
+}
+
+GType
+gsql_iface_get_type ()
+{
+	GSQL_TRACE_FUNC
+	
+	static GType type = 0;
+
+	if (!type)
+	{
+		static const GTypeInfo info = {
+			sizeof (GSQLInterface),
+			gsql_iface_init,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			0,
+			0,
+			NULL
+		};
+
+		type = g_type_register_static (G_TYPE_INTERFACE, "GSQLIface",
+		    							&info, 0);
+
+		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
+	}
+
+	return type;
+}
+
+
+/**
+ * gsql_iface_get_ui:
+ *
+ * @iface: a #GSQLIface object
+ * @error: #GError object 
+ *
+ * Return value: a #GSQLAppUI object or NULL if no UI was found
+ *
+ * FIXME desc
+ */
+GSQLAppUI *
+gsql_iface_get_ui (GSQLIface *iface, GError **error)
+{
+	g_return_val_if_fail (GSQL_IS_IFACE (iface), NULL);
+
+	return GSQL_IFACE_GET_INTERFACE (iface)->get_ui (iface, error);
+}
+
+/**
+ * gsql_iface_get_object:
+ *
+ * @iface: a #GSQLIface object
+ * @iface_name: 
+ * @error: #GError object 
+ *
+ * Return value: a #GObject or NULL if no UI was found
+ *
+ * FIXME desc
+ */
+GObject *
+gsql_iface_get_object (GSQLIface *iface, const gchar iface_name,
+	    					GError **error)
+{
+	g_return_val_if_fail (GSQL_IS_IFACE (iface), NULL);
+
+	return GSQL_IFACE_GET_INTERFACE (iface)->get_object (iface, iface_name, error);
+}
+
+
+

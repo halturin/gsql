@@ -124,6 +124,12 @@ gsql_appui_add_actions (GSQLAppUI *appui,
     									gint n_entries,
     									gpointer user_data);
 
+void 
+gsql_appui_add_action (GSQLAppUI *appui, 
+    									const gchar *group_name,
+    									GtkAction *action,
+    									gpointer user_data);
+
 void
 gsql_appui_add_toggle_actions (GSQLAppUI *appui,
     									const gchar *group_name,
@@ -140,6 +146,11 @@ void gsql_appui_remove_action_group_n (GSQLAppUI *appui,
 
 GtkAction * gsql_appui_get_action (GSQLAppUI *appui, const gchar *group_name,
     								const gchar *action_name);
+
+void gsql_appui_set_actions_sensitivity (GSQLAppUI *appui, 
+    									const gchar *group_name, 
+    									...);
+
 GtkWidget * gsql_appui_get_widget (GSQLAppUI *appui, const gchar *widget_name);
 
 gint gsql_appui_merge (GSQLAppUI *appui, const gchar *filename);

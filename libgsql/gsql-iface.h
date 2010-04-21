@@ -22,18 +22,22 @@
 #ifndef _GSQL_IFACE_H
 #define _GSQL_IFACE_H
 
+#include <libgsql/gsql-appui.h>
+
 G_BEGIN_DECLS
 
-typedef struct _GSQLIface GSQLIface; 
-typedef struct _GSQLInterface GSQLInterface;
+typedef struct _GSQLIface		GSQLIface;
+typedef struct _GSQLInterface 	GSQLInterface;
 
-#define GSQL_TYPE_IFACE	(gsql_iface_get_type ())
+#define GSQL_TYPE_IFACE (gsql_iface_get_type ())
 #define GSQL_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GSQL_TYPE_IFACE, GSQLIface))
 #define GSQL_IS_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQL_TYPE_IFACE))
+#define GSQL_IFACE_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), \
+										GSQL_TYPE_IFACE, GSQLInterface))
 
 struct _GSQLInterface 
 {
-	GTypeInterface g_iface;
+	GTypeInterface parent;
 
 	GSQLAppUI *	(*get_ui) (GSQLIface *iface, GError **error);
 	//GSQLAppPreferences * (*get_preferences) (GSQLIface *iface, GError **error);
@@ -45,8 +49,11 @@ struct _GSQLInterface
 GType gsql_iface_get_type (void);
 
 GObject *
-gsql_iface_get_object (GSQLInterface *iface, const gchar iface_name,
+gsql_iface_get_object (GSQLIface *iface, const gchar iface_name,
 	    					GError **error);
+
+GSQLAppUI *
+gsql_iface_get_ui (GSQLIface *iface, GError **error);
 
 G_END_DECLS
 

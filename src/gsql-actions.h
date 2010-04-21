@@ -64,6 +64,13 @@ static GtkActionEntry	menu_entries_session[] = {
 
 };
 
+static GtkActionEntry	menu_entries_object[] = {
+	{ "ActionMenuObject", NULL, N_("_Object") }
+
+
+
+};
+
 static GtkActionEntry	menu_entries_tools[] = {
 	{ "ActionMenuTools", NULL, N_("Tools") }
 

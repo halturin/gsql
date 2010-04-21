@@ -30,7 +30,9 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-  
+#include <libgsql/gsql-iface.h>
+
+
 #define GSQL_GLADE_DIALOGS PACKAGE_GLADE_DIR"/gsql_dialogs.glade"
 
 #define GSQL_TRACE_FUNC \
@@ -57,6 +59,9 @@
 		gdk_threads_leave (); \
 	} \
 
+
+
+extern GSQLIface	*gsqlapp;
 extern gpointer gsql_main_thread;
 extern gboolean gsql_opt_trace_enable;
 extern gboolean gsql_opt_debug_enable;

@@ -61,6 +61,6 @@ struct _GSQLSessionManagerClass
 
 GType gsql_session_manager_get_type (void);
 
-GtkWidget *gsql_ssmn_new (GSQLAppUI *appui);
+GSQLSessionManager* gsql_ssmn_new ();
 
 #endif

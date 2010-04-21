@@ -131,6 +131,7 @@ gsql_appui_new (void)
 
 }
 
+
 /**
  * gsql_appui_add_action_group:
  *
@@ -181,15 +182,48 @@ gsql_appui_add_actions (GSQLAppUI *appui,
 	g_return_if_fail (group_name != NULL);
 
 	GtkActionGroup *group;
+
+	group = g_hash_table_lookup (appui->private->action_groups, group_name);
 	
-	group = gtk_action_group_new (group_name);
+	if (!group)
+	{
+		group = gtk_action_group_new (group_name);
+		gsql_appui_add_action_group (appui, group_name, group);	
+	}	
 
 	gtk_action_group_add_actions (group,
 	    						  (GtkActionEntry *) entries,
 	    						  n_entries, user_data);
 
-	gsql_appui_add_action_group (appui, group_name, group);
+	
 }
+
+
+void 
+gsql_appui_add_action (GSQLAppUI *appui, 
+    									const gchar *group_name,
+    									GtkAction *action,
+    									gpointer user_data)
+{
+	GSQL_TRACE_FUNC
+
+	g_return_if_fail (GSQL_IS_APPUI (appui));
+	g_return_if_fail (GTK_IS_ACTION (action));
+	g_return_if_fail (group_name != NULL);
+
+	GtkActionGroup *group;
+
+	group = g_hash_table_lookup (appui->private->action_groups, group_name);
+	
+	if (!group)
+	{
+		group = gtk_action_group_new (group_name);
+		gsql_appui_add_action_group (appui, group_name, group);	
+	}
+
+	gtk_action_group_add_action (group, action);
+}
+
 
 /**
  * gsql_appui_add_toggle_actions:
@@ -215,14 +249,18 @@ gsql_appui_add_toggle_actions (GSQLAppUI *appui,
 	g_return_if_fail (group_name != NULL);
 
 	GtkActionGroup *group;
+
+	group = g_hash_table_lookup (appui->private->action_groups, group_name);
 	
-	group = gtk_action_group_new (group_name);
+	if (!group)
+	{
+		group = gtk_action_group_new (group_name);
+		gsql_appui_add_action_group (appui, group_name, group);	
+	}
 
 	gtk_action_group_add_toggle_actions (group,
 	    						  (GtkToggleActionEntry *) entries,
 	    						  n_entries, user_data);
-
-	gsql_appui_add_action_group (appui, group_name, group);
 }
 
 
@@ -314,6 +352,51 @@ gsql_appui_get_action (GSQLAppUI *appui, const gchar *group_name,
 	    				action_name, group_name);
 
 	return NULL;
+}
+
+/**
+ * gsql_appui_set_actions_sensitivity:
+ *
+ * @appui: a #GSQLAppUI object
+ * @group_name: the name of group you would like find
+ * @...: pair of action name and sensitivity status, terminated with NULL
+ *
+ *
+ * desc. FIXME.
+ */
+void 
+gsql_appui_set_actions_sensitivity (GSQLAppUI *appui, 
+    									const gchar *group_name, 
+    									...)
+{
+	va_list args;
+	gchar *name;
+	gboolean status;
+	GtkAction *action;
+	GtkActionGroup *group = NULL;
+
+	group = g_hash_table_lookup (appui->private->action_groups, group_name);
+
+	g_return_if_fail (group != NULL);
+	
+	va_start (args, group_name);
+	
+	do
+	{
+		name = va_arg (args, gchar *);
+
+		if (name == NULL)
+			break;
+
+		action = gtk_action_group_get_action (group, name);
+
+		status = va_arg (args, gboolean);
+
+		gtk_action_set_sensitive (action, status);
+		
+	} while (1);
+
+	va_end (args);
 }
 
 /**

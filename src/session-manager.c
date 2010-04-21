@@ -47,11 +47,7 @@ void on_ssmn_close_all_sessions (GtkMenuItem *mi, gpointer data);
 static GtkActionEntry	session_entries[] = {
 	{ "ActionNewSession", GTK_STOCK_CONNECT, N_("New session"), NULL,
 			N_("Open a new session to the database"), G_CALLBACK (on_ssmn_new_session) },
-	{ "ActionRecentSessions", NULL, N_("Recent sessions"), NULL,
-			N_("Open a recent session"), NULL },
-	{ "ActionActiveSessions", NULL, N_("Recent sessions"), NULL,
-			N_("Switch to the session"), NULL },
-
+	
 	{ "ActionCloneSession", GTK_STOCK_CONNECT, N_("Clone"), NULL,
 			N_("Open a clone of the current session"), G_CALLBACK (on_ssmn_clone_session) },
 	{ "ActionReconnectSession", GTK_STOCK_CONNECT, N_("Reconnect"), NULL,
@@ -110,16 +106,105 @@ gsql_ssmn_init (GSQLSessionManager *ssmn )
 
 }
 
+static gboolean
+on_ssmn_recent_activate (gpointer data)
+{
 
 
-GtkWidget *
-gsql_ssmn_new (GSQLAppUI *appui)
+	return TRUE;
+}
+
+static void
+gsql_ssmn_recent_sessions_menu (GtkRecentChooser *recent)
+{
+
+	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent), TRUE);
+	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent), TRUE);
+	gtk_recent_chooser_set_show_tips (GTK_RECENT_CHOOSER (recent), TRUE);
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent), GTK_RECENT_SORT_MRU);
+	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (recent), 20);
+
+	g_signal_connect (recent, "item-activated",
+	    				G_CALLBACK (on_ssmn_recent_activate), NULL);
+}
+
+static void
+gsql_ssmn_update_actions_status (GSQLSessionManager *ssmn)
+{
+	GSQL_TRACE_FUNC
+
+	GSQLAppUI *appui = NULL;
+	guint i;
+
+	appui = gsql_iface_get_ui (gsqlapp, NULL);
+
+	g_return_if_fail (GSQL_IS_APPUI (appui));
+	
+	i = g_list_length (ssmn->private->sessions);
+
+	if (i)
+	{
+		gsql_appui_set_actions_sensitivity (appui, "ActionGroupSession",
+	    					"ActionActiveSessions", TRUE,
+	    					"ActionCloneSession", TRUE,
+	    					"ActionReconnectSession", TRUE,
+
+	    					"ActionCloseSession", TRUE,
+	    					
+	    								NULL);
+
+		/*
+		 if has commit and rollback
+				    		"ActionCommitSession", FALSE,
+	    					"ActionRollbackSession", FALSE,
+
+		 */
+
+		if (i > 1)
+			gsql_appui_set_actions_sensitivity (appui, "ActionGroupSession",
+							"ActionCloseAllSessions", TRUE,
+			    			NULL);
+		else 
+			gsql_appui_set_actions_sensitivity (appui, "ActionGroupSession",
+							"ActionCloseAllSessions", FALSE,
+			    			NULL);
+
+		gsql_appui_set_actions_sensitivity (appui, "ActionGroupObject",
+		    				"ActionMenuObject", TRUE,
+		    				NULL);
+		
+		gtk_widget_set_sensitive (GTK_WIDGET (ssmn->private->colorhint), TRUE);
+
+	} else {
+		
+		gsql_appui_set_actions_sensitivity (appui, "ActionGroupSession",
+	    					"ActionActiveSessions", FALSE,
+	    					"ActionCloneSession", FALSE,
+	    					"ActionReconnectSession", FALSE,
+	    					"ActionCommitSession", FALSE,
+	    					"ActionRollbackSession", FALSE,
+	    					"ActionCloseSession", FALSE,
+	    					"ActionCloseAllSessions", FALSE,
+	    								NULL);
+
+		gsql_appui_set_actions_sensitivity (appui, "ActionGroupObject",
+		    				"ActionMenuObject", FALSE,
+		    							NULL);
+		gtk_widget_set_sensitive (GTK_WIDGET (ssmn->private->colorhint), FALSE);
+	}
+}
+
+GSQLSessionManager *
+gsql_ssmn_new ()
 {
 	GSQL_TRACE_FUNC
 
 	GSQLSessionManager 	*ssmn;
 	GtkToolItem			*dummy;
 	GSQLColorHinter		*colorhint;
+	GtkAction			*action;
+
+	GSQLAppUI *appui;
 	
 	ssmn = g_object_new (GSQL_SSMN_TYPE, NULL);
 	ssmn->private->dock = gdl_dock_new();
@@ -149,12 +234,29 @@ gsql_ssmn_new (GSQLAppUI *appui)
 	
 	gtk_widget_show_all (GTK_WIDGET (ssmn));
 
+	appui = gsql_iface_get_ui (GSQL_IFACE (gsqlapp), NULL);
+
 	gsql_appui_add_actions (appui, "ActionGroupSession",
 	    					session_entries,
 	    					G_N_ELEMENTS (session_entries), 
 	    					NULL);
 	
-	return GTK_WIDGET (ssmn);
+	action = gtk_recent_action_new ("ActionRecentSessions", N_("Recent sessions"),
+	    								N_("Open a recent session"), NULL);
+	
+	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);
+
+	action = gtk_recent_action_new ("ActionActiveSessions", N_("Active sessions"),
+	    								N_("Switch to the session"), NULL);
+	
+	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);
+
+	
+	gsql_ssmn_recent_sessions_menu (GTK_RECENT_CHOOSER (action));
+	
+	gsql_ssmn_update_actions_status (ssmn);
+	
+	return ssmn;
 }
 
 
@@ -166,14 +268,16 @@ on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC
 
+	GSQLSessionManager 	*ssmn = NULL;
 
+	gsql_ssmn_update_actions_status (ssmn);
 }
 
 void on_ssmn_clone_session (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC
 
-
+//	gsql_ssmn_update_actions_status (ssmn);
 }
 
 void on_ssmn_reconnect_session (GtkMenuItem *mi, gpointer data)
@@ -201,14 +305,14 @@ void on_ssmn_close_session (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC
 
-
+//	gsql_ssmn_update_actions_status (ssmn);
 }
 
 void on_ssmn_close_all_sessions (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC
 
-
+//	gsql_ssmn_update_actions_status (ssmn);
 }
 
 

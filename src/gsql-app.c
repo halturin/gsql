@@ -98,7 +98,7 @@ static GSQLStockIcon common_stock_icons[] =
 
 static void gsql_app_class_init (GSQLAppClass *class);
 static void gsql_app_init (GSQLApp *app);
-static void gsql_app_iface_init (GSQLInterface *iface);
+static void gsql_app_interface_init (GSQLInterface *iface);
 
 GType
 gsql_app_get_type (void)
@@ -120,16 +120,16 @@ gsql_app_get_type (void)
 			(GInstanceInitFunc) gsql_app_init,
 			NULL
 		};
-		
-		obj_type = g_type_register_static (GTK_TYPE_WINDOW,
-										   "GSQLApp", &obj_info, 0);
 
 		GInterfaceInfo iface_info = 
 		{
-			(GInterfaceInitFunc) gsql_app_iface_init,
+			(GInterfaceInitFunc) gsql_app_interface_init,
 			NULL,
 			NULL
 		};
+		
+		obj_type = g_type_register_static (GTK_TYPE_WINDOW,
+										   "GSQLApp", &obj_info, 0);
 
 		g_type_add_interface_static (obj_type, GSQL_TYPE_IFACE, &iface_info);
 	}
@@ -151,6 +151,9 @@ gsql_app_new (void)
 
 	app = g_object_new (GSQL_APP_TYPE, NULL);
 
+	// set the global name 'gsqlapp'
+	gsqlapp = GSQL_IFACE (app);
+	
 	gtk_window_set_title (GTK_WINDOW (app), "GSQL");
 
 	restore_xywh = gsql_conf_value_get_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS);
@@ -215,6 +218,12 @@ gsql_app_new (void)
 	    									menu_entries_session,
 	    									G_N_ELEMENTS (menu_entries_session),
 	    									NULL);
+
+	gsql_appui_add_actions (app->private->appui,
+	    									"ActionGroupObject",
+	    									menu_entries_object,
+	    									G_N_ELEMENTS (menu_entries_object),
+	    									NULL);
 	
 	gsql_appui_add_actions (app->private->appui,
 	    									"ActionGroupTools",
@@ -228,7 +237,7 @@ gsql_app_new (void)
 	    									G_N_ELEMENTS (menu_entries_help),
 	    									NULL);
 	
-	app->private->ssmn = GSQL_SSMN (gsql_ssmn_new (app->private->appui));
+	app->private->ssmn = gsql_ssmn_new ();
 
 	app->private->statusbar = gtk_statusbar_new ();
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (app->private->statusbar), FALSE);
@@ -245,7 +254,7 @@ gsql_app_new (void)
 	    											"/MenuMain");
 	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
 	    				app->private->mainmenu, FALSE, FALSE, 0);
-GSQL_DEBUG ("3");
+
 	app->private->maintoolbar = gsql_appui_get_widget (app->private->appui,
 	    											"/ToolbarMain");
 	gtk_box_pack_start (GTK_BOX (app->private->mainvbox), 
@@ -331,15 +340,15 @@ gsql_app_init (GSQLApp *app)
 }
 
 static GSQLAppUI *
-gsql_app_get_ui (GSQLIface *app, GError **error)
+gsql_app_get_ui (GSQLIface *iface, GError **error)
 {
-	g_return_val_if_fail (GSQL_IS_APP (app), NULL);
+	g_return_val_if_fail (GSQL_IS_APP (iface), NULL);
 
-	return GSQL_APP (app)->private->appui;
+	return GSQL_APP (iface)->private->appui;
 }
 
 static void 
-gsql_app_iface_init (GSQLInterface *iface)
+gsql_app_interface_init (GSQLInterface *iface)
 {
 	iface->get_ui = gsql_app_get_ui;
 

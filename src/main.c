@@ -78,11 +78,11 @@ main (int argc, char *argv[])
 	gtk_set_locale ();
 	
 	
-//	gsql_main_thread = (gpointer) g_thread_self ();
+	gsql_main_thread = (gpointer) g_thread_self ();
 
 	gtk_init (&argc, &argv);
-	
-	gtk_widget_show (gsql_app_new ());
+
+	gtk_widget_show (GTK_WIDGET (gsql_app_new ()));
 	
 	gtk_main ();
 

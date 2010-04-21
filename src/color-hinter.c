@@ -229,7 +229,5 @@ gsql_colorhinter_new ()
 	
 	gtk_container_add (GTK_CONTAINER (ch), ch->private->ebox);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (ch), FALSE);
-
 	return ch;
 }
