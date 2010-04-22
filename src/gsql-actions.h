@@ -29,14 +29,16 @@ static GtkActionEntry	menu_entries_file[] = {
 };
 
 static GtkActionEntry	menu_entries_edit[] = {
-	{ "ActionMenuEdit", NULL, N_("_Edit") },
-	{ "ActionEditPreferences", NULL, N_("Preferences"), NULL,
-			N_("Customize the GSQL behavior"), G_CALLBACK (on_gsql_preferences) }
+	{ "ActionMenuEdit", NULL, N_("_Edit") }
+
 };
 
 static GtkActionEntry	menu_entries_view[] = {
 	{ "ActionMenuView", NULL, N_("_View") },
+	{ "ActionMenuPreferences", NULL, N_("Preferences"), NULL,
+			N_("Customize the GSQL behavior"), G_CALLBACK (on_gsql_preferences) }
 
+	
 };
 
 static GtkToggleActionEntry menu_toggle_entries_view[] = {

@@ -9,13 +9,15 @@
     
     <menu name="MenuEdit" action="ActionMenuEdit">
 	<placeholder name="PHolderEdit" />
-	<menuitem name="Preferences" action="ActionEditPreferences" />
     </menu>
     
     <menu name="MenuView" action="ActionMenuView">
       <menuitem name="MenuFullScreen" action="ActionFullScreen"/>
       <menuitem name="MenuShowToolbar" action="ActionShowToolbar"/>
       <menuitem name="MenuShowStatusBar" action="ActionShowStatusbar"/>
+      <separator/>
+      <menuitem name="MenuNextSession" action="ActionNextSession"/>
+      <menuitem name="MenuPrevSession" action="ActionPrevSession"/>
       <separator/>
       <placeholder name="PHolderView"/>
       <separator/>
@@ -64,7 +66,13 @@
 
   </menubar>
   <toolbar name="ToolbarMain">
-	<toolitem name="Open" action="ActionFileOpenRecent" />
+	<toolitem name="ToolitemNewSession" action="ActionNewSession" />
+	<toolitem name="ToolitemRecentSessions" action="ActionRecentSessions" />
+	<toolitem name="ToolitemCloseSession" action="ActionCloseSession" />
+	<separator/>
+	<toolitem name="ToolitemCommitSession" action="ActionCommitSession" />
+	<toolitem name="ToolitemRollbackSession" action="ActionRollbackSession" />
+	<separator/>
 	<placeholder name="PHolderSessionToolbar" />
 	<placeholder name="PHolderFileToolbar" />
 	<placeholder name="PHolderEditToolbar" />

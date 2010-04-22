@@ -44,25 +44,33 @@ void on_ssmn_commit_session (GtkMenuItem *mi, gpointer data);
 void on_ssmn_rollback_session (GtkMenuItem *mi, gpointer data);
 void on_ssmn_close_session (GtkMenuItem *mi, gpointer data);
 void on_ssmn_close_all_sessions (GtkMenuItem *mi, gpointer data);
+void on_ssmn_next_session (GtkMenuItem *mi, gpointer data);
+void on_ssmn_prev_session (GtkMenuItem *mi, gpointer data);
 
 static GtkActionEntry	session_entries[] = {
 	{ "ActionNewSession", GTK_STOCK_CONNECT, N_("New session"), NULL,
 			N_("Open a new session to the database"), G_CALLBACK (on_ssmn_new_session) },
 	
-	{ "ActionCloneSession", GTK_STOCK_CONNECT, N_("Clone"), NULL,
+	{ "ActionCloneSession", NULL, N_("Clone"), NULL,
 			N_("Open a clone of the current session"), G_CALLBACK (on_ssmn_clone_session) },
-	{ "ActionReconnectSession", GTK_STOCK_CONNECT, N_("Reconnect"), NULL,
+	{ "ActionReconnectSession", NULL, N_("Reconnect"), NULL,
 			N_("Recover the losted link to the database"), G_CALLBACK (on_ssmn_reconnect_session) },
 
-	{ "ActionCommitSession", GTK_STOCK_CONNECT, N_("Commit changes"), NULL,
+	{ "ActionCommitSession", GTK_STOCK_YES, N_("Commit changes"), NULL,
 			N_("Commit the changes to the database"), G_CALLBACK (on_ssmn_commit_session) },
-	{ "ActionRollbackSession", GTK_STOCK_CONNECT, N_("Rollback changes"), NULL,
+	{ "ActionRollbackSession", GTK_STOCK_NO, N_("Rollback changes"), NULL,
 			N_("Rollback changes"), G_CALLBACK (on_ssmn_rollback_session) },
 
-	{ "ActionCloseSession", GTK_STOCK_CONNECT, N_("Close session"), NULL,
+	{ "ActionCloseSession", GTK_STOCK_DISCONNECT, N_("Close session"), NULL,
 			N_("Close the current session to the database "), G_CALLBACK (on_ssmn_close_session) },
-	{ "ActionCloseAllSessions", GTK_STOCK_CONNECT, N_("Close all sessions"), NULL,
-			N_("Close the all opened session to the databases "), G_CALLBACK (on_ssmn_close_all_sessions) }
+	{ "ActionCloseAllSessions", NULL, N_("Close all sessions"), NULL,
+			N_("Close the all opened session to the databases "), G_CALLBACK (on_ssmn_close_all_sessions) },
+
+	{ "ActionNextSession", NULL, N_("Next session"), NULL,
+			N_("Switch to the next session"), G_CALLBACK (on_ssmn_next_session) },
+	{ "ActionPrevSession", NULL, N_("Previous session"), NULL,
+			N_("Switch to the previous session"), G_CALLBACK (on_ssmn_prev_session) }
+	
 };
 
 G_DEFINE_TYPE (GSQLSessionManager, gsql_ssmn, GTK_TYPE_VBOX);
@@ -194,9 +202,9 @@ gsql_ssmn_update_actions_status (GSQLSessionManager *ssmn)
 	    					"ActionActiveSessions", TRUE,
 	    					"ActionCloneSession", TRUE,
 	    					"ActionReconnectSession", TRUE,
-
 	    					"ActionCloseSession", TRUE,
-	    					
+	    					"ActionNextSession", TRUE,
+		    				"ActionPrevSession", TRUE,
 	    								NULL);
 
 		/*
@@ -231,11 +239,15 @@ gsql_ssmn_update_actions_status (GSQLSessionManager *ssmn)
 	    					"ActionRollbackSession", FALSE,
 	    					"ActionCloseSession", FALSE,
 	    					"ActionCloseAllSessions", FALSE,
+
+		    				"ActionNextSession", FALSE,
+		    				"ActionPrevSession", FALSE,
 	    								NULL);
 
 		gsql_appui_set_actions_sensitivity (appui, "ActionGroupObject",
 		    				"ActionMenuObject", FALSE,
 		    							NULL);
+		
 		gtk_widget_set_sensitive (GTK_WIDGET (ssmn->private->colorhint), FALSE);
 	}
 }
@@ -298,15 +310,17 @@ gsql_ssmn_new ()
 	action = gtk_recent_action_new ("ActionActiveSessions", N_("Active sessions"),
 	    								N_("Switch to the session"), NULL);
 	
-	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);
+	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);	
 
 	ssmn->private->recent_sessions = gtk_recent_manager_get_default ();
 
 	gsql_ssmn_recent_manager_update (ssmn, "gsql://asdfasfdasdfasdf", TRUE);
 
 	gsql_ssmn_recent_sessions_menu (GTK_RECENT_CHOOSER (action));
-	
 	gsql_ssmn_update_actions_status (ssmn);
+
+	action = gsql_appui_get_action (appui, "ActionGroupSession", "ActionNewSession");
+	g_object_set (G_OBJECT (action), "is-important", TRUE, NULL);
 	
 	return ssmn;
 }
@@ -369,5 +383,14 @@ void on_ssmn_close_all_sessions (GtkMenuItem *mi, gpointer data)
 //	gsql_ssmn_update_actions_status (ssmn);
 }
 
+void on_ssmn_prev_session (GtkMenuItem *mi, gpointer data)
+{
+	GSQL_TRACE_FUNC
 
+}
 
+void on_ssmn_next_session (GtkMenuItem *mi, gpointer data)
+{
+	GSQL_TRACE_FUNC
+
+}
