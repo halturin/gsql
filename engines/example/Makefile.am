@@ -4,8 +4,7 @@ SUBDIRS = pixmaps
 engine_gladedir = $(PACKAGE_GLADE_DIR)/example
 engine_uidir = $(PACKAGE_UI_DIR)/example
 
-engine_glade_DATA = \
-	widgets/logon.glade
+engine_glade_DATA = 
 
 engine_ui_DATA = 
 

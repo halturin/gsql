@@ -18,7 +18,8 @@ gsql_gladedir = $(PACKAGE_GLADE_DIR)
 gsql_uidir = $(PACKAGE_UI_DIR)
 
 gsql_glade_DATA =
-gsql_ui_DATA = 
+gsql_ui_DATA = \
+	gsql.ui
 
 bin_PROGRAMS = gsql
 
