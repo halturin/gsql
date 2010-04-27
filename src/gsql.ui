@@ -16,9 +16,6 @@
       <menuitem name="MenuShowToolbar" action="ActionShowToolbar"/>
       <menuitem name="MenuShowStatusBar" action="ActionShowStatusbar"/>
       <separator/>
-      <menuitem name="MenuNextSession" action="ActionNextSession"/>
-      <menuitem name="MenuPrevSession" action="ActionPrevSession"/>
-      <separator/>
       <placeholder name="PHolderView"/>
       <separator/>
       <menuitem name="MenuPreferences" action="ActionMenuPreferences"/>
@@ -28,20 +25,7 @@
 	   <placeholder name="PHolderSearch"/>
     </menu>
     
-    <menu name="MenuSessions" action="ActionMenuSession">
-	<menuitem name="MenuNewSession" action="ActionNewSession" />
-	<menuitem name="MenuRecentSession" action="ActionRecentSessions" />
-	<menuitem name="MenuActiveSession" action="ActionActiveSessions" />
-	<separator/>
-	<menuitem name="MenuCloneSession" action="ActionCloneSession" />
-	<menuitem name="MenuReconnectSession" action="ActionReconnectSession" />
-	<separator/>
-	<menuitem name="MenuCommitSession" action="ActionCommitSession" />
-	<menuitem name="MenuRollbackSession" action="ActionRollbackSession" />
-	<separator/>
-	<menuitem name="MenuCloseSession" action="ActionCloseSession" />
-	<menuitem name="MenuCloseAllSessions" action="ActionCloseAllSessions" />
-    </menu>
+    <placeholder name="PHolderSessions" />
 
     <menu name="MenuObject" action="ActionMenuObject">
 	<placeholder name="PHolderObject" />
@@ -66,13 +50,6 @@
 
   </menubar>
   <toolbar name="ToolbarMain">
-	<toolitem name="ToolitemNewSession" action="ActionNewSession" />
-	<toolitem name="ToolitemRecentSessions" action="ActionRecentSessions" />
-	<toolitem name="ToolitemCloseSession" action="ActionCloseSession" />
-	<separator/>
-	<toolitem name="ToolitemCommitSession" action="ActionCommitSession" />
-	<toolitem name="ToolitemRollbackSession" action="ActionRollbackSession" />
-	<separator/>
 	<placeholder name="PHolderSessionToolbar" />
 	<placeholder name="PHolderFileToolbar" />
 	<placeholder name="PHolderEditToolbar" />

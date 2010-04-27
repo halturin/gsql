@@ -19,7 +19,8 @@ gsql_uidir = $(PACKAGE_UI_DIR)
 
 gsql_glade_DATA =
 gsql_ui_DATA = \
-	gsql.ui
+	gsql.ui \
+	gsql-sessions.ui
 
 bin_PROGRAMS = gsql
 

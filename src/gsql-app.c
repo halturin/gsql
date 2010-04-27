@@ -237,6 +237,10 @@ gsql_app_new (void)
 	    									G_N_ELEMENTS (menu_entries_help),
 	    									NULL);
 	
+	
+	app->private->uim_id = gsql_appui_merge (app->private->appui, 
+	    										PACKAGE_UI_DIR "/gsql.ui");
+
 	app->private->ssmn = gsql_ssmn_new ();
 
 	app->private->statusbar = gtk_statusbar_new ();
@@ -245,9 +249,6 @@ gsql_app_new (void)
 	app->private->sysmessages = gtk_combo_box_entry_new();//gtk_combo_box_new_text ();
 	gtk_widget_set_size_request (app->private->sysmessages, 400, 26);
 	
-	app->private->uim_id = gsql_appui_merge (app->private->appui, 
-	    										PACKAGE_UI_DIR "/gsql.ui");
-
 
 	// packing the widgets
 	app->private->mainmenu = gsql_appui_get_widget (app->private->appui,

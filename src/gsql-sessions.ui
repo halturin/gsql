@@ -1,0 +1,40 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+    <menu name="MenuView" action="ActionMenuView">
+	<placeholder name="PHolderView">
+	    <menuitem name="MenuNextSession" action="ActionNextSession"/>
+	    <menuitem name="MenuPrevSession" action="ActionPrevSession"/>
+	</placeholder>
+    </menu>
+    
+    <placeholder name="PHolderSessions">
+	<menu name="MenuSessions" action="ActionMenuSession">
+	    <menuitem name="MenuNewSession" action="ActionNewSession" />
+	    <menuitem name="MenuRecentSession" action="ActionRecentSessions" />
+	    <menuitem name="MenuActiveSession" action="ActionActiveSessions" />
+	    <separator/>
+	    <menuitem name="MenuCloneSession" action="ActionCloneSession" />
+	    <menuitem name="MenuReconnectSession" action="ActionReconnectSession" />
+	    <separator/>
+	    <menuitem name="MenuCommitSession" action="ActionCommitSession" />
+	    <menuitem name="MenuRollbackSession" action="ActionRollbackSession" />
+	    <separator/>
+	    <menuitem name="MenuCloseSession" action="ActionCloseSession" />
+	    <menuitem name="MenuCloseAllSessions" action="ActionCloseAllSessions" />
+	</menu>
+    </placeholder>
+  </menubar>
+
+  <toolbar name="ToolbarMain">
+    <placeholder name="PHolderSessionToolbar">
+	<toolitem name="ToolitemNewSession" action="ActionRecentSessions" />
+	<toolitem name="ToolitemCloseSession" action="ActionCloseSession" />
+	<separator/>
+	<toolitem name="ToolitemCommitSession" action="ActionCommitSession" />
+	<toolitem name="ToolitemRollbackSession" action="ActionRollbackSession" />
+	<separator/>
+    </placeholder>
+  </toolbar>
+</ui>
+

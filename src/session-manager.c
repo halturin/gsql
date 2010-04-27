@@ -159,30 +159,6 @@ gsql_ssmn_recent_manager_update (GSQLSessionManager *ssmn, gchar *uri,
 
 
 static void
-gsql_ssmn_recent_sessions_menu (GtkRecentChooser *recent)
-{
-	GtkRecentFilter *filter;
-	
-	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent), TRUE);
-	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent), TRUE);
-	gtk_recent_chooser_set_show_tips (GTK_RECENT_CHOOSER (recent), TRUE);
-	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent), GTK_RECENT_SORT_MRU);
-	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (recent), 20);
-
-	filter = gtk_recent_filter_new ();
-
-	// FIXME
-//	gtk_recent_filter_add_application (filter, g_get_application_name ());
-
-	gtk_recent_filter_add_mime_type (filter, GSQL_MIME_SESSION);
-	
-	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent), filter);
-	
-	g_signal_connect (recent, "item-activated",
-	    				G_CALLBACK (on_ssmn_recent_activate), NULL);
-}
-
-static void
 gsql_ssmn_update_actions_status (GSQLSessionManager *ssmn)
 {
 	GSQL_TRACE_FUNC
@@ -260,7 +236,11 @@ gsql_ssmn_new ()
 	static GSQLSessionManager 	*ssmn;
 	GtkToolItem			*dummy;
 	GSQLColorHinter		*colorhint;
+	GtkAction			*recsess_action;
 	GtkAction			*action;
+	GtkWidget			*widget, *recent_menu;
+	GtkRecentFilter *filter;
+	GtkRecentManager *recent;
 
 	GSQLAppUI *appui;
 
@@ -302,31 +282,63 @@ gsql_ssmn_new ()
 	    					G_N_ELEMENTS (session_entries), 
 	    					NULL);
 	
-	action = gtk_recent_action_new ("ActionRecentSessions", N_("Recent sessions"),
-	    								N_("Open a recent session"), NULL);
+	recsess_action = gtk_recent_action_new ("ActionRecentSessions", N_("Recent sessions"),
+	    								N_("Open a recent session"), GTK_STOCK_CONNECT);
+	g_object_set (G_OBJECT (recsess_action), "is-important", TRUE, NULL);
 	
-	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);
+	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (recsess_action), NULL);
 
 	action = gtk_recent_action_new ("ActionActiveSessions", N_("Active sessions"),
 	    								N_("Switch to the session"), NULL);
 	
 	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);	
 
-	ssmn->private->recent_sessions = gtk_recent_manager_get_default ();
 
+
+	recent = gtk_recent_manager_get_default ();
+	recent_menu = gtk_recent_chooser_menu_new_for_manager (recent);
+
+	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent_menu), TRUE);
+	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent_menu), TRUE);
+	gtk_recent_chooser_set_show_tips (GTK_RECENT_CHOOSER (recent_menu), TRUE);
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent_menu), GTK_RECENT_SORT_MRU);
+	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (recent_menu), 20);
+
+	filter = gtk_recent_filter_new ();
+
+	// FIXME
+	//gtk_recent_filter_add_application (filter, g_get_application_name ());
+
+	gtk_recent_filter_add_mime_type (filter, GSQL_MIME_SESSION);
+	
+	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent_menu), filter);
+	
+	g_signal_connect (recent_menu, "item-activated",
+	    				G_CALLBACK (on_ssmn_recent_activate), NULL);
+
+	ssmn->private->recent_sessions = recent;
 	gsql_ssmn_recent_manager_update (ssmn, "gsql://asdfasfdasdfasdf", TRUE);
 
-	gsql_ssmn_recent_sessions_menu (GTK_RECENT_CHOOSER (action));
 	gsql_ssmn_update_actions_status (ssmn);
 
-	action = gsql_appui_get_action (appui, "ActionGroupSession", "ActionNewSession");
-	g_object_set (G_OBJECT (action), "is-important", TRUE, NULL);
-	
+	gsql_appui_merge (appui, PACKAGE_UI_DIR "/gsql-sessions.ui");
+
+	widget = gsql_appui_get_widget (appui, "/ToolbarMain/PHolderSessionToolbar/ToolitemNewSession");
+
+	if (!widget)
+	    g_debug ("asdfasfdsafdasdfasfdasfasdf");
+
+	gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (widget), recent_menu);
+	gtk_tool_button_set_label (GTK_TOOL_BUTTON (widget), N_("New session"));
+	gtk_tool_item_set_tooltip_text (GTK_TOOL_ITEM (widget), 
+	    			N_("Open a new session to the database"));
+	gtk_menu_tool_button_set_arrow_tooltip_text (GTK_MENU_TOOL_BUTTON (widget), 
+	    										N_("Open a recent session"));
+
+	g_signal_connect (widget, "clicked", G_CALLBACK (on_ssmn_new_session), NULL);
+	    
 	return ssmn;
 }
-
-
-
 
 
 void 
