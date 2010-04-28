@@ -33,7 +33,6 @@
  * </note>
  */
 
-
 #include <libgsql/common.h>
 #include <libgsql/gsql-iface.h>
 #include <libgsql/gsql-appui.h>
@@ -122,4 +121,37 @@ gsql_iface_get_object (GSQLIface *iface, const gchar iface_name,
 }
 
 
+/**
+ * gsql_iface_add_widget:
+ *
+ * @iface: a #GSQLIface object
+ * @session: a #GSQLSession object
+ * @widget: a #GtkWidget you would like to add
+ * @name:	short name
+ * @title:	title for the widget 
+ * @stock_id: stock name of the icon
+ * @placement: dock position #GSQLIfacePlacement
+ * @locked:	lock status
+ * @error: #GError object 
+ *
+ * FIXME desc
+ */
+void
+gsql_iface_add_widget (GSQLIface *iface, GSQLSession *session,
+    					GtkWidget 	*widget,
+    					const gchar	*name,
+    					const gchar *title,
+    					const gchar *stock_id,
+    					GSQLIfacePlacement placement,
+    					gboolean	locked,
+    					GError 		**error)
+{
+	g_return_if_fail (GSQL_IS_IFACE (iface));
+	//g_return_if_fail (GSQL_IS_SESSION (session));
+	g_return_if_fail (GTK_WIDGET (widget));
 
+	GSQL_IFACE_GET_INTERFACE (iface)->add_widget (iface, session, 
+	    widget,
+	    						name, title, stock_id, placement, locked,
+	    						error);
+}

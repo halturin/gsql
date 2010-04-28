@@ -30,7 +30,11 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include <glib.h>
+#include <glib-object.h>
+
 #include <libgsql/gsql-iface.h>
+
 
 
 #define GSQL_GLADE_DIALOGS PACKAGE_GLADE_DIR"/gsql_dialogs.glade"

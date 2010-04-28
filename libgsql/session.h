@@ -23,9 +23,6 @@
 #ifndef _SESSION_H
 #define _SESSION_H
 
-#include <libgsql/common.h>
-#include <glib.h>
-#include <glib-object.h>
 
 typedef struct _GSQLSession 		GSQLSession;
 typedef struct _GSQLSessionClass 	GSQLSessionClass;

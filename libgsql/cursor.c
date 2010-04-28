@@ -20,13 +20,13 @@
  */
 
 
+#include <libgsql/common.h>
+#include <libgsql/cursor.h>
+#include <libgsql/variable.h>
+#include <libgsql/session.h>
 #include <string.h>
 
-#include "session.h"
-#include "cursor.h"
-#include "common.h"
 
-#include "variable.h"
 
 struct _GSQLCursorPrivate 
 {

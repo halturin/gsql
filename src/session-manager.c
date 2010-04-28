@@ -21,18 +21,31 @@
 
 
 #include "session-manager.h"
-#include "color-hinter.h"
 #include "gsql-app.h"
 
 #define GSQL_MIME_SESSION	"application/x-gsql"
 
-struct _GSQLSessionManagerPrivate
+typedef struct _GSQLSessionPack GSQLSessionPack;
+
+struct _GSQLSessionPack
 {
+	GSQLSession *session;
 	GdlDockLayout	*layout;
 	GtkWidget		*dock;
-	GList			*sessions; // list of GSQLSession objects
-	GtkWidget		*sessionbar;
-	GtkWidget		*colorhint;
+	GtkWidget 		*dockbar;
+
+	GtkWidget		*left_item;
+	GtkWidget		*center_item;
+	GtkWidget		*right_item;
+	
+	gint			page; 
+	
+};
+
+struct _GSQLSessionManagerPrivate
+{
+	GtkNotebook		*container;
+	GList			*sessions; // list of GSQLSessionPack 
 
 	GtkRecentManager	*recent_sessions;
 };
@@ -80,9 +93,8 @@ gsql_ssmn_dispose (GObject *object)
 {
 	GSQL_TRACE_FUNC
 
-	GSQLSessionManager *ssmn = GSQL_SSMN (object);
+//	GSQLSessionManager *ssmn = GSQL_SSMN (object);
 
-	g_object_unref (ssmn->private->layout);
 
 }
 
@@ -203,7 +215,6 @@ gsql_ssmn_update_actions_status (GSQLSessionManager *ssmn)
 		    				"ActionMenuObject", TRUE,
 		    				NULL);
 		
-		gtk_widget_set_sensitive (GTK_WIDGET (ssmn->private->colorhint), TRUE);
 
 	} else {
 		
@@ -224,7 +235,6 @@ gsql_ssmn_update_actions_status (GSQLSessionManager *ssmn)
 		    				"ActionMenuObject", FALSE,
 		    							NULL);
 		
-		gtk_widget_set_sensitive (GTK_WIDGET (ssmn->private->colorhint), FALSE);
 	}
 }
 
@@ -234,8 +244,6 @@ gsql_ssmn_new ()
 	GSQL_TRACE_FUNC
 
 	static GSQLSessionManager 	*ssmn;
-	GtkToolItem			*dummy;
-	GSQLColorHinter		*colorhint;
 	GtkAction			*recsess_action;
 	GtkAction			*action;
 	GtkWidget			*widget, *recent_menu;
@@ -248,30 +256,10 @@ gsql_ssmn_new ()
 		return ssmn;
 	
 	ssmn = g_object_new (GSQL_SSMN_TYPE, NULL);
-	ssmn->private->dock = gdl_dock_new();
 	
-	ssmn->private->layout = gdl_dock_layout_new (GDL_DOCK (ssmn->private->dock));
-	ssmn->private->sessionbar = gtk_toolbar_new ();
-
-	gtk_box_pack_start(GTK_BOX (ssmn), ssmn->private->dock, FALSE, FALSE, 0);
-	gtk_box_pack_end(GTK_BOX (ssmn), ssmn->private->sessionbar, FALSE, FALSE, 0);
-
-	dummy = gtk_tool_item_new ();
-	gtk_tool_item_set_expand (dummy, TRUE);
-	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
-	    				dummy,
-	    				-1);
-
-	gtk_container_set_border_width (GTK_CONTAINER (ssmn->private->sessionbar), 1);
-	
-	colorhint = gsql_colorhinter_new ();
-	ssmn->private->colorhint = GTK_WIDGET (colorhint);
-
-	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
-	    				gtk_separator_tool_item_new (),	-1);
-	
-	gtk_toolbar_insert (GTK_TOOLBAR (ssmn->private->sessionbar), 
-	    				GTK_TOOL_ITEM (colorhint), -1);
+	ssmn->private->container = GTK_NOTEBOOK (gtk_notebook_new ());
+	gtk_box_pack_start(GTK_BOX (ssmn), GTK_WIDGET (ssmn->private->container), 
+	    				FALSE, FALSE, 0);
 	
 	gtk_widget_show_all (GTK_WIDGET (ssmn));
 
@@ -284,7 +272,6 @@ gsql_ssmn_new ()
 	
 	recsess_action = gtk_recent_action_new ("ActionRecentSessions", N_("Recent sessions"),
 	    								N_("Open a recent session"), GTK_STOCK_CONNECT);
-	g_object_set (G_OBJECT (recsess_action), "is-important", TRUE, NULL);
 	
 	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (recsess_action), NULL);
 
@@ -292,8 +279,6 @@ gsql_ssmn_new ()
 	    								N_("Switch to the session"), NULL);
 	
 	gsql_appui_add_action (appui, "ActionGroupSession", GTK_ACTION (action), NULL);	
-
-
 
 	recent = gtk_recent_manager_get_default ();
 	recent_menu = gtk_recent_chooser_menu_new_for_manager (recent);
@@ -325,9 +310,6 @@ gsql_ssmn_new ()
 
 	widget = gsql_appui_get_widget (appui, "/ToolbarMain/PHolderSessionToolbar/ToolitemNewSession");
 
-	if (!widget)
-	    g_debug ("asdfasfdsafdasdfasfdasfasdf");
-
 	gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (widget), recent_menu);
 	gtk_tool_button_set_label (GTK_TOOL_BUTTON (widget), N_("New session"));
 	gtk_tool_item_set_tooltip_text (GTK_TOOL_ITEM (widget), 
@@ -335,11 +317,51 @@ gsql_ssmn_new ()
 	gtk_menu_tool_button_set_arrow_tooltip_text (GTK_MENU_TOOL_BUTTON (widget), 
 	    										N_("Open a recent session"));
 
-	g_signal_connect (widget, "clicked", G_CALLBACK (on_ssmn_new_session), NULL);
+	action = gsql_appui_get_action (appui, "ActionGroupSession", "ActionNewSession");
+	g_object_set (G_OBJECT (action), "is-important", TRUE, NULL);
+	gtk_action_connect_proxy (action, widget);
 	    
 	return ssmn;
 }
 
+
+// --- <draft> ---
+
+static GSQLSessionPack *
+ssmn_create_session ()
+{
+	GSQLSession *session;
+	GSQLSessionPack *spack;
+
+	
+	session = g_object_new (GSQL_SESSION_TYPE, NULL);
+	spack = g_slice_new0 (GSQLSessionPack);
+
+	spack->session = session;
+	spack->dock = gdl_dock_new ();
+	spack->layout = gdl_dock_layout_new (GDL_DOCK (spack->dock));
+	spack->dockbar = gdl_dock_bar_new (GDL_DOCK (spack->dock));
+
+	spack->left_item = gdl_dock_item_new_with_stock ("item 1", "item 1 long name", GTK_STOCK_NETWORK,
+	    			GDL_DOCK_ITEM_BEH_NORMAL);
+
+	gdl_dock_add_item (GDL_DOCK (spack->dock), GDL_DOCK_ITEM (spack->left_item), GDL_DOCK_LEFT);
+
+
+	spack->center_item = gdl_dock_item_new_with_stock ("item 2", "item 2 long name", GTK_STOCK_NETWORK,
+	    			GDL_DOCK_ITEM_BEH_NORMAL);
+
+	gdl_dock_add_item (GDL_DOCK (spack->dock), GDL_DOCK_ITEM (spack->center_item), GDL_DOCK_LEFT);
+	
+	spack->right_item = gdl_dock_item_new_with_stock ("item 3", "item 3 long name", GTK_STOCK_NETWORK,
+	    			GDL_DOCK_ITEM_BEH_NORMAL);
+
+	gdl_dock_add_item (GDL_DOCK (spack->dock), GDL_DOCK_ITEM (spack->right_item), GDL_DOCK_LEFT);
+	
+	return spack;
+}
+
+// --- </draft> ---
 
 void 
 on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
@@ -347,8 +369,19 @@ on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
 	GSQL_TRACE_FUNC
 
 	GSQLSessionManager 	*ssmn = NULL;
+	GSQLSessionPack *spack = NULL;
 
 	ssmn = gsql_app_get_ssmn (GSQL_APP (gsqlapp));
+
+	spack  = ssmn_create_session ();
+	if (spack)
+	{
+		ssmn->private->sessions = g_list_append (ssmn->private->sessions, spack);
+		gtk_widget_show_all (spack->dock);
+
+		gtk_notebook_append_page (ssmn->private->container, spack->dock, NULL);
+
+	}
 
 	gsql_ssmn_update_actions_status (ssmn);
 }

@@ -20,7 +20,7 @@
  */
 
 
-
+#include <libgsql/common.h>
 #include <libgsql/session.h>
 
 G_DEFINE_TYPE (GSQLSession, gsql_session, G_TYPE_OBJECT);

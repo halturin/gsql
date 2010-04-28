@@ -23,9 +23,6 @@
 #ifndef _CURSOR_H
 #define _CURSOR_H
 
-#include <glib.h>
-#include <glib-object.h>
-
 typedef struct _GSQLCursor GSQLCursor;
 typedef struct _GSQLCursorClass GSQLCursorClass;
 typedef struct _GSQLCursorPrivate GSQLCursorPrivate;

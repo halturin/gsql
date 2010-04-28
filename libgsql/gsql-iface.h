@@ -22,7 +22,11 @@
 #ifndef _GSQL_IFACE_H
 #define _GSQL_IFACE_H
 
+#include <libgsql/gsql-iface.h>
 #include <libgsql/gsql-appui.h>
+#include <libgsql/session.h>
+
+
 
 G_BEGIN_DECLS
 
@@ -35,6 +39,18 @@ typedef struct _GSQLInterface 	GSQLInterface;
 #define GSQL_IFACE_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), \
 										GSQL_TYPE_IFACE, GSQLInterface))
 
+typedef enum
+{
+	GSQL_IFACE_PLACEMENT_NONE = 0,
+	GSQL_IFACE_PLACEMENT_TOP,
+	GSQL_IFACE_PLACEMENT_BOTTOM,
+	GSQL_IFACE_PLACEMENT_RIGHT,
+	GSQL_IFACE_PLACEMENT_LEFT,
+	GSQL_IFACE_PLACEMENT_CENTER,
+	GSQL_IFACE_PLACEMENT_FLOATING
+} GSQLIfacePlacement;
+
+
 struct _GSQLInterface 
 {
 	GTypeInterface parent;
@@ -45,6 +61,15 @@ struct _GSQLInterface
 
 	GObject* (*get_object) (GSQLIface *iface, const gchar iface_name,
 	    					GError **error);
+	
+	void (*add_widget) (GSQLIface *iface, GSQLSession *session,
+    					GtkWidget 	*widget,
+    					const gchar	*name,
+    					const gchar *title,
+    					const gchar *stock_id,
+    					GSQLIfacePlacement placement,
+    					gboolean	locked,
+    					GError 		**error);
 };
  
 GType gsql_iface_get_type (void);
@@ -55,6 +80,16 @@ gsql_iface_get_object (GSQLIface *iface, const gchar iface_name,
 
 GSQLAppUI *
 gsql_iface_get_ui (GSQLIface *iface, GError **error);
+
+void
+gsql_iface_add_widget (GSQLIface *iface, GSQLSession *session,
+    					GtkWidget 	*widget,
+    					const gchar	*name,
+    					const gchar *title,
+    					const gchar *stock_id,
+    					GSQLIfacePlacement placement,
+    					gboolean	locked,
+    					GError 		**error);
 
 G_END_DECLS
 

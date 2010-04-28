@@ -38,7 +38,6 @@ typedef struct _GSQLContentClass	GSQLContentClass;
 #define GSQL_IS_CONTENT(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GSQL_CONTENT_TYPE))
 #define GSQL_IS_CONTENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GSQL_CONTENT_TYPE))
 
-#include <libgsql/common.h>
 #include <libgsql/session.h>
 
 
