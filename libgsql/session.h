@@ -1,7 +1,7 @@
 /* 
  * GSQL - database development tool for GNOME
  *
- * Copyright (C) 2006-2008  Taras Halturin  halturin@gmail.com
+ * Copyright (C) 2006-2010  Taras Halturin  halturin@gmail.com
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,6 @@
 #ifndef _SESSION_H
 #define _SESSION_H
 
-
 typedef struct _GSQLSession 		GSQLSession;
 typedef struct _GSQLSessionClass 	GSQLSessionClass;
 typedef struct _GSQLSessionPrivate	GSQLSessionPrivate;
@@ -37,25 +36,27 @@ typedef struct _GSQLSessionPrivate	GSQLSessionPrivate;
 
 struct _GSQLSession
 {
-	GObject parent;
+	GtkContainer parent;
 	
 	GSQLSessionPrivate *private;
 };
 
+#define GSQL_SESSION_SUB_MAIN "main-subsession"
 
 struct _GSQLSessionClass
 {
-	GObjectClass parent;
+	GtkContainerClass parent;
+
+	GHashTable	*subsessions;
+	
+
+
 	/* signals */
 	
-	void (*on_session_open)		(GSQLSession *session);
-	void (*on_session_close)	(GSQLSession *session);
-	void (*on_session_reopen)	(GSQLSession *session);
-	// ?
-	void (*on_session_duplicate)	(GSQLSession *session);
+	void (*on_session_close)	(GSQLSession *session, gboolean reserved);
+
 	void (*on_session_commit)		(GSQLSession *session);
 	void (*on_session_rollback)		(GSQLSession *session);	
-	//
 
 };
 

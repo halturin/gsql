@@ -28,10 +28,12 @@ libgsql_la_SOURCES = \
 	conf.h
 
 libgsql_la_LIBADD = \
-	$(PACKAGE_LIBS)
+	$(PACKAGE_LIBS)\
+	$(GDL_LIBS)
 
 AM_CPPFLAGS = \
-	$(PACKAGE_CFLAGS)
+	$(PACKAGE_CFLAGS)\
+	$(GDL_CFLAGS)
 
 libgsqlincludedir=$(includedir)/libgsql
 

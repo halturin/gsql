@@ -25,7 +25,7 @@
 #include <libgsql/common.h>
 #include <libgsql/session.h>
 #include <libgsql/gsql-appui.h>
-#include <gdl/gdl.h>
+
 
 typedef struct _GSQLSessionManager GSQLSessionManager;
 typedef struct _GSQLSessionManagerClass GSQLSessionManagerClass;

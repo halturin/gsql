@@ -25,22 +25,8 @@
 
 #define GSQL_MIME_SESSION	"application/x-gsql"
 
-typedef struct _GSQLSessionPack GSQLSessionPack;
+static GSQLSession *current_session = NULL;
 
-struct _GSQLSessionPack
-{
-	GSQLSession *session;
-	GdlDockLayout	*layout;
-	GtkWidget		*dock;
-	GtkWidget 		*dockbar;
-
-	GtkWidget		*left_item;
-	GtkWidget		*center_item;
-	GtkWidget		*right_item;
-	
-	gint			page; 
-	
-};
 
 struct _GSQLSessionManagerPrivate
 {
@@ -259,7 +245,7 @@ gsql_ssmn_new ()
 	
 	ssmn->private->container = GTK_NOTEBOOK (gtk_notebook_new ());
 	gtk_box_pack_start(GTK_BOX (ssmn), GTK_WIDGET (ssmn->private->container), 
-	    				FALSE, FALSE, 0);
+	    				TRUE, TRUE, 0);
 	
 	gtk_widget_show_all (GTK_WIDGET (ssmn));
 
@@ -325,43 +311,13 @@ gsql_ssmn_new ()
 }
 
 
-// --- <draft> ---
-
-static GSQLSessionPack *
-ssmn_create_session ()
+static void
+ssmn_session_set_active (GSQLSession *session)
 {
-	GSQLSession *session;
-	GSQLSessionPack *spack;
+	GSQL_TRACE_FUNC
 
 	
-	session = g_object_new (GSQL_SESSION_TYPE, NULL);
-	spack = g_slice_new0 (GSQLSessionPack);
-
-	spack->session = session;
-	spack->dock = gdl_dock_new ();
-	spack->layout = gdl_dock_layout_new (GDL_DOCK (spack->dock));
-	spack->dockbar = gdl_dock_bar_new (GDL_DOCK (spack->dock));
-
-	spack->left_item = gdl_dock_item_new_with_stock ("item 1", "item 1 long name", GTK_STOCK_NETWORK,
-	    			GDL_DOCK_ITEM_BEH_NORMAL);
-
-	gdl_dock_add_item (GDL_DOCK (spack->dock), GDL_DOCK_ITEM (spack->left_item), GDL_DOCK_LEFT);
-
-
-	spack->center_item = gdl_dock_item_new_with_stock ("item 2", "item 2 long name", GTK_STOCK_NETWORK,
-	    			GDL_DOCK_ITEM_BEH_NORMAL);
-
-	gdl_dock_add_item (GDL_DOCK (spack->dock), GDL_DOCK_ITEM (spack->center_item), GDL_DOCK_LEFT);
-	
-	spack->right_item = gdl_dock_item_new_with_stock ("item 3", "item 3 long name", GTK_STOCK_NETWORK,
-	    			GDL_DOCK_ITEM_BEH_NORMAL);
-
-	gdl_dock_add_item (GDL_DOCK (spack->dock), GDL_DOCK_ITEM (spack->right_item), GDL_DOCK_LEFT);
-	
-	return spack;
 }
-
-// --- </draft> ---
 
 void 
 on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
@@ -369,17 +325,18 @@ on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
 	GSQL_TRACE_FUNC
 
 	GSQLSessionManager 	*ssmn = NULL;
-	GSQLSessionPack *spack = NULL;
+	GSQLSession *session = NULL;
 
 	ssmn = gsql_app_get_ssmn (GSQL_APP (gsqlapp));
 
-	spack  = ssmn_create_session ();
-	if (spack)
+	session = g_object_new (GSQL_SESSION_TYPE, NULL);
+	
+	if (session)
 	{
-		ssmn->private->sessions = g_list_append (ssmn->private->sessions, spack);
-		gtk_widget_show_all (spack->dock);
+		ssmn->private->sessions = g_list_append (ssmn->private->sessions, session);
 
-		gtk_notebook_append_page (ssmn->private->container, spack->dock, NULL);
+		gtk_notebook_append_page (ssmn->private->container, session, NULL);
+		gtk_widget_show_all (session);
 
 	}
 
@@ -431,11 +388,24 @@ void on_ssmn_close_all_sessions (GtkMenuItem *mi, gpointer data)
 void on_ssmn_prev_session (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC
+	
+	GSQLSessionManager 	*ssmn = NULL;
+
+	ssmn = gsql_app_get_ssmn (GSQL_APP (gsqlapp));
+
+	gtk_notebook_prev_page (ssmn->private->container);
 
 }
 
 void on_ssmn_next_session (GtkMenuItem *mi, gpointer data)
 {
 	GSQL_TRACE_FUNC
+
+
+		GSQLSessionManager 	*ssmn = NULL;
+
+	ssmn = gsql_app_get_ssmn (GSQL_APP (gsqlapp));
+
+	gtk_notebook_next_page (ssmn->private->container);
 
 }
