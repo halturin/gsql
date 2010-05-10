@@ -326,20 +326,20 @@ on_ssmn_new_session (GtkMenuItem *mi, gpointer data)
 
 	GSQLSessionManager 	*ssmn = NULL;
 	GSQLSession *session = NULL;
-
+	gint i;
 	ssmn = gsql_app_get_ssmn (GSQL_APP (gsqlapp));
 
 	session = g_object_new (GSQL_SESSION_TYPE, NULL);
+		gtk_widget_show_all (GTK_WIDGET (session));	
 	
 	if (session)
 	{
 		ssmn->private->sessions = g_list_append (ssmn->private->sessions, session);
 
-		gtk_notebook_append_page (ssmn->private->container, session, NULL);
-		gtk_widget_show_all (session);
-
+		i = gtk_notebook_append_page (ssmn->private->container, GTK_WIDGET (session), NULL);
+		gtk_notebook_set_current_page (ssmn->private->container, i);
 	}
-
+	
 	gsql_ssmn_update_actions_status (ssmn);
 }
 

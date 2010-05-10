@@ -37,6 +37,7 @@ typedef struct _GSQLSessionPrivate	GSQLSessionPrivate;
 struct _GSQLSession
 {
 	GtkContainer parent;
+	GHashTable	*subsessions;
 	
 	GSQLSessionPrivate *private;
 };
@@ -47,7 +48,7 @@ struct _GSQLSessionClass
 {
 	GtkContainerClass parent;
 
-	GHashTable	*subsessions;
+	
 	
 
 

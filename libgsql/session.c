@@ -51,7 +51,7 @@ static guint session_signals[SIG_LAST] = { 0 };
 G_DEFINE_TYPE (GSQLSession, gsql_session, GTK_TYPE_CONTAINER);
 
 static void
-gsql_session_destroy (GObject *obj)
+gsql_session_destroy (GtkObject *obj)
 {
 	GSQLSession *session = GSQL_SESSION (obj);
 	
@@ -83,6 +83,7 @@ gsql_session_forall (GtkContainer *container,
 		(* callback) (child, callback_data);
 
 }
+
 static GType gsql_session_child_type (GtkContainer   *container)
 {
 	return GTK_TYPE_WIDGET;
@@ -90,10 +91,51 @@ static GType gsql_session_child_type (GtkContainer   *container)
 
 static void gsql_session_add (GtkContainer *container, GtkWidget *widget)
 {
-
+	// stub
+	return;
 }
 
+static void
+gsql_session_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
+{
+	GSQLSession *session = GSQL_SESSION (widget);
+	GtkWidget 	*child = GTK_WIDGET (session->private->dock);
+	GtkAllocation child_allocation;
+	gint width, height;
+	
+	widget->allocation = *allocation;
+	width = allocation->width - GTK_CONTAINER (widget)->border_width*2;
+	height = allocation->height - GTK_CONTAINER (widget)->border_width*2;
 
+	child_allocation.width = width;
+	child_allocation.height = height;
+	child_allocation.x = allocation->x;
+	child_allocation.y = allocation->y;
+	
+	gtk_widget_size_allocate (child, &child_allocation);
+	gtk_widget_show (child);
+	
+}
+
+static void
+gsql_session_size_request (GtkWidget *widget, GtkRequisition *requisition)
+{
+	GSQLSession *session = GSQL_SESSION (widget);
+	GtkWidget 	*child = GTK_WIDGET (session->private->dock);
+	
+	GtkRequisition req;
+	
+	gtk_widget_size_request (child, &req);
+	widget->requisition.width = 0;
+	widget->requisition.height = 0;
+	
+	widget->requisition.width = MAX (widget->requisition.width, req.width);
+	widget->requisition.height = MAX (widget->requisition.height, req.height);
+	
+	widget->requisition.width += GTK_CONTAINER (widget)->border_width * 2;
+	widget->requisition.height += GTK_CONTAINER (widget)->border_width * 2;
+	
+}
 
 static void
 gsql_session_class_init (GSQLSessionClass *klass)
@@ -103,8 +145,8 @@ gsql_session_class_init (GSQLSessionClass *klass)
 	GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 	GtkObjectClass   *gtkobject_class = GTK_OBJECT_CLASS (klass);
 	GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
-	
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+	
 	parent_class = g_type_class_peek_parent (klass);
 	gtkobject_class->destroy = gsql_session_destroy;
 	obj_class->finalize = gsql_session_finalize;
@@ -113,8 +155,8 @@ gsql_session_class_init (GSQLSessionClass *klass)
 	container_class->forall = gsql_session_forall;
 	container_class->child_type = gsql_session_child_type;
 	
-	widget_class->size_request = gtk_widget_size_request;
-	widget_class->size_allocate = gtk_widget_size_allocate;
+	widget_class->size_request = gsql_session_size_request;
+	widget_class->size_allocate = gsql_session_size_allocate;
 	
 	session_signals [SIG_ON_CLOSE] = 
 		g_signal_new ("close", 
@@ -152,9 +194,9 @@ gsql_session_init (GSQLSession *session)
 {
 	GSQL_TRACE_FUNC
 
-
 	session->private = g_slice_new0 (GSQLSessionPrivate);
-	session->private->dock = gdl_dock_new ();
+
+	session->private->dock = GDL_DOCK (gdl_dock_new ());
 	session->private->layout = gdl_dock_layout_new (GDL_DOCK (session->private->dock));
 	session->private->dockbar = gdl_dock_bar_new (GDL_DOCK (session->private->dock));
 
@@ -162,34 +204,31 @@ gsql_session_init (GSQLSession *session)
 	    			GDL_DOCK_ITEM_BEH_NORMAL);
 gtk_container_add (GTK_CONTAINER (session->private->left_item), gtk_button_new ());
 
-	g_debug ("aaaa");
+
 	gdl_dock_add_item (GDL_DOCK (session->private->dock), GDL_DOCK_ITEM (session->private->left_item), GDL_DOCK_LEFT);
-	g_debug ("bbbb");
+
 
 	session->private->center_item = gdl_dock_item_new_with_stock ("item 2", "item 2 long name", GTK_STOCK_NETWORK,
 	    			GDL_DOCK_ITEM_BEH_NORMAL);
 gtk_container_add (GTK_CONTAINER (session->private->center_item), gtk_button_new ());
 
-	g_debug ("cccc");
+
 	gdl_dock_add_item (GDL_DOCK (session->private->dock), GDL_DOCK_ITEM (session->private->center_item), GDL_DOCK_LEFT);
-	g_debug ("dddd");
+
 	
 	session->private->right_item = gdl_dock_item_new_with_stock ("item 3", "item 3 long name", GTK_STOCK_NETWORK,
 	    			GDL_DOCK_ITEM_BEH_NORMAL);
 gtk_container_add (GTK_CONTAINER (session->private->right_item), gtk_button_new ());
 
-	g_debug ("eeee");
+
 	gdl_dock_add_item (GDL_DOCK (session->private->dock), GDL_DOCK_ITEM (session->private->right_item), GDL_DOCK_LEFT);
-	g_debug ("ffff");
 
-	gtk_container_add (GTK_CONTAINER (session), session->private->dock);
+	gtk_widget_set_parent (GTK_WIDGET (session->private->dock), GTK_WIDGET (session));
 	
-	//gtk_widget_show_all (GTK_WIDGET (session));
-
-	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (session), GTK_NO_WINDOW);
-	
+	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (session), GTK_NO_WINDOW);	
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (session), FALSE);
 }
+
 
 gboolean
 gsql_session_lock (GSQLSession *session)
