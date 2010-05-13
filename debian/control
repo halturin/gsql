@@ -4,7 +4,7 @@ Section: gnome
 Priority: optional
 Build-Depends: cdbs, debhelper, autotools-dev,
  libgtksourceview2.0-dev, libnotify-dev, libgtk2.0-dev,
- libgnomeui-dev, libvte-dev, libmysqlclient-dev, libssh-dev
+ libgnomeui-dev, libvte-dev, libmysqlclient-dev, libpq-dev, libssh-dev
 Standards-Version: 3.8.0
 Homepage: http://gsql.org
 
