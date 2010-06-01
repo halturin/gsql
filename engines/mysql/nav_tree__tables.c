@@ -28,6 +28,7 @@
 
 #include <libgsql/session.h>
 #include <libgsql/stock.h>
+#include <libgsql/editor.h>
 #include <libgsql/sqleditor.h>
 
 #include "mysql_cursor.h"

@@ -542,6 +542,8 @@ do_connect_bg (gpointer p)
 	ssh_options_set (tunnel->ssh, SSH_OPTIONS_PORT, &tunnel->port);
 	i = 30;
 	ssh_options_set (tunnel->ssh, SSH_OPTIONS_TIMEOUT, &i);
+	i = SSH_LOG_FUNCTIONS;
+	ssh_options_set (tunnel->ssh, SSH_OPTIONS_LOG_VERBOSITY, &i);
 
 	if (ssh_connect(tunnel->ssh))
 	{
