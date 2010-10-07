@@ -1,2 +1,0 @@
-gsql-plugins: postinst-has-useless-call-to-ldconfig
-gsql-plugins: postrm-has-useless-call-to-ldconfig

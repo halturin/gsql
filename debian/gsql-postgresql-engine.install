@@ -1,4 +1,0 @@
-debian/tmp/usr/lib/gsql/engines/libgsqlengine_pgsql*.so*
-debian/tmp/usr/share/pixmaps/gsql/postgresql/*
-debian/tmp/usr/share/gsql/ui/postgresql/*
-
