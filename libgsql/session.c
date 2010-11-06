@@ -34,6 +34,9 @@ struct _GSQLSessionPrivate
 	GtkWidget		*center_item;
 	GtkWidget		*right_item;
 
+	gboolean		has_rollback;
+	gboolean		has_commit;
+
 };
 
 enum {
