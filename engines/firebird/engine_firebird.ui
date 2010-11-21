@@ -1,0 +1,10 @@
+<!--*- xml -*-->
+<ui>
+  <menubar name="MenuMain">
+    <placeholder name="PHolderEngines">
+      <menu name="MenuFirebird" action="FirebirdActionMenu">
+    	<menu name="MenuFirebirdCharsetList" action="ActionMenuFirebirdCharsetList" />
+      </menu>
+    </placeholder>
+  </menubar>
+</ui>

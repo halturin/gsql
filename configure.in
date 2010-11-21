@@ -112,6 +112,7 @@ dnl Checks for library functions.
 CHECK_ORACLE
 CHECK_MYSQL
 CHECK_PGSQL
+CHECK_FIREBIRD
 
 if test "x$HAVE_DB" = "x"; then
     AC_MSG_ERROR(Have no database support installed)
@@ -252,6 +253,8 @@ engines/mysql/Makefile
 engines/mysql/pixmaps/Makefile
 engines/postgresql/Makefile
 engines/postgresql/pixmaps/Makefile
+engines/firebird/Makefile
+engines/firebird/pixmaps/Makefile
 plugins/Makefile
 plugins/vte/Makefile
 plugins/exporter/Makefile

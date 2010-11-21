@@ -378,6 +378,86 @@ AC_DEFUN([CHECK_PGSQL],
   
 ])
 
+AC_DEFUN([CHECK_FIREBIRD],
+[
+  AC_MSG_CHECKING([for firebird])
+
+  have_firebird=yes
+
+  AC_ARG_WITH(firebird,
+    [  --with-firebird=DIR          base directory where Firebird is installed ],
+    [ firebird_lib_dir="$withval/lib"
+      firebird_include_dir="$withval/include"
+      firebird_bin_dir="$withval/bin" ]
+    )
+
+  AC_ARG_WITH(firebird-lib,
+    [  --with-firebird-lib=DIR      directory where the Firebird libraries may be found ],
+    [ firebird_lib_dir="$withval" ]
+    )
+
+  AC_ARG_WITH(firebird-include,
+    [  --with-firebird-include=DIR  directory where the Firebird includes may be found ],
+    [ firebird_include_dir="$withval" ]
+    )
+
+  AC_CHECK_PROG(FB_CONFIG, fb_config, yes, no)
+
+  dnl try to link to libfbclient
+  if test "x$FB_CONFIG" = "xyes"; then
+    firebird_libs="$($FB_CONFIG --libs)"
+    old_LIBS="$LIBS"
+    LIBS="$firebird_libs $LIBS"
+    AC_MSG_CHECKING([for isc_attach_database in -libfbclient (using fb_config)])
+    AC_TRY_LINK_FUNC(isc_attach_database, have_libfbclient=yes)
+    LIBS="$old_LIBS"
+	if test "x$have_libfbclient" = "xyes"; then
+		AC_MSG_RESULT(yes)
+		my_libs="$firebird_libs"
+	else
+		AC_MSG_RESULT(no)
+		have_firebird=no
+	fi
+ else
+    have_firebird=no
+ fi
+
+  dnl ############################################################
+  dnl # Check for header files
+  dnl ############################################################
+
+  if test "x$FB_CONFIG" = "xyes"; then
+	fb_cflags="$($FB_CONFIG --cflags)"
+	old_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS $fb_cflags"
+	AC_MSG_CHECKING([for ibase.h (using fb_config)])
+	AC_TRY_COMPILE([#include <ibase.h>], [int a = 1;],
+		       have_ibase_h=yes)
+	if test "x$have_ibase_h" = "xyes"; then
+	    AC_MSG_RESULT(yes)
+	    my_cflags="$SMART_CFLAGS $fb_cflags"
+	else
+	    AC_MSG_RESULT(no)
+		have_firebird=no
+	fi
+	CFLAGS="$old_CFLAGS"
+  else
+    have_firebird=no
+  fi
+  
+   if test $have_firebird = yes; then
+     AC_SUBST(FIREBIRD_CFLAGS, $my_cflags)
+     AC_SUBST(FIREBIRD_LIBS, $my_libs)
+   fi
+
+   AM_CONDITIONAL([GSQL_ENGINE_FIREBIRD],[test "x$have_firebird" = "xyes"])
+   
+   if test -z "${GSQL_ENGINE_FIREBIRD_TRUE}"; then
+	    HAVE_DB=yes
+   fi
+  
+])
+
 
 AC_DEFUN([AM_GCONF_SOURCE_2],
 [
