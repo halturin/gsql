@@ -45,8 +45,12 @@ gsql_notify_send (GSQLSession *session, gchar *subject, gchar *message)
 
 	if (!notify_is_initted())
 		notify_init (PROJECT_NAME);
-	
+
+	#if NOTIFY_VERSION_NEW == 1
+	notify = notify_notification_new (subj, message, NULL);
+	#else
 	notify = notify_notification_new (subj, message, NULL, NULL);
+	#endif
 	
 	notify_notification_set_icon_from_pixbuf(notify, create_pixbuf ("gsql.png"));
 	notify_notification_set_timeout (notify, NOTIFY_EXPIRES_DEFAULT);

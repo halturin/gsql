@@ -26,6 +26,8 @@ AM_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 gconf-2.0 libglade-2.0 gmodule-2.0 libnotify gtksourceview-2.0])
 
+PKG_CHECK_MODULES(NOTIFY, libnotify < 0.7, AC_DEFINE([NOTIFY_VERSION_NEW], [0], [Not using new libnotify]), AC_DEFINE([NOTIFY_VERSION_NEW], [1], [Using new libnotify]))
+
 AC_ARG_WITH(gnome,
     AC_HELP_STRING([--with-gnome],[disable the GNOME support]),
     [case "${withval}" in
