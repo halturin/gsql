@@ -62,7 +62,7 @@ pgsql_session_open (GSQLEPGSQLSession *spec_session,
 	if (! spec_session->pgconn || 
 	    PQstatus(spec_session->pgconn) != CONNECTION_OK) 
 	  {
-	  	GSQL_DEBUG ("Connect failed");
+		GSQL_DEBUG ("Connection failed");
 		g_free ( conninfo );
 		return FALSE;
 	  }

@@ -78,8 +78,8 @@ engine_session_open (GtkWidget *logon_widget, gchar *buffer) {
 	if (!pgsql_session_open (pgsql_session, username, password, database,
 				 hostname, port)) {
 		if (buffer)
-			g_strlcpy (buffer, 
-				   (const gchar *) "Erro ao conectar.", 256);
+			g_snprintf (buffer, 256,
+				    (const gchar *) N_("Error connecting: %s"), PQerrorMessage (pgsql_session->pgconn));
 		g_free (pgsql_session->pgconn);
 		g_free (pgsql_session);
 		return FALSE;
