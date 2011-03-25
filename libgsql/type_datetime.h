@@ -30,8 +30,6 @@
 #define GSQL_CONF_DATETIME_FORMAT		GSQL_CONF_ROOT_KEY "/datetime_format"
 #define GSQL_DATETIME_FORMAT_DEFAULT    "%D/%M/%Y %h:%m:%s"
 
-#include <gtk/gtkcellrenderertext.h>
-
 #define GSQL_TYPE_DATETIME (gsql_type_datetime_get_type ())
 
 #define GSQL_TYPE_CELL_RENDERER_DATETIME  (gsql_cell_renderer_datetime_get_type ())
