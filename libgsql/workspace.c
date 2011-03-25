@@ -811,20 +811,15 @@ gsql_workspace_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	GSQLWorkspace *workspace = GSQL_WORKSPACE (widget);
 	GtkWidget *child = GTK_WIDGET (workspace->private->root);
 	
-	GtkRequisition req, *wreq = NULL;
+	GtkRequisition req;
 	
 	gtk_widget_size_request (child, &req);
 
-	gtk_widget_get_requisition (widget, wreq);
-	wreq->width = 0;
-	wreq->height = 0;
+	requisition->width = MAX (requisition->width, req.width);
+	requisition->height = MAX (requisition->height, req.height);
 	
-	wreq->width = MAX (wreq->width, req.width);
-	wreq->height = MAX (wreq->height, req.height);
-	
-	wreq->width += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
-	wreq->height += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
-	
+	requisition->width += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
+	requisition->height += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
 }
 
 static void
