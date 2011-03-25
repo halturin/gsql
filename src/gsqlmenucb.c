@@ -449,7 +449,7 @@ on_new_session_activate (GtkMenuItem *mi, gpointer data)
 	
 	while (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
 	{
-		dialog_vbox = GTK_DIALOG (dialog)->vbox;
+		dialog_vbox = gtk_dialog_get_content_area (dialog);
 		
 		notebook = (GtkWidget *) g_object_get_data (G_OBJECT (dialog_vbox),
 													"notebook");

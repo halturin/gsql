@@ -304,7 +304,7 @@ gsql_utils_header_new (GtkWidget * icon, gchar *text, gchar *tooltip,
 
 		button = gtk_button_new();
 		gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);		
-		GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);	
+		gtk_widget_set_can_focus (button, FALSE);
 		
 		rcstyle = gtk_rc_style_new ();
 		rcstyle->xthickness = rcstyle->ythickness = 0;

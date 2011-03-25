@@ -347,7 +347,7 @@ gsql_editor_new (GSQLSession *session, GtkWidget *source)
 	gtk_toolbar_insert (GTK_TOOLBAR (result_toolbar), GTK_TOOL_ITEM (toolitem), 0);
 	custom_limit_checkbutton = gtk_check_button_new ();
 	gtk_widget_show (custom_limit_checkbutton);
-	GTK_WIDGET_UNSET_FLAGS (custom_limit_checkbutton, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (custom_limit_checkbutton, FALSE);
 	gtk_container_add (GTK_CONTAINER (toolitem),
 						custom_limit_checkbutton);
 	gtk_widget_set_tooltip_text (custom_limit_checkbutton,
@@ -538,7 +538,7 @@ gsql_editor_init (GSQLEditor *obj)
 	g_return_if_fail (obj != NULL);
 	obj->private = g_new0 (GSQLEditorPrivate, 1);
 
-	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (obj), GTK_NO_WINDOW);
+	gtk_widget_set_has_window (GTK_WIDGET (obj), FALSE);
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (obj), FALSE);
 	
 	obj->private->is_file = FALSE;

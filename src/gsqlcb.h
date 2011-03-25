@@ -46,7 +46,7 @@ on_gsql_window_delete(GtkWidget * wd, GdkEvent * event, gpointer data);
 
 void
 on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
-											GtkNotebookPage *page,
+											GtkWidget *page,
 											guint            page_num,
 											gpointer         user_data);
 

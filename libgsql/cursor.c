@@ -356,10 +356,10 @@ gsql_cursor_open (GSQLCursor *cursor, gboolean background)
 				{
 					GSQL_DEBUG ("widgets status: [content->widget = %d] [gsql_window = %d]",
 		
-					GTK_WIDGET_DRAWABLE (cursor->linked_widget), 
+					gtk_widget_is_drawable (cursor->linked_widget), 
 					gtk_window_is_active ( GTK_WINDOW (gsql_window)));
 		
-					if ((!GTK_WIDGET_DRAWABLE (cursor->linked_widget)) ||
+					if ((!gtk_widget_is_drawable (cursor->linked_widget)) ||
 						(!gtk_window_is_active ( GTK_WINDOW (gsql_window))))
 					{
 						//gtk_window_set_urgency_hint (GTK_WINDOW (gsql_window), TRUE);
@@ -701,10 +701,10 @@ gsql_cursor_open_with_vbind (GSQLCursor *cursor, GSQLCursorBindType btype, GList
 	{
 		GSQL_DEBUG ("widgets status: [content->widget = %d] [gsql_window = %d]",
 		
-		GTK_WIDGET_DRAWABLE (cursor->linked_widget), 
+		gtk_widget_is_drawable (cursor->linked_widget), 
 		gtk_window_is_active ( GTK_WINDOW (gsql_window)));
 		
-		if ((!GTK_WIDGET_DRAWABLE (cursor->linked_widget)) ||
+		if ((!gtk_widget_is_drawable (cursor->linked_widget)) ||
 			(!gtk_window_is_active ( GTK_WINDOW (gsql_window))))
 		{
 			//gtk_window_set_urgency_hint (GTK_WINDOW (gsql_window), TRUE);

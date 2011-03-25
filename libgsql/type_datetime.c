@@ -241,7 +241,7 @@ gsql_cell_renderer_datetime_get_property (GObject      *object,
 	switch (prop_id)
     {
 		case PROP_DATETIME:
-			text = renderer->parent.text;
+			g_object_get (G_OBJECT (gtk_widget_get_parent (renderer)), "text", text, -1);
 			g_value_set_boxed (value, text);
 			break;
 
@@ -272,17 +272,19 @@ gsql_cell_renderer_datetime_set_property (GObject      *object,
 			obj = g_value_get_boxed (value);
 			if (obj)
 			{
-				if (renderer->parent.text)
+			  g_object_get (G_OBJECT (gtk_widget_get_parent (renderer)), "text", text, -1);
+				if (text)
 				{
-					memset (renderer->parent.text, 0, DATETIME_MAX_LEN);
+					memset (text, 0, DATETIME_MAX_LEN);
 					
 				} else {
 					
-					renderer->parent.text = g_malloc0 (DATETIME_MAX_LEN);
-					memset (renderer->parent.text, 0, DATETIME_MAX_LEN);
+					text = g_malloc0 (DATETIME_MAX_LEN);
+					memset (text, 0, DATETIME_MAX_LEN);
+					g_object_set (G_OBJECT (gtk_widget_get_parent (renderer)), "text", text, -1);
 				}
 				
-				gsql_type_datetime_to_gchar (obj, renderer->parent.text, DATETIME_MAX_LEN);		
+				gsql_type_datetime_to_gchar (obj, text, DATETIME_MAX_LEN);		
 			};
 			break;
 

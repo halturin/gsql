@@ -539,7 +539,7 @@ gsql_workspace_get_session (GSQLWorkspace *workspace)
 	
 	g_return_val_if_fail (GSQL_IS_WORKSPACE (workspace), NULL);
 		
-	return GSQL_SESSION (GTK_WIDGET (workspace)->parent);
+	return GSQL_SESSION (gtk_widget_get_parent (GTK_WIDGET (workspace)));
 }
 
 GtkTreeView *
@@ -799,7 +799,7 @@ gsql_workspace_init (GSQLWorkspace *obj)
 	obj->private->navigate_show = TRUE;
 	obj->private->messages_show = TRUE;
 	
-	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (obj), GTK_NO_WINDOW);
+	gtk_widget_set_has_window (GTK_WIDGET (obj), FALSE);
 	
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (obj), FALSE);
 	
@@ -811,18 +811,19 @@ gsql_workspace_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	GSQLWorkspace *workspace = GSQL_WORKSPACE (widget);
 	GtkWidget *child = GTK_WIDGET (workspace->private->root);
 	
-	GtkRequisition req;
+	GtkRequisition req, *wreq = NULL;
 	
 	gtk_widget_size_request (child, &req);
+
+	gtk_widget_get_requisition (widget, wreq);
+	wreq->width = 0;
+	wreq->height = 0;
 	
-	widget->requisition.width = 0;
-	widget->requisition.height = 0;
+	wreq->width = MAX (wreq->width, req.width);
+	wreq->height = MAX (wreq->height, req.height);
 	
-	widget->requisition.width = MAX (widget->requisition.width, req.width);
-	widget->requisition.height = MAX (widget->requisition.height, req.height);
-	
-	widget->requisition.width += GTK_CONTAINER (widget)->border_width * 2;
-	widget->requisition.height += GTK_CONTAINER (widget)->border_width * 2;
+	wreq->width += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
+	wreq->height += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
 	
 }
 
@@ -835,10 +836,10 @@ gsql_workspace_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 	GtkAllocation child_allocation;
 	gint width, height;
 	
-	widget->allocation = *allocation;
+	gtk_widget_set_allocation (widget, allocation);
 	
-	width = allocation->width - GTK_CONTAINER (widget)->border_width*2;
-	height = allocation->height - GTK_CONTAINER (widget)->border_width*2;
+	width = allocation->width - gtk_container_get_border_width (GTK_CONTAINER (widget))*2;
+	height = allocation->height - gtk_container_get_border_width(GTK_CONTAINER (widget))*2;
 
 	child_allocation.width = width;
 	child_allocation.height = height;
@@ -883,7 +884,7 @@ on_adjustment_changed (GtkAdjustment* adj, gpointer data)
 {
 	GSQL_THREAD_ENTER
 		
-	gtk_adjustment_set_value (adj, adj->upper - adj->page_size);
+	gtk_adjustment_set_value (adj, gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj));
 	
 	GSQL_THREAD_LEAVE
 	

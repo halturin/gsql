@@ -569,19 +569,18 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 	GSQLWorkspace *workspace;
 	GtkTreeStore *ts;
 	GtkWidget  *tv = NULL;
-	GtkVBox *box;
+	GtkContainer *content_area;
 	GtkWidget *dialog;
 	GtkWidget	*scroll;
 	GtkWidget *label;
 	GtkTreeViewColumn 	*column;
 	GtkCellRenderer 	*renderer;
-	GtkWidget *alignment;
 	GtkTreeIter iter, child;
 	GList *clist = NULL;
 	GList *slist = NULL;
-	GSQLContent *content;
+	/* GSQLContent *content; */
 	guint unsaved_count = 0;
-	gchar *session_name;
+	/* gchar *session_name; */
 	gboolean content_state, have_changes;
 	
 	if (!sessions)
@@ -722,11 +721,9 @@ gsql_session_unsaved_dialog (GSQLSession *session)
 							  "files in this session."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	
-	alignment = gtk_alignment_new (0.02, 0.5, 1, 1);
-	gtk_container_add (GTK_CONTAINER (alignment), label);
-	
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), alignment, FALSE, FALSE, 2);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scroll, TRUE, TRUE, 2);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	gtk_container_add (GTK_CONTAINER (content_area), label);
+	gtk_container_add (GTK_CONTAINER (content_area), scroll);
 	g_object_set_data (G_OBJECT (dialog), "treeview", tv);
 	
 	gtk_tree_view_expand_all (GTK_TREE_VIEW (tv));
@@ -962,7 +959,7 @@ gsql_session_init (GSQLSession *obj)
 											  untitled_hash_remove_key_notify,
 											  NULL);
 	
-	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (obj), GTK_NO_WINDOW);
+	gtk_widget_set_has_window (GTK_WIDGET (obj), FALSE);
 	
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (obj), FALSE);
 	
@@ -1113,17 +1110,19 @@ gsql_session_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	GSQLSession *session = GSQL_SESSION (widget);
 	GtkWidget 	*child = GTK_WIDGET (session->private->workspace);
 	
-	GtkRequisition req;
+	GtkRequisition req, *wreq;
 	
 	gtk_widget_size_request (child, &req);
-	widget->requisition.width = 0;
-	widget->requisition.height = 0;
+
+	gtk_widget_get_requisition (widget, wreq);
+	wreq->width = 0;
+	wreq->height = 0;
 	
-	widget->requisition.width = MAX (widget->requisition.width, req.width);
-	widget->requisition.height = MAX (widget->requisition.height, req.height);
+	wreq->width = MAX (wreq->width, req.width);
+	wreq->height = MAX (wreq->height, req.height);
 	
-	widget->requisition.width += GTK_CONTAINER (widget)->border_width * 2;
-	widget->requisition.height += GTK_CONTAINER (widget)->border_width * 2;
+	wreq->width += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
+	wreq->height += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
 
 }
 
@@ -1135,9 +1134,9 @@ gsql_session_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 	GtkAllocation child_allocation;
 	gint width, height;
 	
-	widget->allocation = *allocation;
-	width = allocation->width - GTK_CONTAINER (widget)->border_width*2;
-	height = allocation->height - GTK_CONTAINER (widget)->border_width*2;
+	gtk_widget_set_allocation (widget, allocation);
+	width = allocation->width - gtk_container_get_border_width (GTK_CONTAINER (widget))*2;
+	height = allocation->height - gtk_container_get_border_width (GTK_CONTAINER (widget))*2;
 
 	child_allocation.width = width;
 	child_allocation.height = height;

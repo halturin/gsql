@@ -107,7 +107,7 @@ on_dialog_close_session_toggle_activate (GtkCellRendererToggle * renderer,
 
 void
 on_sessions_notebook_change_current_page (GtkNotebook     *notebook,
-											GtkNotebookPage *page,
+											GtkWidget *page,
 											guint            page_num,
 											gpointer         user_data)
 {

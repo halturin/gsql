@@ -420,7 +420,7 @@ gsql_content_init (GSQLContent *obj)
 	obj->private->name = NULL;
 	obj->private->display_name = NULL;
 	
-	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (obj), GTK_NO_WINDOW);
+	gtk_widget_set_has_window (GTK_WIDGET (obj), FALSE);
 	
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (obj), FALSE);
 	
@@ -510,9 +510,9 @@ gsql_content_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 	GtkAllocation child_allocation;
 	gint width, height;
 	
-	widget->allocation = *allocation;
-	width = allocation->width - GTK_CONTAINER (widget)->border_width*2;
-	height = allocation->height - GTK_CONTAINER (widget)->border_width*2;
+	gtk_widget_set_allocation (widget, allocation);
+	width = allocation->width - gtk_container_get_border_width (GTK_CONTAINER (widget))*2;
+	height = allocation->height - gtk_container_get_border_width (GTK_CONTAINER (widget))*2;
 
 	child_allocation.width = width;
 	child_allocation.height = height;
@@ -530,17 +530,17 @@ gsql_content_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	GSQLContent *content = GSQL_CONTENT (widget);
 	GtkWidget 	*child = GTK_WIDGET (content->private->child);
 	
-	GtkRequisition req;
+	GtkRequisition req, *wreq;
 	
 	gtk_widget_size_request (child, &req);
-	widget->requisition.width = 0;
-	widget->requisition.height = 0;
+	wreq->width = 0;
+	wreq->height = 0;
 	
-	widget->requisition.width = MAX (widget->requisition.width, req.width);
-	widget->requisition.height = MAX (widget->requisition.height, req.height);
+	wreq->width = MAX (wreq->width, req.width);
+	wreq->height = MAX (wreq->height, req.height);
 	
-	widget->requisition.width += GTK_CONTAINER (widget)->border_width * 2;
-	widget->requisition.height += GTK_CONTAINER (widget)->border_width * 2;
+	wreq->width += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
+	wreq->height += gtk_container_get_border_width (GTK_CONTAINER (widget)) * 2;
 	
 }
 

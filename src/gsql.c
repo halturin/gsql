@@ -169,7 +169,7 @@ gsql_window_clean_exit()
 		return;
 	
     restore_xywh = gsql_conf_value_get_boolean (GSQL_CONF_UI_RESTORE_SIZE_POS);
-	state = gdk_window_get_state (GTK_WIDGET (gsql_window)->window);
+	state = gdk_window_get_state (gtk_widget_get_window (gsql_window));
 	
 	if (state & GDK_WINDOW_STATE_MAXIMIZED)
 		mstate = TRUE;
@@ -297,7 +297,7 @@ create_dialog_logon (void)
 	gtk_dialog_set_default_response(GTK_DIALOG(dialog_logon), GTK_RESPONSE_OK);
 	gtk_window_set_resizable (GTK_WINDOW (dialog_logon), FALSE);
         
-	dialog_vbox = GTK_DIALOG (dialog_logon)->vbox;
+	dialog_vbox = gtk_dialog_get_content_area (dialog_logon);
 	gtk_widget_show (dialog_vbox);
         
 	hbox1 = gtk_hbox_new (FALSE, 0);
@@ -377,7 +377,7 @@ create_dialog_close_session (void)
 	gtk_window_set_resizable (GTK_WINDOW (dialog_close_session), FALSE);
 	gtk_window_set_type_hint (GTK_WINDOW (dialog_close_session), GDK_WINDOW_TYPE_HINT_DIALOG);
 
-	dialog_vbox2 = GTK_DIALOG (dialog_close_session)->vbox;
+	dialog_vbox2 = gtk_dialog_get_content_area (dialog_close_session);
 	gtk_widget_show (dialog_vbox2);
 
 	scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
@@ -393,14 +393,14 @@ create_dialog_close_session (void)
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (tv_sessions), TRUE);
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (tv_sessions), FALSE);
 
-	dialog_action_area2 = GTK_DIALOG (dialog_close_session)->action_area;
+	dialog_action_area2 = gtk_dialog_get_action_area (dialog_close_session);
 	gtk_widget_show (dialog_action_area2);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area2), GTK_BUTTONBOX_END);
 
 	select_all_button = gtk_button_new_with_mnemonic (_("Select all"));
 	gtk_widget_show (select_all_button);  
-	gtk_container_add(GTK_CONTAINER(dialog_close_session->action_area),select_all_button);
-	GTK_WIDGET_SET_FLAGS (select_all_button, GTK_CAN_DEFAULT);
+	gtk_container_add(GTK_CONTAINER (gtk_dialog_get_action_area (dialog_close_session)),select_all_button);
+	gtk_widget_set_can_default (select_all_button, TRUE);
 	g_signal_connect ((gpointer) select_all_button, "clicked",
 						G_CALLBACK (on_dialog_close_session_select_all_button_activate),
 						dialog_close_session);
@@ -408,12 +408,12 @@ create_dialog_close_session (void)
 	ok_button = gtk_button_new_from_stock ("gtk-ok");
 	gtk_widget_show (ok_button);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog_close_session), ok_button, GTK_RESPONSE_OK);
-	GTK_WIDGET_SET_FLAGS (ok_button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (ok_button, TRUE);
 
 	cancel_button = gtk_button_new_from_stock ("gtk-cancel");
 	gtk_widget_show (cancel_button);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog_close_session), cancel_button, GTK_RESPONSE_CANCEL);
-	GTK_WIDGET_SET_FLAGS (cancel_button, GTK_CAN_DEFAULT);        
+	gtk_widget_set_can_default (cancel_button, TRUE);
 
 	HOOKUP_OBJECT_NO_REF (dialog_close_session, dialog_close_session, "dialog_close_session");
 	HOOKUP_OBJECT_NO_REF (dialog_close_session, dialog_vbox2, "dialog_vbox2");
